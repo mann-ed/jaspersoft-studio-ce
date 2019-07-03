@@ -33,7 +33,7 @@ public class IssueSubmissionHandler extends AbstractHandler {
 			Shell mainShell = UIUtils.getShell();
 			WizardDialog issueCreationDialog = new WizardDialog(mainShell, newWizard){
 				@Override
-				protected void setShellStyle(int newShellStyle) {
+				public void setShellStyle(int newShellStyle) {
 					super.setShellStyle(SWT.SHELL_TRIM | SWT.MODELESS);
 				}
 			};

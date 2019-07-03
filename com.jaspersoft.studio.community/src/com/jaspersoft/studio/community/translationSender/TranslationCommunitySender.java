@@ -40,7 +40,7 @@ public class TranslationCommunitySender implements ISendTranslation{
 		Shell newShell = new Shell(UIUtils.getDisplay());
 		WizardDialog translationSend = new WizardDialog(newShell, newWizard){
 			@Override
-			protected void setShellStyle(int newShellStyle) {
+			public void setShellStyle(int newShellStyle) {
 				super.setShellStyle(SWT.SHELL_TRIM | SWT.MODELESS);
 			}
 		};
