@@ -63,7 +63,12 @@ public class JSSKeyStroke extends Trigger {
 		String token = string.toUpperCase(Locale.ENGLISH);
 		int naturalKey = lookup.formalModifierLookup(token);
 		if (naturalKey == NO_KEY){
-			Integer simpleKey =  lookup.formalKeyLookupInteger(token);
+			Integer simpleKey =  null;
+			try {
+				simpleKey = lookup.formalKeyLookupInteger(token);
+			} catch(IllegalArgumentException ex) {
+				simpleKey = Integer.valueOf(token.charAt(0));;
+			}
 			naturalKey = simpleKey != null ? simpleKey : NO_KEY;
 		}
 		if (naturalKey == NO_KEY) {
