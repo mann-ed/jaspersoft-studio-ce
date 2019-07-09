@@ -202,6 +202,9 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	private FlyoutPreferences palettePreferences;
 
 	protected JasperReportsConfiguration jrContext;
+	
+	/** The ruler comp. */
+	private JDRulerComposite rulerComp;
 
 	public JasperReportsConfiguration getJrContext() {
 		return jrContext;
@@ -287,9 +290,6 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 		return super.getActionRegistry();
 	}
 
-	/** The ruler comp. */
-	private JDRulerComposite rulerComp;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -298,6 +298,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	 */
 	@Override
 	protected void createGraphicalViewer(Composite parent) {
+		//the rulerComp is the composite that will contain both the ruler and the editor as child
+		//this doens't change if the editor is visible or not, since it act only as container 
 		rulerComp = new JDRulerComposite(parent, SWT.NONE, this);
 		super.createGraphicalViewer(rulerComp);
 		rulerComp.setGraphicalViewer((ScrollingGraphicalViewer) getGraphicalViewer());
@@ -305,10 +307,14 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 
 	/**
 	 * Return the ruler composite, the ruler has the possibility to layout the
-	 * complete editor area trought the layout() method
+	 * complete editor area trough the layout() method
 	 */
 	public JDRulerComposite getRuler() {
 		return rulerComp;
+	}
+	
+	public void layout() {
+		rulerComp.requestLayout();
 	}
 
 	/*
