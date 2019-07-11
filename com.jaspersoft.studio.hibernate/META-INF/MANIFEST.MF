@@ -32,3 +32,6 @@ Bundle-ClassPath: patch-library.jar,
  .
 Eclipse-RegisterBuddy: com.jaspersoft.studio
 Eclipse-BuddyPolicy: registered
+Export-Package: com.jaspersoft.studio.hibernate,
+ com.jaspersoft.studio.hibernate.classpath,
+ com.jaspersoft.studio.hibernate.messages
