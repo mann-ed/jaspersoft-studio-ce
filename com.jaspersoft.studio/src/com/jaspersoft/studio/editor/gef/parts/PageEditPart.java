@@ -437,7 +437,7 @@ public class PageEditPart extends AJDEditPart implements PropertyChangeListener 
 		
 		//at this point the isRefreshing flag was false and became true
 		try {
-			//Don't refresh is the refresh is disable and the event is not a forced refresh
+			//Don't refresh if the refresh is disable and the event is not a forced refresh
 			if (JSSCompoundCommand.REFRESH_UI_EVENT.equals(arg0.getPropertyName()) || !JSSCompoundCommand.isRefreshEventsIgnored((ANode)getModel())){
 			
 				refreshChildren();
@@ -446,6 +446,7 @@ public class PageEditPart extends AJDEditPart implements PropertyChangeListener 
 				AbstractVisualEditor visualEditor = (AbstractVisualEditor)refreshedEditor;
 				if (visualEditor == null || visualEditor.isEditorVisible()){
 					refreshVisuals();
+					visualEditor.layout();
 				}
 			}
 			
