@@ -19,6 +19,7 @@ import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.model.DefaultValue;
 import com.jaspersoft.studio.model.ICopyable;
 import com.jaspersoft.studio.model.IDragable;
+import com.jaspersoft.studio.model.dataset.MDataset;
 import com.jaspersoft.studio.model.util.IIconDescriptor;
 import com.jaspersoft.studio.model.util.NodeIconDescriptor;
 import com.jaspersoft.studio.property.descriptor.NullEnum;
@@ -280,7 +281,8 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 				design.getGroupsMap().remove(evt.getOldValue());
 				design.getGroupsMap().put(jrGroup.getName(), jrGroup);
 				// JRDesignDataset dataset = ModelUtils.getDataset(this);
-				JRVariable groupVar = getJasperDesign().getVariablesMap().get(evt.getOldValue() + "_COUNT"); //$NON-NLS-1$
+				Map<String, JRVariable> variablesMap = getVariablesMap();
+				JRVariable groupVar = variablesMap.get(evt.getOldValue() + "_COUNT"); //$NON-NLS-1$
 				if (groupVar != null) {
 					// This should launch the propertyChange event on the
 					// variable so the map is updated also for it
@@ -289,6 +291,19 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 			}
 		}
 		super.propertyChange(evt);
+	}
+	
+	/**
+	 * Return the variables map of the correct parent object, the jrdesign if the group is 
+	 * on the main dataset or the map of the dataset if it is on a subdataset
+	 * 
+	 * @return a not null variables map
+	 */
+	protected Map<String, JRVariable> getVariablesMap(){
+		if (getParent() != null && getParent().getParent() instanceof MDataset) {
+			return ((MDataset)getParent().getParent()).getValue().getVariablesMap();
+		}
+		return getJasperDesign().getVariablesMap();
 	}
 
 	/*
