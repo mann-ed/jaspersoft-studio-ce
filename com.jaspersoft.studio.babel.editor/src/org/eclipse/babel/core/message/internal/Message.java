@@ -215,7 +215,7 @@ public final class Message extends AbstractMessageModel implements IMessage {
     	Message newMessage = new Message(new String(key), newLocale);
     	newMessage.setActive(isActive());
     	newMessage.setComment(getComment() != null ? new String(getComment()) : null, true);
-    	newMessage.setText(new String(getValue()), true);
+    	newMessage.setText(getValue() != null ? new String(getValue()) : null, true);
     	return newMessage;
     }
 }
