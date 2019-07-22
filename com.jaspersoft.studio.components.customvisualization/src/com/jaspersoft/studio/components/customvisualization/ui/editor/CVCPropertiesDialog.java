@@ -106,6 +106,7 @@ public class CVCPropertiesDialog extends Dialog {
 		d.setExpressionContext(getExpressionContext());
 		if (d.open() == Window.OK) {
 			itemProps.getItemProps().add(d.getItemProperty());
+			propertiesTV.refresh();
 		}
 	}
 
@@ -119,6 +120,7 @@ public class CVCPropertiesDialog extends Dialog {
 				int idx = itemProps.getItemProps().indexOf(p);
 				itemProps.getItemProps().remove(p);
 				itemProps.getItemProps().add(idx, clonedP);
+				propertiesTV.refresh();
 			}
 		}
 	}
@@ -127,6 +129,7 @@ public class CVCPropertiesDialog extends Dialog {
 		ItemProperty p = getCurrentSelectedProperty();
 		if (p != null) {
 			itemProps.getItemProps().remove(p);
+			propertiesTV.refresh();
 		}
 	}
 
@@ -377,7 +380,7 @@ public class CVCPropertiesDialog extends Dialog {
 			propertyPageContainer = null;
 		}
 
-		propertiesTV.setInput(itemProps);
+		propertiesTV.setInput(itemProps.getItemProps());
 
 		JasperDesign jd = itemProps.getJd();
 		JasperReportsConfiguration jConf = itemProps.getjConfig();
