@@ -326,8 +326,8 @@ public class ICParameterContributor implements IParameterICContributor {
 	};
 
 	public void setWidgetsState() {
-		if (refresh)
-			return;
+		if (refresh || cOpt.isDisposed())
+			return; 
 		refresh = true;
 		String path = prm != null ? prm.getPropertiesMap().getProperty(PROPERTY_JS_INPUTCONTROL_PATH) : "";
 		String v = Misc.nvl(prm != null ? prm.getPropertiesMap().getProperty(PROPERTY_JS_INPUTCONTROL_TYPE) : "");
