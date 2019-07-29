@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.jaspersoft.studio.data.designer.IFilterQuery;
 import com.jaspersoft.studio.property.dataset.fields.table.widget.AWTextButton;
 import com.jaspersoft.studio.property.dataset.fields.table.widget.AWidget;
+import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionDTO;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
 
 import net.sf.jasperreports.eclipse.util.Misc;
@@ -77,7 +78,7 @@ public class WICValueSelector extends AWTextButton {
 	}
 
 	private void showText(Composite cmp, JRParameter prm) {
-		String v = prm.getPropertiesMap().getProperty(ICParameterContributor.PROPERTY_JS_INPUTCONTROL_VALUE);
+		String v = getValue(prm);
 		TextDialog d = new TextDialog(cmp.getShell(), Misc.nvl(v));
 		if (d.open() == Dialog.OK) {
 			aw.setValue(d.getValue());
@@ -86,7 +87,7 @@ public class WICValueSelector extends AWTextButton {
 	}
 
 	private void showLOV(Composite cmp, JRParameter prm) {
-		String v = prm.getPropertiesMap().getProperty(ICParameterContributor.PROPERTY_JS_INPUTCONTROL_VALUE);
+		String v = getValue(prm);
 		LovDialog d = new LovDialog(cmp.getShell(), Misc.nvl(v));
 		if (d.open() == Dialog.OK) {
 			aw.setValue(d.getValue());
@@ -95,13 +96,32 @@ public class WICValueSelector extends AWTextButton {
 	}
 
 	private void showQuery(Composite cmp, JRParameter prm) {
-		String v = prm.getPropertiesMap().getProperty(ICParameterContributor.PROPERTY_JS_INPUTCONTROL_VALUE);
+		String v = getValue(prm);
 		Object v1 = aw.getTColumn().getValue1();
+
 		IFilterQuery fq = v1 instanceof IFilterQuery ? (IFilterQuery) v1 : null;
 		QueryDialog d = new QueryDialog(cmp.getShell(), Misc.nvl(v), fq);
 		if (d.open() == Dialog.OK) {
 			aw.setValue(d.getValue());
 			fillValue();
 		}
+	}
+
+	private String getValue(JRParameter prm) {
+		String v = prm.getPropertiesMap().getProperty(ICParameterContributor.PROPERTY_JS_INPUTCONTROL_VALUE);
+		if (v == null) {
+			if (aw.getElement() instanceof PropertyExpressionsDTO) {
+				PropertyExpressionsDTO d = (PropertyExpressionsDTO) aw.getElement();
+				for (PropertyExpressionDTO tdto : d.getProperties())
+					if (tdto.getName().equals(ICParameterContributor.PROPERTY_JS_INPUTCONTROL_VALUE)) {
+						v = tdto.getValue();
+						break;
+					}
+			} else if (aw.getElement() instanceof JRPropertiesMap) {
+				v = ((JRPropertiesMap) aw.getElement())
+						.getProperty(ICParameterContributor.PROPERTY_JS_INPUTCONTROL_VALUE);
+			}
+		}
+		return v;
 	}
 }
