@@ -8,10 +8,10 @@ import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -52,13 +52,10 @@ public class DataAdapterEditorPart extends ABasicEditor {
 	private final class ModelPropertyChangeListener implements PropertyChangeListener {
 
 		public void propertyChange(PropertyChangeEvent evt) {
-			getSite().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					isDirty = true;
-					firePropertyChange(ISaveablePart.PROP_DIRTY);
-				}
+			getSite().getWorkbenchWindow().getShell().getDisplay().asyncExec(() -> {
+				isDirty = true;
+				firePropertyChange(ISaveablePart.PROP_DIRTY);
 			});
-
 		}
 	}
 
@@ -66,7 +63,6 @@ public class DataAdapterEditorPart extends ABasicEditor {
 	private DataAdapterDescriptor descriptor;
 	private ModelPropertyChangeListener modelListener = new ModelPropertyChangeListener();
 	private NameComposite nameComposite;
-	private DataAdapterEditor editor;
 	private ADataAdapterComposite dacomposite;
 
 	public DataAdapterEditorPart() {
@@ -94,15 +90,14 @@ public class DataAdapterEditorPart extends ABasicEditor {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		try {
-			IResource resource = ((IFileEditorInput) getEditorInput()).getFile();
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
 			descriptor = dacomposite.getDataAdapter();
 			dacomposite.performAdditionalUpdates();
 
 			String xml = DataAdapterManager.toDataAdapterFile(descriptor, jrContext);
-
-			file.setContents(new ByteArrayInputStream(xml.getBytes()), true, true, monitor);
-			Markers.deleteMarkers(resource);
+			file.setContents(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)),
+					IFile.KEEP_HISTORY | IFile.FORCE, monitor);
+			Markers.deleteMarkers(file);
 		} catch (CoreException e) {
 			UIUtils.showError(e);
 		}
@@ -119,12 +114,20 @@ public class DataAdapterEditorPart extends ABasicEditor {
 		if (path != null) {
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			if (file != null) {
-				IFileEditorInput modelFile = new FileEditorInput(file);
-				setInputWithNotify(modelFile);
-				setInput(modelFile);
-				setPartName(file.getName());
-				IProgressMonitor progressMonitor = getEditorSite().getActionBars().getStatusLineManager().getProgressMonitor();
-				doSave(progressMonitor);
+				IProgressMonitor monitor = getEditorSite().getActionBars().getStatusLineManager().getProgressMonitor();
+				try {
+					String xml = DataAdapterManager.toDataAdapterFile(descriptor, jrContext);
+					file.create(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)), true, monitor);
+					IFileEditorInput modelFile = new FileEditorInput(file);
+					setInputWithNotify(modelFile);
+					setInput(modelFile);
+					setPartName(file.getName());
+
+					doSave(monitor);
+				} catch (CoreException e) {
+					UIUtils.showError(e);
+				}
+
 			}
 		}
 	}
@@ -143,7 +146,7 @@ public class DataAdapterEditorPart extends ABasicEditor {
 		gd.horizontalSpan = 2;
 		nameComposite.setLayoutData(gd);
 		if (descriptor != null) {
-			editor = descriptor.getEditor();
+			DataAdapterEditor editor = descriptor.getEditor();
 			dacomposite = editor.getComposite(c, SWT.NONE, null, jrContext);
 			PlatformUI.getWorkbench().getHelpSystem().setHelp(c, editor.getHelpContextId());
 			nameComposite.addModifyListener(modelListener);
@@ -179,11 +182,7 @@ public class DataAdapterEditorPart extends ABasicEditor {
 
 							@Override
 							protected void runOperations(IProgressMonitor monitor) {
-								UIUtils.getDisplay().syncExec(new Runnable() {
-									public void run() {
-										btnTest.setEnabled(false);
-									}
-								});
+								UIUtils.getDisplay().syncExec(() -> btnTest.setEnabled(false));
 
 								monitor.beginTask(Messages.DataAdapterEditorPart_0, IProgressMonitor.UNKNOWN);
 								ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
@@ -195,23 +194,18 @@ public class DataAdapterEditorPart extends ABasicEditor {
 											Thread.currentThread().setContextClassLoader(cl);
 									}
 									das.test();
-									UIUtils.getDisplay().syncExec(new Runnable() {
-										public void run() {
-											MessageBox mb = new MessageBox(btnTest.getShell(), SWT.ICON_INFORMATION | SWT.OK);
-											mb.setText(Messages.DataAdapterWizard_testbutton);
-											mb.setMessage(Messages.DataAdapterWizard_testsuccesful);
-											mb.open();
-										}
+									UIUtils.getDisplay().syncExec(() -> {
+										MessageBox mb = new MessageBox(btnTest.getShell(),
+												SWT.ICON_INFORMATION | SWT.OK);
+										mb.setText(Messages.DataAdapterWizard_testbutton);
+										mb.setMessage(Messages.DataAdapterWizard_testsuccesful);
+										mb.open();
 									});
 								} catch (Exception e1) {
 									UIUtils.showError(e1);
 								} finally {
 									Thread.currentThread().setContextClassLoader(oldCL);
-									UIUtils.getDisplay().syncExec(new Runnable() {
-										public void run() {
-											btnTest.setEnabled(true);
-										}
-									});
+									UIUtils.getDisplay().syncExec(() -> btnTest.setEnabled(true));
 								}
 							}
 						});
