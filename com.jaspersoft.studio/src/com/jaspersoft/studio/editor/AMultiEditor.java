@@ -224,6 +224,8 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 	@Override
 	public void doSaveAs() {
 		SaveAsDialog saveAsDialog = new SaveAsDialog(getSite().getShell());
+		IFile oldFile = ((FileEditorInput) getEditorInput()).getFile();
+		saveAsDialog.setOriginalFile(oldFile);
 		saveAsDialog.open();
 		IPath path = saveAsDialog.getResult();
 		if (path != null) {
