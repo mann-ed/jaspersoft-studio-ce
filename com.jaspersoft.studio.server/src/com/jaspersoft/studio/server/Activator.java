@@ -58,8 +58,7 @@ public class Activator extends AbstractJRUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		HttpUtils.patchUri("lowMask", "L_DASH");
-		HttpUtils.patchUri("highMask", "H_DASH");
+		HttpUtils.patchURIClass();
 	}
 
 	/*
