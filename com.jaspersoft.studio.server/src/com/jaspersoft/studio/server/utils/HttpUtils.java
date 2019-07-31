@@ -7,7 +7,6 @@ package com.jaspersoft.studio.server.utils;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.IDN;
 import java.net.URI;
@@ -131,20 +130,13 @@ public class HttpUtils {
 		return req;
 	}
 
-	public static void patchUri(String mname, String fname) {
+	public static void patchURIClass() {
 		try {
-			Method mask = URI.class.getDeclaredMethod(mname, String.class);
-			mask.setAccessible(true);
-			long vmask = (long) mask.invoke(null, "-_");
-
-			Field dash = URI.class.getDeclaredField(fname);
-
-			Field modifiers = Field.class.getDeclaredField("modifiers");
-			modifiers.setAccessible(true);
-			modifiers.setInt(dash, dash.getModifiers() & ~Modifier.FINAL);
-
-			dash.setAccessible(true);
-			dash.setLong(null, vmask);
+			long lowMaskValue = lowMask("-_");
+			long highMaskValue = highMask("-_");
+			
+			patchUriField(lowMaskValue, "L_DASH");
+		    patchUriField(highMaskValue, "H_DASH");
 		} catch (NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -157,7 +149,44 @@ public class HttpUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	private static void patchUriField(long maskValue, String fieldName)
+	        throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	        Field field = URI.class.getDeclaredField(fieldName);
+	
+	        Field modifiers = Field.class.getDeclaredField("modifiers");
+	        modifiers.setAccessible(true);
+	        modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+	
+	        field.setAccessible(true);
+	        field.setLong(null, maskValue);
+	}
+	
+    // Compute the low-order mask for the characters in the given string (JDK 8)
+    private static long lowMask(String chars) {
+        int n = chars.length();
+        long m = 0;
+        for (int i = 0; i < n; i++) {
+            char c = chars.charAt(i);
+            if (c < 64)
+                m |= (1L << c);
+        }
+        return m;
+    }
 
+    // Compute the high-order mask for the characters in the given string (JDK 8)
+    private static long highMask(String chars) {
+        int n = chars.length();
+        long m = 0;
+        for (int i = 0; i < n; i++) {
+            char c = chars.charAt(i);
+            if ((c >= 64) && (c < 128))
+                m |= (1L << (c - 64));
+        }
+        return m;
+    }	
+	
+	
 	public static void setupProxy(ClientConfig clientConfig, URI uri) {
 		CredentialsProvider cp = (CredentialsProvider) clientConfig
 				.getProperty(ApacheClientProperties.CREDENTIALS_PROVIDER);

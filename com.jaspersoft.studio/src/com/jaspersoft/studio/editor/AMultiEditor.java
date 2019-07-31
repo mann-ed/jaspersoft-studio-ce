@@ -9,7 +9,7 @@ import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import org.eclipse.core.resources.IFile;
@@ -75,7 +75,7 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 
 	@Override
 	protected void pageChange(int newPageIndex) {
-		IContextService service = (IContextService) getSite().getService(IContextService.class);
+		IContextService service = getSite().getService(IContextService.class);
 		if (activePage == 0) {
 			if (outlinePage != null)
 				tmpselection = outlinePage.getSite().getSelectionProvider().getSelection();
@@ -88,18 +88,14 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 				xml2model();
 			}
 			setModel(model);
-			Display.getDefault().syncExec(new Runnable() {
+			Display.getDefault().syncExec(() -> {
+				ISelectionProvider sp = null;
+				if (outlinePage != null)
+					sp = outlinePage.getSite().getSelectionProvider();
+				else
+					sp = getActiveEditor().getSite().getSelectionProvider();
 
-				@Override
-				public void run() {
-					ISelectionProvider sp = null;
-					if (outlinePage != null)
-						sp = outlinePage.getSite().getSelectionProvider();
-					else
-						sp = getActiveEditor().getSite().getSelectionProvider();
-
-					sp.setSelection(tmpselection);
-				}
+				sp.setSelection(tmpselection);
 			});
 			if (context == null)
 				context = service.activateContext("com.jaspersoft.studio.context");
@@ -136,17 +132,15 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 			try {
 				IFile f = getCurrentFile();
 				if (f != null)
-					f.setContents(new ByteArrayInputStream(xml.getBytes(FileUtils.UTF8_ENCODING)),
+					f.setContents(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)),
 							IFile.KEEP_HISTORY | IFile.FORCE, monitor);
 			} catch (Throwable e) {
 				UIUtils.showError(e);
 			}
 		}
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				isRefresh = false;
-				firePropertyChange(ISaveablePart.PROP_DIRTY);
-			}
+		Display.getDefault().asyncExec(() -> {
+			isRefresh = false;
+			firePropertyChange(ISaveablePart.PROP_DIRTY);
 		});
 		xmlFresh = true;
 	}
@@ -185,20 +179,18 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 	/**
 	 * Closes all project files on project close.
 	 * 
-	 * @param event
-	 *          the event
+	 * @param event the event
 	 */
 	public void resourceChanged(final IResourceChangeEvent event) {
 		switch (event.getType()) {
 		case IResourceChangeEvent.PRE_CLOSE:
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					IWorkbenchPage[] pages = getSite().getWorkbenchWindow().getPages();
-					for (int i = 0; i < pages.length; i++) {
-						if (((FileEditorInput) xmlEditor.getEditorInput()).getFile().getProject().equals(event.getResource())) {
-							IEditorPart editorPart = pages[i].findEditor(xmlEditor.getEditorInput());
-							pages[i].closeEditor(editorPart, true);
-						}
+			Display.getDefault().asyncExec(() -> {
+				IWorkbenchPage[] pages = getSite().getWorkbenchWindow().getPages();
+				for (int i = 0; i < pages.length; i++) {
+					if (((FileEditorInput) xmlEditor.getEditorInput()).getFile().getProject()
+							.equals(event.getResource())) {
+						IEditorPart editorPart = pages[i].findEditor(xmlEditor.getEditorInput());
+						pages[i].closeEditor(editorPart, true);
 					}
 				}
 			});
@@ -224,6 +216,8 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 	@Override
 	public void doSaveAs() {
 		SaveAsDialog saveAsDialog = new SaveAsDialog(getSite().getShell());
+		IFile oldFile = ((FileEditorInput) getEditorInput()).getFile();
+		saveAsDialog.setOriginalFile(oldFile);
 		saveAsDialog.open();
 		IPath path = saveAsDialog.getResult();
 		if (path != null) {
@@ -232,7 +226,7 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 				IProgressMonitor monitor = getActiveEditor().getEditorSite().getActionBars().getStatusLineManager()
 						.getProgressMonitor();
 				try {
-					file.create(new ByteArrayInputStream("FILE".getBytes(FileUtils.UTF8_ENCODING)), true, monitor);
+					file.create(new ByteArrayInputStream("FILE".getBytes(StandardCharsets.UTF_8)), true, monitor);
 					IFileEditorInput modelFile = new FileEditorInput(file);
 					setInputWithNotify(modelFile);
 					xmlEditor.setInput(modelFile);
@@ -241,8 +235,6 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 
 					doSave(monitor);
 				} catch (CoreException e) {
-					UIUtils.showError(e);
-				} catch (UnsupportedEncodingException e) {
 					UIUtils.showError(e);
 				}
 			}
@@ -266,7 +258,7 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 			jrContext.dispose();
 		super.dispose();
 		if (context != null) {
-			IContextService service = (IContextService) getSite().getService(IContextService.class);
+			IContextService service = getSite().getService(IContextService.class);
 			service.deactivateContext(context);
 		}
 	}
@@ -333,13 +325,9 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 		if (activeWorkbenchWindow != null) {
 			final IWorkbenchPage apage = activeWorkbenchWindow.getActivePage();
 			if (apage != null)
-				Display.getDefault().asyncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						closing = true;
-						apage.closeEditor(AMultiEditor.this, false);
-					}
+				Display.getDefault().asyncExec(() -> {
+					closing = true;
+					apage.closeEditor(AMultiEditor.this, false);
 				});
 		}
 	}
@@ -351,9 +339,11 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 		if (model == this.model)
 			return;
 		if (this.model != null && this.model.getChildren() != null && !this.model.getChildren().isEmpty())
-			this.model.getChildren().get(0).getPropertyChangeSupport().addPropertyChangeListener(modelPropertyChangeListener);
+			this.model.getChildren().get(0).getPropertyChangeSupport()
+					.addPropertyChangeListener(modelPropertyChangeListener);
 		if (model != null && model.getChildren() != null && !model.getChildren().isEmpty())
-			model.getChildren().get(0).getPropertyChangeSupport().addPropertyChangeListener(modelPropertyChangeListener);
+			model.getChildren().get(0).getPropertyChangeSupport()
+					.addPropertyChangeListener(modelPropertyChangeListener);
 		this.model = model;
 	}
 
@@ -364,14 +354,12 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+		 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
+		 * PropertyChangeEvent)
 		 */
 		public void propertyChange(PropertyChangeEvent evt) {
-			getSite().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					firePropertyChange(ISaveablePart.PROP_DIRTY);
-				}
-			});
+			getSite().getWorkbenchWindow().getShell().getDisplay()
+					.asyncExec(() -> firePropertyChange(ISaveablePart.PROP_DIRTY));
 
 		}
 	}
@@ -414,7 +402,7 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 	private void updateContentOutline(int page) {
 		if (outlinePage == null)
 			return;
-		IContentOutlinePage outline = (IContentOutlinePage) getEditor(page).getAdapter(IContentOutlinePage.class);
+		IContentOutlinePage outline = getEditor(page).getAdapter(IContentOutlinePage.class);
 		if (outline == null)
 			outline = new EmptyOutlinePage();
 		outlinePage.setPageActive(outline);
@@ -423,27 +411,23 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 	private class StateListener implements IElementStateListener {
 
 		public void elementDirtyStateChanged(Object element, boolean isDirty) {
-
+			// nothing to do
 		}
 
 		public void elementContentAboutToBeReplaced(Object element) {
-
+			// nothing to do
 		}
 
 		public void elementContentReplaced(Object element) {
-
+			// nothing to do
 		}
 
 		public void elementDeleted(Object element) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					getSite().getPage().closeEditor(AMultiEditor.this, false);
-				}
-			});
+			Display.getDefault().asyncExec(() -> getSite().getPage().closeEditor(AMultiEditor.this, false));
 		}
 
 		public void elementMoved(Object originalElement, Object movedElement) {
-
+			// nothing to do
 		}
 
 	}
@@ -466,7 +450,7 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 						}
 
 						public void documentAboutToBeChanged(DocumentEvent event) {
-
+							// nothing to do
 						}
 					});
 			xmlEditor.getDocumentProvider().addElementStateListener(new StateListener());

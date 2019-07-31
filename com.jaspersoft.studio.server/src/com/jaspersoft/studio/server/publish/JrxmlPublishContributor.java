@@ -319,7 +319,7 @@ public class JrxmlPublishContributor implements IPublishContributor {
 
 	private void look4Files(String root, String dapath, Set<String> fileNames, List<File> files) {
 		try (Stream<Path> st = Files.walk(Paths.get(root))) {
-			String pattern = "(.*)" + dapath + "_(.*).properties";
+			String pattern = "(.*)" + FilenameUtils.separatorsToSystem(dapath) + "_(.*).properties";
 			st.filter(Files::isRegularFile).forEach(f -> {
 				File file = f.toFile();
 				String fn = file.getAbsolutePath();
