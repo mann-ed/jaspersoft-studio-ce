@@ -170,8 +170,13 @@ public class CustomVisualizationComponentWizard extends JSSWizard implements INe
 									e.printStackTrace();
 								}
 							} catch (FileNotFoundException ex) {
-								MessageDialog.openError(UIUtils.getShell(),
-										Messages.CustomVisualizationComponentWizard_errorTitle, ex.getMessage());
+								UIUtils.getDisplay().syncExec(new Runnable() {
+								    public void run() {
+								    	MessageDialog.openError(UIUtils.getShell(),
+												Messages.CustomVisualizationComponentWizard_errorTitle, ex.getMessage());
+								    }
+								});
+								
 							}
 						}
 					} finally {
