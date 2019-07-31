@@ -314,7 +314,12 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	}
 	
 	public void layout() {
-		rulerComp.requestLayout();
+		//this is a short running method so it can be executed synchronously
+		UIUtils.getDisplay().syncExec(new Runnable() {
+		    public void run() {
+				rulerComp.requestLayout();
+		    }
+		});
 	}
 
 	/*
