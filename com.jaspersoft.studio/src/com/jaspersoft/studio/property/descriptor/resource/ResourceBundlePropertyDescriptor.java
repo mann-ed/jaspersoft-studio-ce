@@ -6,6 +6,7 @@ package com.jaspersoft.studio.property.descriptor.resource;
 
 import java.util.Locale;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.viewers.CellEditor;
@@ -65,7 +66,7 @@ public class ResourceBundlePropertyDescriptor extends NTextPropertyDescriptor {
 				pname = pname.substring(1);
 			if (!pname.isEmpty())
 				pname += "/";
-			return pname + fname;
+			return FilenameUtils.normalize(pname + fname, true);
 		}
 
 		@Override

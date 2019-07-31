@@ -91,7 +91,7 @@ public class MReport extends MLockableRefresh implements IGraphicElement, IConta
 
 	private static final String JR_CREATE_BOOKMARKS = "net.sf.jasperreports.print.create.bookmarks"; //$NON-NLS-1$
 
-	private Map<JRDesignBand, Integer> bandIndexMap = new HashMap<JRDesignBand, Integer>();
+	private Map<JRDesignBand, Integer> bandIndexMap = new HashMap<>();
 
 	/**
 	 * The icon descriptor.
@@ -104,7 +104,7 @@ public class MReport extends MLockableRefresh implements IGraphicElement, IConta
 
 	private MDataset mDataset;
 
-	private Map<Object, ANode> obj2Node = new HashMap<Object, ANode>();
+	private Map<Object, ANode> obj2Node = new HashMap<>();
 
 	/**
 	 * used when we need to change the position of a band. The differences between
