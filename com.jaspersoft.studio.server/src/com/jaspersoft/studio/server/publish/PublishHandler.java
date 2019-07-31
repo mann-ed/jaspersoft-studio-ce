@@ -33,6 +33,8 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.PersistentLocationWizardDialog;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileExtension;
+import net.sf.jasperreports.eclipse.util.Misc;
 
 public class PublishHandler extends AbstractHandler {
 	private static IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -76,30 +78,32 @@ public class PublishHandler extends AbstractHandler {
 		}
 		if (file == null)
 			UIUtils.showInformation(Messages.PublishHandler_0);
-		// String ext = file.getFileExtension();
-		// if (ext.equals(FileExtension.JRXML) || ext.equals(FileExtension.JASPER)) {
-		if (jContext == null) {
-			jContext = JasperReportsConfiguration.getDefaultJRConfig(file);
-			disposeJrContext = true;
-			try {
-				jContext.setJasperDesign(JRXMLUtils.getJasperDesign(jContext, file.getContents(), null));
-			} catch (Exception e) {
-				e.printStackTrace();
-				jContext.dispose();
-				jContext = null;
+		if (file != null) {
+			String ext = file.getFileExtension();
+			if (ext.equals(FileExtension.JRXML) || ext.equals(FileExtension.JASPER) || Misc.isNullOrEmpty(ext)) {
+				if (jContext == null) {
+					jContext = JasperReportsConfiguration.getDefaultJRConfig(file);
+					disposeJrContext = true;
+					try {
+						jContext.setJasperDesign(JRXMLUtils.getJasperDesign(jContext, file.getContents(), null));
+					} catch (Exception e) {
+						e.printStackTrace();
+						jContext.dispose();
+						jContext = null;
+					}
+				}
+				if (jContext != null) {
+					JrxmlPublishAction publishAction = new JrxmlPublishAction(1, null);
+					publishAction.setJrConfig(jContext);
+					publishAction.run();
+					// Check if the context was created internally and must be disposed
+					if (disposeJrContext) {
+						jContext.dispose();
+					}
+					return null;
+				}
 			}
 		}
-		if (jContext != null) {
-			JrxmlPublishAction publishAction = new JrxmlPublishAction(1, null);
-			publishAction.setJrConfig(jContext);
-			publishAction.run();
-			// Check if the context was created internally and must be disposed
-			if (disposeJrContext) {
-				jContext.dispose();
-			}
-			return null;
-		}
-		// }
 		PublishFile2ServerWizard wizard = new PublishFile2ServerWizard(file, 1);
 		WizardDialog dialog = new PersistentLocationWizardDialog(UIUtils.getShell(), wizard);
 		if (dialog.open() == Dialog.OK) {
