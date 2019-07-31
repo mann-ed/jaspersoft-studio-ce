@@ -21,6 +21,8 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jaspersoft.jasperserver.dto.resources.ClientFile;
+import com.jaspersoft.jasperserver.dto.resources.ClientReportUnit;
 
 import net.sf.jasperreports.eclipse.util.FileUtils;
 
@@ -84,6 +86,10 @@ public abstract class ARestV2ConnectionJersey extends ARestV2Connection {
 				return (Class<T>) String.class;
 			if (type.equals("text/plain"))
 				return (Class<T>) String.class;
+			if (type.equals("application/repository.reportunit+json"))
+				return (Class<T>) ClientReportUnit.class;
+			if (type.equals("application/repository.file+json"))
+				return (Class<T>) ClientFile.class;
 			int sind = type.indexOf('.');
 			int eind = type.indexOf('+');
 			if (sind >= 0 && eind >= 0) {
