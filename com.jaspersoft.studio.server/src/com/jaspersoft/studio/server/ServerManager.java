@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,17 +72,16 @@ public class ServerManager {
 
 	public static List<MServerProfile> getServerProfiles() {
 		if (serverProfiles == null) {
-			serverProfiles = new HashMap<MServerProfile, String>();
+			serverProfiles = new HashMap<>();
 			loadServerProfiles(new MServers(null));
 		}
-		return new ArrayList<MServerProfile>(serverProfiles.keySet());
+		return new ArrayList<>(serverProfiles.keySet());
 	}
 
 	/**
 	 * Save an element on the server file storage.
 	 * 
-	 * @param serverProfile
-	 *            the element to save
+	 * @param serverProfile the element to save
 	 */
 	private static void saveIntoStrage(MServerProfile serverProfile, String fileName) {
 		FileOutputStream stream = null;
@@ -107,7 +107,7 @@ public class ServerManager {
 
 	public static List<ServerProfile> getServerList() {
 		getServerProfiles();
-		List<ServerProfile> servers = new ArrayList<ServerProfile>();
+		List<ServerProfile> servers = new ArrayList<>();
 		for (MServerProfile ms : serverProfiles.keySet())
 			servers.add(ms.getValue());
 		return servers;
@@ -150,7 +150,7 @@ public class ServerManager {
 		if (serverProfiles.containsKey(adapter)) {
 			String fileName = serverProfiles.remove(adapter);
 			ConfigurationManager.removeStoregeResource(PREF_TAG, fileName);
-			((ANode) adapter.getParent()).removeChild(adapter);
+			adapter.getParent().removeChild(adapter);
 			propertyChangeSupport.firePropertyChange(new PropertyChangeEvent(adapter, SERVERPROFILE, null, adapter));
 		}
 	}
@@ -162,16 +162,14 @@ public class ServerManager {
 			String path = serverProfiles.get(adapter);
 			ConfigurationManager.removeStoregeResource(PREF_TAG, path);
 			saveIntoStrage(adapter, path);
-			UIUtils.getDisplay().syncExec(new Runnable() {
-				public void run() {
-					propertyChangeSupport
-							.firePropertyChange(new PropertyChangeEvent(adapter, SERVERPROFILE, null, adapter));
-				}
-			});
+			UIUtils.getDisplay().syncExec(() -> propertyChangeSupport
+					.firePropertyChange(new PropertyChangeEvent(adapter, SERVERPROFILE, null, adapter)));
 		}
 	}
 
 	public static void loadServerProfilesCopy(MServers root) {
+		if (serverProfiles == null)
+			serverProfiles = new HashMap<>();
 		if (serverProfiles.isEmpty())
 			loadServerProfiles(root);
 		for (MServerProfile msp : serverProfiles.keySet()) {
@@ -184,7 +182,7 @@ public class ServerManager {
 	public static void loadServerProfiles(MServers root) {
 		root.removeChildren();
 		if (serverProfiles == null)
-			serverProfiles = new HashMap<MServerProfile, String>();
+			serverProfiles = new HashMap<>();
 		serverProfiles.clear();
 
 		// Convert the old configuration
@@ -193,9 +191,8 @@ public class ServerManager {
 		// Read the configuration from the file storage
 		File[] storageContent = ConfigurationManager.getStorageContent(PREF_TAG);
 		for (File storageElement : storageContent) {
-			try {
-				InputStream inputStream = new FileInputStream(storageElement);
-				Reader reader = new InputStreamReader(inputStream, "UTF-8");
+			try (InputStream inputStream = new FileInputStream(storageElement);) {
+				Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 				InputSource is = new InputSource(reader);
 				is.setEncoding("UTF-8");
 				Document document = JRXmlUtils.parse(is);
@@ -221,9 +218,7 @@ public class ServerManager {
 		if (ind > 0) {
 			String[] tokens = key.split(":");
 
-			// StringTokenizer st = new StringTokenizer(key, ":");
 			String name = new String(Base64.decodeBase64(tokens[0]));
-			// String path = tokens[1];
 			if (tokens.length > 2) {
 				String urls = new String(Base64.decodeBase64(tokens[2]));
 				String[] urlt = urls.split("\n");
@@ -244,9 +239,7 @@ public class ServerManager {
 									|| (serv.getOrganisation() != null && serv.getOrganisation().equals(organization))))
 								return sp;
 						}
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
-					} catch (URISyntaxException e) {
+					} catch (MalformedURLException | URISyntaxException e) {
 						e.printStackTrace();
 					}
 				}
@@ -275,9 +268,7 @@ public class ServerManager {
 			try {
 				if (sp.getValue().getUrl().equals(url))
 					return sp;
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
+			} catch (MalformedURLException | URISyntaxException e) {
 				e.printStackTrace();
 			}
 		}
@@ -297,9 +288,7 @@ public class ServerManager {
 					} else
 						return sp;
 				}
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
+			} catch (MalformedURLException | URISyntaxException e) {
 				e.printStackTrace();
 			}
 		}
@@ -312,9 +301,7 @@ public class ServerManager {
 			try {
 				if (sp.getValue().getUrl().equals(url))
 					return i;
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
+			} catch (MalformedURLException | URISyntaxException e) {
 				e.printStackTrace();
 			}
 			i++;
@@ -340,9 +327,7 @@ public class ServerManager {
 					} else
 						return j;
 				}
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
+			} catch (MalformedURLException | URISyntaxException e) {
 				e.printStackTrace();
 			}
 			i++;
@@ -356,7 +341,7 @@ public class ServerManager {
 
 	public static String getKey(AMResource res, String uri, String option) {
 		INode n = res.getRoot();
-		if (n != null && n instanceof MServerProfile) {
+		if (n instanceof MServerProfile) {
 			MServerProfile sp = (MServerProfile) n;
 			ServerProfile serv = sp.getValue();
 			String srvurl;
@@ -371,9 +356,7 @@ public class ServerManager {
 					srvurl += "\n" + option;
 				return Base64.encodeBase64String(serv.getName().getBytes()) + ":" + uri + ":" //$NON-NLS-1$ //$NON-NLS-2$
 						+ Base64.encodeBase64String(srvurl.getBytes());
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
+			} catch (MalformedURLException | URISyntaxException e) {
 				e.printStackTrace();
 			}
 
@@ -383,7 +366,7 @@ public class ServerManager {
 
 	public static String getVersion(ANode node) {
 		INode n = node.getRoot();
-		if (n != null && n instanceof MServerProfile) {
+		if (n instanceof MServerProfile) {
 			MServerProfile server = (MServerProfile) n;
 			ServerProfile srvrd = server.getValue();
 			return srvrd.getJrVersion();
@@ -398,8 +381,7 @@ public class ServerManager {
 	 * used for example as input when creating a new treeviewer for repository
 	 * exploring.
 	 * 
-	 * @param original
-	 *            the {@link MServerProfile} instance to copy
+	 * @param original the {@link MServerProfile} instance to copy
 	 * @return a copy of the original {@link MServerProfile} instance
 	 */
 	public static MServerProfile getMServerProfileCopy(MServerProfile original) {
@@ -447,9 +429,7 @@ public class ServerManager {
 							if (usr.equals(prop[1]))
 								break;
 						}
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
-					} catch (URISyntaxException e) {
+					} catch (MalformedURLException | URISyntaxException e) {
 						e.printStackTrace();
 					}
 				}
@@ -462,7 +442,7 @@ public class ServerManager {
 			IProgressMonitor monitor) {
 		final MRoot root = new MRoot(null, null);
 		root.setJasperConfiguration(jConfig);
-		List<MServerProfile> profiles = new ArrayList<MServerProfile>();
+		List<MServerProfile> profiles = new ArrayList<>();
 
 		String[] prop = JRSEditorContributor.getServerURL(jd, (IFile) jConfig.get(FileUtils.KEY_FILE), monitor);
 		if (prop != null && !Misc.isNullOrEmpty(prop[0])) {
@@ -481,9 +461,7 @@ public class ServerManager {
 							continue;
 						}
 					}
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
+				} catch (MalformedURLException | URISyntaxException e) {
 					e.printStackTrace();
 				}
 			}
@@ -503,9 +481,7 @@ public class ServerManager {
 		try {
 			sp = getServerByUrl(sp.getValue().getUrl());
 			selectIfExists(monitor, sp, mres);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
+		} catch (MalformedURLException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
