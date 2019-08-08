@@ -31,7 +31,7 @@ import net.sf.jasperreports.export.HtmlReportConfiguration;
  * 
  */
 public class HTMLExporterPreferencePage extends FieldEditorOverlayPage {
-	public static final String PAGE_ID = "com.jaspersoft.studio.preferences.exporter.HTMLExporterPreferencePage.property";
+	public static final String PAGE_ID = "com.jaspersoft.studio.preferences.exporter.HTMLExporterPreferencePage.property"; //$NON-NLS-1$
 
 	public HTMLExporterPreferencePage() {
 		super(GRID);
@@ -96,16 +96,11 @@ public class HTMLExporterPreferencePage extends FieldEditorOverlayPage {
 		addField(bf);
 		HelpSystem.setHelp(bf.getDescriptionControl(sc), StudioPreferencePage.REFERENCE_PREFIX + bf.getPreferenceName());
 
-		bf = new BooleanFieldEditor(HtmlReportConfiguration.PROPERTY_EMBED_IMAGE, Messages.HTMLExporterPreferencePage_27,
-				sc);
+		bf = new BooleanFieldEditor(HtmlReportConfiguration.PROPERTY_EMBED_IMAGE, Messages.HTMLExporterPreferencePage_1, sc);
 		addField(bf);
 		HelpSystem.setHelp(bf.getDescriptionControl(sc), StudioPreferencePage.REFERENCE_PREFIX + bf.getPreferenceName());
 
-		bf = new BooleanFieldEditor(HtmlReportConfiguration.PROPERTY_EMBED_IMAGE, "Embed Image", sc);
-		addField(bf);
-		HelpSystem.setHelp(bf.getDescriptionControl(sc), StudioPreferencePage.REFERENCE_PREFIX + bf.getPreferenceName());
-
-		bf = new BooleanFieldEditor(HtmlReportConfiguration.PROPERTY_EMBEDDED_SVG_USE_FONTS, "Use SVG Fonts", sc);
+		bf = new BooleanFieldEditor(HtmlReportConfiguration.PROPERTY_EMBEDDED_SVG_USE_FONTS, Messages.HTMLExporterPreferencePage_2, sc);
 		addField(bf);
 		HelpSystem.setHelp(bf.getDescriptionControl(sc), StudioPreferencePage.REFERENCE_PREFIX + bf.getPreferenceName());
 

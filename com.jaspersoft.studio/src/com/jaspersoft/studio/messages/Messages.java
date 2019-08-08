@@ -965,12 +965,14 @@ public class Messages extends NLS {
 	public static String HideElementsAction_showTooltip;
 	public static String HorizontalRowLayout_name;
 	public static String HorizontalRowLayout_toolTip;
+	public static String HTMLExporterPreferencePage_1;
 	public static String HTMLExporterPreferencePage_14;
 	public static String HTMLExporterPreferencePage_15;
 	public static String HTMLExporterPreferencePage_16;
 	public static String HTMLExporterPreferencePage_17;
 	public static String HTMLExporterPreferencePage_18;
 	public static String HTMLExporterPreferencePage_19;
+	public static String HTMLExporterPreferencePage_2;
 	public static String HTMLExporterPreferencePage_20;
 	public static String HTMLExporterPreferencePage_21;
 	public static String HTMLExporterPreferencePage_22;

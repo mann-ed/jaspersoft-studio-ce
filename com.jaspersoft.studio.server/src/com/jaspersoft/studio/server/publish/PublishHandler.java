@@ -11,14 +11,17 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jdt.internal.core.PackageFragmentRoot;
+import org.eclipse.jdt.internal.ui.packageview.ClassPathContainer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -33,6 +36,8 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.PersistentLocationWizardDialog;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileExtension;
+import net.sf.jasperreports.eclipse.util.Misc;
 
 public class PublishHandler extends AbstractHandler {
 	private static IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -45,9 +50,9 @@ public class PublishHandler extends AbstractHandler {
 		ISelection sel = HandlerUtil.getCurrentSelection(event);
 		if (sel instanceof StructuredSelection) {
 			Object obj = ((StructuredSelection) sel).getFirstElement();
-			if (obj instanceof IFile)
+			if (obj instanceof IFile) {
 				file = (IFile) obj;
-			else if (obj instanceof JarPackageFragmentRoot) {
+			} else if (obj instanceof JarPackageFragmentRoot) {
 				try {
 					ZipFile zf = ((JarPackageFragmentRoot) obj).getJar();
 					if (zf != null)
@@ -55,15 +60,19 @@ public class PublishHandler extends AbstractHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			} else if (obj instanceof CompilationUnit)
+			} else if (obj instanceof CompilationUnit) {
 				file = getFileFromURI(((CompilationUnit) obj).getPath().toFile().toURI());
+			} else if (obj instanceof IProject || obj instanceof IFolder || obj instanceof IPackageFragment
+					|| obj instanceof PackageFragmentRoot || obj instanceof ClassPathContainer) {
+				UIUtils.showInformation(
+						"Currently this type of operation is not supported, only publishing files is supported");
+				return null;
+			}
 		}
 		if (file == null) {
 			IEditorInput ei = com.jaspersoft.studio.utils.compatibility.HandlerUtil.getActiveEditorInput(event);
 			if (ei instanceof IFileEditorInput) {
 				file = ((IFileEditorInput) ei).getFile();
-				// String ext = file.getFileExtension();
-				// if (ext.equals(FileExtension.JRXML) || ext.equals(FileExtension.JASPER)) {
 				IEditorPart ep = HandlerUtil.getActiveEditor(event);
 				if (ep instanceof AbstractJRXMLEditor)
 					try {
@@ -71,39 +80,36 @@ public class PublishHandler extends AbstractHandler {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				// }
 			}
 		}
 		if (file == null)
 			UIUtils.showInformation(Messages.PublishHandler_0);
-		// String ext = file.getFileExtension();
-		// if (ext.equals(FileExtension.JRXML) || ext.equals(FileExtension.JASPER)) {
-		if (jContext == null) {
-			jContext = JasperReportsConfiguration.getDefaultJRConfig(file);
-			disposeJrContext = true;
-			try {
-				jContext.setJasperDesign(JRXMLUtils.getJasperDesign(jContext, file.getContents(), null));
-			} catch (Exception e) {
-				e.printStackTrace();
-				jContext.dispose();
-				jContext = null;
+		else {
+			String ext = file.getFileExtension();
+			if (ext.equals(FileExtension.JRXML) || ext.equals(FileExtension.JASPER) || Misc.isNullOrEmpty(ext)) {
+				if (jContext == null) {
+					jContext = JasperReportsConfiguration.getDefaultJRConfig(file);
+					disposeJrContext = true;
+					try {
+						jContext.setJasperDesign(JRXMLUtils.getJasperDesign(jContext, file.getContents(), null));
+					} catch (Exception e) {
+						e.printStackTrace();
+						jContext.dispose();
+						jContext = null;
+					}
+				}
+				if (jContext != null) {
+					JrxmlPublishAction publishAction = new JrxmlPublishAction(1, null);
+					publishAction.setJrConfig(jContext);
+					publishAction.run();
+					// Check if the context was created internally and must be disposed
+					if (disposeJrContext)
+						jContext.dispose();
+					return null;
+				}
 			}
-		}
-		if (jContext != null) {
-			JrxmlPublishAction publishAction = new JrxmlPublishAction(1, null);
-			publishAction.setJrConfig(jContext);
-			publishAction.run();
-			// Check if the context was created internally and must be disposed
-			if (disposeJrContext) {
-				jContext.dispose();
-			}
-			return null;
-		}
-		// }
-		PublishFile2ServerWizard wizard = new PublishFile2ServerWizard(file, 1);
-		WizardDialog dialog = new PersistentLocationWizardDialog(UIUtils.getShell(), wizard);
-		if (dialog.open() == Dialog.OK) {
-
+			PublishFile2ServerWizard wizard = new PublishFile2ServerWizard(file, 1);
+			new PersistentLocationWizardDialog(UIUtils.getShell(), wizard).open();
 		}
 		return null;
 	}

@@ -141,29 +141,6 @@
      <handler
            class="com.jaspersoft.studio.server.publish.PublishHandler"
            commandId="com.jaspersoft.studio.server.publish">
-		<activeWhen>  
-				<with variable="selection"> 
-					<iterate operator="or"> 
-						<or>
-							<instanceof value="org.eclipse.core.resources.IFile"/> 
-							 <with variable="activeEditorInput">
-			      		<instanceof value="org.eclipse.ui.IFileEditorInput"/> 
-			    		</with> 
-			    		
-           <instanceof value="com.jaspersoft.studio.components.table.editor.TableEditor"/>
-           <instanceof value="com.jaspersoft.studio.components.crosstab.editor.CrosstabEditor" />
-           <instanceof
-                 value="com.jaspersoft.studio.components.list.editor.ListEditor">
-           </instanceof>
-		    		</or>
-					</iterate> 
-				</with> 
-		</activeWhen>
-    <enabledWhen>
-       <with variable="selection">
-            <count value="1"/> 
-       </with>
-    </enabledWhen> 
      </handler>
   </extension>
   <extension
