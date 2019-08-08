@@ -52,7 +52,9 @@ public class SubreportParameterEditor extends ParameterEditor {
 		super();
 		this.jd = subReport.getJasperDesign();
 		this.subReport = subReport;
-		preloadReport(subReport);
+		//actually this is not used because SubreportParameterPage is no longer using the subreport design to read the
+		//parameters because of #JSS-1751
+		//preloadReport(subReport);
 	}
 	
 	@Override

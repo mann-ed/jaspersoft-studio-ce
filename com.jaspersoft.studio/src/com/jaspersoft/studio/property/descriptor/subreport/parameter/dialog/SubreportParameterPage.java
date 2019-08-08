@@ -22,7 +22,9 @@ import com.jaspersoft.studio.property.descriptor.parameter.dialog.ComboInputPara
 import com.jaspersoft.studio.property.descriptor.parameter.dialog.ComboParametersPage;
 import com.jaspersoft.studio.property.descriptor.parameter.dialog.GenericJSSParameter;
 import com.jaspersoft.studio.property.descriptor.parameter.dialog.InputParameterDialog;
+import com.jaspersoft.studio.utils.ModelUtils;
 
+import net.sf.jasperreports.engine.JRDataset;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JRDesignSubreportParameter;
@@ -61,9 +63,17 @@ public class SubreportParameterPage extends ComboParametersPage {
 		bMaster.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (subreportDesign == null)
+				/* this code read the parameter from the subreport but it is no longer used because of #JSS-1751
+				 * if (subreportDesign == null)
 					return;
 				for (JRParameter prm : subreportDesign.getMainDataset().getParameters()) {
+				*/
+				JRDataset dataset = ModelUtils.getFirstDatasetInHierarchy(subreportModel);
+				if (dataset == null && jd != null) {
+					dataset = jd.getMainDataset();
+				}
+				if (dataset == null) return;
+				for (JRParameter prm : dataset.getParameters()) {
 					if (prm.isSystemDefined())
 						continue;
 					String name = prm.getName();
@@ -99,13 +109,28 @@ public class SubreportParameterPage extends ComboParametersPage {
 		for(GenericJSSParameter param : values){
 				usedParams.add(param.getName());
 		}
-		if (subreportDesign != null)
+		/*this code read the parameter from the subreport but it is no longer used because of #JSS-1751
+		 * if (subreportDesign != null)
 			for (JRParameter param : subreportDesign.getParameters()) {
 				if (!usedParams.contains(param.getName())) {
 					if (param.getName() != null)
 						result.add(param.getName());
 				}
 			}
+			*/
+		JRDataset dataset = ModelUtils.getFirstDatasetInHierarchy(subreportModel);
+		if (dataset == null && jd != null) {
+			dataset = jd.getMainDataset();
+		}
+		if (dataset != null){
+			for (JRParameter param :dataset.getParameters()){
+				if (!usedParams.contains(param.getName())){
+					if (param.getName() != null) {
+						result.add(param.getName());
+					}
+				}
+			}
+		}
 		Collections.sort(result);
 		return result;
 	}

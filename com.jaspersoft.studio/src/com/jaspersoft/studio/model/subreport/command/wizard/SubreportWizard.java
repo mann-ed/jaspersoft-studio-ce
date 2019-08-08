@@ -4,19 +4,13 @@
  ******************************************************************************/
 package com.jaspersoft.studio.model.subreport.command.wizard;
 
-import java.io.File;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 
@@ -25,32 +19,18 @@ import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.subreport.MSubreport;
 import com.jaspersoft.studio.property.dataset.wizard.WizardConnectionPage;
 import com.jaspersoft.studio.property.descriptor.parameter.dialog.GenericJSSParameter;
-import com.jaspersoft.studio.utils.ExpressionUtil;
 import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.wizards.JSSWizard;
 import com.jaspersoft.studio.wizards.ReportNewWizard;
 import com.jaspersoft.studio.wizards.datasource.StaticWizardDataSourcePage;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.util.FileExtension;
 import net.sf.jasperreports.eclipse.util.FileUtils;
-import net.sf.jasperreports.eclipse.util.Misc;
-import net.sf.jasperreports.eclipse.util.StringUtils;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExpression;
-import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.JRSubreportParameter;
 import net.sf.jasperreports.engine.design.JRDesignDatasetRun;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignSubreport;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import net.sf.jasperreports.repo.RepositoryContext;
-import net.sf.jasperreports.repo.RepositoryUtil;
-import net.sf.jasperreports.repo.SimpleRepositoryContext;
-import net.sf.jasperreports.repo.SimpleRepositoryResourceContext;
 
 public class SubreportWizard extends JSSWizard {
 	private NewSubreportPage step0;
@@ -113,8 +93,12 @@ public class SubreportWizard extends JSSWizard {
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == step3) {
-			try {
-				step3.setJasperDesign(getConfig().getJasperDesign());
+		//	try {
+			step3.setJasperDesign(getConfig().getJasperDesign());
+				/*
+				this code read the parameter from the subreport but it is no longer used because of #JSS-1751
+			
+				step3.setJasperDesign(null);
 				getContainer().run(true, true, new IRunnableWithProgress() {
 
 					@Override
@@ -170,15 +154,15 @@ public class SubreportWizard extends JSSWizard {
 								r = (JRReport) JRLoader.loadObject(jrConf, in);
 							}
 						}
-						
+						step3.setJasperDesign(r);
 					}
 
-				});
-			} catch (InvocationTargetException e) {
+				});*/
+			/*} catch (InvocationTargetException e) {
 				UIUtils.showError(e.getCause());
 			} catch (InterruptedException e) {
 				UIUtils.showError(e.getCause());
-			}
+			}*/
 		}
 		return super.getNextPage(page);
 
