@@ -6,6 +6,7 @@ package com.jaspersoft.studio.server.publish.wizard;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -39,12 +40,13 @@ import com.jaspersoft.studio.utils.SelectionHelper;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.ui.validator.IDStringValidator;
+import net.sf.jasperreports.eclipse.util.Misc;
 
 public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 	private JasperReportsConfiguration jrConfig;
 	private int startPage = 0;
-	private IFile file;
-	private FileSelectionPage page0;
+	private List<IFile> file;
 	private RFileLocationPage page1;
 	private ISelection selection;
 
@@ -54,20 +56,20 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 		setNeedsProgressMonitor(true);
 	}
 
-	public PublishFile2ServerWizard(IFile file, int page) {
+	public PublishFile2ServerWizard(List<IFile> file, int page) {
 		this();
 		this.file = file;
 		this.startPage = page;
 	}
 
 	private void init() {
-		if (file == null && selection != null && selection instanceof IStructuredSelection) {
+		if (file.isEmpty() && selection != null && selection instanceof IStructuredSelection) {
 			Object obj = ((IStructuredSelection) selection).getFirstElement();
 			if (obj instanceof IFile)
-				file = (IFile) obj;
+				file.add((IFile) obj);
 		}
 		if (jrConfig == null)
-			jrConfig = JasperReportsConfiguration.getDefaultJRConfig(file);
+			jrConfig = JasperReportsConfiguration.getDefaultJRConfig(file.get(0));
 	}
 
 	@Override
@@ -82,8 +84,8 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 	@Override
 	public void addPages() {
 		init();
-		if (file == null) {
-			page0 = new FileSelectionPage(jrConfig);
+		if (file.isEmpty()) {
+			FileSelectionPage page0 = new FileSelectionPage(jrConfig);
 			addPage(page0);
 		}
 		page1 = new RFileLocationPage(jrConfig);
@@ -107,34 +109,45 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 						monitor.beginTask("Saving", IProgressMonitor.UNKNOWN);
 						AFileResource fres = page1.getSelectedNode();
 						if (fres != null) {
-							String ext = file.getFileExtension().toLowerCase();
 							ResourceDescriptor rd = fres.getValue();
-							if (ext.equalsIgnoreCase("xml"))
-								rd.setWsType(ResourceDescriptor.TYPE_XML_FILE);
-							else if (ext.equalsIgnoreCase("jar") || ext.equalsIgnoreCase("zip"))
-								rd.setWsType(ResourceDescriptor.TYPE_CLASS_JAR);
-							else if (ext.equalsIgnoreCase("jrtx"))
-								rd.setWsType(ResourceDescriptor.TYPE_STYLE_TEMPLATE);
-							else if (ext.equalsIgnoreCase("css"))
-								rd.setWsType(ResourceDescriptor.TYPE_CSS_FILE);
-							else if (ext.equalsIgnoreCase("json"))
-								rd.setWsType(ResourceDescriptor.TYPE_JSON_FILE);
-							else if (ext.equalsIgnoreCase("properties"))
-								rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
-							else if (ext.equalsIgnoreCase("ttf") || ext.equalsIgnoreCase("eot")
-									|| ext.equalsIgnoreCase("woff"))
-								rd.setWsType(ResourceDescriptor.TYPE_FONT);
-							else if (ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif")
-									|| ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg")
-									|| ext.equalsIgnoreCase("bmp") || ext.equalsIgnoreCase("tiff"))
-								rd.setWsType(ResourceDescriptor.TYPE_IMAGE);
-							else if (fres.getParent() instanceof MReportUnit)
-								rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
+							String purl = rd.getParentFolder();
+							boolean first = true;
+							for (IFile f : file) {
+								monitor.subTask(f.toString());
+								if (!first) {
+									rd.setName(IDStringValidator.safeChar(f.getName()));
+									rd.setLabel(f.getName());
+									rd.setUriString(purl + "/" + rd.getName());
+								}
 
-							fres.setFile(new File(file.getRawLocationURI()));
-							WSClientHelper.save(monitor, fres);
+								String ext = f.getFileExtension().toLowerCase();
+								if (ext.equalsIgnoreCase("xml"))
+									rd.setWsType(ResourceDescriptor.TYPE_XML_FILE);
+								else if (ext.equalsIgnoreCase("jar") || ext.equalsIgnoreCase("zip"))
+									rd.setWsType(ResourceDescriptor.TYPE_CLASS_JAR);
+								else if (ext.equalsIgnoreCase("jrtx"))
+									rd.setWsType(ResourceDescriptor.TYPE_STYLE_TEMPLATE);
+								else if (ext.equalsIgnoreCase("css"))
+									rd.setWsType(ResourceDescriptor.TYPE_CSS_FILE);
+								else if (ext.equalsIgnoreCase("json"))
+									rd.setWsType(ResourceDescriptor.TYPE_JSON_FILE);
+								else if (ext.equalsIgnoreCase("properties"))
+									rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
+								else if (ext.equalsIgnoreCase("ttf") || ext.equalsIgnoreCase("eot")
+										|| ext.equalsIgnoreCase("woff"))
+									rd.setWsType(ResourceDescriptor.TYPE_FONT);
+								else if (ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif")
+										|| ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg")
+										|| ext.equalsIgnoreCase("bmp") || ext.equalsIgnoreCase("tiff"))
+									rd.setWsType(ResourceDescriptor.TYPE_IMAGE);
+								else if (fres.getParent() instanceof MReportUnit)
+									rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
 
-							PublishUtil.savePath(file, fres);
+								fres.setFile(new File(f.getRawLocationURI()));
+								WSClientHelper.save(monitor, fres);
+								PublishUtil.savePath(f, fres);
+								first = false;
+							}
 							INode n = fres.getRoot();
 							if (n != null && n instanceof MServerProfile) {
 								MServerProfile msp = ServerManager

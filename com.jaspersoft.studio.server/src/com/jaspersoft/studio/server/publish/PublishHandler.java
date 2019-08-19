@@ -5,6 +5,8 @@
 package com.jaspersoft.studio.server.publish;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipFile;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -26,6 +28,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.part.MultiPageEditorPart;
 
 import com.jaspersoft.studio.editor.AbstractJRXMLEditor;
 import com.jaspersoft.studio.server.messages.Messages;
@@ -44,24 +47,24 @@ public class PublishHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IFile file = null;
+		List<IFile> file = new ArrayList<>();
 		JasperReportsConfiguration jContext = null;
 		boolean disposeJrContext = false;
 		ISelection sel = HandlerUtil.getCurrentSelection(event);
 		if (sel instanceof StructuredSelection) {
 			Object obj = ((StructuredSelection) sel).getFirstElement();
 			if (obj instanceof IFile) {
-				file = (IFile) obj;
+				file.add((IFile) obj);
 			} else if (obj instanceof JarPackageFragmentRoot) {
 				try {
 					ZipFile zf = ((JarPackageFragmentRoot) obj).getJar();
 					if (zf != null)
-						file = getFileFromURI(new URI(zf.getName()));
+						file.add(getFileFromURI(new URI(zf.getName())));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			} else if (obj instanceof CompilationUnit) {
-				file = getFileFromURI(((CompilationUnit) obj).getPath().toFile().toURI());
+				file.add(getFileFromURI(((CompilationUnit) obj).getPath().toFile().toURI()));
 			} else if (obj instanceof IProject || obj instanceof IFolder || obj instanceof IPackageFragment
 					|| obj instanceof PackageFragmentRoot || obj instanceof ClassPathContainer) {
 				UIUtils.showInformation(
@@ -69,29 +72,36 @@ public class PublishHandler extends AbstractHandler {
 				return null;
 			}
 		}
-		if (file == null) {
+		if (file.isEmpty()) {
 			IEditorInput ei = com.jaspersoft.studio.utils.compatibility.HandlerUtil.getActiveEditorInput(event);
 			if (ei instanceof IFileEditorInput) {
-				file = ((IFileEditorInput) ei).getFile();
+				IFile f = ((IFileEditorInput) ei).getFile();
 				IEditorPart ep = HandlerUtil.getActiveEditor(event);
-				if (ep instanceof AbstractJRXMLEditor)
+				if (ep instanceof AbstractJRXMLEditor) {
 					try {
-						jContext = ((AbstractJRXMLEditor) ep).getJrContext(file);
+						jContext = ((AbstractJRXMLEditor) ep).getJrContext(f);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				} else if (ep instanceof MultiPageEditorPart) {
+					MultiPageEditorPart mep = (MultiPageEditorPart) ep;
+					Object obj = mep.getAdapter(IFile.class);
+					if (obj instanceof List)
+						file.addAll((List<IFile>) obj);
+				}
 			}
 		}
-		if (file == null)
+		if (file.isEmpty())
 			UIUtils.showInformation(Messages.PublishHandler_0);
 		else {
-			String ext = file.getFileExtension();
+			IFile f = file.get(0);
+			String ext = f.getFileExtension();
 			if (ext.equals(FileExtension.JRXML) || ext.equals(FileExtension.JASPER) || Misc.isNullOrEmpty(ext)) {
 				if (jContext == null) {
-					jContext = JasperReportsConfiguration.getDefaultJRConfig(file);
+					jContext = JasperReportsConfiguration.getDefaultJRConfig(f);
 					disposeJrContext = true;
 					try {
-						jContext.setJasperDesign(JRXMLUtils.getJasperDesign(jContext, file.getContents(), null));
+						jContext.setJasperDesign(JRXMLUtils.getJasperDesign(jContext, f.getContents(), null));
 					} catch (Exception e) {
 						e.printStackTrace();
 						jContext.dispose();

@@ -69,265 +69,262 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 /**
  * Multi-page editor for editing resource bundles.
  */
-public abstract class AbstractMessagesEditor extends MultiPageEditorPart
-        implements IGotoMarker, IMessagesEditor {
+public abstract class AbstractMessagesEditor extends MultiPageEditorPart implements IGotoMarker, IMessagesEditor {
 
-    /** Editor ID, as defined in plugin.xml. */
-    public static final String EDITOR_ID = "org.eclilpse.babel.editor.editor.MessagesEditor"; //$NON-NLS-1$
+	/** Editor ID, as defined in plugin.xml. */
+	public static final String EDITOR_ID = "org.eclilpse.babel.editor.editor.MessagesEditor"; //$NON-NLS-1$
 
-    protected String selectedKey;
-    protected List<IMessagesEditorChangeListener> changeListeners = new ArrayList<IMessagesEditorChangeListener>(
-            2);
+	protected String selectedKey;
+	protected List<IMessagesEditorChangeListener> changeListeners = new ArrayList<IMessagesEditorChangeListener>(2);
 
-    /** MessagesBundle group. */
-    protected MessagesBundleGroup messagesBundleGroup;
+	/** MessagesBundle group. */
+	protected MessagesBundleGroup messagesBundleGroup;
 
-    /** Page with key tree and text fields for all locales. */
-    protected I18NPage i18nPage;
-    protected final List<Locale> localesIndex = new ArrayList<Locale>();
-    protected final List<ITextEditor> textEditorsIndex = new ArrayList<ITextEditor>();
+	/** Page with key tree and text fields for all locales. */
+	protected I18NPage i18nPage;
+	protected final List<Locale> localesIndex = new ArrayList<Locale>();
+	protected final List<ITextEditor> textEditorsIndex = new ArrayList<ITextEditor>();
 
-    protected MessagesBundleGroupOutline outline;
+	protected MessagesBundleGroupOutline outline;
 
-    protected MessagesEditorMarkers markers;
+	protected MessagesEditorMarkers markers;
 
-    protected AbstractKeyTreeModel keyTreeModel;
+	protected AbstractKeyTreeModel keyTreeModel;
 
-    protected IFile file; // init
+	protected IFile file; // init
 
-    protected boolean updateSelectedKey;
+	protected boolean updateSelectedKey;
 
-    /**
-     * Creates a multi-page editor example.
-     */
-    public AbstractMessagesEditor() {
-        super();
-        outline = new MessagesBundleGroupOutline(this);
-    }
+	/**
+	 * Creates a multi-page editor example.
+	 */
+	public AbstractMessagesEditor() {
+		super();
+		outline = new MessagesBundleGroupOutline(this);
+	}
 
-    public MessagesEditorMarkers getMarkers() {
-        return markers;
-    }
+	public MessagesEditorMarkers getMarkers() {
+		return markers;
+	}
 
-    /**
-     * The <code>MultiPageEditorExample</code> implementation of this method
-     * checks that the input is an instance of <code>IFileEditorInput</code> of 
-     * <code>FileStoreEditorInput</code> for the external file. In case of external
-     * file a link is created into an appropriate project folder.
-     */
-    @Override
-    public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
-        file = null;
-    	if (editorInput instanceof IFileEditorInput) {
-            file = ((IFileEditorInput) editorInput).getFile();
-            IProject p = file.getProject();
-            if (p != null && p.isAccessible()) {
-                ToggleNatureAction.addOrRemoveNatureOnProject(p, true, true);
-            }
-        } else if (editorInput instanceof FileStoreEditorInput) {
-        	FileStoreEditorInput input = (FileStoreEditorInput)editorInput;
-        	file = createLinkedResource(input.getURI().getRawPath());
-        }
-    	
-    	if (file != null){    	
-	        try {
-	            messagesBundleGroup = MessagesBundleGroupFactory.createBundleGroup(site, file);
-	        } catch (MessageException e) {
-	            throw new PartInitException("Cannot create bundle group.", e); //$NON-NLS-1$
-	        }
-	        messagesBundleGroup.addMessagesBundleGroupListener(getMsgBundleGroupListner());
-	        markers = new MessagesEditorMarkers(messagesBundleGroup);
-	        setPartName(messagesBundleGroup.getName());
-	        setTitleImage(UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
-	        closeIfAreadyOpen(site, file);
-	        super.init(site, editorInput);
-	        keyTreeModel = new AbstractKeyTreeModel(messagesBundleGroup);   
-	        initRAP();
-    	} else {
-            throw new PartInitException("Unable to load the selected file"); //$NON-NLS-1$
-        }
-    }
-    
-    /**
-     * Create a project for the external files called External Files
-     * and put a link to the external resource inside there. The project
-     * is created only if it dosen't exist and any previous link to the same
-     * file is deleted before to create the new one
-     * 
-     * @param fileName Absolute path of the file on the disk
-     * @return an IFile resource, type link, to the external file or null if 
-     * for some reason it was not possible to create the link.
-     */
-    private IFile createLinkedResource(String fileName){
-    	IFile file = null;
-    	try {
-		    IWorkspace ws = ResourcesPlugin.getWorkspace();
-		    IProject project = ws.getRoot().getProject("External Files");
-		    if (!project.exists())
-		        project.create(null);
-		    if (!project.isOpen())
-		        project.open(null);
-		    IPath location = new Path(fileName);
-		    file = project.getFile(location.lastSegment());
-		    if (file.exists()) file.delete(true, null);
+	/**
+	 * The <code>MultiPageEditorExample</code> implementation of this method checks
+	 * that the input is an instance of <code>IFileEditorInput</code> of
+	 * <code>FileStoreEditorInput</code> for the external file. In case of external
+	 * file a link is created into an appropriate project folder.
+	 */
+	@Override
+	public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
+		file = null;
+		if (editorInput instanceof IFileEditorInput) {
+			file = ((IFileEditorInput) editorInput).getFile();
+			IProject p = file.getProject();
+			if (p != null && p.isAccessible()) {
+				ToggleNatureAction.addOrRemoveNatureOnProject(p, true, true);
+			}
+		} else if (editorInput instanceof FileStoreEditorInput) {
+			FileStoreEditorInput input = (FileStoreEditorInput) editorInput;
+			file = createLinkedResource(input.getURI().getRawPath());
+		}
+
+		if (file != null) {
+			try {
+				messagesBundleGroup = MessagesBundleGroupFactory.createBundleGroup(site, file);
+			} catch (MessageException e) {
+				throw new PartInitException("Cannot create bundle group.", e); //$NON-NLS-1$
+			}
+			messagesBundleGroup.addMessagesBundleGroupListener(getMsgBundleGroupListner());
+			markers = new MessagesEditorMarkers(messagesBundleGroup);
+			setPartName(messagesBundleGroup.getName());
+			setTitleImage(UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
+			closeIfAreadyOpen(site, file);
+			super.init(site, editorInput);
+			keyTreeModel = new AbstractKeyTreeModel(messagesBundleGroup);
+			initRAP();
+		} else {
+			throw new PartInitException("Unable to load the selected file"); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Create a project for the external files called External Files and put a link
+	 * to the external resource inside there. The project is created only if it
+	 * dosen't exist and any previous link to the same file is deleted before to
+	 * create the new one
+	 * 
+	 * @param fileName Absolute path of the file on the disk
+	 * @return an IFile resource, type link, to the external file or null if for
+	 *         some reason it was not possible to create the link.
+	 */
+	private IFile createLinkedResource(String fileName) {
+		IFile file = null;
+		try {
+			IWorkspace ws = ResourcesPlugin.getWorkspace();
+			IProject project = ws.getRoot().getProject("External Files");
+			if (!project.exists())
+				project.create(null);
+			if (!project.isOpen())
+				project.open(null);
+			IPath location = new Path(fileName);
+			file = project.getFile(location.lastSegment());
+			if (file.exists())
+				file.delete(true, null);
 			file.createLink(location, IResource.NONE, null);
 		} catch (CoreException e) {
 			e.printStackTrace();
 			file = null;
 		}
-	    return file;
-    }
+		return file;
+	}
 
+	/**
+	 * Creates the pages of the multi-page editor.
+	 */
+	@Override
+	protected void createPages() {
+		// Create I18N page
+		i18nPage = new I18NPage(getContainer(), SWT.NONE, this);
+		int index = addPage(i18nPage);
+		setPageText(index, Messages.editor_properties);
+		setPageImage(index, UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
 
+		// Create text editor pages for each locales
+		Locale[] locales = messagesBundleGroup.getLocales();
+		// first: sort the locales.
+		UIUtils.sortLocales(locales);
+		// second: filter+sort them according to the filter preferences.
+		locales = UIUtils.filterLocales(locales);
+		for (int i = 0; i < locales.length; i++) {
+			Locale locale = locales[i];
+			MessagesBundle messagesBundle = (MessagesBundle) messagesBundleGroup.getMessagesBundle(locale);
+			createMessagesBundlePage(messagesBundle);
+		}
+	}
 
-    /**
-     * Creates the pages of the multi-page editor.
-     */
-    @Override
-    protected void createPages() {
-        // Create I18N page
-        i18nPage = new I18NPage(getContainer(), SWT.NONE, this);
-        int index = addPage(i18nPage);
-        setPageText(index, Messages.editor_properties);
-        setPageImage(index, UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
+	/**
+	 * Creates a new text editor for the messages bundle, which gets added to a new
+	 * page
+	 */
+	protected void createMessagesBundlePage(MessagesBundle messagesBundle) {
+		try {
+			IMessagesResource resource = messagesBundle.getResource();
+			final TextEditor textEditor = (TextEditor) resource.getSource();
+			int index = addPage(textEditor, textEditor.getEditorInput());
+			setPageText(index, UIUtils.getDisplayName(messagesBundle.getLocale()));
+			setPageImage(index, UIUtils.getImage(UIUtils.IMAGE_PROPERTIES_FILE));
+			localesIndex.add(messagesBundle.getLocale());
+			textEditorsIndex.add(textEditor);
+		} catch (PartInitException e) {
+			ErrorDialog.openError(getSite().getShell(), "Error creating text editor page.", //$NON-NLS-1$
+					null, e.getStatus());
+		}
+	}
 
-        // Create text editor pages for each locales
-        Locale[] locales = messagesBundleGroup.getLocales();
-        // first: sort the locales.
-        UIUtils.sortLocales(locales);
-        // second: filter+sort them according to the filter preferences.
-        locales = UIUtils.filterLocales(locales);
-        for (int i = 0; i < locales.length; i++) {
-            Locale locale = locales[i];
-            MessagesBundle messagesBundle = (MessagesBundle) messagesBundleGroup.getMessagesBundle(locale);
-            createMessagesBundlePage(messagesBundle);
-        }
-    }
+	/**
+	 * Adds a new messages bundle to an opened messages editor. Creates a new text
+	 * edtor page and a new entry in the i18n page for the given locale and messages
+	 * bundle.
+	 */
+	protected void addMessagesBundle(MessagesBundle messagesBundle) {
+		createMessagesBundlePage(messagesBundle);
+		i18nPage.addI18NEntry(messagesBundle.getLocale());
+	}
 
-    /**
-     * Creates a new text editor for the messages bundle, which gets added to a new page
-     */
-    protected void createMessagesBundlePage(MessagesBundle messagesBundle) {
-        try {
-            IMessagesResource resource = messagesBundle.getResource();
-            final TextEditor textEditor = (TextEditor) resource.getSource();
-            int index = addPage(textEditor, textEditor.getEditorInput());
-            setPageText(index,
-                    UIUtils.getDisplayName(messagesBundle.getLocale()));
-            setPageImage(index, UIUtils.getImage(UIUtils.IMAGE_PROPERTIES_FILE));
-            localesIndex.add(messagesBundle.getLocale());
-            textEditorsIndex.add(textEditor);            
-        } catch (PartInitException e) {
-            ErrorDialog.openError(getSite().getShell(),
-                    "Error creating text editor page.", //$NON-NLS-1$
-                    null, e.getStatus());
-        }
-    }
+	/**
+	 * Removes the text editor page + the entry from the i18n page of the given
+	 * locale and messages bundle.
+	 */
+	protected void removeMessagesBundle(MessagesBundle messagesBundle) {
+		IMessagesResource resource = messagesBundle.getResource();
+		final TextEditor textEditor = (TextEditor) resource.getSource();
+		// index + 1 because of i18n page
+		int pageIndex = textEditorsIndex.indexOf(textEditor) + 1;
+		removePage(pageIndex);
 
-    /**
-     * Adds a new messages bundle to an opened messages editor. Creates a new text edtor page
-     * and a new entry in the i18n page for the given locale and messages bundle.
-     */
-    protected void addMessagesBundle(MessagesBundle messagesBundle) {
-        createMessagesBundlePage(messagesBundle);
-        i18nPage.addI18NEntry(messagesBundle.getLocale());
-    }
-    
-    /**
-     * Removes the text editor page + the entry from the i18n page of the given locale and messages bundle.
-     */
-    protected void removeMessagesBundle(MessagesBundle messagesBundle) {
-        IMessagesResource resource = messagesBundle.getResource();
-        final TextEditor textEditor = (TextEditor) resource.getSource();
-        // index + 1 because of i18n page
-        int pageIndex = textEditorsIndex.indexOf(textEditor) + 1;
-        removePage(pageIndex);
+		textEditorsIndex.remove(textEditor);
+		localesIndex.remove(messagesBundle.getLocale());
 
-        textEditorsIndex.remove(textEditor);
-        localesIndex.remove(messagesBundle.getLocale());
+		textEditor.dispose();
 
-        textEditor.dispose();
+		// remove entry from i18n page
+		i18nPage.removeI18NEntry(messagesBundle.getLocale());
+	}
 
-        // remove entry from i18n page
-        i18nPage.removeI18NEntry(messagesBundle.getLocale());        
-    }
+	/**
+	 * Called when the editor's pages need to be reloaded. For example when the
+	 * filters of locale is changed.
+	 * <p>
+	 * Currently this only reloads the index page. TODO: remove and add the new
+	 * locales? it actually looks quite hard to do.
+	 * </p>
+	 */
+	public void reloadDisplayedContents(boolean showFirstPage) {
+		super.removePage(0);
+		int currentlyActivePage = 0;
+		if (!showFirstPage)
+			currentlyActivePage = super.getActivePage();
+		changeListeners.clear();
+		i18nPage.dispose();
+		i18nPage = new I18NPage(getContainer(), SWT.NONE, this);
+		// keyTreeModel.dispose();
+		// keyTreeModel = new AbstractKeyTreeModel(messagesBundleGroup);
+		super.addPage(0, i18nPage);
+		setPageText(0, Messages.editor_properties);
+		setPageImage(0, UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
+		if (currentlyActivePage == 0) {
+			super.setActivePage(currentlyActivePage);
+		}
+	}
 
-    /**
-     * Called when the editor's pages need to be reloaded. For example when the
-     * filters of locale is changed.
-     * <p>
-     * Currently this only reloads the index page. TODO: remove and add the new
-     * locales? it actually looks quite hard to do.
-     * </p>
-     */
-    public void reloadDisplayedContents(boolean showFirstPage) {
-        super.removePage(0);
-        int currentlyActivePage = 0;
-        if (!showFirstPage) currentlyActivePage = super.getActivePage();
-        changeListeners.clear();
-        i18nPage.dispose();
-        i18nPage = new I18NPage(getContainer(), SWT.NONE, this);
-        //keyTreeModel.dispose();
-       // keyTreeModel = new AbstractKeyTreeModel(messagesBundleGroup);
-        super.addPage(0, i18nPage);
-        setPageText(0, Messages.editor_properties);
-        setPageImage(0, UIUtils.getImage(UIUtils.IMAGE_RESOURCE_BUNDLE));
-        if (currentlyActivePage == 0) {
-            super.setActivePage(currentlyActivePage);
-        }
-    }
+	/**
+	 * Saves the multi-page editor's document.
+	 */
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		for (ITextEditor textEditor : textEditorsIndex) {
+			textEditor.doSave(monitor);
+		}
 
-    /**
-     * Saves the multi-page editor's document.
-     */
-    @Override
-    public void doSave(IProgressMonitor monitor) {
-        for (ITextEditor textEditor : textEditorsIndex) {
-            textEditor.doSave(monitor);
-        }
+		try { // [alst] remove in near future
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-        try { // [alst] remove in near future
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		updateSelectedKey = true;
 
-        updateSelectedKey = true;
+		RBManager instance = RBManager.getInstance(messagesBundleGroup.getProjectName());
 
-        RBManager instance = RBManager.getInstance(messagesBundleGroup
-                .getProjectName());
+		refreshKeyTreeModel(); // keeps editor and I18NPage in sync
 
-        refreshKeyTreeModel(); // keeps editor and I18NPage in sync
+		instance.fireEditorSaved();
 
-        instance.fireEditorSaved();
+		// // maybe new init?
+	}
 
-        // // maybe new init?
-    }
+	protected void refreshKeyTreeModel() {
+		String selectedKey = getSelectedKey(); // memorize
 
-    protected void refreshKeyTreeModel() {
-        String selectedKey = getSelectedKey(); // memorize
+		if (messagesBundleGroup == null) {
+			messagesBundleGroup = MessagesBundleGroupFactory.createBundleGroup((IEditorSite) getSite(), file);
+		}
 
-        if (messagesBundleGroup == null) {
-            messagesBundleGroup = MessagesBundleGroupFactory.createBundleGroup(
-                    (IEditorSite) getSite(), file);
-        }
+		AbstractKeyTreeModel oldModel = this.keyTreeModel;
+		this.keyTreeModel = new AbstractKeyTreeModel(messagesBundleGroup);
 
-        AbstractKeyTreeModel oldModel = this.keyTreeModel;
-        this.keyTreeModel = new AbstractKeyTreeModel(messagesBundleGroup);
+		for (IMessagesEditorChangeListener listener : changeListeners) {
+			listener.keyTreeModelChanged(oldModel, this.keyTreeModel);
+		}
 
-        for (IMessagesEditorChangeListener listener : changeListeners) {
-            listener.keyTreeModelChanged(oldModel, this.keyTreeModel);
-        }
+		i18nPage.getTreeViewer().expandAll();
 
-        i18nPage.getTreeViewer().expandAll();
+		if (selectedKey != null) {
+			setSelectedKey(selectedKey);
+		}
+	}
 
-        if (selectedKey != null) {
-            setSelectedKey(selectedKey);
-        }
-    }
-    
-    public void updateBundleGroup(){
+	public void updateBundleGroup() {
 		messagesBundleGroup = MessagesBundleGroupFactory.createBundleGroup((IEditorSite) getSite(), file);
 		AbstractKeyTreeModel oldModel = this.keyTreeModel;
 		this.keyTreeModel = new AbstractKeyTreeModel(messagesBundleGroup);
@@ -336,324 +333,308 @@ public abstract class AbstractMessagesEditor extends MultiPageEditorPart
 			listener.keyTreeModelChanged(oldModel, this.keyTreeModel);
 		}
 		i18nPage.getTreeViewer().expandAll();
-    }
+	}
 
-    /**
-     * @see org.eclipse.ui.ISaveablePart#doSaveAs()
-     */
-    @Override
-    public void doSaveAs() {
-        // Save As not allowed.
-    }
+	/**
+	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
+	 */
+	@Override
+	public void doSaveAs() {
+		// Save As not allowed.
+	}
 
-    /**
-     * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
-     */
-    @Override
-    public boolean isSaveAsAllowed() {
-        return false;
-    }
+	/**
+	 * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
+	 */
+	@Override
+	public boolean isSaveAsAllowed() {
+		return false;
+	}
 
-    /**
-     * Change current page based on locale. If there is no editors associated
-     * with current locale, do nothing.
-     * 
-     * @param locale
-     *            locale used to identify the page to change to
-     */
-    public void setActivePage(Locale locale) {
-        int index = localesIndex.indexOf(locale);
-        if (index > -1) {
-            setActivePage(index + 1);
-        }
-    }
+	/**
+	 * Change current page based on locale. If there is no editors associated with
+	 * current locale, do nothing.
+	 * 
+	 * @param locale locale used to identify the page to change to
+	 */
+	public void setActivePage(Locale locale) {
+		int index = localesIndex.indexOf(locale);
+		if (index > -1) {
+			setActivePage(index + 1);
+		}
+	}
 
-    /**
-     * @see org.eclipse.ui.ide.IGotoMarker#gotoMarker(org.eclipse.core.resources.IMarker)
-     */
-    public void gotoMarker(IMarker marker) {
-        IResource resource = marker.getResource();
-        Locale[] locales = messagesBundleGroup.getLocales();
-        for (int i = 0; i < locales.length; i++) {
-            IMessagesResource messagesResource = ((MessagesBundle) messagesBundleGroup
-                    .getMessagesBundle(locales[i])).getResource();
-            if (messagesResource instanceof EclipsePropertiesEditorResource) {
-                EclipsePropertiesEditorResource propFile = (EclipsePropertiesEditorResource) messagesResource;
-                if (resource.equals(propFile.getResource())) {
-                    // ok we got the locale.
-                    // try to open the master i18n page and select the
-                    // corresponding key.
-                    try {
-                        String key = (String) marker
-                                .getAttribute(IMarker.LOCATION);
-                        if (key != null && key.length() > 0) {
-                            getI18NPage().selectLocale(locales[i]);
-                            setActivePage(0);
-                            setSelectedKey(key);
-                            return;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();// something better.s
-                    }
-                    // it did not work... fall back to the text editor.
-                    setActivePage(locales[i]);
-                    IDE.gotoMarker((IEditorPart) propFile.getSource(), marker);
-                    break;
-                }
-            }
-        }
-        // }
-    }
+	/**
+	 * @see org.eclipse.ui.ide.IGotoMarker#gotoMarker(org.eclipse.core.resources.IMarker)
+	 */
+	public void gotoMarker(IMarker marker) {
+		IResource resource = marker.getResource();
+		Locale[] locales = messagesBundleGroup.getLocales();
+		for (int i = 0; i < locales.length; i++) {
+			IMessagesResource messagesResource = ((MessagesBundle) messagesBundleGroup.getMessagesBundle(locales[i]))
+					.getResource();
+			if (messagesResource instanceof EclipsePropertiesEditorResource) {
+				EclipsePropertiesEditorResource propFile = (EclipsePropertiesEditorResource) messagesResource;
+				if (resource.equals(propFile.getResource())) {
+					// ok we got the locale.
+					// try to open the master i18n page and select the
+					// corresponding key.
+					try {
+						String key = (String) marker.getAttribute(IMarker.LOCATION);
+						if (key != null && key.length() > 0) {
+							getI18NPage().selectLocale(locales[i]);
+							setActivePage(0);
+							setSelectedKey(key);
+							return;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();// something better.s
+					}
+					// it did not work... fall back to the text editor.
+					setActivePage(locales[i]);
+					IDE.gotoMarker((IEditorPart) propFile.getSource(), marker);
+					break;
+				}
+			}
+		}
+		// }
+	}
 
-    /**
-     * Calculates the contents of page GUI page when it is activated.
-     */
-    @Override
-    protected void pageChange(int newPageIndex) {
-        super.pageChange(newPageIndex);
-        if (newPageIndex != 0) { // if we just want the default page -> == 1
-            setSelection(newPageIndex);
-        } else if (newPageIndex == 0 && updateSelectedKey) {
-            // TODO: find better way
-            for (IMessagesBundle bundle : messagesBundleGroup
-                    .getMessagesBundles()) {
-                RBManager.getInstance(messagesBundleGroup.getProjectName())
-                        .fireResourceChanged(bundle);
-            }
-            updateSelectedKey = false;
-        }
+	/**
+	 * Calculates the contents of page GUI page when it is activated.
+	 */
+	@Override
+	protected void pageChange(int newPageIndex) {
+		super.pageChange(newPageIndex);
+		if (newPageIndex != 0) { // if we just want the default page -> == 1
+			setSelection(newPageIndex);
+		} else if (newPageIndex == 0 && updateSelectedKey) {
+			// TODO: find better way
+			for (IMessagesBundle bundle : messagesBundleGroup.getMessagesBundles()) {
+				RBManager.getInstance(messagesBundleGroup.getProjectName()).fireResourceChanged(bundle);
+			}
+			updateSelectedKey = false;
+		}
 
-        // if (newPageIndex == 0) {
-        // resourceMediator.reloadProperties();
-        // i18nPage.refreshTextBoxes();
-        // }
-    }
+		// if (newPageIndex == 0) {
+		// resourceMediator.reloadProperties();
+		// i18nPage.refreshTextBoxes();
+		// }
+	}
 
-    protected void setSelection(int newPageIndex) {
-        ITextEditor editor = textEditorsIndex.get(--newPageIndex);
-        String selectedKey = getSelectedKey();
-        if (selectedKey != null) {
-            if (editor.getEditorInput() instanceof FileEditorInput) {
-                FileEditorInput input = (FileEditorInput) editor
-                        .getEditorInput();
-                try {
-                    IFile file = input.getFile();
-                    file.refreshLocal(IResource.DEPTH_ZERO, null);
-                    BufferedReader reader = new BufferedReader(
-                            new InputStreamReader(file.getContents()));
-                    String line = "";
-                    int selectionIndex = 0;
-                    boolean found = false;
+	protected void setSelection(int newPageIndex) {
+		ITextEditor editor = textEditorsIndex.get(--newPageIndex);
+		String selectedKey = getSelectedKey();
+		if (selectedKey != null) {
+			if (editor.getEditorInput() instanceof FileEditorInput) {
+				FileEditorInput input = (FileEditorInput) editor.getEditorInput();
+				try {
+					IFile file = input.getFile();
+					file.refreshLocal(IResource.DEPTH_ZERO, null);
+					BufferedReader reader = new BufferedReader(new InputStreamReader(file.getContents()));
+					String line = "";
+					int selectionIndex = 0;
+					boolean found = false;
 
-                    while ((line = reader.readLine()) != null) {
-                        int index = line.indexOf('=');
-                        if (index != -1) {
-                            if (selectedKey.equals(line.substring(0, index)
-                                    .trim())) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        selectionIndex += line.length() + 2; // + \r\n
-                    }
+					while ((line = reader.readLine()) != null) {
+						int index = line.indexOf('=');
+						if (index != -1) {
+							if (selectedKey.equals(line.substring(0, index).trim())) {
+								found = true;
+								break;
+							}
+						}
+						selectionIndex += line.length() + 2; // + \r\n
+					}
 
-                    if (found) {
-                        editor.selectAndReveal(selectionIndex, 0);
-                    }
-                } catch (CoreException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }
+					if (found) {
+						editor.selectAndReveal(selectionIndex, 0);
+					}
+				} catch (CoreException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 
-    }
+	}
 
-    /**
-     * Is the given file a member of this resource bundle.
-     * 
-     * @param file
-     *            file to test
-     * @return <code>true</code> if file is part of bundle
-     */
-    public boolean isBundleMember(IFile file) {
-        // return resourceMediator.isResource(file);
-        return false;
-    }
+	/**
+	 * Is the given file a member of this resource bundle.
+	 * 
+	 * @param file file to test
+	 * @return <code>true</code> if file is part of bundle
+	 */
+	public boolean isBundleMember(IFile file) {
+		// return resourceMediator.isResource(file);
+		return false;
+	}
 
-    protected void closeIfAreadyOpen(IEditorSite site, IFile file) {
-        IWorkbenchPage[] pages = site.getWorkbenchWindow().getPages();
-        for (int i = 0; i < pages.length; i++) {
-            IWorkbenchPage page = pages[i];
-            IEditorReference[] editors = page.getEditorReferences();
-            for (int j = 0; j < editors.length; j++) {
-                IEditorPart editor = editors[j].getEditor(false);
-                if (editor instanceof AbstractMessagesEditor) {
-                    AbstractMessagesEditor rbe = (AbstractMessagesEditor) editor;
-                    if (rbe.isBundleMember(file)) {
-                        page.closeEditor(editor, true);
-                    }
-                }
-            }
-        }
-    }
+	protected void closeIfAreadyOpen(IEditorSite site, IFile file) {
+		IWorkbenchPage[] pages = site.getWorkbenchWindow().getPages();
+		for (int i = 0; i < pages.length; i++) {
+			IWorkbenchPage page = pages[i];
+			IEditorReference[] editors = page.getEditorReferences();
+			for (int j = 0; j < editors.length; j++) {
+				IEditorPart editor = editors[j].getEditor(false);
+				if (editor instanceof AbstractMessagesEditor) {
+					AbstractMessagesEditor rbe = (AbstractMessagesEditor) editor;
+					if (rbe.isBundleMember(file)) {
+						page.closeEditor(editor, true);
+					}
+				}
+			}
+		}
+	}
 
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#dispose()
-     */
-    @Override
-    public void dispose() {
-        for (IMessagesEditorChangeListener listener : changeListeners) {
-            listener.editorDisposed();
-        }
-        if (i18nPage != null) i18nPage.dispose();
-        for (ITextEditor textEditor : textEditorsIndex) {
-            textEditor.dispose();
-        }
+	/**
+	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
+	 */
+	@Override
+	public void dispose() {
+		for (IMessagesEditorChangeListener listener : changeListeners) {
+			listener.editorDisposed();
+		}
+		if (i18nPage != null)
+			i18nPage.dispose();
+		for (ITextEditor textEditor : textEditorsIndex) {
+			textEditor.dispose();
+		}
 
-        disposeRAP();
-    }
+		disposeRAP();
+	}
 
-    /**
-     * @return Returns the selectedKey.
-     */
-    public String getSelectedKey() {
-        return selectedKey;
-    }
+	/**
+	 * @return Returns the selectedKey.
+	 */
+	public String getSelectedKey() {
+		return selectedKey;
+	}
 
-    /**
-     * @param selectedKey
-     *            The selectedKey to set.
-     */
-    public void setSelectedKey(String activeKey) {
-        if ((selectedKey == null && activeKey != null)
-                || (selectedKey != null && activeKey == null)
-                || (selectedKey != null && !selectedKey.equals(activeKey))) {
-            String oldKey = this.selectedKey;
-            this.selectedKey = activeKey;
-            for (IMessagesEditorChangeListener listener : changeListeners) {
-                listener.selectedKeyChanged(oldKey, activeKey);
-            }
-        }
-    }
+	/**
+	 * @param selectedKey The selectedKey to set.
+	 */
+	public void setSelectedKey(String activeKey) {
+		if ((selectedKey == null && activeKey != null) || (selectedKey != null && activeKey == null)
+				|| (selectedKey != null && !selectedKey.equals(activeKey))) {
+			String oldKey = this.selectedKey;
+			this.selectedKey = activeKey;
+			for (IMessagesEditorChangeListener listener : changeListeners) {
+				listener.selectedKeyChanged(oldKey, activeKey);
+			}
+		}
+	}
 
-    public void addChangeListener(IMessagesEditorChangeListener listener) {
-        changeListeners.add(0, listener);
-    }
+	public void addChangeListener(IMessagesEditorChangeListener listener) {
+		changeListeners.add(0, listener);
+	}
 
-    public void removeChangeListener(IMessagesEditorChangeListener listener) {
-        changeListeners.remove(listener);
-    }
+	public void removeChangeListener(IMessagesEditorChangeListener listener) {
+		changeListeners.remove(listener);
+	}
 
-    public Collection<IMessagesEditorChangeListener> getChangeListeners() {
-        return changeListeners;
-    }
+	public Collection<IMessagesEditorChangeListener> getChangeListeners() {
+		return changeListeners;
+	}
 
-    /**
-     * @return Returns the messagesBundleGroup.
-     */
-    public MessagesBundleGroup getBundleGroup() {
-        return messagesBundleGroup;
-    }
+	/**
+	 * @return Returns the messagesBundleGroup.
+	 */
+	public MessagesBundleGroup getBundleGroup() {
+		return messagesBundleGroup;
+	}
 
-    /**
-     * @return Returns the keyTreeModel.
-     */
-    public AbstractKeyTreeModel getKeyTreeModel() {
-        return keyTreeModel;
-    }
+	/**
+	 * @return Returns the keyTreeModel.
+	 */
+	public AbstractKeyTreeModel getKeyTreeModel() {
+		return keyTreeModel;
+	}
 
-    /**
-     * @param keyTreeModel
-     *            The keyTreeModel to set.
-     */
-    public void setKeyTreeModel(AbstractKeyTreeModel newKeyTreeModel) {
-        if ((this.keyTreeModel == null && newKeyTreeModel != null)
-                || (keyTreeModel != null && newKeyTreeModel == null)
-                || (!keyTreeModel.equals(newKeyTreeModel))) {
-            AbstractKeyTreeModel oldModel = this.keyTreeModel;
-            this.keyTreeModel = newKeyTreeModel;
-            for (IMessagesEditorChangeListener listener : changeListeners) {
-                listener.keyTreeModelChanged(oldModel, newKeyTreeModel);
-            }
-        }
-    }
+	/**
+	 * @param keyTreeModel The keyTreeModel to set.
+	 */
+	public void setKeyTreeModel(AbstractKeyTreeModel newKeyTreeModel) {
+		if ((this.keyTreeModel == null && newKeyTreeModel != null) || (keyTreeModel != null && newKeyTreeModel == null)
+				|| (!keyTreeModel.equals(newKeyTreeModel))) {
+			AbstractKeyTreeModel oldModel = this.keyTreeModel;
+			this.keyTreeModel = newKeyTreeModel;
+			for (IMessagesEditorChangeListener listener : changeListeners) {
+				listener.keyTreeModelChanged(oldModel, newKeyTreeModel);
+			}
+		}
+	}
 
-    public I18NPage getI18NPage() {
-        return i18nPage;
-    }
+	public I18NPage getI18NPage() {
+		return i18nPage;
+	}
 
-    /**
-     * one of the SHOW_* constants defined in the
-     * {@link IMessagesEditorChangeListener}
-     */
-    private int showOnlyMissingAndUnusedKeys = IMessagesEditorChangeListener.SHOW_ALL;
+	/**
+	 * one of the SHOW_* constants defined in the
+	 * {@link IMessagesEditorChangeListener}
+	 */
+	private int showOnlyMissingAndUnusedKeys = IMessagesEditorChangeListener.SHOW_ALL;
 
-    /**
-     * @return true when only unused and missing keys should be displayed. flase
-     *         by default.
-     */
-    public int isShowOnlyUnusedAndMissingKeys() {
-        return showOnlyMissingAndUnusedKeys;
-    }
+	/**
+	 * @return true when only unused and missing keys should be displayed. flase by
+	 *         default.
+	 */
+	public int isShowOnlyUnusedAndMissingKeys() {
+		return showOnlyMissingAndUnusedKeys;
+	}
 
-    public void setShowOnlyUnusedMissingKeys(int showFlag) {
-        showOnlyMissingAndUnusedKeys = showFlag;
-        for (IMessagesEditorChangeListener listener : getChangeListeners()) {
-            listener.showOnlyUnusedAndMissingChanged(showFlag);
-        }
-    }
+	public void setShowOnlyUnusedMissingKeys(int showFlag) {
+		showOnlyMissingAndUnusedKeys = showFlag;
+		for (IMessagesEditorChangeListener listener : getChangeListeners()) {
+			listener.showOnlyUnusedAndMissingChanged(showFlag);
+		}
+	}
 
-    @Override
-    public Object getAdapter(Class adapter) {
-    	if (IFile.class.equals(adapter)) {
-    		List<IFile> result = new ArrayList<IFile>();
-    		for(ITextEditor editor : textEditorsIndex) {
-    			IEditorInput editorInput = editor.getEditorInput();
-    			if (editorInput instanceof FileEditorInput) {
-    				result.add(((FileEditorInput)editorInput).getFile());
-    			}
-    			return result;
-    		}
-    	}
-    	
-        Object obj = super.getAdapter(adapter);
-        if (obj == null) {
-            if (IContentOutlinePage.class.equals(adapter)) {
-                return (outline);
-            }
-        }
-        return (obj);
-    }
+	@Override
+	public Object getAdapter(Class adapter) {
+		if (IFile.class.equals(adapter)) {
+			List<IFile> result = new ArrayList<>();
+			for (ITextEditor editor : textEditorsIndex) {
+				IEditorInput editorInput = editor.getEditorInput();
+				if (editorInput instanceof FileEditorInput)
+					result.add(((FileEditorInput) editorInput).getFile());
+			}
+			return result;
+		}
 
-    public ITextEditor getTextEditor(Locale locale) {
-        int index = localesIndex.indexOf(locale);
-        return textEditorsIndex.get(index);
-    }
+		Object obj = super.getAdapter(adapter);
+		if (obj == null && IContentOutlinePage.class.equals(adapter))
+			return (outline);
+		return (obj);
+	}
 
-    // Needed for RAP, otherwise super implementation of getTitleImage always
-    // returns
-    // same image with same device and same session context, and when this
-    // session ends
-    // -> NPE at org.eclipse.swt.graphics.Image.getImageData(Image.java:348)
-    @Override
-    public Image getTitleImage() {
-        // create new image with current display
-        return UIUtils.getImageDescriptor(UIUtils.IMAGE_RESOURCE_BUNDLE)
-                .createImage();
-    }
+	public ITextEditor getTextEditor(Locale locale) {
+		int index = localesIndex.indexOf(locale);
+		return textEditorsIndex.get(index);
+	}
 
-    public void setTitleName(String name) {
-        setPartName(name);
-    }
+	// Needed for RAP, otherwise super implementation of getTitleImage always
+	// returns
+	// same image with same device and same session context, and when this
+	// session ends
+	// -> NPE at org.eclipse.swt.graphics.Image.getImageData(Image.java:348)
+	@Override
+	public Image getTitleImage() {
+		// create new image with current display
+		return UIUtils.getImageDescriptor(UIUtils.IMAGE_RESOURCE_BUNDLE).createImage();
+	}
 
-    abstract public void setEnabled(boolean enabled);
+	public void setTitleName(String name) {
+		setPartName(name);
+	}
 
-    abstract protected void initRAP();
+	abstract public void setEnabled(boolean enabled);
 
-    abstract protected void disposeRAP();
+	abstract protected void initRAP();
 
-    abstract protected IMessagesBundleGroupListener getMsgBundleGroupListner();
+	abstract protected void disposeRAP();
+
+	abstract protected IMessagesBundleGroupListener getMsgBundleGroupListner();
 }
