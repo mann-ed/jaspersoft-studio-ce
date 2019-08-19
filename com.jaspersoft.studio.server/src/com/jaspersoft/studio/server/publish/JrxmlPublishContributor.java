@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FilenameUtils;
@@ -319,7 +320,7 @@ public class JrxmlPublishContributor implements IPublishContributor {
 
 	private void look4Files(String root, String dapath, Set<String> fileNames, List<File> files) {
 		try (Stream<Path> st = Files.walk(Paths.get(root))) {
-			String pattern = "(.*)" + FilenameUtils.separatorsToSystem(dapath) + "_(.*).properties";
+			String pattern = "(.*)" + Pattern.quote(FilenameUtils.separatorsToSystem(dapath)) + "_(.*).properties";
 			st.filter(Files::isRegularFile).forEach(f -> {
 				File file = f.toFile();
 				String fn = file.getAbsolutePath();
