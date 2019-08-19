@@ -608,6 +608,17 @@ public abstract class AbstractMessagesEditor extends MultiPageEditorPart
 
     @Override
     public Object getAdapter(Class adapter) {
+    	if (IFile.class.equals(adapter)) {
+    		List<IFile> result = new ArrayList<IFile>();
+    		for(ITextEditor editor : textEditorsIndex) {
+    			IEditorInput editorInput = editor.getEditorInput();
+    			if (editorInput instanceof FileEditorInput) {
+    				result.add(((FileEditorInput)editorInput).getFile());
+    			}
+    			return result;
+    		}
+    	}
+    	
         Object obj = super.getAdapter(adapter);
         if (obj == null) {
             if (IContentOutlinePage.class.equals(adapter)) {
