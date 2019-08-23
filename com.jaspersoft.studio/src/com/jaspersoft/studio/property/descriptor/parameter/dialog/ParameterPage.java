@@ -296,7 +296,7 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 	/**
 	 * Set the input of the table to the stored value list
 	 */
-	private void fillTable() {
+	protected void fillTable() {
 		if (values != null) {
 			tableViewer.setInput(values);
 		}

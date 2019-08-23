@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -25,9 +26,13 @@ import com.jaspersoft.studio.property.descriptor.parameter.dialog.ParameterPage;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JRDesignSubreportParameter;
+import net.sf.jasperreports.engine.design.JasperDesign;
 
 public class SubreportParameterPage extends ParameterPage {
-	private JRReport jd;
+	
+	private JRReport subreportJD;
+	
+	private JasperDesign mainReportJD;
 
 	@Override
 	protected void generateButtons(Composite bGroup) {
@@ -37,30 +42,58 @@ public class SubreportParameterPage extends ParameterPage {
 		bMaster.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (jd == null)
+				if (mainReportJD == null)
 					return;
-				for (JRParameter prm : jd.getMainDataset().getParameters()) {
+				HashSet<String> usedParams = new HashSet<>();
+				for (GenericJSSParameter sp : values) {
+					usedParams.add(sp.getName());
+				}
+				for (JRParameter prm : mainReportJD.getMainDataset().getParameters()) {
 					if (prm.isSystemDefined())
 						continue;
 					String name = prm.getName();
-					boolean exists = false;
-					for (GenericJSSParameter sp : values) {
-						if (sp.getName().equals(name)) {
-							exists = true;
-							break;
-						}
+					if (!usedParams.contains(name)) {
+						JRDesignSubreportParameter param = new JRDesignSubreportParameter();
+						param.setName(name);
+						param.setExpression(ExprUtil.createExpression("$P{" + name + "}")); //$NON-NLS-1$ //$NON-NLS-2$
+						values.add(new GenericJSSParameter(param));	
 					}
-					if (exists)
-						return;
-
+				}
+				tableViewer.refresh(true);
+			}
+		});
+	}
+	
+	@Override
+	protected void fillTable() {
+		if (values == null) {
+			values = new ArrayList<GenericJSSParameter>();
+		}
+		if (subreportJD != null) {
+			HashSet<String> usedParams = new HashSet<>();
+			for (GenericJSSParameter sp : values) {
+				usedParams.add(sp.getName());
+			}
+			boolean hasParameter = false;
+			for (JRParameter prm : subreportJD.getMainDataset().getParameters()) {
+				if (prm.isSystemDefined())
+					continue;
+				hasParameter = true;
+				String name = prm.getName();
+				if (!usedParams.contains(name)) {
 					JRDesignSubreportParameter param = new JRDesignSubreportParameter();
 					param.setName(name);
 					param.setExpression(ExprUtil.createExpression("$P{" + name + "}")); //$NON-NLS-1$ //$NON-NLS-2$
 					values.add(new GenericJSSParameter(param));
 				}
-				tableViewer.refresh(true);
 			}
-		});
+			if (!hasParameter) {
+				setMessage(Messages.SubreportParameterPage_noParametersWarning, IMessageProvider.WARNING);
+			} else {
+				setMessage(null);
+			}
+		}
+		super.fillTable();
 	}
 
 	/**
@@ -75,19 +108,30 @@ public class SubreportParameterPage extends ParameterPage {
 		for (GenericJSSParameter param : values) {
 			usedParams.add(param.getName());
 		}
-		if (jd != null)
-			for (JRParameter param : jd.getParameters()) {
+		if (subreportJD != null) {
+			for (JRParameter param : subreportJD.getParameters()) {
 				if (!usedParams.contains(param.getName())) {
 					if (param.getName() != null)
 						result.add(param.getName());
 				}
 			}
+		}
+		if (mainReportJD != null) {
+			for (JRParameter param : mainReportJD.getParameters()) {
+				if (!usedParams.contains(param.getName())) {
+					if (param.getName() != null)
+						result.add(param.getName());
+				}
+			}
+		}
 		Collections.sort(result);
 		return result;
 	}
 
-	public void setJasperDesign(JRReport jd) {
-		this.jd = jd;
+	public void setJasperDesign(JRReport subreportJD, JasperDesign mainReportJD) {
+		this.subreportJD = subreportJD;
+		this.mainReportJD = mainReportJD;
+		fillTable();
 	}
 
 	@Override

@@ -2202,6 +2202,8 @@ public class Messages extends NLS {
 	public static String StyleTemplateNewWizard_VirtualFolderErr;
 	public static String StyleTemplateNewWizard_wizardtitle;
 	public static String SubreportParameterPage_copyFromMaster;
+	public static String SubreportParameterPage_importFromSubreport;
+	public static String SubreportParameterPage_noParametersWarning;
 	public static String SubreportPropertiesLabelProvider_numbers_of_parameters;
 	public static String SubreportPropertyPage_description;
 	public static String SubreportSelectionDialog_0;

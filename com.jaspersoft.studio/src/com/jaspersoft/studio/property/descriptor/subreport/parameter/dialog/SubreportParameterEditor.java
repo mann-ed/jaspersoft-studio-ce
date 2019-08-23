@@ -52,14 +52,12 @@ public class SubreportParameterEditor extends ParameterEditor {
 		super();
 		this.jd = subReport.getJasperDesign();
 		this.subReport = subReport;
-		//actually this is not used because SubreportParameterPage is no longer using the subreport design to read the
-		//parameters because of #JSS-1751
-		//preloadReport(subReport);
+		preloadReport(subReport);
 	}
 	
 	@Override
 	protected ParameterPage getEditingPage() {
-		SubreportParameterPage page = new SubreportParameterPage(subReport, jd,  getJasperDesign());
+		SubreportParameterPage page = new SubreportParameterPage(subReport, jd,  getSubreportJasperDesign());
 		return page;
 	}
 	
@@ -91,7 +89,7 @@ public class SubreportParameterEditor extends ParameterEditor {
 	 * @return The jasperdesign or null if the jasper design
 	 * can not be found
 	 */
-	public JRReport getJasperDesign(){
+	public JRReport getSubreportJasperDesign(){
 		while(isLoading()){
 			try {
 				Thread.sleep(100);
@@ -131,7 +129,8 @@ public class SubreportParameterEditor extends ParameterEditor {
 					if (reportFileName != null){
 						if (reportFileName instanceof File) {
 							reportFileName = ((File) reportFileName).toURI().toString();
-						} else if (!(reportFileName instanceof String)) {
+						} 
+						if (!(reportFileName instanceof String)) {
 							return; // We only understand string paths...
 						}
 						String location = (String) reportFileName;

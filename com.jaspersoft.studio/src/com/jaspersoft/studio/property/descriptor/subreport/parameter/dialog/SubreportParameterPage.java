@@ -9,9 +9,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
@@ -22,9 +24,7 @@ import com.jaspersoft.studio.property.descriptor.parameter.dialog.ComboInputPara
 import com.jaspersoft.studio.property.descriptor.parameter.dialog.ComboParametersPage;
 import com.jaspersoft.studio.property.descriptor.parameter.dialog.GenericJSSParameter;
 import com.jaspersoft.studio.property.descriptor.parameter.dialog.InputParameterDialog;
-import com.jaspersoft.studio.utils.ModelUtils;
 
-import net.sf.jasperreports.engine.JRDataset;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRReport;
 import net.sf.jasperreports.engine.design.JRDesignSubreportParameter;
@@ -44,15 +44,15 @@ public class SubreportParameterPage extends ComboParametersPage {
 
 	private MSubreport subreportModel;
 	
-	private JRReport subreportDesign;
+	private JRReport subreportJD;
 
-	private JasperDesign jd;
+	private JasperDesign mainReportJD;
 	
 	public SubreportParameterPage(MSubreport subreportModel, JasperDesign jd, JRReport subreportDesign) {
 		super(null);
 		this.subreportModel = subreportModel;
-		this.jd = jd;
-		this.subreportDesign = subreportDesign;
+		this.mainReportJD = jd;
+		this.subreportJD = subreportDesign;
 	}
 
 	@Override
@@ -60,41 +60,76 @@ public class SubreportParameterPage extends ComboParametersPage {
 		super.generateButtons(bGroup);
 		Button bMaster = new Button(bGroup, SWT.PUSH);
 		bMaster.setText(Messages.SubreportParameterPage_copyFromMaster);
+		bMaster.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		bMaster.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				/* this code read the parameter from the subreport but it is no longer used because of #JSS-1751
-				 * if (subreportDesign == null)
-					return;
-				for (JRParameter prm : subreportDesign.getMainDataset().getParameters()) {
-				*/
-				JRDataset dataset = ModelUtils.getFirstDatasetInHierarchy(subreportModel);
-				if (dataset == null && jd != null) {
-					dataset = jd.getMainDataset();
-				}
-				if (dataset == null) return;
-				for (JRParameter prm : dataset.getParameters()) {
-					if (prm.isSystemDefined())
-						continue;
-					String name = prm.getName();
-					boolean exists = false;
+				if (mainReportJD != null) {
+					HashSet<String> usedParams = new HashSet<>();
 					for (GenericJSSParameter sp : values) {
-						if (sp.getName().equals(name)) {
-							exists = true;
-							break;
+						usedParams.add(sp.getName());
+					}
+					for (JRParameter prm : mainReportJD.getMainDataset().getParameters()) {
+						if (prm.isSystemDefined())
+							continue;
+						String name = prm.getName();
+						if (!usedParams.contains(name)) {
+							JRDesignSubreportParameter param = new JRDesignSubreportParameter();
+							param.setName(name);
+							param.setExpression(ExprUtil.createExpression("$P{" + name + "}")); //$NON-NLS-1$ //$NON-NLS-2$
+							values.add(new GenericJSSParameter(param));	
 						}
 					}
-					if (exists)
-						return;
-
-					JRDesignSubreportParameter param = new JRDesignSubreportParameter();
-					param.setName(name);
-					param.setExpression(ExprUtil.createExpression("$P{" + name + "}")); //$NON-NLS-1$ //$NON-NLS-2$
-					values.add(new GenericJSSParameter(param));
 				}
 				tableViewer.refresh(true);
 			}
 		});
+		
+		Button bImport = new Button(bGroup, SWT.PUSH);
+		bImport.setText(Messages.SubreportParameterPage_importFromSubreport);
+		bImport.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		bImport.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (subreportJD != null) {
+					HashSet<String> usedParams = new HashSet<>();
+					for (GenericJSSParameter sp : values) {
+						usedParams.add(sp.getName());
+					}
+					for (JRParameter prm : subreportJD.getMainDataset().getParameters()) {
+						if (prm.isSystemDefined())
+							continue;
+						String name = prm.getName();
+						if (!usedParams.contains(name)) {
+							JRDesignSubreportParameter param = new JRDesignSubreportParameter();
+							param.setName(name);
+							param.setExpression(ExprUtil.createExpression("$P{" + name + "}")); //$NON-NLS-1$ //$NON-NLS-2$
+							values.add(new GenericJSSParameter(param));	
+						}
+					}
+				}
+				tableViewer.refresh(true);
+			}
+		});
+		bImport.setEnabled(subreportJD != null);
+		
+		if (!hasUserDefinedParams()) {
+			setMessage(Messages.SubreportParameterPage_noParametersWarning, IMessageProvider.WARNING);
+		} else {
+			setMessage(null);
+		}
+	}
+	
+	private boolean hasUserDefinedParams() {
+		if (subreportJD != null) {
+			for (JRParameter param : subreportJD.getParameters()) {
+				if (!param.isSystemDefined()) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -109,25 +144,19 @@ public class SubreportParameterPage extends ComboParametersPage {
 		for(GenericJSSParameter param : values){
 				usedParams.add(param.getName());
 		}
-		/*this code read the parameter from the subreport but it is no longer used because of #JSS-1751
-		 * if (subreportDesign != null)
-			for (JRParameter param : subreportDesign.getParameters()) {
+		if (subreportJD != null) {
+			for (JRParameter param : subreportJD.getParameters()) {
 				if (!usedParams.contains(param.getName())) {
 					if (param.getName() != null)
 						result.add(param.getName());
 				}
 			}
-			*/
-		JRDataset dataset = ModelUtils.getFirstDatasetInHierarchy(subreportModel);
-		if (dataset == null && jd != null) {
-			dataset = jd.getMainDataset();
 		}
-		if (dataset != null){
-			for (JRParameter param :dataset.getParameters()){
-				if (!usedParams.contains(param.getName())){
-					if (param.getName() != null) {
+		if (mainReportJD != null) {
+			for (JRParameter param : mainReportJD.getParameters()) {
+				if (!usedParams.contains(param.getName())) {
+					if (param.getName() != null)
 						result.add(param.getName());
-					}
 				}
 			}
 		}
