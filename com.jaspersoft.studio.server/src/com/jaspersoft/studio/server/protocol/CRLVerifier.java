@@ -29,7 +29,7 @@ import javax.naming.directory.InitialDirContext;
 
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.DERIA5String;
-import org.bouncycastle.asn1.DERObject;
+import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.x509.CRLDistPoint;
 import org.bouncycastle.asn1.x509.DistributionPoint;
@@ -127,7 +127,7 @@ public class CRLVerifier {
 		ASN1InputStream oAsnInStream2 = null;
 		try {
 			oAsnInStream = new ASN1InputStream(new ByteArrayInputStream(crldpExt));
-			DERObject derObjCrlDP = oAsnInStream.readObject();
+			ASN1Primitive derObjCrlDP = oAsnInStream.readObject();
 			DEROctetString dosCrlDP = (DEROctetString) derObjCrlDP;
 			byte[] crldpExtOctets = dosCrlDP.getOctets();
 			oAsnInStream2 = new ASN1InputStream(new ByteArrayInputStream(crldpExtOctets));

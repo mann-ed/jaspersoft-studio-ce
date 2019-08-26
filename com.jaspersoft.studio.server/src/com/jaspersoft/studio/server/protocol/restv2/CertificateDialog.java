@@ -16,8 +16,8 @@ import java.util.Map;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.WordUtils;
 import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DERBitString;
-import org.bouncycastle.asn1.DERObject;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERUTF8String;
@@ -200,7 +200,7 @@ public class CertificateDialog extends ATitledDialog {
 
 	private static String fromByteArray(byte[] extensionValue) throws IOException {
 		if (extensionValue != null) {
-			DERObject derObject = toDERObject(extensionValue);
+			ASN1Primitive derObject = toDERObject(extensionValue);
 			if (derObject instanceof DEROctetString) {
 				derObject = toDERObject(((DEROctetString) derObject).getOctets());
 				if (derObject instanceof DERUTF8String)
@@ -218,8 +218,8 @@ public class CertificateDialog extends ATitledDialog {
 		return ""; //$NON-NLS-1$
 	}
 
-	private static DERObject toDERObject(byte[] data) throws IOException {
-		DERObject der = null;
+	private static ASN1Primitive toDERObject(byte[] data) throws IOException {
+		ASN1Primitive der = null;
 		ByteArrayInputStream inStream = new ByteArrayInputStream(data);
 		ASN1InputStream asnInputStream = new ASN1InputStream(inStream);
 		try {
