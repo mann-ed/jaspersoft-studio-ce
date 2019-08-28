@@ -1,12 +1,13 @@
 package com.jaspersoft.studio.hibernate;
 
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import net.sf.jasperreports.eclipse.AbstractJRUIPlugin;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class HibernateActivator extends AbstractUIPlugin {
+public class HibernateActivator extends AbstractJRUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.jaspersoft.studio.hibernate"; //$NON-NLS-1$
@@ -47,4 +48,9 @@ public class HibernateActivator extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	@Override
+	public String getPluginID() {
+		return PLUGIN_ID;
+	}
+	
 }
