@@ -33,6 +33,7 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Base64;
@@ -55,6 +56,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.spi.Connector;
+import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.Boundary;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -108,6 +110,7 @@ import com.jaspersoft.studio.server.protocol.JdbcDriver;
 import com.jaspersoft.studio.server.protocol.ReportExecution;
 import com.jaspersoft.studio.server.protocol.Version;
 import com.jaspersoft.studio.server.publish.PublishUtil;
+import com.jaspersoft.studio.server.utils.Encrypter;
 import com.jaspersoft.studio.server.utils.HttpUtils;
 import com.jaspersoft.studio.server.utils.ResourceDescriptorUtil;
 import com.jaspersoft.studio.server.wizard.exp.ExportOptions;
@@ -221,37 +224,8 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			url = url.substring(0, url.lastIndexOf("/services/repository")); //$NON-NLS-1$
 		if (!url.endsWith("/")) //$NON-NLS-1$
 			url += "/"; //$NON-NLS-1$
-		try {
-			target = client.target(url + "j_spring_security_check"); //$NON-NLS-1$
-			target = target.queryParam("forceDefaultRedirect", "false"); //$NON-NLS-1$ //$NON-NLS-2$
-			if (sp.isUseSSO()) {
-				String token = CASUtil.getToken(sp, monitor);
-				target = target.queryParam("ticket", token); //$NON-NLS-1$
-			} else {
-				target = target.queryParam("j_username", sp.getUser()); //$NON-NLS-1$
-				String pwd = parent.getPassword(monitor);
-				if (pwd != null)
-					target = target.queryParam("j_password", URLEncoder.encode(pwd, "UTF-8")); //$NON-NLS-1$
-				if (monitor.isCanceled())
-					return false;
-			}
-			target = target.queryParam("orgId", sp.getOrganisation()); //$NON-NLS-1$
-			if (!Misc.isNullOrEmpty(sp.getLocale()))
-				target = target.queryParam("userLocale", Locale.getDefault().toString()); //$NON-NLS-1$ //$NON-NLS-2$
-			if (!Misc.isNullOrEmpty(sp.getTimeZone()))
-				target = target.queryParam("userTimezone", TimeZone.getDefault().getID()); //$NON-NLS-1$ //$NON-NLS-2$
-
-			Builder req = HttpUtils.getRequest(target);
-
-			toObj(connector.get(req, monitor), String.class, monitor);
-		} catch (Exception e) {
-			if (logger != null)
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			throw e;
-		} finally {
-			// ok, now check others
-			target = client.target(url + SUFFIX);
-		}
+		if (!doConnect(monitor, sp, url))
+			return false;
 		getServerInfo(monitor);
 		try {
 			getServerProfile().setClientUser(null);
@@ -264,6 +238,95 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			Activator.getDefault().logError(e);
 		}
 		return serverInfo != null && serverInfo.getVersion().compareTo("5.5") >= 0; //$NON-NLS-1$
+	}
+
+	private boolean doConnect(IProgressMonitor monitor, ServerProfile sp, String url) throws Exception {
+		String pass = encryptPass(monitor, url, parent.getPassword(monitor));
+		try {
+			// try to get encrypted key first, if possible
+			if (!doConnectLogin(monitor, sp, url, pass))
+				return false;
+		} catch (Exception e) {
+			try {
+				if (!doConnectOld(monitor, sp, url, pass))
+					return false;
+			} catch (Exception e1) {
+				if (logger != null)
+					logger.log(Level.SEVERE, e1.getMessage(), e1);
+				throw e;
+			}
+		} finally {
+			// ok, now check others
+			target = client.target(url + SUFFIX);
+		}
+		return true;
+	}
+
+	private String encryptPass(IProgressMonitor monitor, String url, String pass) {
+		if (pass == null)
+			return null;
+		try {
+			target = client.target(url + "GetEncryptionKey");
+			Builder req = HttpUtils.getRequest(target, MediaType.APPLICATION_JSON);
+			String key = toObj(connector.get(req, monitor), String.class, monitor);
+			if (key.contains("maxdigits"))
+				pass = Encrypter.encryptRSA(pass, key);
+		} catch (Exception e) {
+			if (logger != null)
+				logger.log(Level.FINE, e.getMessage(), e);
+		}
+		return pass;
+	}
+
+	private boolean doConnectOld(IProgressMonitor monitor, ServerProfile sp, String url, String pwd) throws Exception {
+		target = client.target(url + "j_spring_security_check"); //$NON-NLS-1$
+		target = target.queryParam("forceDefaultRedirect", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (sp.isUseSSO()) {
+			String token = CASUtil.getToken(sp, monitor);
+			target = target.queryParam("ticket", token); //$NON-NLS-1$
+		} else {
+			target = target.queryParam("j_username", sp.getUser()); //$NON-NLS-1$
+			if (pwd != null)
+				target = target.queryParam("j_password", URLEncoder.encode(pwd, "UTF-8")); //$NON-NLS-1$
+			if (monitor.isCanceled())
+				return false;
+		}
+		target = target.queryParam("orgId", sp.getOrganisation()); //$NON-NLS-1$
+		if (!Misc.isNullOrEmpty(sp.getLocale()))
+			target = target.queryParam("userLocale", Locale.getDefault().toString()); //$NON-NLS-1$ //$NON-NLS-2$
+		if (!Misc.isNullOrEmpty(sp.getTimeZone()))
+			target = target.queryParam("userTimezone", TimeZone.getDefault().getID()); //$NON-NLS-1$ //$NON-NLS-2$
+
+		Builder req = HttpUtils.getRequest(target);
+
+		toObj(connector.get(req, monitor), String.class, monitor);
+		return true;
+	}
+
+	private boolean doConnectLogin(IProgressMonitor monitor, ServerProfile sp, String url, String pwd)
+			throws Exception {
+		target = client.target(url + SUFFIX + "login"); //$NON-NLS-1$
+		MultivaluedMap<String, String> formData = new MultivaluedStringMap();
+		formData.add("forceDefaultRedirect", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (sp.isUseSSO()) {
+			String token = CASUtil.getToken(sp, monitor);
+			formData.add("ticket", token); //$NON-NLS-1$
+		} else {
+			formData.add("j_username", sp.getUser()); //$NON-NLS-1$
+			if (pwd != null)
+				formData.add("j_password", URLEncoder.encode(pwd, "UTF-8")); //$NON-NLS-1$
+			if (monitor.isCanceled())
+				return false;
+		}
+		formData.add("orgId", sp.getOrganisation()); //$NON-NLS-1$
+		if (!Misc.isNullOrEmpty(sp.getLocale()))
+			formData.add("userLocale", Locale.getDefault().toString()); //$NON-NLS-1$ //$NON-NLS-2$
+		if (!Misc.isNullOrEmpty(sp.getTimeZone()))
+			formData.add("userTimezone", TimeZone.getDefault().getID()); //$NON-NLS-1$ //$NON-NLS-2$
+
+		Builder req = HttpUtils.getRequest(target);
+		eh.handleException(connector.post(req, Entity.form(formData), monitor), monitor);
+		return true;
 	}
 
 	@Override

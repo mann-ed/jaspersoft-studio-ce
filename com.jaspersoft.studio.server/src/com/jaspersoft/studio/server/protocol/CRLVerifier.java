@@ -7,15 +7,14 @@ package com.jaspersoft.studio.server.protocol;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.CRLException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.CertificateParsingException;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -28,15 +27,15 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
 import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.DERIA5String;
 import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.DERIA5String;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.x509.CRLDistPoint;
 import org.bouncycastle.asn1.x509.DistributionPoint;
 import org.bouncycastle.asn1.x509.DistributionPointName;
+import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
-import org.bouncycastle.asn1.x509.X509Extensions;
 
 import com.jaspersoft.studio.server.messages.Messages;
 
@@ -57,19 +56,18 @@ public class CRLVerifier {
 				if (crl.isRevoked(cert))
 					throw new CertificateException(Messages.CRLVerifier_0 + crlDP);
 			}
+		} catch (CertificateException ex) {
+			throw ex;
 		} catch (Exception ex) {
-			if (ex instanceof CertificateException)
-				throw (CertificateException) ex;
 			throw new CertificateException(Messages.CRLVerifier_1 + cert.getSubjectX500Principal());
 		}
 	}
 
 	/**
-	 * Downloads CRL from given URL. Supports http, https, ftp and ldap based
-	 * URLs.
+	 * Downloads CRL from given URL. Supports http, https, ftp and ldap based URLs.
 	 */
 	private static X509CRL downloadCRL(String crlURL)
-			throws IOException, CertificateException, CRLException, CertificateException, NamingException {
+			throws IOException, CRLException, CertificateException, NamingException {
 		if (crlURL.startsWith(Messages.CRLVerifier_2) || crlURL.startsWith("https://") || crlURL.startsWith("ftp://")) //$NON-NLS-2$ //$NON-NLS-3$
 			return downloadCRLFromWeb(crlURL);
 		if (crlURL.startsWith("ldap://")) //$NON-NLS-1$
@@ -82,8 +80,8 @@ public class CRLVerifier {
 	 * ldap://ldap.infonotary.com/dc=identity-ca,dc=infonotary,dc=com
 	 */
 	private static X509CRL downloadCRLFromLDAP(String ldapURL)
-			throws CertificateException, NamingException, CRLException, CertificateException {
-		Map<String, String> env = new Hashtable<String, String>();
+			throws NamingException, CRLException, CertificateException {
+		Map<String, String> env = new HashMap<>();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, Messages.CRLVerifier_7);
 		env.put(Context.PROVIDER_URL, ldapURL);
 
@@ -102,8 +100,7 @@ public class CRLVerifier {
 	 * Downloads a CRL from given HTTP/HTTPS/FTP URL, e.g.
 	 * http://crl.infonotary.com/crl/identity-ca.crl
 	 */
-	private static X509CRL downloadCRLFromWeb(String crlURL)
-			throws MalformedURLException, IOException, CertificateException, CRLException {
+	private static X509CRL downloadCRLFromWeb(String crlURL) throws IOException, CertificateException, CRLException {
 		InputStream crlStream = new URL(crlURL).openStream();
 		try {
 			return (X509CRL) CertificateFactory.getInstance("X.509").generateCRL(crlStream); //$NON-NLS-1$
@@ -113,16 +110,15 @@ public class CRLVerifier {
 	}
 
 	/**
-	 * Extracts all CRL distribution point URLs from the
-	 * "CRL Distribution Point" extension in a X.509 certificate. If CRL
-	 * distribution point extension is unavailable, returns an empty list.
+	 * Extracts all CRL distribution point URLs from the "CRL Distribution Point"
+	 * extension in a X.509 certificate. If CRL distribution point extension is
+	 * unavailable, returns an empty list.
 	 */
-	public static List<String> getCrlDistributionPoints(X509Certificate cert)
-			throws CertificateParsingException, IOException {
-		byte[] crldpExt = cert.getExtensionValue(X509Extensions.CRLDistributionPoints.getId());
+	public static List<String> getCrlDistributionPoints(X509Certificate cert) throws IOException {
+		byte[] crldpExt = cert.getExtensionValue(Extension.cRLDistributionPoints.getId());
 		if (crldpExt == null)
-			return new ArrayList<String>();
-		List<String> crlUrls = new ArrayList<String>();
+			return new ArrayList<>();
+		List<String> crlUrls = new ArrayList<>();
 		ASN1InputStream oAsnInStream = null;
 		ASN1InputStream oAsnInStream2 = null;
 		try {
