@@ -24,8 +24,6 @@ import org.bouncycastle.asn1.DERUTF8String;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TableViewer;
@@ -97,16 +95,12 @@ public class CertificateDialog extends ATitledDialog {
 		gd.widthHint = 500;
 		gd.heightHint = 400;
 		cTxt.setLayoutData(gd);
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		viewer.addSelectionChangedListener((event) -> {
+			StructuredSelection sel = (StructuredSelection) viewer.getSelection();
+			StyledString ss = getStyledToolTip((X509Certificate) sel.getFirstElement());
 
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				StructuredSelection sel = (StructuredSelection) viewer.getSelection();
-				StyledString ss = getStyledToolTip((X509Certificate) sel.getFirstElement());
-
-				cTxt.setText(ss.getString());
-				cTxt.setStyleRanges(ss.getStyleRanges());
-			}
+			cTxt.setText(ss.getString());
+			cTxt.setStyleRanges(ss.getStyleRanges());
 		});
 
 		viewer.setSelection(new StructuredSelection(client), true);
@@ -231,7 +225,7 @@ public class CertificateDialog extends ATitledDialog {
 		return der;
 	}
 
-	private static Map<String, String> certExtensions = new HashMap<String, String>();
+	private static Map<String, String> certExtensions = new HashMap<>();
 
 	static {
 		certExtensions.put("2.5.29.1", Messages.CertificateDialog_52); //$NON-NLS-1$

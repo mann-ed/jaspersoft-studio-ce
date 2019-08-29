@@ -6,7 +6,6 @@ package com.jaspersoft.studio.server.protocol.restv2;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -50,12 +49,11 @@ import net.sf.jasperreports.eclipse.util.Misc;
 public class CertChainValidator {
 	private static String fname = System.getProperty("javax.net.ssl.trustStore"); //$NON-NLS-1$
 	private static String fksname = System.getProperty("javax.net.ssl.trustStore"); //$NON-NLS-1$
-	public static char[] spass = Misc.nvl(System.getProperty("javax.net.ssl.trustStorePassword")).toCharArray(); //$NON-NLS-1$
-	public static char[] kpass = Pass
+	private static final char[] spass = Misc.nvl(System.getProperty("javax.net.ssl.trustStorePassword")).toCharArray(); //$NON-NLS-1$
+	public static final char[] kpass = Pass
 			.getPassKeyStore(Misc.nvl(System.getProperty("javax.net.ssl.keyStorePassword"), "keystore")) //$NON-NLS-1$
 			.toCharArray();
 	private static String stype = System.getProperty("javax.net.ssl.trustStoreType"); //$NON-NLS-1$
-	private static String kstype = System.getProperty("javax.net.ssl.keyStoreType"); //$NON-NLS-1$
 
 	public static KeyStore getDefaultTrustStore()
 			throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
@@ -84,7 +82,7 @@ public class CertChainValidator {
 
 	public static KeyStore getDefaultKeyStore()
 			throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-		kstype = System.getProperty("javax.net.ssl.keyStoreType"); //$NON-NLS-1$
+		String kstype = System.getProperty("javax.net.ssl.keyStoreType"); //$NON-NLS-1$
 		KeyStore store = KeyStore.getInstance(Misc.isNullOrEmpty(stype) ? KeyStore.getDefaultType() : kstype);
 		fksname = System.getProperty("javax.net.ssl.keyStore"); //$NON-NLS-1$
 		File f = null;
@@ -107,13 +105,13 @@ public class CertChainValidator {
 		return store;
 	}
 
-	public static void writeKeyStore(KeyStore trustStore) throws FileNotFoundException, KeyStoreException, IOException,
-			NoSuchAlgorithmException, CertificateException {
+	public static void writeKeyStore(KeyStore trustStore)
+			throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
 		writeKeyStore(fksname, trustStore);
 	}
 
-	protected static void writeKeyStore(String fname, KeyStore trustStore) throws FileNotFoundException,
-			KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+	protected static void writeKeyStore(String fname, KeyStore trustStore)
+			throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(fname);
@@ -123,13 +121,13 @@ public class CertChainValidator {
 		}
 	}
 
-	public static void writeTrustStore(KeyStore trustStore) throws FileNotFoundException, KeyStoreException,
-			IOException, NoSuchAlgorithmException, CertificateException {
+	public static void writeTrustStore(KeyStore trustStore)
+			throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
 		writeTrustStore(fname, trustStore);
 	}
 
-	protected static void writeTrustStore(String fname, KeyStore trustStore) throws FileNotFoundException,
-			KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+	protected static void writeTrustStore(String fname, KeyStore trustStore)
+			throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(fname);
@@ -148,7 +146,7 @@ public class CertChainValidator {
 			cf = CertificateFactory.getInstance("X.509"); //$NON-NLS-1$
 		if (validator == null)
 			validator = CertPathValidator.getInstance("PKIX"); //$NON-NLS-1$
-		Set<X509Certificate> trustCertificates = new HashSet<X509Certificate>();
+		Set<X509Certificate> trustCertificates = new HashSet<>();
 		Enumeration<String> alias = trustStore.aliases();
 		while (alias.hasMoreElements()) {
 			Certificate c = trustStore.getCertificate(alias.nextElement());
@@ -170,7 +168,7 @@ public class CertChainValidator {
 		}
 
 		if (trustCertificates.contains(chain[chain.length - 1])) {
-			List<X509Certificate> intermediateCerts = new ArrayList<X509Certificate>();
+			List<X509Certificate> intermediateCerts = new ArrayList<>();
 			for (int i = chain.length - 1; i > 0; i--)
 				intermediateCerts.add(chain[i]);
 			try {
@@ -193,7 +191,7 @@ public class CertChainValidator {
 		selector.setCertificate(cert);
 
 		// Create the trust anchors (set of root CA certificates)
-		Set<TrustAnchor> trustAnchors = new HashSet<TrustAnchor>();
+		Set<TrustAnchor> trustAnchors = new HashSet<>();
 		for (X509Certificate trustedRootCert : trustedRootCerts) {
 			trustAnchors.add(new TrustAnchor(trustedRootCert, null));
 		}
@@ -211,8 +209,7 @@ public class CertChainValidator {
 
 		// Build and verify the certification chain
 		CertPathBuilder builder = CertPathBuilder.getInstance("PKIX"); //$NON-NLS-1$
-		PKIXCertPathBuilderResult result = (PKIXCertPathBuilderResult) builder.build(pkixParams);
-		return result;
+		return (PKIXCertPathBuilderResult) builder.build(pkixParams);
 	}
 
 	static class ShowDialog implements Runnable {
@@ -251,9 +248,7 @@ public class CertChainValidator {
 		try {
 			cert.verify(cert.getPublicKey());
 			return true;
-		} catch (SignatureException sigEx) {
-			return false;
-		} catch (InvalidKeyException keyEx) {
+		} catch (SignatureException | InvalidKeyException sigEx) {
 			return false;
 		}
 	}

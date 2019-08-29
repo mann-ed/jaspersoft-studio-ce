@@ -8,14 +8,28 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.security.spec.RSAPublicKeySpec;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
+
+import org.apache.commons.codec.CharEncoding;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.json.JSONObject;
 
 import net.sf.jasperreports.util.Base64Util;
 
@@ -48,13 +62,8 @@ public class Encrypter {
 			ecipher.init(Cipher.ENCRYPT_MODE, key);
 			dcipher.init(Cipher.DECRYPT_MODE, key);
 
-		} catch (InvalidKeySpecException e) {
-			e.printStackTrace();
-		} catch (javax.crypto.NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (java.security.NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (java.security.InvalidKeyException e) {
+		} catch (InvalidKeySpecException | javax.crypto.NoSuchPaddingException | java.security.NoSuchAlgorithmException
+				| java.security.InvalidKeyException e) {
 			e.printStackTrace();
 		}
 	}
@@ -62,17 +71,13 @@ public class Encrypter {
 	public String encrypt(String str) {
 		try {
 			// Encode the string into bytes using utf-8
-			byte[] utf8 = str.getBytes("UTF8");
+			byte[] utf8 = str.getBytes(StandardCharsets.UTF_8);
 
 			// Encrypt
 			byte[] enc = ecipher.doFinal(utf8);
 
 			return encodeBase64(enc);
-		} catch (javax.crypto.BadPaddingException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
+		} catch (javax.crypto.BadPaddingException | IllegalBlockSizeException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -87,18 +92,14 @@ public class Encrypter {
 			byte[] utf8 = dcipher.doFinal(dec);
 
 			// Decode using utf-8
-			return new String(utf8, "UTF8");
-		} catch (javax.crypto.BadPaddingException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
+			return new String(utf8, StandardCharsets.UTF_8);
+		} catch (javax.crypto.BadPaddingException | IllegalBlockSizeException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	private String encodeBase64(byte[] bytes) {
+	private static String encodeBase64(byte[] bytes) {
 		try {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			Base64Util.encode(new ByteArrayInputStream(bytes), os);
@@ -116,5 +117,40 @@ public class Encrypter {
 		} catch (IOException ex) {
 		}
 		return null;
+	}
+
+	private static String byteArrayToHexString(byte[] byteArr) {
+		StringBuilder sb = new StringBuilder();
+		for (byte b : byteArr) {
+			sb.append(Character.forDigit((b & 0xF0) >> 4, 16));
+			sb.append(Character.forDigit(b & 0x0F, 16));
+		}
+		return sb.toString();
+	}
+
+	private static PublicKey getPublicKey(String n, String e) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+		int radix = 16;
+		BigInteger modulus = new BigInteger(n, radix);
+		BigInteger publicExponent = new BigInteger(e, radix);
+		RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
+		return keyFactory.generatePublic(publicKeySpec);
+	}
+
+	public static String encryptRSA(String pass, String key) {
+		try {
+			JSONObject jo = new JSONObject(key);
+			PublicKey k = getPublicKey(jo.getString("n"), jo.getString("e"));
+
+			Cipher c = Cipher.getInstance("RSA/NONE/NoPadding", new BouncyCastleProvider());
+			c.init(Cipher.ENCRYPT_MODE, k);
+			pass = URLEncoder.encode(pass, CharEncoding.UTF_8);
+			return byteArrayToHexString(c.doFinal(pass.getBytes()));
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException
+				| IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return pass;
+
 	}
 }
