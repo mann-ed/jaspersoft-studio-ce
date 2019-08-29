@@ -266,7 +266,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 		if (pass == null)
 			return null;
 		try {
-			target = client.target(url + "GetEncryptionKey/");
+			target = client.target(url + "GetEncryptionKey");
 			Builder req = HttpUtils.getRequest(target, MediaType.APPLICATION_JSON);
 			String key = toObj(connector.get(req, monitor), String.class, monitor);
 			if (key.contains("maxdigits"))
