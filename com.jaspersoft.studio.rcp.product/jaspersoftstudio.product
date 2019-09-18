@@ -27,7 +27,9 @@ Special thanks to all people who support this software.
 -XX:+CMSClassUnloadingEnabled
 -XX:+UseConcMarkSweepGC
 -Dfile.encoding=UTF-8
--Djava.net.preferIPv4Stack=true</vmArgs>
+-Djava.net.preferIPv4Stack=true
+-Ddeployment.security.TLSv1.1=true
+-Ddeployment.security.TLSv1.2=true</vmArgs>
       <vmArgsMac>-XstartOnFirstThread</vmArgsMac>
    </launcherArgs>
 
