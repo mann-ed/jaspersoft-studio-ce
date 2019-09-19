@@ -4,8 +4,7 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.action.resource;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -16,6 +15,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreePath;
@@ -120,8 +120,7 @@ public class OpenInEditorAction extends Action {
 
 	protected IPath path;
 
-	protected void dorun(final Object obj, IProgressMonitor monitor)
-			throws Exception, FileNotFoundException, IOException {
+	protected void dorun(final Object obj, IProgressMonitor monitor) throws Exception {
 		if (isFileResource(obj)) {
 			AFileResource res = (AFileResource) obj;
 			ResourceDescriptor rd = WSClientHelper.getResource(new NullProgressMonitor(), res, res.getValue());
@@ -137,34 +136,7 @@ public class OpenInEditorAction extends Action {
 			String type = rd.getWsType();
 			IFile f = null;
 			if (type.equals(ResourceDescriptor.TYPE_JRXML)) {
-				IFile file = new JrxmlExporter(path).exportToIFile(res, rd, fkeyname, monitor);
-				if (file != null) {
-					JasperReportsConfiguration jrconf = JasperReportsConfiguration.getDefaultJRConfig(file);
-					try {
-						jrconf.getPrefStore().setValue(JRSEditorContributor.KEY_PUBLISH2JSS_SILENT, true);
-						openEditor(file, res);
-					} finally {
-						jrconf.dispose();
-					}
-				}
-				if (res.getParent() instanceof MReportUnit) {
-					MReportUnit runit = (MReportUnit) res.getParent();
-					for (INode n : runit.getChildren()) {
-						if (n == res)
-							continue;
-						if (n instanceof AFileResource) {
-							AFileResource mfile = (AFileResource) n;
-							fkeyname = ServerManager.getKey(mfile);
-							rd = WSClientHelper.getResource(new NullProgressMonitor(), mfile, mfile.getValue());
-							f = new AExporter(path).exportToIFile(mfile, rd, fkeyname, monitor);
-							if (f != null)
-								PublishUtil.savePath(f, mfile);
-							if (rd.getReferenceUri() != null
-									|| !rd.getUriString().startsWith(runit.getValue().getUriString()))
-								createLink(f.getLocation(), rd.getName(), file, monitor);
-						}
-					}
-				}
+				doExportJrxml(res, rd, fkeyname, monitor);
 				return;
 			} else if (type.equals(ResourceDescriptor.TYPE_IMAGE))
 				f = new ImageExporter(path).exportToIFile(res, rd, fkeyname, monitor);
@@ -179,6 +151,51 @@ public class OpenInEditorAction extends Action {
 		}
 	}
 
+	protected void doExportJrxml(AFileResource res, ResourceDescriptor rd, String fkeyname, IProgressMonitor monitor)
+			throws Exception {
+		IFile f = new JrxmlExporter(path).exportToIFile(res, rd, fkeyname, monitor);
+		if (f != null) {
+			JasperReportsConfiguration jrconf = JasperReportsConfiguration.getDefaultJRConfig(f);
+			try {
+				jrconf.getPrefStore().setValue(JRSEditorContributor.KEY_PUBLISH2JSS_SILENT, true);
+				openEditor(f, res);
+			} finally {
+				jrconf.dispose();
+			}
+		}
+		if (res.getParent() instanceof MReportUnit) {
+			MReportUnit runit = (MReportUnit) res.getParent();
+			for (INode n : runit.getChildren()) {
+				if (n == res)
+					continue;
+				if (n instanceof AFileResource) {
+					AFileResource mfile = (AFileResource) n;
+					fkeyname = ServerManager.getKey(mfile);
+					rd = WSClientHelper.getResource(new NullProgressMonitor(), mfile, mfile.getValue());
+					IPath p = Path.fromOSString(
+							path.toFile().getParentFile().getAbsolutePath() + File.separator + rd.getName());
+					exportFile(rd, fkeyname, monitor, f, runit, mfile, p);
+				}
+			}
+		}
+	}
+
+	private void exportFile(ResourceDescriptor rd, String fkeyname, IProgressMonitor monitor, IFile f,
+			MReportUnit runit, AFileResource mfile, IPath p) throws Exception {
+		AExporter exp = null;
+		if(rd.getWsType().equals(ResourceDescriptor.TYPE_IMAGE))
+			exp = new ImageExporter(p);
+		else if(rd.getWsType().equals(ResourceDescriptor.TYPE_JRXML))
+			exp = new ImageExporter(p);
+		else
+			exp = new AExporter(p);
+		IFile file = exp.exportToIFile(mfile, rd, fkeyname, monitor);
+		if (file != null)
+			PublishUtil.savePath(file, mfile);
+		if (rd.getReferenceUri() != null || !rd.getUriString().startsWith(runit.getValue().getUriString()))
+			createLink(file.getLocation(), rd.getName(), f, monitor);
+	}
+
 	private void createLink(IPath path, String name, IFile file, IProgressMonitor monitor) throws CoreException {
 		IProject project = file.getProject();
 		IFile newFile = project.getFile(file.getParent().getProjectRelativePath() + "/" + name);
@@ -190,17 +207,14 @@ public class OpenInEditorAction extends Action {
 		BookUtils.checkFileResourceForDefaultEditor(f);
 		if (!openInEditor)
 			return;
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-
-			public void run() {
-				if (res instanceof MJrxml)
-					if (BookUtils.isValidJRBook(f))
-						SelectionHelper.openEditorType(f, JRBookEditor.BOOK_EDITOR_ID);
-					else
-						SelectionHelper.openEditorType(f, JrxmlEditor.JRXML_EDITOR_ID);
+		UIUtils.getDisplay().asyncExec(() -> {
+			if (res instanceof MJrxml)
+				if (BookUtils.isValidJRBook(f))
+					SelectionHelper.openEditorType(f, JRBookEditor.BOOK_EDITOR_ID);
 				else
-					SelectionHelper.openEditor(f);
-			}
+					SelectionHelper.openEditorType(f, JrxmlEditor.JRXML_EDITOR_ID);
+			else
+				SelectionHelper.openEditor(f);
 		});
 	}
 

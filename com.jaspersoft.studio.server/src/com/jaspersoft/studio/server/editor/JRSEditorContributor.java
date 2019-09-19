@@ -119,11 +119,12 @@ public class JRSEditorContributor implements IEditorContributor {
 	public void onRename(IFile oldName, IFile newName, JasperReportsContext jrConfig, IProgressMonitor monitor) {
 		JasperReportsConfiguration jConfig = (JasperReportsConfiguration) jrConfig;
 		JasperDesign jd = jConfig.getJasperDesign();
-
-		if (!replaceURL(AExporter.PROP_REPORTUNIT, jd, oldName, newName))
-			replaceURL(AExporter.PROP_REPORTRESOURCE, jd, oldName, newName);
-		else
-			jd.removeProperty(AExporter.PROP_REPORTRESOURCE);
+		if (jd != null) {
+			if (!replaceURL(AExporter.PROP_REPORTUNIT, jd, oldName, newName))
+				replaceURL(AExporter.PROP_REPORTRESOURCE, jd, oldName, newName);
+			else
+				jd.removeProperty(AExporter.PROP_REPORTRESOURCE);
+		}
 	}
 
 	@Override
@@ -203,7 +204,7 @@ public class JRSEditorContributor implements IEditorContributor {
 	public Action[] getEditorActions(AbstractVisualEditor editor) {
 		return null;
 	}
-	
+
 	@Override
 	public String getTitleToolTip(JasperReportsContext jrConfig, String toolTip) {
 		String s = toolTip;

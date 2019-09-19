@@ -111,8 +111,8 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	public static final int PAGE_PREVIEW = 2;
 
 	/**
-	 * Listener to execute the zoom-in or zoom-out operation when requested. It is
-	 * static becuase it is placed on the display, so one get all the events
+	 * Listener to execute the zoom-in or zoom-out operation when requested. It
+	 * is static becuase it is placed on the display, so one get all the events
 	 */
 	private static Listener mouseWheelListener = new JRXMLEditorZoomListener();
 
@@ -261,11 +261,10 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	}
 
 	/**
-	 * Returns the {@link JasperReportsContext} associated to the specified report
-	 * file.
+	 * Returns the {@link JasperReportsContext} associated to the specified
+	 * report file.
 	 * 
-	 * @param file
-	 *            the JRXML file reference
+	 * @param file the JRXML file reference
 	 * @return the JasperReports context of the report file
 	 */
 	public JasperReportsConfiguration getJrContext(IFile file) {
@@ -331,7 +330,8 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.
+	 * @see
+	 * org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.
 	 * eclipse.core.resources.IResourceChangeEvent)
 	 */
 	@Override
@@ -361,9 +361,11 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 					if (jrContext != null && getEditorInput() != null) {
 						IFile old = jrContext.getAssociatedReportFile();
 						IFile newf = ((IFileEditorInput) getEditorInput()).getFile();
-						jrContext.init(newf);
-						JaspersoftStudioPlugin.getExtensionManager().onRename(old, newf, jrContext,
-								new NullProgressMonitor());
+						if (!old.equals(newf)) {
+							jrContext.init(newf);
+							JaspersoftStudioPlugin.getExtensionManager().onRename(old, newf, jrContext,
+									new NullProgressMonitor());
+						}
 					}
 				} catch (CoreException e) {
 					UIUtils.showError(e);
@@ -500,15 +502,13 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	}
 
 	/**
-	 * Handles the {@link JRException} when it happens. Markers can be used in order
-	 * to give a better user experience.
+	 * Handles the {@link JRException} when it happens. Markers can be used in
+	 * order to give a better user experience.
 	 * 
-	 * @param editorInput
-	 *            the editor input
-	 * @param exception
-	 *            the exception to be handled
-	 * @param mute
-	 *            flag to determine if the exception should be presented in a dialog
+	 * @param editorInput the editor input
+	 * @param exception the exception to be handled
+	 * @param mute flag to determine if the exception should be presented in a
+	 * dialog
 	 */
 	public void handleJRException(IEditorInput editorInput, final Exception exception, boolean mute) {
 		if (!mute)
@@ -581,13 +581,14 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 		xmlEditor.getDocumentProvider().addElementStateListener(new StateListener());
 
 		/*
-		 * JSS has the function to disable the automatic run when entering in the
-		 * Preview editor with the shift key pressed. Typically this used the method
-		 * JasperReportsPlugin.isPressed(SWT.SHIFT) to know if shift was pressed. This
-		 * however can't work anymore since the tab changing made the app loose the
-		 * focus and this cancel the keyboard keys press map. To avoid to loose this
-		 * every time a tab is changed it is check if the shift key was pressed and the
-		 * method on the preview editor to enable or disable the run is called
+		 * JSS has the function to disable the automatic run when entering in
+		 * the Preview editor with the shift key pressed. Typically this used
+		 * the method JasperReportsPlugin.isPressed(SWT.SHIFT) to know if shift
+		 * was pressed. This however can't work anymore since the tab changing
+		 * made the app loose the focus and this cancel the keyboard keys press
+		 * map. To avoid to loose this every time a tab is changed it is check
+		 * if the shift key was pressed and the method on the preview editor to
+		 * enable or disable the run is called
 		 */
 		((CTabFolder) getContainer()).addMouseListener(new MouseAdapter() {
 
@@ -600,8 +601,8 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	}
 
 	/**
-	 * Bind some key combination to specific, it remove eventually the old ones to
-	 * assure to have only on filter
+	 * Bind some key combination to specific, it remove eventually the old ones
+	 * to assure to have only on filter
 	 * 
 	 * FIXME: Verify the usage of the removeFilter and addFilter!
 	 */
@@ -773,7 +774,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 
 	@Override
 	protected void handlePropertyChange(final int propertyId) {
-		if (!isRefreshing) { 
+		if (!isRefreshing) {
 //			JaspersoftStudioPlugin.getInstance().logError(new Exception());
 			if (propertyId == ISaveablePart.PROP_DIRTY && previewEditor != null)
 				setPreviewDirty(true);
@@ -929,8 +930,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	 * Updates the Outline view content depending on the editor page currently
 	 * opened.
 	 * 
-	 * @param page
-	 *            the page index
+	 * @param page the page index
 	 */
 	protected void updateContentOutline(int page) {
 		if (outlinePage == null)
@@ -965,8 +965,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	 * Converts the current model to XML, specifying a version it should be
 	 * compliant with.
 	 * 
-	 * @param the
-	 *            JasperReports version that should be used for compliance.
+	 * @param the JasperReports version that should be used for compliance.
 	 */
 	protected String model2xml(String version) {
 		String xml = null;
@@ -1002,7 +1001,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	 * Check if the current editor is dirty
 	 * 
 	 * @return true if the design or the preview editor are dirty, or if the xml
-	 *         inside the xml editor is not fresh. False otherwise
+	 * inside the xml editor is not fresh. False otherwise
 	 */
 	@Override
 	public boolean isDirty() {
@@ -1041,8 +1040,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	/**
 	 * Sets the model.
 	 * 
-	 * @param model
-	 *            the new model
+	 * @param model the new model
 	 */
 	public void setModel(INode model) {
 		this.model = model;
@@ -1106,7 +1104,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 
 	/**
 	 * @return the current {@link IFile} associated to the editor if possible,
-	 *         <code>null</code> otherwise
+	 * <code>null</code> otherwise
 	 */
 	protected IFile getCurrentFile() {
 		if (getEditorInput() instanceof IFileEditorInput)
@@ -1130,10 +1128,8 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	/**
 	 * Set the current preview type
 	 * 
-	 * @param viewerKey
-	 *            key of the type to show
-	 * @param refresh
-	 *            flag to set if the preview should also be refreshed
+	 * @param viewerKey key of the type to show
+	 * @param refresh flag to set if the preview should also be refreshed
 	 */
 	public void setPreviewOutput(String key, boolean refresh) {
 		previewEditor.setCurrentViewer(key, refresh);
@@ -1149,11 +1145,10 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	}
 
 	/**
-	 * Set the preview editor to dirty, this will refresh the preview when switching
-	 * into it
+	 * Set the preview editor to dirty, this will refresh the preview when
+	 * switching into it
 	 * 
-	 * @param dirty
-	 *            true to set the editor dirty, false otherwise
+	 * @param dirty true to set the editor dirty, false otherwise
 	 */
 	public void setPreviewDirty(boolean dirty) {
 		previewEditor.setDirty(dirty);
@@ -1201,7 +1196,8 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 		}
 
 		/**
-		 * Set the dirty flag of the preview area, but only if it isn't refreshing
+		 * Set the dirty flag of the preview area, but only if it isn't
+		 * refreshing
 		 */
 		@Override
 		public void setDirty(boolean dirty) {
@@ -1215,7 +1211,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 
 	/**
 	 * @return <code>true</code> if the main report designer is dirty,
-	 *         <code>false</code> otherwise
+	 * <code>false</code> otherwise
 	 */
 	protected abstract boolean isDesignerDirty();
 
