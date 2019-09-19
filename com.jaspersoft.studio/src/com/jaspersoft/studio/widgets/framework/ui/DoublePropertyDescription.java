@@ -117,6 +117,23 @@ public class DoublePropertyDescription extends NumberPropertyDescription<Double>
 			String tvalue = floatValue != null ? floatValue.toString() : null;
 			if (tvalue != null && tvalue.isEmpty())
 				tvalue = null;
+			//it could happen that during the conversion to string a .0 is appended at the end of the number
+			//so we compare what is the result of the conversion with what is actually in the text area,
+			//and if the decimal part is appended because of the conversion then it is truncated. It also
+			//check to append a single decimal zero if the textual number ends with a decimal zero
+			if (tvalue != null && widget.getText() != null) {
+				int decimalPosition = tvalue.indexOf(ValidatedDecimalFormat.DECIMAL_SEPARATOR);
+				if (decimalPosition != -1) {
+					int unconvertedDecimal = widget.getText().indexOf(ValidatedDecimalFormat.DECIMAL_SEPARATOR);
+					if (unconvertedDecimal == -1) {
+						tvalue = tvalue.substring(0, decimalPosition);
+					}
+				} else {
+					if (widget.getText().endsWith("0") && !tvalue.endsWith("0")) {
+						tvalue += "0";
+					}
+				}
+			}
 			wiProp.setValue(tvalue, null);
 		} else super.handleEdit(txt, wiProp);
 	}

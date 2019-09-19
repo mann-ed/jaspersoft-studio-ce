@@ -119,8 +119,9 @@ public abstract class NumberPropertyDescription<T extends Number> extends Abstra
 			}
 			simpleControl.setFallback(isFallback);
 			try{
-				Number numericValue = convertValue(Misc.nvl(v));
-				simpleControl.setValue(numericValue);
+				String safeValue = Misc.nvl(v);
+				Number numericValue = convertValue(safeValue);
+				simpleControl.setValue(numericValue, safeValue);
 				simpleControl.setToolTipText(getToolTip());
 			} catch (NumberFormatException ex){
 				simpleControl.setUnparsedValue(Misc.nvl(v));

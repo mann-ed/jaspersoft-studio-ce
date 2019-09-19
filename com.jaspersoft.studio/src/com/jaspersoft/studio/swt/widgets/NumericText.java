@@ -33,6 +33,8 @@ import org.mihalis.opal.utils.StringUtil;
 import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.ValidatedDecimalFormat;
 
+import net.sf.jasperreports.eclipse.util.StringUtils;
+
 /**
  * Extension of an swt widget to handle only numeric values. It will forbid invalid characters.
  * It will handle also min and max values. It is not possible to forbid the input of numbers
@@ -329,21 +331,23 @@ public class NumericText extends Text {
 		if (currentState != VALIDATION_RESULT.VALID) return false;
 		if (ModelUtils.safeEquals(newValue, storedValue)) return true;
 		String newFormat = null;
-		if (newValue != null) newFormat = formatNumber(newValue);
+		if (newValue != null) newFormat = formatNumber(newValue, "");
 		String storedFormat = null;
-		if (storedValue != null) storedFormat = formatNumber(storedValue);
+		if (storedValue != null) storedFormat = formatNumber(storedValue, "");
 		return ModelUtils.safeEquals(newFormat, storedFormat);
 	}
 	
 	/**
 	 * Method that convert the number value to a string. The perfect place to do this
 	 * could be the formatter, but since the format method is final we do this workaround
-	 * to allow custom implementation
+	 * to allow custom implementation. This uses also the textual representation inserted
+	 * by the user to provide a better rounding of the number
 	 * 
 	 * @param value the number to format, must be not null
+	 * @param a not null string that represent the value, used to do a better conversion
 	 * @return the number as a string
 	 */
-	protected String formatNumber(Number value){
+	protected String formatNumber(Number value, String text){
 		String result;
 		if (value instanceof Float){
 			//When using a decimal format there is a conversion error done passing from float to double
@@ -354,10 +358,14 @@ public class NumericText extends Text {
 			result = formatter.format(value);
 		}
 		if (removeTrailZeroes && result.indexOf(ValidatedDecimalFormat.DECIMAL_SEPARATOR) != -1){
+			String trailingDecimal = StringUtils.getTrailingZeros(text, ValidatedDecimalFormat.DECIMAL_SEPARATOR);
 			result = result.replaceAll("0*$", "").replaceAll(ValidatedDecimalFormat.PATTERN_DECIMAL_SEPARATOR + "$", "");
+			result += trailingDecimal;
+		
 		}
 		return result;
 	}
+	
 	
 	/**
 	 * Sets the <em>selection</em>, which is the receiver's position, to the
@@ -371,19 +379,36 @@ public class NumericText extends Text {
 	 * 
 	 */
 	public void setValue(Number selection) {
+		setValue(selection, "");
+	}
+	
+	/**
+	 * Sets the <em>selection</em>, which is the receiver's position, to the
+	 * argument. If the argument is not within the range specified by minimum
+	 * and maximum, it will be adjusted to fall within this range. The value is
+	 * set only if the current value is different, also the value is formatted with the
+	 * current formatter. This uses also the textual representation inserted
+	 * by the user to provide a better rounding of the number
+	 * 
+	 * @param value the new selection, can be null but only if the isNullable flag is
+	 * set to true (it is by default)
+	 * @param a not null string that represent the value, used to do a better conversion
+	 * 
+	 */
+	public void setValue(Number selection, String text) {
 		if (selection != null){
 			setInherited(false);
 			if (!hasSameValue(selection, storedValue)){
-				setValue(selection, true);
+				setValue(selection, true, text);
 			}
 		} else if (defaultValue != null){
 			setInherited(true);
 			if (!hasSameValue(defaultValue, storedValue)){
-				setValue(null, true);
+				setValue(null, true, text);
 			}
 		} else if (storedValue != null){
 			setInherited(false);
-			setValue(null, false);
+			setValue(null, false, text);
 		}
 	}
 	
@@ -399,6 +424,21 @@ public class NumericText extends Text {
 	 * 
 	 */
 	protected void setValue(Number selection, boolean formatText) {
+		setValue(selection, formatText, "");
+	}
+	
+	/**
+	 * Sets the <em>selection</em>, which is the receiver's position, to the
+	 * argument. If the argument is not within the range specified by minimum
+	 * and maximum, it will be adjusted to fall within this range.
+	 * 
+	 * @param value the new selection, can be null but only if the isNullable flag is
+	 * set to true (it is by default)
+	 * @param formatText true if the text should be formatted before to be shown inside the
+	 * text area, false to have it put directly
+	 * 
+	 */
+	protected void setValue(Number selection, boolean formatText, String text) {
 		this.checkWidget();
 		if (selection != null){	
 			if ((minimum != null && selection.doubleValue() < minimum) || 
@@ -413,7 +453,7 @@ public class NumericText extends Text {
 				storedValue = selection;
 			}
 			if (formatText) {
-				setText(formatNumber(selection));
+				setText(formatNumber(selection, text));
 			} else {
 				setText(selection.toString());
 			}
@@ -425,7 +465,7 @@ public class NumericText extends Text {
 				storedValue = null;
 				if (defaultValue != null){
 					if (formatText) {
-						setText(formatNumber(defaultValue));
+						setText(formatNumber(defaultValue, text));
 					} else {
 						setText(defaultValue.toString());
 					}
