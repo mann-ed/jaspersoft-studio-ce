@@ -171,7 +171,7 @@ public class NumericText extends Text {
 					fireListeners();
 				}
 				//Refresh the value
-				setValue(storedValue, true);
+				setValue(storedValue, true, getText());
 			}
 		}
 		

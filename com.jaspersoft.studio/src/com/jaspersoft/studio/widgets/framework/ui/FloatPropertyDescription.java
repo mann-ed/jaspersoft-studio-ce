@@ -123,10 +123,8 @@ public class FloatPropertyDescription extends NumberPropertyDescription<Float> {
 					int unconvertedDecimal = widget.getText().indexOf(ValidatedDecimalFormat.DECIMAL_SEPARATOR);
 					if (unconvertedDecimal == -1) {
 						tvalue = tvalue.substring(0, decimalPosition);
-					} else {
-						if (widget.getText().endsWith("0") && !tvalue.endsWith("0")) {
-							tvalue += "0";
-						}
+					} else if (widget.getText().endsWith("0")){
+						tvalue = widget.getText();
 					}
 				}
 			}
