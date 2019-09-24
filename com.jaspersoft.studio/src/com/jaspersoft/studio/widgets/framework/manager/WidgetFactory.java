@@ -124,6 +124,7 @@ public class WidgetFactory {
 			hardcodedWidgets.put("float", new FloatPropertyDescription());
 			hardcodedWidgets.put("integer", new IntegerPropertyDescription());
 			hardcodedWidgets.put("double", new DoublePropertyDescription());
+			hardcodedWidgets.put("number", new DoublePropertyDescription());
 			hardcodedWidgets.put("long", new LongPropertyDescription());
 			hardcodedWidgets.put("bigdecimal", new BigDecimalPropertyDescription());
 			hardcodedWidgets.put("text", new TextPropertyDescription<String>());

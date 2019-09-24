@@ -6,6 +6,7 @@ package com.jaspersoft.studio.widgets.framework;
 
 import org.eclipse.swt.widgets.Composite;
 
+import com.jaspersoft.studio.utils.ValidatedDecimalFormat;
 import com.jaspersoft.studio.widgets.framework.model.WidgetPropertyDescriptor;
 import com.jaspersoft.studio.widgets.framework.ui.ItemPropertyDescription;
 
@@ -14,7 +15,7 @@ import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 /**
  * This custom version of the standard {@link WItemProperty} is meant to be used
- * with integer widgets where it is not possible to rely on the standard value string
+ * with number widgets where it is not possible to rely on the standard value string
  * for the property value.
  * <p>
  * 
@@ -24,14 +25,14 @@ import net.sf.jasperreports.engine.design.JRDesignExpression;
  * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
  *
  */
-public class WIntegerItemProperty extends WItemProperty {
+public class WNumberItemProperty extends WItemProperty {
 
-	public WIntegerItemProperty(Composite parent, int style, ItemPropertyDescription<?> widgetDescriptor,
+	public WNumberItemProperty(Composite parent, int style, ItemPropertyDescription<?> widgetDescriptor,
 			IPropertyEditor editor) {
 		super(parent, style, widgetDescriptor, editor);
 	}
 
-	public WIntegerItemProperty(Composite parent, int style, WidgetPropertyDescriptor descriptor,
+	public WNumberItemProperty(Composite parent, int style, WidgetPropertyDescriptor descriptor,
 			ItemPropertyDescription<?> widgetDescriptor, IPropertyEditor editor) {
 		super(parent, style, descriptor, widgetDescriptor, editor);
 	}
@@ -57,13 +58,26 @@ public class WIntegerItemProperty extends WItemProperty {
 			JRExpression expressionValue = getExpressionValue();
 			if(expressionValue!=null){
 				String numText = expressionValue.getText();
-				try{
-					int parseInt = Integer.parseInt(numText);
-					return ""+parseInt;
-				}
-				catch(NumberFormatException ex) {
-					// silent catch 
-				}
+				return numText;
+//				try{
+//					double parsedNum = Double.parseDouble((numText));
+//					String parsedNumString = parsedNum+"";
+//					if (parsedNumString != null && numText != null) {
+//						int decimalPosition = parsedNumString.indexOf(ValidatedDecimalFormat.DECIMAL_SEPARATOR);
+//						if (decimalPosition != -1) {
+//							int unconvertedDecimal = numText.indexOf(ValidatedDecimalFormat.DECIMAL_SEPARATOR);
+//							if (unconvertedDecimal == -1) {
+//								parsedNumString = parsedNumString.substring(0, decimalPosition);
+//							}
+//						} else if (numText.endsWith("0")){
+//							parsedNumString = numText;
+//						}
+//					}
+//					return parsedNumString;
+//				}
+//				catch(NumberFormatException ex) {
+//					// silent catch 
+//				}
 			}
 		}
 		return super.getStaticValue();
