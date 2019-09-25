@@ -238,6 +238,7 @@ public class ReportController {
 				|| name.startsWith("XLSX_") || name.startsWith("XLS_") //$NON-NLS-1$
 				|| name.startsWith("JSON_") || name.startsWith("HIBERNATE_") //$NON-NLS-1$
 				|| name.startsWith("JPA_") || name.startsWith("CSV_") //$NON-NLS-1$
+				|| name.startsWith(JRParameter.REPORT_CONTEXT)
 				|| name.contains("csv.source") || name.startsWith("XMLA_")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -411,7 +412,7 @@ public class ReportController {
 						Set<String> toRemove = new HashSet<>();
 						for (String key : jasperParameters.keySet()) {
 							JRParameter p = jd.getParametersMap().get(key);
-							if (p != null && !p.isSystemDefined() && !p.isForPrompting())
+							if (p != null && !p.isSystemDefined() && !p.isForPrompting() && !keepParameter(p.getName()))
 								toRemove.add(p.getName());
 						}
 						for (String key : toRemove)
