@@ -202,7 +202,7 @@ public class OpenInEditorAction extends Action {
 		newFile.createLink(path, IResource.REPLACE, monitor);
 	}
 
-	private void openEditor(final IFile f, final AMResource res) {
+	protected void openEditor(final IFile f, final AMResource res) {
 		// FIXME - temporary fix to handle the case of opening a book from JRS
 		BookUtils.checkFileResourceForDefaultEditor(f);
 		if (!openInEditor)

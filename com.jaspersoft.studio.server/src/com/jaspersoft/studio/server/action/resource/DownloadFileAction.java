@@ -22,8 +22,7 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 public class DownloadFileAction extends OpenInEditorAction {
 	private static final String ID = "DOWNLOADJSRESOURCE"; //$NON-NLS-1$
-
-	// private TreeViewer treeViewer;
+ 
 
 	public DownloadFileAction(TreeViewer treeViewer) {
 		super(treeViewer, true);
@@ -46,6 +45,7 @@ public class DownloadFileAction extends OpenInEditorAction {
 		return false;
 	}
 	
+	@Override
 	protected void doExportJrxml(AFileResource res, ResourceDescriptor rd, String fkeyname, IProgressMonitor monitor)
 			throws Exception {
 		IFile f = new JrxmlExporter(path).exportToIFile(res, rd, fkeyname, monitor);
@@ -53,6 +53,7 @@ public class DownloadFileAction extends OpenInEditorAction {
 			JasperReportsConfiguration jrconf = JasperReportsConfiguration.getDefaultJRConfig(f);
 			try {
 				jrconf.getPrefStore().setValue(JRSEditorContributor.KEY_PUBLISH2JSS_SILENT, true);
+				openEditor(f, res);
 			} finally {
 				jrconf.dispose();
 			}

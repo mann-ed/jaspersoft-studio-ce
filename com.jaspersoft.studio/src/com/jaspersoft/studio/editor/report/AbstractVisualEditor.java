@@ -46,7 +46,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -202,8 +201,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	private FlyoutPreferences palettePreferences;
 
 	protected JasperReportsConfiguration jrContext;
-	
-	/** The ruler comp. */
+
+	/** The ruler composite. */
 	private JDRulerComposite rulerComp;
 
 	public JasperReportsConfiguration getJrContext() {
@@ -242,21 +241,22 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	/**
 	 * Sets the model.
 	 * 
-	 * @param model
-	 *            the new model
+	 * @param model the new model
 	 */
 	public void setModel(INode model) {
 		this.model = model;
-		// getGraphicalViewer().setRootEditPart(new MainDesignerRootEditPart());
-		// if (model != null)
 		getGraphicalViewer().setContents(model);
 		if (outlinePage != null) {
-			// The outline for the current editor maybe not available because it was closed
-			// and reopened into another editor. So when we try to set its contents it is
-			// better to check if it was disposed outside and in that case recrated it.
+			// The outline for the current editor maybe not available because it
+			// was closed
+			// and reopened into another editor. So when we try to set its
+			// contents it is
+			// better to check if it was disposed outside and in that case
+			// recreated it.
 			if (outlinePage.isDisposed()) {
 				// If the outline is recreated by calling the getOutlineView
-				// then the setContends it is already done so we need to do it only in the else
+				// then the setContends it is already done so we need to do it
+				// only in the else
 				// case
 				getOutlineView();
 			} else
@@ -293,13 +293,16 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.jaspersoft.studio.editor.java2d.J2DGraphicalEditorWithFlyoutPalette#
+	 * @see
+	 * com.jaspersoft.studio.editor.java2d.J2DGraphicalEditorWithFlyoutPalette#
 	 * createGraphicalViewer(org.eclipse.swt. widgets .Composite)
 	 */
 	@Override
 	protected void createGraphicalViewer(Composite parent) {
-		//the rulerComp is the composite that will contain both the ruler and the editor as child
-		//this doens't change if the editor is visible or not, since it act only as container 
+		// the rulerComp is the composite that will contain both the ruler and
+		// the editor as child
+		// this doens't change if the editor is visible or not, since it act
+		// only as container
 		rulerComp = new JDRulerComposite(parent, SWT.NONE, this);
 		super.createGraphicalViewer(rulerComp);
 		rulerComp.setGraphicalViewer((ScrollingGraphicalViewer) getGraphicalViewer());
@@ -312,13 +315,12 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	public JDRulerComposite getRuler() {
 		return rulerComp;
 	}
-	
+
 	public void layout() {
-		//this is a short running method so it can be executed synchronously
-		UIUtils.getDisplay().syncExec(new Runnable() {
-		    public void run() {
+		// this is a short running method so it can be executed synchronously
+		UIUtils.getDisplay().syncExec(() -> {
+			if (!rulerComp.isDisposed())
 				rulerComp.requestLayout();
-		    }
 		});
 	}
 
@@ -326,7 +328,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#getPaletteRoot()
+	 * org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#getPaletteRoot(
+	 * )
 	 */
 	@Override
 	protected PaletteRoot getPaletteRoot() {
@@ -341,9 +344,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#getGraphicalControl
-	 * ()
+	 * @see org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#
+	 * getGraphicalControl ()
 	 */
 	@Override
 	protected Control getGraphicalControl() {
@@ -404,12 +406,12 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 		int gspaceX = jrContext.getPropertyInteger(RulersGridPreferencePage.P_PAGE_RULERGRID_GRIDSPACEX, 10);
 		int gspaceY = jrContext.getPropertyInteger(RulersGridPreferencePage.P_PAGE_RULERGRID_GRIDSPACEY, 10);
 
-		graphicalViewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, isSnapToGrid.booleanValue());
-		graphicalViewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, isGridVisible.booleanValue());
+		graphicalViewer.setProperty(SnapToGrid.PROPERTY_GRID_ENABLED, isSnapToGrid);
+		graphicalViewer.setProperty(SnapToGrid.PROPERTY_GRID_VISIBLE, isGridVisible);
 		graphicalViewer.setProperty(SnapToGrid.PROPERTY_GRID_ORIGIN, new Point(30, 30));
 		graphicalViewer.setProperty(SnapToGrid.PROPERTY_GRID_SPACING, new Dimension(gspaceX, gspaceY));
 		graphicalViewer.setProperty(SnapToGuidesAction.ID, isSnapToGuides);
-		graphicalViewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, isSnapToGeometry.booleanValue());
+		graphicalViewer.setProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED, isSnapToGeometry);
 
 		IAction showGrid = new ShowGridAction(jrContext);
 		getActionRegistry().registerAction(showGrid);
@@ -485,15 +487,13 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 				return isSame((IWorkbenchPart) spage);
 		}
 		if (part instanceof ContentOutline) {
-			IContentOutlinePage outPage = (IContentOutlinePage) part.getAdapter(IContentOutlinePage.class);
+			IContentOutlinePage outPage = part.getAdapter(IContentOutlinePage.class);
 			if (outPage instanceof MultiOutlineView)
 				return isSame(((MultiOutlineView) outPage).getEditor());
 			else if (outPage instanceof JDReportOutlineView) {
 				JDReportOutlineView coPage = (JDReportOutlineView) outPage;
 				return coPage == outlinePage;
 			}
-			// if (outPage != null)
-			// return isSame(outPage);
 		}
 		return false;
 	}
@@ -506,8 +506,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#getAdapter(java.
-	 * lang.Class)
+	 * org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#getAdapter(
+	 * java. lang.Class)
 	 */
 	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class type) {
@@ -580,7 +580,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 		graphicalViewer.addDropTargetListener(
 				new ImageResourceDropTargetListener(graphicalViewer, ImageURLTransfer.getInstance()));
 
-		// Load the contributed drop providers for the contributed template styles
+		// Load the contributed drop providers for the contributed template
+		// styles
 		List<TemplateViewProvider> dropProviders = JaspersoftStudioPlugin.getExtensionManager().getStylesViewProvider();
 		for (TemplateViewProvider provider : dropProviders) {
 			AbstractTransferDropTargetListener listener = provider.getDropListener(graphicalViewer);
@@ -595,9 +596,10 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				IContextService service = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+				IContextService service = PlatformUI.getWorkbench().getService(IContextService.class);
 				if (context != null && service != null) {
-					// it could be activated somewhere else, we don't know, so I add this dirty :(
+					// it could be activated somewhere else, we don't know, so I
+					// add this dirty :(
 					for (int i = 0; i < 10; i++)
 						service.deactivateContext(context);
 				}
@@ -605,7 +607,7 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				IContextService service = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+				IContextService service = PlatformUI.getWorkbench().getService(IContextService.class);
 				if (service != null)
 					context = service.activateContext("com.jaspersoft.studio.context"); //$NON-NLS-1$
 			}
@@ -626,8 +628,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#createPalettePage()
+	 * @see org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette#
+	 * createPalettePage()
 	 */
 	@Override
 	protected CustomPalettePage createPalettePage() {
@@ -660,15 +662,19 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 				viewer.getEditDomain().loadDefaultTool();
 				// Uncomment these lines if you want to set as default a palette
 				// with column layout and large icons.
-				// // TODO: we should replace these default suggestions not using the GEF
+				// // TODO: we should replace these default suggestions not
+				// using the GEF
 				// preference
-				// // store explicitly. It would be better override the PaletteViewer creation
+				// // store explicitly. It would be better override the
+				// PaletteViewer creation
 				// in order
 				// // to have a custom PaletteViewerPreferences
 				// (#viewer.getPaletteViewerPreferences()).
-				// // This way we could store the preferences in our preference store (maybe the
+				// // This way we could store the preferences in our preference
+				// store (maybe the
 				// JaspersoftStudio plugin one).
-				// // For now we'll stay with this solution avoiding the user to lose previous
+				// // For now we'll stay with this solution avoiding the user to
+				// lose previous
 				// saved preferences
 				// // regarding the palette.
 				// InternalGEFPlugin.getDefault().getPreferenceStore().setDefault(
@@ -682,9 +688,7 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 			protected void hookPaletteViewer(PaletteViewer viewer) {
 				super.hookPaletteViewer(viewer);
 				final CopyTemplateAction copy = new CopyTemplateAction(AbstractVisualEditor.this);
-				if (copy != null) {
-					viewer.addSelectionChangedListener(copy);
-				}
+				viewer.addSelectionChangedListener(copy);
 			}
 		};
 	}
@@ -697,8 +701,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	}
 
 	/**
-	 * Create the contextual action to add stuff to the datasets (fields, variables)
-	 * and to create styles.
+	 * Create the contextual action to add stuff to the datasets (fields,
+	 * variables) and to create styles.
 	 */
 	protected void createDatasetAndStyleActions(ActionRegistry registry) {
 		List<String> selectionActions = getSelectionActions();
@@ -847,7 +851,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 
 		List<String> selectionActions = getSelectionActions();
 
-		// Create the custom delete action that aggregate all the messages when more
+		// Create the custom delete action that aggregate all the messages when
+		// more
 		// elements are deleted
 		// the old default action is replaced
 		createDeleteAction(registry);
@@ -1065,7 +1070,7 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 		action = new Size2BorderAction(this, Size2BorderAction.BOTH);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new MaximizeContainerAction(this);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
@@ -1113,7 +1118,7 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 		// End of the convert actions
-		
+
 		action = new AdjustTextFontSize(this);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
@@ -1215,14 +1220,14 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 		selectionActions.add(action.getId());
 
 		// End of the background actions
-		
+
 		// Contributed actions
 		List<Action> contributedActions = JaspersoftStudioPlugin.getExtensionManager().getEditorActions(this);
-		for(Action cAction : contributedActions) {
+		for (Action cAction : contributedActions) {
 			registry.registerAction(cAction);
 			selectionActions.add(cAction.getId());
 		}
-		
+
 	}
 
 	protected void createEditorActions(ActionRegistry registry) {
@@ -1231,43 +1236,39 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 
 	protected RZoomComboContributionItem zoomItem = null;
 	protected IToolBarManager topToolbarManager;
-	protected List<ActionContributionItem> act4TextIcon = new ArrayList<ActionContributionItem>();
+	protected List<ActionContributionItem> act4TextIcon = new ArrayList<>();
 	protected IPropertyChangeListener pcListener;
 
+	@Override
 	public void dispose() {
 		if (pcListener != null)
 			JaspersoftStudioPlugin.getInstance().removePreferenceListener(pcListener);
 		super.dispose();
-	};
+	}
 
 	protected void setTextIcon() {
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				JasperReportsConfiguration jc = getJrContext();
-				Boolean forceText = jc.getPropertyBoolean(DesignerPreferencePage.P_TITLEICON);
-				if (pcListener == null) {
-					pcListener = new IPropertyChangeListener() {
-
-						public void propertyChange(PropertyChangeEvent event) {
-							String property = event.getProperty();
-							if (property.equals(DesignerPreferencePage.P_TITLEICON))
-								setTextIcon();
-						}
-					};
-					JaspersoftStudioPlugin.getInstance().addPreferenceListener(pcListener);
-				}
-
-				for (ActionContributionItem act : act4TextIcon)
-					act.setMode(forceText != null && forceText ? ActionContributionItem.MODE_FORCE_TEXT : 0);
-				topToolbarManager.update(true);
+		UIUtils.getDisplay().asyncExec(() -> {
+			JasperReportsConfiguration jc = getJrContext();
+			Boolean forceText = jc.getPropertyBoolean(DesignerPreferencePage.P_TITLEICON);
+			if (pcListener == null) {
+				pcListener = event -> {
+					String property = event.getProperty();
+					if (property.equals(DesignerPreferencePage.P_TITLEICON))
+						setTextIcon();
+				};
+				JaspersoftStudioPlugin.getInstance().addPreferenceListener(pcListener);
 			}
+
+			for (ActionContributionItem act : act4TextIcon)
+				act.setMode(forceText != null && forceText ? ActionContributionItem.MODE_FORCE_TEXT : 0);
+			topToolbarManager.update(true);
 		});
 	}
 
 	/**
-	 * Contributes items to the specified toolbar that is supposed to be put on the
-	 * top right of the current visual editor (i.e: ReportEditor, CrosstabEditor,
-	 * TableEditor, ListEditor).
+	 * Contributes items to the specified toolbar that is supposed to be put on
+	 * the top right of the current visual editor (i.e: ReportEditor,
+	 * CrosstabEditor, TableEditor, ListEditor).
 	 * <p>
 	 * 
 	 * Default behavior contributes the following items:
@@ -1280,8 +1281,7 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	 * 
 	 * Sub-classes may want to override this method to modify the toolbar.
 	 * 
-	 * @param toolbarManager
-	 *            the toolbar manager to be enriched
+	 * @param toolbarManager the toolbar manager to be enriched
 	 */
 	public void contributeItemsToEditorTopToolbar(IToolBarManager toolbarManager) {
 		this.topToolbarManager = toolbarManager;
@@ -1304,13 +1304,13 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	}
 
 	/**
-	 * Return the main element managed by this editor, page and root are excluded
+	 * Return the main element managed by this editor, page and root are
+	 * excluded
 	 */
 	public INode getManagedElement() {
 		INode node = model;
-		while (node != null && !node.getChildren().isEmpty() && (node instanceof MRoot || node instanceof MPage)) {
+		while (node != null && !node.getChildren().isEmpty() && (node instanceof MRoot || node instanceof MPage))
 			node = node.getChildren().get(node.getChildren().size() - 1);
-		}
 		return node;
 	}
 
@@ -1321,12 +1321,11 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	 */
 	public boolean isEditorVisible() {
 		IEditorPart editor = SelectionHelper.getActiveJRXMLEditor();
-		if (editor != null && editor instanceof AbstractJRXMLEditor) {
+		if (editor instanceof AbstractJRXMLEditor) {
 			AbstractJRXMLEditor jrxmlEditor = (AbstractJRXMLEditor) editor;
 			IEditorPart activeEditor = jrxmlEditor.getActiveInnerEditor();
-			if (activeEditor != null) {
+			if (activeEditor != null)
 				return (this == activeEditor);
-			}
 		}
 		return true;
 	}
