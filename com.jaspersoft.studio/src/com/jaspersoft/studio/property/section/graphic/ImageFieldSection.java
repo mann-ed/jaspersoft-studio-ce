@@ -55,7 +55,7 @@ public class ImageFieldSection extends AbstractRealValueSection {
 		createWidget4Property(parent, JRBaseStyle.PROPERTY_SCALE_IMAGE);
 
 		createWidget4Property(parent, JRBaseImage.PROPERTY_ON_ERROR_TYPE);
-
+		createWidget4Property(parent, JRBaseStyle.PROPERTY_ROTATION);
 	}
 
 	
@@ -68,5 +68,6 @@ public class ImageFieldSection extends AbstractRealValueSection {
 		addProvidedProperties(JRBaseStyle.PROPERTY_FILL, Messages.common_fill);
 		addProvidedProperties(JRBaseStyle.PROPERTY_SCALE_IMAGE, Messages.MImage_scale_image);
 		addProvidedProperties(JRBaseImage.PROPERTY_ON_ERROR_TYPE, Messages.MImage_on_error_type);
+		addProvidedProperties(JRBaseStyle.PROPERTY_ROTATION, Messages.MImage_on_error_type);
 	}
 }

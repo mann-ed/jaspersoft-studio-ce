@@ -259,6 +259,7 @@ public class LazyImageConverter extends ElementConverter {
 		printImage.setBookmarkLevel(image.getBookmarkLevel());
 		printImage.setHorizontalImageAlign(image.getOwnHorizontalImageAlign());
 		printImage.setLinkType(image.getLinkType());
+		printImage.setRotation(image.getRotation());
 		printImage.setOnErrorType(OnErrorTypeEnum.ICON);
 		printImage.setVerticalImageAlign(image.getOwnVerticalImageAlign());
 		// If it is null load the no image found element
