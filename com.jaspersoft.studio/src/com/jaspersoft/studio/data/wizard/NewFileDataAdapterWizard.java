@@ -144,7 +144,17 @@ public class NewFileDataAdapterWizard extends AbstractDataAdapterWizard implemen
 				setErrorMessage(Messages.NewFileDataAdapterWizard_VirtualFolderError);
 				return false;
 			}
-			return super.canFlipToNextPage();
+			IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(getContainerFullPath());
+			String fileName = getFileName();
+			IFile file = r.getProject().getFile(fileName);
+			if (file.exists()) {
+				return false;
+			}
+			if (!fileName.endsWith(".xml")) {
+				fileName += ".xml"; 
+			}
+			file = r.getProject().getFile(fileName);
+			return !file.exists();
 		}
 
 		@Override
@@ -202,7 +212,7 @@ public class NewFileDataAdapterWizard extends AbstractDataAdapterWizard implemen
 			step1.setFileName(filename);
 		}
 	}
-
+	
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == step1) {
