@@ -5,8 +5,10 @@
 package com.jaspersoft.studio.server.action.resource;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -40,11 +42,13 @@ import com.jaspersoft.studio.server.model.AFileResource;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MJrxml;
 import com.jaspersoft.studio.server.model.MReportUnit;
+import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.publish.PublishUtil;
 import com.jaspersoft.studio.utils.SelectionHelper;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileUtils;
 
 public class OpenInEditorAction extends Action {
 	private static final String ID = "OPENINEDITOR"; //$NON-NLS-1$
@@ -85,7 +89,26 @@ public class OpenInEditorAction extends Action {
 		return (obj != null && (obj instanceof AFileResource && !(obj instanceof MReportUnit)));
 	}
 
-	protected boolean preDownload(AFileResource fres) {
+	protected boolean preDownload(AFileResource fres, IProgressMonitor monitor) {
+		INode root = fres.getRoot();
+		IFolder ttroot = null;
+		try {
+			if (root instanceof MServerProfile)
+				ttroot = ((MServerProfile) root).getTmpDir(monitor);
+			else
+				ttroot = FileUtils.getInProjectFolder(FileUtils.createTempDir().toURI(), monitor);
+			ResourceDescriptor rd = fres.getValue();
+			String f = rd.getParentFolder() + File.separator + rd.getName();
+			IFile file = ttroot.getFile(f);
+			if (!file.exists()) {
+				File nf = file.getRawLocation().toFile();
+				nf.getParentFile().mkdirs();
+				nf.createNewFile();
+			}
+			path = file.getFullPath();
+		} catch (IOException | CoreException e) {
+			UIUtils.showError(e);
+		}
 		return true;
 	}
 
@@ -96,7 +119,7 @@ public class OpenInEditorAction extends Action {
 		for (int i = 0; i < p.length; i++) {
 			final Object obj = p[i].getLastSegment();
 			if (isFileResource(obj)) {
-				if (preDownload((AFileResource) obj)) {
+				if (preDownload((AFileResource) obj, new NullProgressMonitor())) {
 					WorkspaceJob job = new WorkspaceJob(Messages.OpenInEditorAction_0) {
 						public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 							try {
@@ -172,8 +195,9 @@ public class OpenInEditorAction extends Action {
 					AFileResource mfile = (AFileResource) n;
 					fkeyname = ServerManager.getKey(mfile);
 					rd = WSClientHelper.getResource(new NullProgressMonitor(), mfile, mfile.getValue());
-					IPath p = Path.fromOSString(
-							path.toFile().getParentFile().getAbsolutePath() + File.separator + rd.getName());
+					String pfolder = path != null ? path.toFile().getParentFile().getAbsolutePath() : "";
+
+					IPath p = Path.fromOSString(pfolder + File.separator + rd.getName());
 					exportFile(rd, fkeyname, monitor, f, runit, mfile, p);
 				}
 			}
@@ -183,17 +207,18 @@ public class OpenInEditorAction extends Action {
 	private void exportFile(ResourceDescriptor rd, String fkeyname, IProgressMonitor monitor, IFile f,
 			MReportUnit runit, AFileResource mfile, IPath p) throws Exception {
 		AExporter exp = null;
-		if(rd.getWsType().equals(ResourceDescriptor.TYPE_IMAGE))
+		if (rd.getWsType().equals(ResourceDescriptor.TYPE_IMAGE))
 			exp = new ImageExporter(p);
-		else if(rd.getWsType().equals(ResourceDescriptor.TYPE_JRXML))
+		else if (rd.getWsType().equals(ResourceDescriptor.TYPE_JRXML))
 			exp = new ImageExporter(p);
 		else
 			exp = new AExporter(p);
 		IFile file = exp.exportToIFile(mfile, rd, fkeyname, monitor);
-		if (file != null)
+		if (file != null) {
 			PublishUtil.savePath(file, mfile);
-		if (rd.getReferenceUri() != null || !rd.getUriString().startsWith(runit.getValue().getUriString()))
-			createLink(file.getLocation(), rd.getName(), f, monitor);
+			if (rd.getReferenceUri() != null || !rd.getUriString().startsWith(runit.getValue().getUriString()))
+				createLink(file.getLocation(), rd.getName(), f, monitor);
+		}
 	}
 
 	private void createLink(IPath path, String name, IFile file, IProgressMonitor monitor) throws CoreException {

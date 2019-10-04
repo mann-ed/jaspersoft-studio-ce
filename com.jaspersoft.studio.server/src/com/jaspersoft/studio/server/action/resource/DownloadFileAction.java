@@ -22,7 +22,6 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 public class DownloadFileAction extends OpenInEditorAction {
 	private static final String ID = "DOWNLOADJSRESOURCE"; //$NON-NLS-1$
- 
 
 	public DownloadFileAction(TreeViewer treeViewer) {
 		super(treeViewer, true);
@@ -35,7 +34,7 @@ public class DownloadFileAction extends OpenInEditorAction {
 	}
 
 	@Override
-	protected boolean preDownload(AFileResource fres) {
+	protected boolean preDownload(AFileResource fres, IProgressMonitor monitor) {
 		SaveAsDialog saveAsDialog = new SaveAsDialog(Display.getDefault().getActiveShell());
 		saveAsDialog.setOriginalName(AExporter.getNewFileName(fres.getValue(), "." + fres.getDefaultFileExtension())); //$NON-NLS-1$
 		if (saveAsDialog.open() == Dialog.OK) {
@@ -44,7 +43,7 @@ public class DownloadFileAction extends OpenInEditorAction {
 		}
 		return false;
 	}
-	
+
 	@Override
 	protected void doExportJrxml(AFileResource res, ResourceDescriptor rd, String fkeyname, IProgressMonitor monitor)
 			throws Exception {
