@@ -139,19 +139,20 @@ public class ICParameterContributor implements IParameterICContributor {
 		cOpt = new Combo(parent, SWT.READ_ONLY);
 		Class<?> pClazz = prm != null ? prm.getValueClass() : null;
 		if (pClazz != null && (Collection.class.isAssignableFrom(pClazz) || pClazz.isArray()))
-			cOpt.setItems(new String[] { "", "Existing From Repository", Messages.ICTypes_0, Messages.ICTypes_1,
-					Messages.ICTypes_3, Messages.ICTypes_6, Messages.ICTypes_5, Messages.ICTypes_8 });
+			cOpt.setItems("", "Existing From Repository", Messages.ICTypes_0, Messages.ICTypes_1, Messages.ICTypes_3,
+					Messages.ICTypes_6, Messages.ICTypes_5, Messages.ICTypes_8);
 		else
-			cOpt.setItems(new String[] { "", "Existing From Repository", Messages.ICTypes_0, Messages.ICTypes_1,
-					Messages.ICTypes_2, Messages.ICTypes_7, Messages.ICTypes_4, Messages.ICTypes_9 });
+			cOpt.setItems("", "Existing From Repository", Messages.ICTypes_0, Messages.ICTypes_1, Messages.ICTypes_2,
+					Messages.ICTypes_7, Messages.ICTypes_4, Messages.ICTypes_9);
 
 		cOpt.addModifyListener(e -> {
 			if (refresh)
 				return;
 			refresh = true;
 			try {
-				cmp.dispose();
-				boolean isCol = Collection.class.isAssignableFrom(pClazz) || pClazz.isArray();
+				if (cmp != null)
+					cmp.dispose();
+				boolean isCol = pClazz != null && (Collection.class.isAssignableFrom(pClazz) || pClazz.isArray());
 				switch (cOpt.getSelectionIndex()) {
 				case 1:
 					ICParameterContributor.this.prm.getPropertiesMap().removeProperty(PROPERTY_JS_INPUTCONTROL_LABEL);
@@ -327,7 +328,7 @@ public class ICParameterContributor implements IParameterICContributor {
 
 	public void setWidgetsState() {
 		if (refresh || cOpt.isDisposed())
-			return; 
+			return;
 		refresh = true;
 		String path = prm != null ? prm.getPropertiesMap().getProperty(PROPERTY_JS_INPUTCONTROL_PATH) : "";
 		String v = Misc.nvl(prm != null ? prm.getPropertiesMap().getProperty(PROPERTY_JS_INPUTCONTROL_TYPE) : "");
@@ -371,6 +372,7 @@ public class ICParameterContributor implements IParameterICContributor {
 			prm.getPropertiesMap().getEventSupport().removePropertyChangeListener(pmapListener);
 			prm.getPropertiesMap().getEventSupport().addPropertyChangeListener(pmapListener);
 		}
+		cOpt.setEnabled(prm != null);
 		if (wDs != null)
 			wDs.setElement(prm);
 		if (wValue != null)
