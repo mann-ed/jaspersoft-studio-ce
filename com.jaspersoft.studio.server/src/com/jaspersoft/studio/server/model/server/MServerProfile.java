@@ -300,7 +300,7 @@ public class MServerProfile extends ANode {
 			if (!tmpDir.getFullPath().toFile().exists()) {
 				if (!tmpDir.exists()) {
 					tmpDir.create(true, true, monitor);
-					tmpDir.setPersistentProperty(EditorContextUtil.EC_KEY, JRSEditorContext.NAME);
+					tmpDir.setPersistentProperty(EditorContextUtil.EC_KEY, JRSEditorContext.JRS_ID);
 				}
 				ServerManager.saveServerProfile(this);
 			}
