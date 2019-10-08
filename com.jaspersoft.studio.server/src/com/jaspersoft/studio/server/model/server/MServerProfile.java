@@ -37,6 +37,7 @@ import com.jaspersoft.studio.utils.Callback;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.ui.validator.IDStringValidator;
 import net.sf.jasperreports.eclipse.util.CastorHelper;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
@@ -288,10 +289,13 @@ public class MServerProfile extends ANode {
 				// if (!isAllowdLinkedResource)
 				// JDTUtils.setLinkedResourcesSupport(false);
 
-				IProject prj = FileUtils.getProject(new NullProgressMonitor());
+				IProject prj = FileUtils.getProject(monitor);
+				String sname = IDStringValidator.safeChar(getValue().getName());
+				String suffix = "";
 				int i = 1;
 				do {
-					tmpDir = prj.getFolder(getValue().getName().replace(" ", "") + "-" + i);
+					tmpDir = prj.getFolder(sname + suffix);
+					suffix = "_" + i;
 					i++;
 				} while (tmpDir.exists());
 				getValue().setProjectPath(tmpDir.getFullPath().toString());
