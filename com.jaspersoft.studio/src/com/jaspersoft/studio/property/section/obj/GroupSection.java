@@ -7,6 +7,7 @@ package com.jaspersoft.studio.property.section.obj;
 import java.text.MessageFormat;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
 import com.jaspersoft.studio.messages.Messages;
@@ -32,8 +33,13 @@ public class GroupSection extends AbstractSection {
 		nameWidget = createWidget4Property(parent, JRDesignGroup.PROPERTY_NAME);
 
 		createWidget4Property(parent, JRDesignGroup.PROPERTY_EXPRESSION);
-		createWidget4Property(parent, JRDesignGroup.PROPERTY_REPRINT_HEADER_ON_EACH_PAGE, false);
-		createWidget4Property(parent, JRDesignGroup.PROPERTY_KEEP_TOGETHER, false);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		createWidget4Property(parent, JRDesignGroup.PROPERTY_REPRINT_HEADER_ON_EACH_PAGE, false).getControl()
+				.setLayoutData(gd);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		createWidget4Property(parent, JRDesignGroup.PROPERTY_KEEP_TOGETHER, false).getControl().setLayoutData(gd);
 	}
 
 	@Override
@@ -56,9 +62,10 @@ public class GroupSection extends AbstractSection {
 	}
 
 	/**
-	 * Check if the property changed is the name and in this case check that the new
-	 * name is different from any existing group. If it is different the change is
-	 * done, otherwise a warning message is shown and the original name is restored
+	 * Check if the property changed is the name and in this case check that the
+	 * new name is different from any existing group. If it is different the
+	 * change is done, otherwise a warning message is shown and the original
+	 * name is restored
 	 */
 	@Override
 	public boolean changeProperty(Object property, Object newValue) {
