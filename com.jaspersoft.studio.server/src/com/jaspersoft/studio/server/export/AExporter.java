@@ -4,10 +4,12 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.export;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -125,6 +127,14 @@ public class AExporter {
 	public IFile exportToIFile(AMResource res, ResourceDescriptor rd, String fkeyname, IProgressMonitor monitor)
 			throws Exception {
 		IFile f = getTempFile(res, rd, fkeyname, getExtension(res), monitor);
+		if (!f.exists()) {
+			File file = f.getFullPath().toFile();
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+			f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(f.getFullPath());
+			if (!f.exists())
+				f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(f.getFullPath());
+		}
 		setServerLocation(res, f);
 		return f;
 	}
@@ -132,17 +142,19 @@ public class AExporter {
 	public static void setServerLocation(AMResource res, IFile f) throws CoreException {
 		if (f != null) {
 			MServerProfile sp = (MServerProfile) res.getRoot();
-			if (sp != null) {
-				ServerProfile v = sp.getValue();
-				try {
-					f.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PROP_SERVERURL), v.getUrl());
-					f.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PROP_USER), encodeUsr(v));
-				} catch (MalformedURLException | URISyntaxException e) {
-					e.printStackTrace();
+			if (f.exists()) {
+				if (sp != null) {
+					ServerProfile v = sp.getValue();
+					try {
+						f.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PROP_SERVERURL), v.getUrl());
+						f.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PROP_USER), encodeUsr(v));
+					} catch (MalformedURLException | URISyntaxException e) {
+						e.printStackTrace();
+					}
 				}
+				f.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PROP_REPORTRESOURCE),
+						res.getValue().getUriString());
 			}
-			f.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PROP_REPORTRESOURCE),
-					res.getValue().getUriString());
 		}
 	}
 
@@ -211,7 +223,10 @@ public class AExporter {
 
 	private IFile downloadFile(AMResource res, ResourceDescriptor rd, IFile f, IProgressMonitor monitor) {
 		try {
-			WSClientHelper.getResource(monitor, res, rd, f.getRawLocation().toFile());
+			IPath p = f.getRawLocation();
+			if(p == null)
+				p = f.getFullPath();
+			WSClientHelper.getResource(monitor, res, rd, p.toFile());
 			f.refreshLocal(1, monitor);
 		} catch (Exception e) {
 			UIUtils.showError(e);
@@ -224,10 +239,10 @@ public class AExporter {
 		String path = rd.getName();
 		if (rd.getWsType().equals(ResourceDescriptor.TYPE_IMAGE)) {
 			String fname = path.toLowerCase();
-			if (fname.endsWith(".jpg") || fname.endsWith(".jpeg") || fname.endsWith(".gif") || fname.endsWith(".tiff") ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			if (fname.endsWith(".jpg") || fname.endsWith(".jpeg") || fname.endsWith(".gif") || fname.endsWith(".tiff")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				return path;
 		}
-		if(!path.contains("."))
+		if (!path.contains("."))
 			path += dextention;
 		return path;
 	}

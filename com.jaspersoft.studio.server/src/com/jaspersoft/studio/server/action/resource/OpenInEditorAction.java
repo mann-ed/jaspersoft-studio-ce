@@ -101,9 +101,13 @@ public class OpenInEditorAction extends Action {
 			String f = rd.getParentFolder() + File.separator + rd.getName();
 			IFile file = ttroot.getFile(f);
 			if (!file.exists()) {
-				File nf = file.getRawLocation().toFile();
+				IPath p = file.getRawLocation();
+				if (p == null)
+					p = file.getFullPath();
+				File nf = p.toFile();
 				nf.getParentFile().mkdirs();
 				nf.createNewFile();
+				file.refreshLocal(1, monitor);
 			}
 			path = file.getFullPath();
 		} catch (IOException | CoreException e) {
