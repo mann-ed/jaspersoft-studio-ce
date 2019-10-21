@@ -11,6 +11,7 @@ import java.io.InputStream;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -50,11 +51,11 @@ import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
 
 public class FileDataAdapterStorage extends ADataAdapterStorage {
-	
+
 	private IProject project;
-	
+
 	private static XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-	
+
 	private final class ResourceVisitor implements IResourceProxyVisitor {
 		public boolean visit(IResourceProxy proxy) throws CoreException {
 			if (proxy.isTeamPrivateMember())
@@ -87,7 +88,8 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 						public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 							listenWorkspace();
 							monitor.beginTask(Messages.FileDataAdapterStorage_2 + project.getName(), 10);
-							project.accept(new ResourceVisitor(), IResource.NONE);
+							project.accept(new ResourceVisitor(), IResource.NONE,
+									IContainer.EXCLUDE_DERIVED | IContainer.DO_NOT_CHECK_EXISTENCE);
 
 							if (monitor.isCanceled())
 								return Status.CANCEL_STATUS;
@@ -106,16 +108,22 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 									IResourceDelta docDelta = delta.findMember(project.getFullPath());
 									if (docDelta == null)
 										return;
-									if (!(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED || (delta
-											.getKind() == IResourceDelta.CHANGED && ((delta.getFlags() & (IResourceDelta.CONTENT
-											| IResourceDelta.ADDED | IResourceDelta.MOVED_TO | IResourceDelta.CHANGED
-											| IResourceDelta.COPIED_FROM | IResourceDelta.REPLACED | IResourceDelta.SYNC | IResourceDelta.MOVED_FROM)) == 0))))
+									if (!(delta.getKind() == IResourceDelta.ADDED
+											|| delta.getKind() == IResourceDelta.REMOVED
+											|| (delta.getKind() == IResourceDelta.CHANGED && ((delta.getFlags()
+													& (IResourceDelta.CONTENT | IResourceDelta.ADDED
+															| IResourceDelta.MOVED_TO | IResourceDelta.CHANGED
+															| IResourceDelta.COPIED_FROM | IResourceDelta.REPLACED
+															| IResourceDelta.SYNC | IResourceDelta.MOVED_FROM)) == 0))))
 										return;
-									// we get event of file creation but file is empty, so we have to wait 1sec to give the possibility to
+									// we get event of file creation but file is
+									// empty, so we have to wait 1sec to give
+									// the possibility to
 									// write into it
 									new WorkspaceJob(Messages.FileDataAdapterStorage_1) {
 										public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-											monitor.beginTask(Messages.FileDataAdapterStorage_2 + project.getName(), 10);
+											monitor.beginTask(Messages.FileDataAdapterStorage_2 + project.getName(),
+													10);
 											processEvent(delta);
 											if (monitor.isCanceled())
 												return Status.CANCEL_STATUS;
@@ -132,36 +140,33 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 
 											public boolean visit(IResourceDelta delta) throws CoreException {
 												final IResource res = delta.getResource();
-												if (res.getType() == IResource.FILE && "xml".equalsIgnoreCase(res.getFileExtension())) //$NON-NLS-1$
+												if (res.getType() == IResource.FILE
+														&& "xml".equalsIgnoreCase(res.getFileExtension())) //$NON-NLS-1$
 													switch (delta.getKind()) {
 													case IResourceDelta.ADDED:
 														checkFile((IFile) res);
 														break;
 													case IResourceDelta.REMOVED:
-														UIUtils.getDisplay().asyncExec(new Runnable() {
-
-															public void run() {
-																DataAdapterDescriptor das = findDataAdapter(res.getProjectRelativePath().toOSString());
-																removeDataAdapter(das);
-															}
+														UIUtils.getDisplay().asyncExec(() -> {
+															DataAdapterDescriptor das = findDataAdapter(
+																	res.getProjectRelativePath().toOSString());
+															removeDataAdapter(das);
 														});
 														break;
 													case IResourceDelta.CHANGED:
-														UIUtils.getDisplay().asyncExec(new Runnable() {
-
-															public void run() {
-																
-																DataAdapterDescriptor das = findDataAdapter(res.getProjectRelativePath().toOSString());
-																if (das != null) {
-																	FileDataAdapterStorage.super.removeDataAdapter(das);
-																	try {
-																		IFile file = (IFile) res;
-																		das = readDataADapter(file.getContents(), file);
-																		das.setName(file.getProjectRelativePath().toOSString());
-																		FileDataAdapterStorage.super.addDataAdapter(das);
-																	} catch (CoreException e) {
-																		UIUtils.showError(e);
-																	}
+														UIUtils.getDisplay().asyncExec(() -> {
+															DataAdapterDescriptor das = findDataAdapter(
+																	res.getProjectRelativePath().toOSString());
+															if (das != null) {
+																FileDataAdapterStorage.super.removeDataAdapter(das);
+																try {
+																	IFile file = (IFile) res;
+																	das = readDataADapter(file.getContents(), file);
+																	das.setName(
+																			file.getProjectRelativePath().toOSString());
+																	FileDataAdapterStorage.super.addDataAdapter(das);
+																} catch (CoreException e) {
+																	UIUtils.showError(e);
 																}
 															}
 														});
@@ -191,7 +196,8 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 		boolean result = super.addDataAdapter(adapter);
 		if (result) {
 			IFile file = project.getFile(adapter.getName());
-			String xml = DataAdapterManager.toDataAdapterFile(adapter, JasperReportsConfiguration.getDefaultJRConfig(file));
+			String xml = DataAdapterManager.toDataAdapterFile(adapter,
+					JasperReportsConfiguration.getDefaultJRConfig(file));
 			try {
 				if (file.exists())
 					file.setContents(new ByteArrayInputStream(xml.getBytes()), true, true, new NullProgressMonitor());
@@ -223,20 +229,15 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 	}
 
 	private void checkFile(final IFile file) throws CoreException {
-		if (!file.isAccessible() || file.isDerived() || file.isPhantom() || file.isHidden() || file.isVirtual())
+		if (!file.isAccessible() || file.isDerived() || file.isPhantom() || file.isHidden() || file.isVirtual()
+				|| !file.exists())
 			return;
 		String ext = file.getFileExtension();
 		if (ext.equals("xml")) { //$NON-NLS-1$
 			final DataAdapterDescriptor das = readDataADapter(file.getContents(), file);
 			if (das != null) {
 				das.setName(file.getProjectRelativePath().toOSString());
-				UIUtils.getDisplay().asyncExec(new Runnable() {
-
-					public void run() {
-						FileDataAdapterStorage.super.addDataAdapter(das);
-					}
-				});
-
+				UIUtils.getDisplay().asyncExec(() -> FileDataAdapterStorage.super.addDataAdapter(das));
 			}
 		}
 	}
@@ -253,8 +254,9 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 		}
 		return null;
 	}
-	
-	public static DataAdapterDescriptor readDataADapter(InputStream in, IFile file, JasperReportsConfiguration jrConfig) {
+
+	public static DataAdapterDescriptor readDataADapter(InputStream in, IFile file,
+			JasperReportsConfiguration jrConfig) {
 		DataAdapterDescriptor dad = null;
 		try {
 			in = new BufferedInputStream(in);
@@ -269,13 +271,15 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 						DefaultDataAdapterDescriptor ddad = new DefaultDataAdapterDescriptor();
 						Class<?> clazz = jrConfig.getClassLoader().loadClass(className);
 						if (clazz != null) {
-							InputStream mis = jrConfig.getClassLoader().getResourceAsStream(clazz.getName().replace(".", "/") + ".xml"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							InputStream mis = jrConfig.getClassLoader()
+									.getResourceAsStream(clazz.getName().replace(".", "/") + ".xml"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							if (mis != null) {
 								try {
 									Mapping mapping = new Mapping(jrConfig.getClassLoader());
 									mapping.loadMapping(new InputSource(mis));
 
-									DataAdapter dataAdapter = (DataAdapter) CastorHelper.read(XMLUtils.parseNoValidation(in).getDocumentElement(), mapping);
+									DataAdapter dataAdapter = (DataAdapter) CastorHelper
+											.read(XMLUtils.parseNoValidation(in).getDocumentElement(), mapping);
 									if (dataAdapter != null) {
 										ddad.setDataAdapter(dataAdapter);
 										dad = ddad;
@@ -287,12 +291,9 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 						}
 					} else
 						// we should at least log a warning here....
-						JaspersoftStudioPlugin
-								.getInstance()
-								.getLog()
-								.log(
-										new Status(Status.WARNING, JaspersoftStudioPlugin.getUniqueIdentifier(), Status.OK,
-												Messages.DataAdapterManager_nodataadapterfound + className, null));
+						JaspersoftStudioPlugin.getInstance().getLog()
+								.log(new Status(Status.WARNING, JaspersoftStudioPlugin.getUniqueIdentifier(), Status.OK,
+										Messages.DataAdapterManager_nodataadapterfound + className, null));
 				} else {
 					DataAdapterDescriptor dataAdapterDescriptor = factory.createDataAdapter();
 					DataAdapter dataAdapter = dataAdapterDescriptor.getDataAdapter(jrConfig);
@@ -308,7 +309,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 		}
 		return dad;
 	}
-	
+
 	public static DataAdapterDescriptor readDataADapter(InputStream in, IFile file) {
 		return readDataADapter(in, file, JasperReportsConfiguration.getDefaultJRConfig(file));
 	}

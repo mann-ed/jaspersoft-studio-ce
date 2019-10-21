@@ -7,6 +7,8 @@ package com.jaspersoft.studio.components.crosstab.model.measure;
 import net.sf.jasperreports.crosstabs.JRCrosstab;
 import net.sf.jasperreports.engine.JRConstants;
 
+import java.util.List;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -54,6 +56,32 @@ public class MMeasures extends MCollection {
 	 */
 	public ImageDescriptor getImagePath() {
 		return getIconDescriptor().getIcon16();
+	}
+
+	@Override
+	public Object getPropertyValue(Object id) {
+		// nothing to do here, no properties
+		return null;
+	}
+
+	@Override
+	public void setPropertyValue(Object id, Object value) {
+		// nothing to do here, no properties
+	}
+
+	@Override
+	public void setDescriptors(IPropertyDescriptor[] descriptors1) {
+		descriptors = descriptors1;
+	}
+
+	@Override
+	public IPropertyDescriptor[] getDescriptors() {
+		return descriptors;
+	}
+
+	@Override
+	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
+		// nothing to do here, no properties
 	}
 
 }

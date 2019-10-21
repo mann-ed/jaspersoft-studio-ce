@@ -19,6 +19,8 @@ import com.jaspersoft.studio.model.util.IIconDescriptor;
 import net.sf.jasperreports.components.table.BaseColumn;
 import net.sf.jasperreports.components.table.Cell;
 import net.sf.jasperreports.components.table.StandardBaseColumn;
+import net.sf.jasperreports.components.table.StandardRow;
+import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
@@ -42,8 +44,8 @@ public class MTableGroupFooter extends AMFooterHeaderCollection {
 	/** The descriptors. */
 	protected static IPropertyDescriptor[] descriptors;
 
-	public MTableGroupFooter(ANode parent, JRDesignComponentElement jrDataset,
-			JRDesignGroup jrDesignGroup, String property) {
+	public MTableGroupFooter(ANode parent, JRDesignComponentElement jrDataset, JRDesignGroup jrDesignGroup,
+			String property) {
 		super(parent, jrDataset, property);
 		this.jrDesignGroup = jrDesignGroup;
 	}
@@ -60,8 +62,7 @@ public class MTableGroupFooter extends AMFooterHeaderCollection {
 	 * @see com.jaspersoft.studio.model.INode#getDisplayText()
 	 */
 	public String getDisplayText() {
-		return Messages.MTableGroupFooter_group_footer
-				+ ": " + jrDesignGroup.getName(); //$NON-NLS-1$
+		return Messages.MTableGroupFooter_group_footer + ": " + jrDesignGroup.getName(); //$NON-NLS-1$
 	}
 
 	/*
@@ -80,19 +81,42 @@ public class MTableGroupFooter extends AMFooterHeaderCollection {
 
 	@Override
 	public void createColumn(ANode mth, BaseColumn bc, int i, int index) {
-		TableComponentFactory.createCellGroupFooter(mth, bc, i,
-				jrDesignGroup.getName(), index);
+		TableComponentFactory.createCellGroupFooter(mth, bc, i, jrDesignGroup.getName(), index);
 	}
 
 	@Override
 	public Color getForeground() {
-		for(INode child : getChildren()){
-			if (child.getValue() != null){
-				StandardBaseColumn currentCol = (StandardBaseColumn)child.getValue();
+		for (INode child : getChildren()) {
+			if (child.getValue() != null) {
+				StandardBaseColumn currentCol = (StandardBaseColumn) child.getValue();
 				Cell footerCell = currentCol.getGroupFooter(jrDesignGroup.getName());
-				if (footerCell != null) return ColorConstants.black;
+				if (footerCell != null)
+					return ColorConstants.black;
 			}
 		}
 		return ColorConstants.gray;
+	}
+
+	@Override
+	public void setDescriptors(IPropertyDescriptor[] descriptors1) {
+		descriptors = descriptors1;
+	}
+
+	@Override
+	public IPropertyDescriptor[] getDescriptors() {
+		return descriptors;
+	}
+
+	@Override
+	protected StandardRow getRow(boolean set) {
+		JRDesignComponentElement jrElement = getValue();
+		StandardTable st = (StandardTable) jrElement.getComponent();
+		String name = getJrDesignGroup().getName();
+		StandardRow r = (StandardRow) st.getGroupFooter(name);
+		if (set && r == null) {
+			r = new StandardRow();
+			st.setGroupFooter(name, r);
+		}
+		return r;
 	}
 }

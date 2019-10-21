@@ -791,6 +791,22 @@
                   type="com.jaspersoft.studio.components.barcode.model.barcode4j.MRoyalMail">
             </input>
          </propertySection>
+         <propertySection
+               class="com.jaspersoft.studio.components.table.properties.TableRowSection"
+               id="com.jaspersoft.studio.components.table.properties.TableRowSection"
+               tab="com.jaspersoft.studio.components.table">
+            <input
+                  type="com.jaspersoft.studio.components.table.model.AMFooterHeaderCollection">
+            </input>
+         </propertySection>
+         <propertySection
+               class="com.jaspersoft.studio.components.table.properties.TableRowSection"
+               id="com.jaspersoft.studio.components.table.properties.TableRowDetailSection"
+               tab="com.jaspersoft.studio.components.table">
+            <input
+                  type="com.jaspersoft.studio.components.table.model.MTableDetail">
+            </input>
+         </propertySection>
       </propertySections>
    </extension>
    <extension

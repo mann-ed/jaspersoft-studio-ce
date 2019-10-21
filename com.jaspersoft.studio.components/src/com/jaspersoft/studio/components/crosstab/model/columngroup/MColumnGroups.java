@@ -83,4 +83,30 @@ public class MColumnGroups extends MCollection {
 		}
 		return result;
 	}
+
+	@Override
+	public Object getPropertyValue(Object id) {
+		// nothing to do here, no properties
+		return null;
+	}
+
+	@Override
+	public void setPropertyValue(Object id, Object value) {
+		// nothing to do here, no properties
+	}
+
+	@Override
+	public void setDescriptors(IPropertyDescriptor[] descriptors1) {
+		descriptors = descriptors1;
+	}
+
+	@Override
+	public IPropertyDescriptor[] getDescriptors() {
+		return descriptors;
+	}
+
+	@Override
+	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
+		// nothing to do here, no properties
+	}
 }

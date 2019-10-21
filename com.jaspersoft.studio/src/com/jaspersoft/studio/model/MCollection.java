@@ -17,7 +17,7 @@ import com.jaspersoft.studio.model.util.ReportFactory;
  * 
  * @author Chicu Veaceslav
  */
-public abstract class MCollection extends ANode implements IPastable, IContainerEditPart {
+public abstract class MCollection extends APropertyNode implements IPastable, IContainerEditPart {
 	public static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
 	private String PROPERTY_PARAMETERS = JRDesignDataset.PROPERTY_PARAMETERS;
 
@@ -33,8 +33,7 @@ public abstract class MCollection extends ANode implements IPastable, IContainer
 	 * @see com.jaspersoft.studio.model.ANode#propertyChange(java.beans.PropertyChangeEvent)
 	 */
 	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		// PropertyChangeEvent newEvent = evt;
+	public void propertyChange(PropertyChangeEvent evt) { 
 		if (evt.getPropertyName().equals(PROPERTY_PARAMETERS) && evt.getSource() == getValue()) {
 			if (evt.getOldValue() == null && evt.getNewValue() != null) {
 				int newIndex = -1;
@@ -59,8 +58,7 @@ public abstract class MCollection extends ANode implements IPastable, IContainer
 				}
 			}
 		}
-		super.propertyChange(evt);
-		// getPropertyChangeSupport().firePropertyChange(newEvent);
+		super.propertyChange(evt); 
 	}
 
 }

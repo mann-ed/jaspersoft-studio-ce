@@ -17,8 +17,8 @@ import com.jaspersoft.studio.data.DataAdapterDescriptor;
 public class DefaultDAManager {
 
 	public void init() {
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(
-				JaspersoftStudioPlugin.PLUGIN_ID, "defaultDA"); //$NON-NLS-1$  
+		IConfigurationElement[] config = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(JaspersoftStudioPlugin.PLUGIN_ID, "defaultDA"); //$NON-NLS-1$
 		for (IConfigurationElement e : config) {
 			try {
 				Object o = e.createExecutableExtension("ClassFactory"); //$NON-NLS-1$
@@ -30,10 +30,10 @@ public class DefaultDAManager {
 		}
 	}
 
-	private List<IDefaultDA> nodeFactory = new ArrayList<IDefaultDA>();
+	private List<IDefaultDA> nodeFactory = new ArrayList<>();
 
 	public List<DataAdapterDescriptor> getDefaultDAs() {
-		List<DataAdapterDescriptor> res = new ArrayList<DataAdapterDescriptor>();
+		List<DataAdapterDescriptor> res = new ArrayList<>();
 		for (IDefaultDA f : nodeFactory) {
 			List<DataAdapterDescriptor> r = f.getDefaultDAs();
 			if (r != null && !r.isEmpty())

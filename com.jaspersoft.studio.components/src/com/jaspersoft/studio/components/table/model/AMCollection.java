@@ -50,7 +50,7 @@ public abstract class AMCollection extends MCollection {
 
 	@Override
 	public void setValue(Object value) {
-		JRDesignComponentElement oldObject = (JRDesignComponentElement) getValue();
+		JRDesignComponentElement oldObject =  getValue();
 		JRDesignComponentElement newObject = (JRDesignComponentElement) value;
 
 		if (oldObject != null) {
