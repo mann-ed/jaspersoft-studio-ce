@@ -50,7 +50,7 @@ public class DatasetSection extends AbstractSection {
 
 		createWidget4Property(parent, JRDesignElementDataset.PROPERTY_INCREMENT_WHEN_EXPRESSION);
 
-		pd = getPropertyDesriptor(JRDesignElementDataset.PROPERTY_RESET_TYPE);
+		pd = getPropertyDesriptor(JRDesignElementDataset.PROPERTY_DATASET_RESET_TYPE);
 		gpd = getPropertyDesriptor(JRDesignElementDataset.PROPERTY_RESET_GROUP);
 		getWidgetFactory().createCLabel(parent, pd.getDisplayName());
 		widgets.put(pd.getId(), new SPResetType(parent, this, pd, gpd));
@@ -73,7 +73,7 @@ public class DatasetSection extends AbstractSection {
 		addProvidedProperties(JRDesignElementDataset.PROPERTY_INCREMENT_TYPE, Messages.common_increment_type);
 		addProvidedProperties(JRDesignElementDataset.PROPERTY_INCREMENT_WHEN_EXPRESSION,
 				Messages.MElementDataset_increment_when_expression);
-		addProvidedProperties(JRDesignElementDataset.PROPERTY_RESET_TYPE, Messages.common_reset_type);
+		addProvidedProperties(JRDesignElementDataset.PROPERTY_DATASET_RESET_TYPE, Messages.common_reset_type);
 		addProvidedProperties(JRDesignElementDataset.PROPERTY_DATASET_RUN, Messages.MElementDataset_dataset_run);
 	}
 }

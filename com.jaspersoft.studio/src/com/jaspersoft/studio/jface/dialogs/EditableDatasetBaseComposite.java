@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -34,13 +34,15 @@ import net.sf.jasperreports.engine.JRGroup;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.DatasetResetTypeEnum;
 import net.sf.jasperreports.engine.type.IncrementTypeEnum;
 import net.sf.jasperreports.engine.type.ResetTypeEnum;
 
 /**
- * This generic composite can be reused in dialogs/wizards when there is the need to edit the dataset information of a
- * report element.<br>
- * A {@link IEditableDataset} instance is used to modify all the dataset information plus the dataset run one.
+ * This generic composite can be reused in dialogs/wizards when there is the
+ * need to edit the dataset information of a report element.<br>
+ * A {@link IEditableDataset} instance is used to modify all the dataset
+ * information plus the dataset run one.
  * 
  * @author mrabbi
  * 
@@ -65,7 +67,7 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 
 	public EditableDatasetBaseComposite(IEditableDataset datasetInst, Composite parent, int style) {
 		super(parent, SWT.NONE);
-		this.dsRunSelectionListeners = new ArrayList<DatasetRunSelectionListener>();
+		this.dsRunSelectionListeners = new ArrayList<>();
 		this.datasetInstance = datasetInst;
 		this.setLayout(new GridLayout(2, true));
 
@@ -81,30 +83,24 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 
 		comboResetType = new Combo(this, SWT.NONE | SWT.READ_ONLY);
 		comboResetType.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		comboResetType.addSelectionListener(new SelectionListener() {
-
+		comboResetType.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int selIndex = ((Combo) e.widget).getSelectionIndex();
 				updateResetTypeInformation(selIndex);
 			}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
 		});
 
 		comboResetGroup = new Combo(this, SWT.NONE | SWT.READ_ONLY);
 		comboResetGroup.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		comboResetGroup.addSelectionListener(new SelectionListener() {
-
+		comboResetGroup.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int selIndex = ((Combo) e.widget).getSelectionIndex();
 				updateResetGroupInformation(selIndex);
 			}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
 		});
 
 		Label lblIncrementType = new Label(this, SWT.NONE);
@@ -117,33 +113,28 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 
 		comboIncrementType = new Combo(this, SWT.NONE | SWT.READ_ONLY);
 		comboIncrementType.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		comboIncrementType.addSelectionListener(new SelectionListener() {
-
+		comboIncrementType.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int selIndex = ((Combo) e.widget).getSelectionIndex();
 				updateIncrementTypeInformation(selIndex);
 			}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
 		});
 
 		comboIncrementGroup = new Combo(this, SWT.NONE | SWT.READ_ONLY);
 		comboIncrementGroup.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		comboIncrementGroup.addSelectionListener(new SelectionListener() {
-
+		comboIncrementGroup.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int selIndex = ((Combo) e.widget).getSelectionIndex();
 				updateIncrementGroupInformation(selIndex);
 			}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
 		});
 
-		filterExpression = new WTextExpression(this, SWT.NONE, Messages.EditableDatasetBaseComposite_FilterExprWidgetLbl,
-				WTextExpression.LABEL_ON_TOP) {
+		filterExpression = new WTextExpression(this, SWT.NONE,
+				Messages.EditableDatasetBaseComposite_FilterExprWidgetLbl, WTextExpression.LABEL_ON_TOP) {
 			@Override
 			public void setExpression(JRDesignExpression exp) {
 				super.setExpression(exp);
@@ -162,11 +153,7 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 		grpDatasetRun.setLayoutData(gd);
 
 		datasetRunContent = new DatasetRunBaseComposite(getEditableDatesetRun(), grpDatasetRun, SWT.NONE);
-		datasetRunContent.addDatasetRunSelectionListener(new DatasetRunSelectionListener() {
-			public void selectionChanged() {
-				notifyDatasetRunSelectionChanged();
-			}
-		});
+		datasetRunContent.addDatasetRunSelectionListener(this::notifyDatasetRunSelectionChanged);
 
 		initWidgets();
 	}
@@ -179,11 +166,11 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 			return;
 		// Select the reset type value
 		comboResetType.setItems(EnumHelper.getEnumNames(ResetTypeEnum.values(), NullEnum.NOTNULL));
-		comboResetType.select(this.datasetInstance.getJRElementDataset().getResetTypeValue().ordinal());
+		comboResetType.select(this.datasetInstance.getJRElementDataset().getDatasetResetType().ordinal());
 		// Select the reset type group, if needed
 		comboResetGroup.setItems(new String[0]);
 		comboResetGroup.setEnabled(false);
-		if (this.datasetInstance.getJRElementDataset().getResetTypeValue() == ResetTypeEnum.GROUP) {
+		if (this.datasetInstance.getJRElementDataset().getDatasetResetType() == DatasetResetTypeEnum.GROUP) {
 			fillGroupCombo(comboResetGroup);
 			JRGroup resetGroup = this.datasetInstance.getJRElementDataset().getResetGroup();
 			if (resetGroup != null) {
@@ -216,38 +203,41 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 			}
 		}
 		// Filter (increment when) expression
-		filterExpression.setExpression((JRDesignExpression) this.datasetInstance.getJRElementDataset()
-				.getIncrementWhenExpression());
+		filterExpression.setExpression(
+				(JRDesignExpression) this.datasetInstance.getJRElementDataset().getIncrementWhenExpression());
 	}
 
 	/**
-	 * Gets the {@link IEditableDatasetRun} instance for the dataset currently being edited.
+	 * Gets the {@link IEditableDatasetRun} instance for the dataset currently
+	 * being edited.
 	 * 
 	 * @return the editable dataset run instance
 	 */
 	protected abstract IEditableDatasetRun getEditableDatesetRun();
 
 	/**
-	 * Gets the {@link IEditableDataset} instance currently being edited inside this composite.
+	 * Gets the {@link IEditableDataset} instance currently being edited inside
+	 * this composite.
 	 * 
 	 * @return the editable dataset instance
 	 */
 	protected IEditableDataset getEditableDataset() {
 		return this.datasetInstance;
 	}
-	
-	protected List<JRGroup> getCurrentGroupsList(){
+
+	protected List<JRGroup> getCurrentGroupsList() {
 		JasperDesign jd = datasetInstance.getJasperDesign();
 		JRDataset currentDataset = jd.getMainDataset();
 		JRDatasetRun darasetRun = datasetInstance.getJRElementDataset().getDatasetRun();
-		if (darasetRun != null && jd.getDatasetMap().containsKey(darasetRun.getDatasetName())){
+		if (darasetRun != null && jd.getDatasetMap().containsKey(darasetRun.getDatasetName())) {
 			currentDataset = jd.getDatasetMap().get(darasetRun.getDatasetName());
 		}
-		return ((JRDesignDataset)currentDataset).getGroupsList();
+		return ((JRDesignDataset) currentDataset).getGroupsList();
 	}
 
 	/*
-	 * Fills the a group combo box. Returns true if the combo filling operation was successful, false otherwise.
+	 * Fills the a group combo box. Returns true if the combo filling operation
+	 * was successful, false otherwise.
 	 */
 	private boolean fillGroupCombo(Combo widget) {
 		List<JRGroup> groupsList = getCurrentGroupsList();
@@ -258,7 +248,7 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 			widget.setEnabled(false);
 			return false;
 		} else {
-			List<String> groupLst = new ArrayList<String>();
+			List<String> groupLst = new ArrayList<>();
 			for (JRGroup g : groupsList) {
 				groupLst.add(g.getName());
 			}
@@ -280,7 +270,8 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 	 * Updates the dataset information with the reset type data.
 	 */
 	private void updateResetTypeInformation(int selIndex) {
-		ResetTypeEnum selectedResType = EnumHelper.getEnumByObjectValue(ResetTypeEnum.values(), comboResetType.getText());
+		ResetTypeEnum selectedResType = EnumHelper.getEnumByObjectValue(ResetTypeEnum.values(),
+				comboResetType.getText());
 		if (selectedResType == ResetTypeEnum.GROUP) {
 			if (fillGroupCombo(comboResetGroup)) {
 				// force the selection of the first group
@@ -301,13 +292,14 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 	private void updateIncrementGroupInformation(int selIndex) {
 		JRGroup jrGroup = getCurrentGroupsList().get(selIndex);
 		datasetInstance.setIncrementGroup(jrGroup);
-	}	
-	
+	}
+
 	/*
 	 * Updates the dataset information with the increment type data.
 	 */
 	private void updateIncrementTypeInformation(int selIndex) {
-		IncrementTypeEnum selectedIncrType = EnumHelper.getEnumByObjectValue(IncrementTypeEnum.values(), comboIncrementType.getText());
+		IncrementTypeEnum selectedIncrType = EnumHelper.getEnumByObjectValue(IncrementTypeEnum.values(),
+				comboIncrementType.getText());
 		if (selectedIncrType == IncrementTypeEnum.GROUP) {
 			if (fillGroupCombo(comboIncrementGroup)) {
 				// force the selection of the first group
@@ -339,8 +331,8 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jaspersoft.studio.editor.expression.IExpressionContextSetter#setExpressionContext(com.jaspersoft.studio.editor
+	 * @see com.jaspersoft.studio.editor.expression.IExpressionContextSetter#
+	 * setExpressionContext(com.jaspersoft.studio.editor
 	 * .expression.ExpressionContext)
 	 */
 	public void setExpressionContext(ExpressionContext expContext) {
@@ -349,10 +341,10 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 	}
 
 	/**
-	 * Sets the default expression context needed for the dataset run composite content.
+	 * Sets the default expression context needed for the dataset run composite
+	 * content.
 	 * 
-	 * @param expContext
-	 *          the expression context to set
+	 * @param expContext the expression context to set
 	 */
 	public void setDefaultExpressionContext(ExpressionContext expContext) {
 		this.datasetRunContent.setExpressionContext(expContext);
