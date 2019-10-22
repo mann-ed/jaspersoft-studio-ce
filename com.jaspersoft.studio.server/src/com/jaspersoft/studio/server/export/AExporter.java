@@ -131,9 +131,11 @@ public class AExporter {
 			File file = f.getFullPath().toFile();
 			file.getParentFile().mkdirs();
 			file.createNewFile();
-			f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(f.getFullPath());
-			if (!f.exists())
-				f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(f.getFullPath());
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(file.toURI());
+			if (files.length > 0) {
+				f = files[0];
+				f.getParent().refreshLocal(1, monitor);
+			}
 		}
 		setServerLocation(res, f);
 		return f;
