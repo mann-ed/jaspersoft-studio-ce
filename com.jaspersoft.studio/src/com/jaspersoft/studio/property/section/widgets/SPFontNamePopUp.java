@@ -100,7 +100,7 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
     int scaledWidth = (int)((float)oldWidth*scaledHeight)/oldHeight;
     if (scaledWidth > newWidth){
     	scaledWidth = newWidth;
-    	scaledHeight = (int)((float)oldHeight*scaledWidth)/oldWidth;
+    	scaledHeight = Math.max((int)((float)oldHeight*scaledWidth)/oldWidth, 1);
     } 
     
     /*BufferedImage after = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
