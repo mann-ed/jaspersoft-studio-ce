@@ -747,8 +747,9 @@ public class MReport extends MLockableRefresh implements IGraphicElement, IConta
 				|| evt.getPropertyName().equals(JasperDesign.PROPERTY_NO_DATA)
 				|| evt.getPropertyName().equals(JasperDesign.PROPERTY_DETAIL)
 				|| evt.getPropertyName().equals(JasperDesign.PROPERTY_BACKGROUND)) {
-			if (evt.getNewValue() instanceof JRBand)
-				handleBandChanged(evt);
+			if (evt.getNewValue() instanceof JRBand || evt.getOldValue() instanceof JRBand) {
+				handleBandChanged(evt);	
+			}
 		} else if (evt.getPropertyName().equals(JRDesignSection.PROPERTY_BANDS)) {
 			handleDetailBandChanged(evt);
 		} else if (evt.getPropertyName().equals(JRDesignDataset.PROPERTY_GROUPS)) {
