@@ -807,6 +807,14 @@
                   type="com.jaspersoft.studio.components.table.model.MTableDetail">
             </input>
          </propertySection>
+         <propertySection
+               class="com.jaspersoft.studio.components.table.properties.TableNoDataSection"
+               id="com.jaspersoft.studio.components.table.properties.TableNoDataSection"
+               tab="com.jaspersoft.studio.editor.JrxmlEditor.Appearance">
+            <input
+                  type="com.jaspersoft.studio.components.table.model.nodata.MTableNoData">
+            </input>
+         </propertySection>
       </propertySections>
    </extension>
    <extension

@@ -74,8 +74,8 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 
 	/**
 	 * In some cases a feedback can be shown on the edit part on the main editor
-	 * that has the same model of the target one. This is the edit part on the main
-	 * editor that has the last added feedback.
+	 * that has the same model of the target one. This is the edit part on the
+	 * main editor that has the last added feedback.
 	 */
 	protected EditPart lastEditorFeedback = null;
 
@@ -86,8 +86,7 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 	/**
 	 * Remove the widget of the node, before it check it was not already removed
 	 * 
-	 * @param childEditPart
-	 *            the node to dispose
+	 * @param childEditPart the node to dispose
 	 */
 	@Override
 	protected void removeChildVisual(EditPart childEditPart) {
@@ -100,13 +99,12 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 	}
 
 	/**
-	 * If the request is an add this search an edit part with the same model of the
-	 * target one on the main editor and paint a feedback on it. Before to pain the
-	 * feedback any previous feedback is removed. All the checks are done to be sure
-	 * that the visual editor exist
+	 * If the request is an add this search an edit part with the same model of
+	 * the target one on the main editor and paint a feedback on it. Before to
+	 * pain the feedback any previous feedback is removed. All the checks are
+	 * done to be sure that the visual editor exist
 	 * 
-	 * @param request
-	 *            the current request
+	 * @param request the current request
 	 */
 	protected void showTargetFeedbackOnEditor(Request request) {
 		if (RequestConstants.REQ_ADD.equals(request.getType())) {
@@ -134,8 +132,7 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 	 * If there is a feedback on an editor part then it is removed, otherwise it
 	 * dosen't do anything
 	 * 
-	 * @param request
-	 *            the current request
+	 * @param request the current request
 	 */
 	protected void eraseTargetFeedbackOnEditor(Request request) {
 		if (lastEditorFeedback != null) {
@@ -188,9 +185,12 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 			@Override
 			protected Command getMoveCommand(ChangeBoundsRequest req) {
 				EditPart parent = getHost().getParent();
-				// during the drag and drop the edit parts list can be null inside the request,
-				// so we need to check that both the parent and the request is valid.
-				// If the node is a variables or parameters node it check if they are sorted and
+				// during the drag and drop the edit parts list can be null
+				// inside the request,
+				// so we need to check that both the parent and the request is
+				// valid.
+				// If the node is a variables or parameters node it check if
+				// they are sorted and
 				// in that
 				// case deny the drag and drop
 				if (parent != null && req.getEditParts() != null) {
@@ -209,7 +209,8 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 						} else if (model instanceof MFields) {
 							MFields variables = (MFields) model;
 							if (ShowFieldsTreeAction.isFieldsTree(variables.getJasperConfiguration())) {
-								;// here we allow moving elements from one tree node to another
+								;// here we allow moving elements from one tree
+									// node to another
 							} else if (SortFieldsAction.areFieldsSorted(variables.getJasperConfiguration())) {
 								return UnexecutableCommand.INSTANCE;
 							}
@@ -238,14 +239,10 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 	protected void refreshVisuals() {
 		if (getWidget() instanceof Tree)
 			return;
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				TreeItem item = (TreeItem) getWidget();
-				ANode node = (ANode) getModel();
-				refreshItem(item, node);
-			}
+		UIUtils.getDisplay().asyncExec(() -> {
+			TreeItem item = (TreeItem) getWidget();
+			ANode node = (ANode) getModel();
+			refreshItem(item, node);
 		});
 	}
 
@@ -316,7 +313,8 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 					? jConfig.getPropertyBoolean(DesignerPreferencePage.P_SHOW_VARIABLES_DEFAULTS, Boolean.TRUE)
 					: true;
 
-			// when the node are the variables or the parameters apply special code to show
+			// when the node are the variables or the parameters apply special
+			// code to show
 			// or hide the system defaults and to sort them
 			if (modelNode.getClass().equals(MVariables.class)) {
 				boolean showVariables = !HideDefaultVariablesAction.areDefaultVariablesHidden(jConfig);
@@ -341,11 +339,9 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 	/**
 	 * Get the list of the fields, they could be ordered
 	 * 
-	 * @param jConfig
-	 *            the {@link JasperReportsConfiguration} of the current report, must
-	 *            be not null
-	 * @param parentNode
-	 *            the {@link MVariables} node, must be not null
+	 * @param jConfig the {@link JasperReportsConfiguration} of the current
+	 * report, must be not null
+	 * @param parentNode the {@link MVariables} node, must be not null
 	 * @return a not null list of the variables to show in the correct order
 	 */
 	protected List<INode> getFields(JasperReportsConfiguration jConfig, MFields parentNode) {
@@ -380,16 +376,13 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 	}
 
 	/**
-	 * Get the list of the variables, they could be ordered or the system default
-	 * can be hidden
+	 * Get the list of the variables, they could be ordered or the system
+	 * default can be hidden
 	 * 
-	 * @param jConfig
-	 *            the {@link JasperReportsConfiguration} of the current report, must
-	 *            be not null
-	 * @param parentNode
-	 *            the {@link MVariables} node, must be not null
-	 * @param showDefaults
-	 *            true if the defaults should be shown, false otherwise
+	 * @param jConfig the {@link JasperReportsConfiguration} of the current
+	 * report, must be not null
+	 * @param parentNode the {@link MVariables} node, must be not null
+	 * @param showDefaults true if the defaults should be shown, false otherwise
 	 * @return a not null list of the variables to show in the correct order
 	 */
 	protected List<INode> getVariables(JasperReportsConfiguration jConfig, MVariables parentNode,
@@ -422,16 +415,13 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 	}
 
 	/**
-	 * Get the list of the parameters, they could be ordered or the system default
-	 * can be hidden
+	 * Get the list of the parameters, they could be ordered or the system
+	 * default can be hidden
 	 * 
-	 * @param jConfig
-	 *            the {@link JasperReportsConfiguration} of the current report, must
-	 *            be not null
-	 * @param parentNode
-	 *            the {@link MParameters} node, must be not null
-	 * @param showDefaults
-	 *            true if the defaults should be shown, false otherwise
+	 * @param jConfig the {@link JasperReportsConfiguration} of the current
+	 * report, must be not null
+	 * @param parentNode the {@link MParameters} node, must be not null
+	 * @param showDefaults true if the defaults should be shown, false otherwise
 	 * @return a not null list of the parameters to show in the correct order
 	 */
 	protected List<INode> getParameters(JasperReportsConfiguration jConfig, MParameters<?> parentNode,
@@ -463,9 +453,9 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 	}
 
 	/**
-	 * Map of EditPart that need a refresh, they can be queued when the refresh is
-	 * disabled refreshed at the end. Using an hashset avoid to refresh the same
-	 * part more than one time
+	 * Map of EditPart that need a refresh, they can be queued when the refresh
+	 * is disabled refreshed at the end. Using an hashset avoid to refresh the
+	 * same part more than one time
 	 */
 	private static HashSet<EditPart> nodeToRefresh = new HashSet<EditPart>();
 
@@ -515,8 +505,8 @@ public class TreeEditPart extends AbstractTreeEditPart implements PropertyChange
 	}
 
 	/**
-	 * Refresh all the cached node, avoid to refresh the node that will be delete
-	 * (parent null)
+	 * Refresh all the cached node, avoid to refresh the node that will be
+	 * delete (parent null)
 	 */
 	private void refreshCached() {
 		// The refresh should be executed inside the graphic thread to avoid

@@ -75,20 +75,21 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	private PropertyChangeSupport propertyChangeSupport;
 
 	/**
-	 * flag to know if the node is visible or not. The visibility can be set and in
-	 * case of new nodes it is inherited by the parent
+	 * flag to know if the node is visible or not. The visibility can be set and
+	 * in case of new nodes it is inherited by the parent
 	 */
 	private boolean visible = true;
 
 	/**
-	 * List of validation error for the current element. The error messages can be
-	 * cached using the flag redoValidation
+	 * List of validation error for the current element. The error messages can
+	 * be cached using the flag redoValidation
 	 */
 	private List<ValidationError> validationErrors = null;
 
 	/**
-	 * Flag used to know when something in the element change. If something change
-	 * the validation must be redone and the list of error messages regenerated
+	 * Flag used to know when something in the element change. If something
+	 * change the validation must be redone and the list of error messages
+	 * regenerated
 	 */
 	private boolean redoValidation = true;
 
@@ -147,10 +148,8 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	/**
 	 * Instantiates a new a node.
 	 * 
-	 * @param parent
-	 *            the parent
-	 * @param newIndex
-	 *            the new index
+	 * @param parent the parent
+	 * @param newIndex the new index
 	 */
 	public ANode(ANode parent, int newIndex) {
 		if (parent != null)
@@ -211,9 +210,9 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 		root = null;
 	}
 
-	public void register(Object key, ANode value){
+	public void register(Object key, ANode value) {
 	}
-	
+
 	public void unregister(Object key) {
 	}
 
@@ -225,14 +224,11 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 		unregister(n.getValue());
 	}
 
-	
 	/**
 	 * Sets the parent.
 	 * 
-	 * @param newparent
-	 *            the parent
-	 * @param newIndex
-	 *            the new index
+	 * @param newparent the parent
+	 * @param newIndex the new index
 	 */
 	public void setParent(ANode newparent, int newIndex) {
 		if (parent != null) {
@@ -285,8 +281,7 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	/**
 	 * Adds the child.
 	 * 
-	 * @param child
-	 *            the child
+	 * @param child the child
 	 */
 	public void addChild(ANode child) {
 		child.setParent(this, -1);
@@ -320,15 +315,16 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	/**
 	 * Removes the child.
 	 * 
-	 * @param child
-	 *            the child
+	 * @param child the child
 	 */
 	public void removeChild(ANode child) {
 		// Set the jasperconfiguration before to remove the parent, because if a
 		// selection is
-		// fired on the child it will search for the jasperconfiguration on the parent,
+		// fired on the child it will search for the jasperconfiguration on the
+		// parent,
 		// and not
-		// finding it the result will be null. But this broke a lot of things on the
+		// finding it the result will be null. But this broke a lot of things on
+		// the
 		// selection
 		// event
 		child.setJasperConfiguration(getJasperConfiguration());
@@ -372,7 +368,8 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	 * PropertyChangeEvent)
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
-		// Redo the validation when something changes, for this element and the children
+		// Redo the validation when something changes, for this element and the
+		// children
 		revalidateChildren();
 		if (evt.getPropertyName().equals(JRDesignElementGroup.PROPERTY_CHILDREN) && evt.getSource() == getValue()) {
 			if (evt.getOldValue() == null && evt.getNewValue() != null) {
@@ -412,7 +409,8 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 		// evt.getNewValue());
 		// }
 		// } else {
-		// newEvent = new PropertyChangeEvent(evt.getSource(), evt.getPropertyName(),
+		// newEvent = new PropertyChangeEvent(evt.getSource(),
+		// evt.getPropertyName(),
 		// evt.getOldValue(),
 		// evt.getNewValue());
 		// }
@@ -461,7 +459,7 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 		if (this.value == value)
 			return;
 		unregister();
-		if (this.value != null && this.value instanceof JRChangeEventsSupport) {
+		if (this.value instanceof JRChangeEventsSupport) {
 			((JRChangeEventsSupport) this.value).getEventSupport().removePropertyChangeListener(this);
 		}
 		if (value != null) {
@@ -598,17 +596,16 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	}
 
 	/**
-	 * This method should be overridden by sub-classes whenever a node during its
-	 * life-cycle can be in a state where new children can not be added.
+	 * This method should be overridden by sub-classes whenever a node during
+	 * its life-cycle can be in a state where new children can not be added.
 	 * <p>
 	 * 
 	 * Default value is <code>true</code> in order to ensure back-compatibility
 	 * 
-	 * @param child
-	 *            the child that should be added to the element (useful for example
-	 *            for typecheck)
-	 * @return <code>true</code> if new children can be added, <code>false</code>
-	 *         otherwise
+	 * @param child the child that should be added to the element (useful for
+	 * example for typecheck)
+	 * @return <code>true</code> if new children can be added,
+	 * <code>false</code> otherwise
 	 * 
 	 */
 	public boolean canAcceptChildren(ANode child) {
@@ -628,18 +625,17 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	 * Set the visibility of the node. This dosen't affect the visibility of the
 	 * children
 	 * 
-	 * @param visible
-	 *            true if the node is visible, false otherwise
+	 * @param visible true if the node is visible, false otherwise
 	 */
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
 
 	/**
-	 * Boolean flag to declare if the children are visible or not. By default are
-	 * always visible. But some elements are editable only inside a subeditor, in
-	 * this cases the children can be shown only when the user is inside the
-	 * subeditor
+	 * Boolean flag to declare if the children are visible or not. By default
+	 * are always visible. But some elements are editable only inside a
+	 * subeditor, in this cases the children can be shown only when the user is
+	 * inside the subeditor
 	 * 
 	 * @return true if the children are visible, false otherwise
 	 */
@@ -648,9 +644,10 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	}
 
 	/**
-	 * Some elements can be edited inside a subeditor. This method can be overridden
-	 * to create the subeditor, like putting styles or dataset item. Every model
-	 * that can be edited inside a subeditor can define how it is initialized
+	 * Some elements can be edited inside a subeditor. This method can be
+	 * overridden to create the subeditor, like putting styles or dataset item.
+	 * Every model that can be edited inside a subeditor can define how it is
+	 * initialized
 	 */
 	public void createSubeditor() {
 
@@ -661,16 +658,17 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	 * default this method doesn't do any validation but can be overridden
 	 * 
 	 * @return null if the validation doesn't return errors, the list of errors
-	 *         otherwise
+	 * otherwise
 	 */
 	protected List<ValidationError> doValidation() {
 		return null;
 	}
 
 	/**
-	 * Request to redo the validation on the current element and on it's children.
-	 * This because in some case the validation of an element depends from the size
-	 * of the parent. Can be overridden to provide a different behavior
+	 * Request to redo the validation on the current element and on it's
+	 * children. This because in some case the validation of an element depends
+	 * from the size of the parent. Can be overridden to provide a different
+	 * behavior
 	 */
 	public void revalidateChildren() {
 		redoValidation = true;
@@ -685,7 +683,7 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	 * validation when it isn't necessary
 	 * 
 	 * @return null if the validation doesn't return errors, the list of errors
-	 *         otherwise
+	 * otherwise
 	 */
 	public List<ValidationError> validate() {
 		if (redoValidation) {
@@ -696,12 +694,12 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	}
 
 	/**
-	 * Return the size available for the placement of elements, it depends from the
-	 * page size. There is a minimum size that is 1000x1000, if the value is lower
-	 * that this one then 1000 is used
+	 * Return the size available for the placement of elements, it depends from
+	 * the page size. There is a minimum size that is 1000x1000, if the value is
+	 * lower that this one then 1000 is used
 	 * 
-	 * @return the space available outside the page. By default it is fourtime the
-	 *         page size, and a minimum of 1000x1000
+	 * @return the space available outside the page. By default it is fourtime
+	 * the page size, and a minimum of 1000x1000
 	 */
 	public Point getAvailableSize() {
 		JasperDesign jd = getJasperDesign();
@@ -719,13 +717,11 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	/**
 	 * Add a style to the map of styles for this element. If the style was not
 	 * already in the map it is added with a list containing only this element,
-	 * otherwise this element is appended to the end of the list associated with the
-	 * style
+	 * otherwise this element is appended to the end of the list associated with
+	 * the style
 	 * 
-	 * @param style
-	 *            the style to add, if null this doensn't do nothing
-	 * @param map
-	 *            map where the style are added, must be not null
+	 * @param style the style to add, if null this doensn't do nothing
+	 * @param map map where the style are added, must be not null
 	 */
 	protected void addElementStyle(JRStyle style, Map<String, List<ANode>> map) {
 		if (style == null)
@@ -743,13 +739,11 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	}
 
 	/**
-	 * Merge to styles map into one, by also concatenated the list of elements when
-	 * a style is present in both
+	 * Merge to styles map into one, by also concatenated the list of elements
+	 * when a style is present in both
 	 * 
-	 * @param destination
-	 *            first map and destination of the merge
-	 * @param origin
-	 *            the map that will be merged with the first one
+	 * @param destination first map and destination of the merge
+	 * @param origin the map that will be merged with the first one
 	 */
 	protected void mergeElementStyle(Map<String, List<ANode>> destination, Map<String, List<ANode>> origin) {
 		for (Entry<String, List<ANode>> entry : origin.entrySet()) {
@@ -767,20 +761,20 @@ public abstract class ANode implements INode, Serializable, IAdaptable, Cloneabl
 	/**
 	 * Return the styles used by this element and eventually by its children.
 	 * 
-	 * @return a not null map with the names of all the styles used by this element
-	 *         or one of its children. The value corresponding to each style is the
-	 *         reference to the element that is using the style
+	 * @return a not null map with the names of all the styles used by this
+	 * element or one of its children. The value corresponding to each style is
+	 * the reference to the element that is using the style
 	 */
 	public Map<String, List<ANode>> getUsedStyles() {
 		return new HashMap<>();
 	}
 
 	/**
-	 * Set a style on this element, the default implementation is empty but in the
-	 * subclasses that support styles it should set the style on the jr element
+	 * Set a style on this element, the default implementation is empty but in
+	 * the subclasses that support styles it should set the style on the jr
+	 * element
 	 * 
-	 * @param style
-	 *            the style to set, could be null to remove it
+	 * @param style the style to set, could be null to remove it
 	 */
 	public void setStyle(JRStyle style) {
 

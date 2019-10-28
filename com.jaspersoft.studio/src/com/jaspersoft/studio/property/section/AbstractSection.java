@@ -42,7 +42,6 @@ import com.jaspersoft.studio.property.ISetValueCommandProvider;
 import com.jaspersoft.studio.property.SetValueCommand;
 import com.jaspersoft.studio.property.section.widgets.ASPropertyWidget;
 import com.jaspersoft.studio.property.section.widgets.SPWidgetFactory;
-import com.jaspersoft.studio.utils.UIUtil;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.JasperReportsContext;
@@ -52,7 +51,7 @@ import net.sf.jasperreports.engine.JasperReportsContext;
  */
 public abstract class AbstractSection extends AbstractPropertySection
 		implements PropertyChangeListener, IWidgetsProviderSection {
-	protected Map<Object, ASPropertyWidget<?>> widgets = new HashMap<Object, ASPropertyWidget<?>>();
+	protected Map<Object, ASPropertyWidget<?>> widgets = new HashMap<>();
 
 	protected JasperReportsContext jasperReportsContext;
 	private List<APropertyNode> elements;
@@ -156,8 +155,9 @@ public abstract class AbstractSection extends AbstractPropertySection
 	}
 
 	/**
-	 * Return always the selected element, in many case this is equals to getElement, but some section can override it to
-	 * return something else. This method instead is thought to return always the selected element
+	 * Return always the selected element, in many case this is equals to
+	 * getElement, but some section can override it to return something else.
+	 * This method instead is thought to return always the selected element
 	 */
 	@Override
 	public APropertyNode getSelectedElement() {
@@ -166,7 +166,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 
 	/**
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabbedPropertySection#setInput(org.eclipse.ui.IWorkbenchPart,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * org.eclipse.jface.viewers.ISelection)
 	 */
 	public void setInput(IWorkbenchPart part, ISelection selection) {
 		super.setInput(part, selection);
@@ -176,7 +176,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 	protected void setInputC(IWorkbenchPart part, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			element = null;
-			elements = new ArrayList<APropertyNode>();
+			elements = new ArrayList<>();
 			List<?> selected = ((IStructuredSelection) selection).toList();
 			for (Object item : selected) {
 				if (item instanceof EditPart) {
@@ -184,7 +184,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 					if (model != null) {
 						jasperReportsContext = model.getJasperConfiguration();
 						if (element == null) {
-							EditorContributor provider = (EditorContributor) part.getAdapter(EditorContributor.class);
+							EditorContributor provider = part.getAdapter(EditorContributor.class);
 							if (provider != null)
 								setEditDomain(provider.getEditDomain());
 							if (getElement() != model) {
@@ -286,7 +286,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 				}
 			}
 			UIUtils.getDisplay().syncExec(new Runnable() {
-				
+
 				@Override
 				public void run() {
 					getTabbedPropertySheetPage().showErrors();
@@ -303,8 +303,8 @@ public abstract class AbstractSection extends AbstractPropertySection
 	private boolean isRefreshing = false;
 
 	/**
-	 * Return if the section is refreshing or not, it is synchronized to avoid concurrent modifications, due for example
-	 * to a change property call
+	 * Return if the section is refreshing or not, it is synchronized to avoid
+	 * concurrent modifications, due for example to a change property call
 	 */
 	public boolean isRefreshing() {
 		synchronized (this) {
@@ -313,8 +313,8 @@ public abstract class AbstractSection extends AbstractPropertySection
 	}
 
 	/**
-	 * set if the section is refreshing or not, it is synchronized to avoid concurrent modifications, due for example to a
-	 * change property call
+	 * set if the section is refreshing or not, it is synchronized to avoid
+	 * concurrent modifications, due for example to a change property call
 	 */
 	public void setRefreshing(boolean value) {
 		synchronized (this) {
@@ -325,7 +325,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 	public boolean changeProperty(Object property, Object newValue) {
 		return changeProperty(property, newValue, null);
 	}
-	
+
 	/**
 	 * Create the compound command where the subcommands can be added
 	 * 
@@ -333,7 +333,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 	 * @param node the node used as reference for the compound command
 	 * @return a not null {@link JSSCompoundCommand}
 	 */
-	protected JSSCompoundCommand getCompoundCommand(String name, ANode node){
+	protected JSSCompoundCommand getCompoundCommand(String name, ANode node) {
 		return new JSSCompoundCommand(name, node);
 	}
 
@@ -376,7 +376,8 @@ public abstract class AbstractSection extends AbstractPropertySection
 		return false;
 	}
 
-	public boolean changePropertyOn(Object property, Object newValue, List<APropertyNode> nodes, List<Command> commands) {
+	public boolean changePropertyOn(Object property, Object newValue, List<APropertyNode> nodes,
+			List<Command> commands) {
 		if (!isRefreshing() && nodes != null && !nodes.isEmpty() && getEditDomain() != null) {
 			CommandStack cs = getEditDomain().getCommandStack();
 			JSSCompoundCommand cc = getCompoundCommand("Set " + property, null);
@@ -435,10 +436,11 @@ public abstract class AbstractSection extends AbstractPropertySection
 
 	public Command getChangePropertyCommand(Object property, Object newValue, APropertyNode n) {
 		if (isChanged(property, newValue, n)) {
-			//Check if the node provide a SetValueCommand provide and use it in case, otherwise
-			//create a standard SetValueCommand
-			ISetValueCommandProvider provider = (ISetValueCommandProvider)n.getAdapter(ISetValueCommandProvider.class);
-			if (provider != null){
+			// Check if the node provide a SetValueCommand provide and use it in
+			// case, otherwise
+			// create a standard SetValueCommand
+			ISetValueCommandProvider provider = (ISetValueCommandProvider) n.getAdapter(ISetValueCommandProvider.class);
+			if (provider != null) {
 				return provider.getSetValueCommand(n, n.getDisplayText(), property, newValue);
 			} else {
 				SetValueCommand setCommand = new SetValueCommand(n.getDisplayText());
@@ -489,7 +491,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 	 * Create the map of the provided properties, empty
 	 */
 	protected void initializeProvidedProperties() {
-		providedProperties = new HashMap<Object, WidgetDescriptor>();
+		providedProperties = new HashMap<>();
 	}
 
 	/**
@@ -498,7 +500,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 	public List<Object> getHandledProperties() {
 		if (providedProperties == null)
 			initializeProvidedProperties();
-		return new ArrayList<Object>(providedProperties.keySet());
+		return new ArrayList<>(providedProperties.keySet());
 	}
 
 	public WidgetDescriptor getPropertyInfo(Object propertyId) {

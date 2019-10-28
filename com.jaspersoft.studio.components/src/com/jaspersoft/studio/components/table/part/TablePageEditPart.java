@@ -22,8 +22,7 @@ import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.model.util.ShowChildrenModelVisitor;
 import com.jaspersoft.studio.property.dataset.dialog.IDatasetDialogSupport;
 
-public class TablePageEditPart extends PageEditPart implements
-		IDatasetDialogSupport {
+public class TablePageEditPart extends PageEditPart implements IDatasetDialogSupport {
 
 	@Override
 	protected void setupPageFigure(APageFigure figure2) {
@@ -49,28 +48,27 @@ public class TablePageEditPart extends PageEditPart implements
 		}
 		if (table != null) {
 			Dimension d = table.getTableManager().getSize();
-			d.height = Math.max(d.height, (Integer) table
-					.getPropertyValue(JRDesignElement.PROPERTY_HEIGHT));
-			d.width = Math.max(d.width, (Integer) table
-					.getPropertyValue(JRDesignElement.PROPERTY_WIDTH));
+			d.height = Math.max(d.height, (Integer) table.getPropertyValue(JRDesignElement.PROPERTY_HEIGHT));
+			d.width = Math.max(d.width, (Integer) table.getPropertyValue(JRDesignElement.PROPERTY_WIDTH));
 			containerSize = d;
 		} else
 			containerSize = new Dimension(4000, 4000);
 	}
-	
+
 	@Override
 	protected List<Object> getModelChildren() {
-		final List<Object> list = new ArrayList<Object>();
+		final List<Object> list = new ArrayList<>();
 		new ShowChildrenModelVisitor<Object>(getPage()) {
 
 			@Override
 			public boolean visit(INode n) {
 				if (n instanceof MCallout) {
 					list.add(n);
-					for (INode child : n.getChildren()){
-						//the connection must not be returned, since their edit part 
-						//must not be created trough the edit part factory but from the createConnection
-						//method of the Pin/Callout edit part
+					for (INode child : n.getChildren()) {
+						// the connection must not be returned, since their edit part
+						// must not be created trough the edit part factory but from the
+						// createConnection
+						// method of the Pin/Callout edit part
 						if (!(child instanceof MPinConnection)) {
 							list.add(child);
 						}

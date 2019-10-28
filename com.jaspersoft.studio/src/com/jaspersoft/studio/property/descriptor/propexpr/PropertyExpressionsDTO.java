@@ -12,7 +12,8 @@ import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.JRPropertyExpression;
 
 /**
- * Container used to represent all the standard properties and the expression properties of an element
+ * Container used to represent all the standard properties and the expression
+ * properties of an element
  * 
  * @author Orlandin Marco
  *
@@ -22,7 +23,7 @@ public class PropertyExpressionsDTO {
 	/**
 	 * The list of the element properties
 	 */
-	protected List<PropertyExpressionDTO> properties = new ArrayList<PropertyExpressionDTO>();
+	protected List<PropertyExpressionDTO> properties = new ArrayList<>();
 
 	private Object jrElement;
 	private ExpressionContext eContext;
@@ -30,12 +31,11 @@ public class PropertyExpressionsDTO {
 	/**
 	 * Build the class with some properties inside
 	 * 
-	 * @param propExpressions
-	 *          list of the expression properties of the element, can be null if empty
-	 * @param propMap
-	 *          map of the standard properties of the element, can be null if empty
-	 * @param pnode
-	 *          the element
+	 * @param propExpressions list of the expression properties of the element,
+	 * can be null if empty
+	 * @param propMap map of the standard properties of the element, can be null
+	 * if empty
+	 * @param pnode the element
 	 */
 	public PropertyExpressionsDTO(JRPropertyExpression[] propExpressions, JRPropertiesMap propMap, Object jrElement,
 			ExpressionContext eContext) {
@@ -60,8 +60,7 @@ public class PropertyExpressionsDTO {
 	/**
 	 * Create the class with no properties inside
 	 * 
-	 * @param pnode
-	 *          the element
+	 * @param pnode the element
 	 */
 	public PropertyExpressionsDTO(Object jrElement, ExpressionContext eContext) {
 		super();
@@ -72,12 +71,11 @@ public class PropertyExpressionsDTO {
 	/**
 	 * Create the dto with the properties and the node from another dto
 	 * 
-	 * @param properties
-	 *          the properties
-	 * @param pnode
-	 *          the node
+	 * @param properties the properties
+	 * @param pnode the node
 	 */
-	public PropertyExpressionsDTO(List<PropertyExpressionDTO> properties, Object jrElement, ExpressionContext eContext) {
+	public PropertyExpressionsDTO(List<PropertyExpressionDTO> properties, Object jrElement,
+			ExpressionContext eContext) {
 		this(jrElement, eContext);
 		this.properties = properties;
 	}
@@ -101,7 +99,8 @@ public class PropertyExpressionsDTO {
 	/**
 	 * Return a not null list of the element properties
 	 * 
-	 * @return a not null list of the element expressions and standard properties
+	 * @return a not null list of the element expressions and standard
+	 * properties
 	 */
 	public List<PropertyExpressionDTO> getProperties() {
 		return properties;
@@ -110,11 +109,11 @@ public class PropertyExpressionsDTO {
 	/**
 	 * Remove a properties from the properties list
 	 * 
-	 * @param propertyName
-	 *          name of the property to remove
-	 * @param isExpression
-	 *          true if the property to remove is an expression property, false if it is a standard one
-	 * @return true if the properties was found and removed, false if it was not found
+	 * @param propertyName name of the property to remove
+	 * @param isExpression true if the property to remove is an expression
+	 * property, false if it is a standard one
+	 * @return true if the properties was found and removed, false if it was not
+	 * found
 	 */
 	public boolean removeProperty(String propertyName, boolean isExpression) {
 		for (PropertyExpressionDTO prop : properties)
@@ -128,10 +127,9 @@ public class PropertyExpressionsDTO {
 	/**
 	 * Check if a specific property is in the properties list
 	 * 
-	 * @param propertyName
-	 *          name of the property
-	 * @param isExpression
-	 *          true if the property is an expression property, false if it is a standard one
+	 * @param propertyName name of the property
+	 * @param isExpression true if the property is an expression property, false
+	 * if it is a standard one
 	 * @return true if the properties was found, false otherwise
 	 */
 	public boolean hasProperty(String propertyName, boolean isExpression) {
@@ -149,15 +147,15 @@ public class PropertyExpressionsDTO {
 	}
 
 	/**
-	 * Add a property to the list, only if a property with the same name and of the same type is not already present
+	 * Add a property to the list, only if a property with the same name and of
+	 * the same type is not already present
 	 * 
-	 * @param name
-	 *          the name of the property
-	 * @param value
-	 *          the value of the property
-	 * @param isExpression
-	 *          true if the property is an expression property, false if it is a standard property
-	 * @return true if a property with the same name\type was not found and the new one was inserted, false otherwise
+	 * @param name the name of the property
+	 * @param value the value of the property
+	 * @param isExpression true if the property is an expression property, false
+	 * if it is a standard property
+	 * @return true if a property with the same name\type was not found and the
+	 * new one was inserted, false otherwise
 	 */
 	public boolean addProperty(String name, String value, boolean isExpression) {
 		if (!hasProperty(name, isExpression)) {
@@ -171,18 +169,16 @@ public class PropertyExpressionsDTO {
 	}
 
 	/**
-	 * Add a property to the list into a specific position, only if a property with the same name and of the same type is
-	 * not already present
+	 * Add a property to the list into a specific position, only if a property
+	 * with the same name and of the same type is not already present
 	 * 
-	 * @param name
-	 *          the name of the property
-	 * @param value
-	 *          the value of the property
-	 * @param isExpression
-	 *          true if the property is an expression property, false if it is a standard property
-	 * @param position
-	 *          the position where the property should be inserted
-	 * @return true if a property with the same name\type was not found and the new one was inserted, false otherwise
+	 * @param name the name of the property
+	 * @param value the value of the property
+	 * @param isExpression true if the property is an expression property, false
+	 * if it is a standard property
+	 * @param position the position where the property should be inserted
+	 * @return true if a property with the same name\type was not found and the
+	 * new one was inserted, false otherwise
 	 */
 	public boolean addProperty(String name, String value, boolean isExpression, int position) {
 		if (!hasProperty(name, isExpression)) {
@@ -196,15 +192,14 @@ public class PropertyExpressionsDTO {
 	}
 
 	/**
-	 * Set a property to the list, if there is a property with the same name and type then the value of that property is
-	 * changed with the passed value parameter. Otherwise a new property is created.
+	 * Set a property to the list, if there is a property with the same name and
+	 * type then the value of that property is changed with the passed value
+	 * parameter. Otherwise a new property is created.
 	 * 
-	 * @param name
-	 *          the name of the property
-	 * @param value
-	 *          the value of the property
-	 * @param isExpression
-	 *          true if the property is an expression property, false if it is a standard property
+	 * @param name the name of the property
+	 * @param value the value of the property
+	 * @param isExpression true if the property is an expression property, false
+	 * if it is a standard property
 	 */
 	public void setProperty(String name, String value, boolean isExpression) {
 		PropertyExpressionDTO prop = getProperty(name, isExpression);
@@ -217,10 +212,9 @@ public class PropertyExpressionsDTO {
 	/**
 	 * Return a property defined inside the list with a specific name and type
 	 * 
-	 * @param propertyName
-	 *          the name of the property
-	 * @param isExpression
-	 *          true if the property is an expression property, false if it is a standard property
+	 * @param propertyName the name of the property
+	 * @param isExpression true if the property is an expression property, false
+	 * if it is a standard property
 	 * @return the property if it was found, null otherwise
 	 */
 	public PropertyExpressionDTO getProperty(String propertyName, boolean isExpression) {

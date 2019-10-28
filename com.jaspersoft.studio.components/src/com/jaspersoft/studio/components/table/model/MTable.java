@@ -51,9 +51,9 @@ import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
 
 import net.sf.jasperreports.components.table.BaseColumn;
 import net.sf.jasperreports.components.table.ColumnGroup;
+import net.sf.jasperreports.components.table.DesignBaseCell;
 import net.sf.jasperreports.components.table.DesignCell;
 import net.sf.jasperreports.components.table.StandardBaseColumn;
-import net.sf.jasperreports.components.table.StandardColumn;
 import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.components.table.WhenNoDataTypeTableEnum;
 import net.sf.jasperreports.eclipse.util.Misc;
@@ -62,6 +62,7 @@ import net.sf.jasperreports.engine.JRDatasetRun;
 import net.sf.jasperreports.engine.JRElementGroup;
 import net.sf.jasperreports.engine.JRPropertiesHolder;
 import net.sf.jasperreports.engine.JRPropertiesMap;
+import net.sf.jasperreports.engine.base.JRBaseElement;
 import net.sf.jasperreports.engine.component.ComponentKey;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
@@ -95,7 +96,7 @@ public class MTable extends MGraphicElement
 
 	private static NamedEnumPropertyDescriptor<WhenNoDataTypeTableEnum> whennodataD;
 
-	private TableManager ctManager;
+	private transient TableManager ctManager;
 
 	private MDatasetRun mDatasetRun;
 
@@ -108,45 +109,40 @@ public class MTable extends MGraphicElement
 	 * Listener put on the current dataset to refresh the group node on the tables
 	 * when a group is added on removed on his dataset
 	 */
-	private PropertyChangeListener datasetGroupListener = new PropertyChangeListener() {
-
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			if (evt.getPropertyName().equals(JRDesignDataset.PROPERTY_GROUPS)) {
-				// this need to be done only inside the table editor
-				if (evt.getNewValue() != null && evt.getOldValue() == null && getChildren().size() > 0) {
-					MTableDetail detailNode = null;
-					for (INode child : getChildren()) {
-						if (detailNode == null && child instanceof MTableDetail) {
-							detailNode = (MTableDetail) child;
-							break;
-						}
+	private transient PropertyChangeListener datasetGroupListener = (evt) -> {
+		if (evt.getPropertyName().equals(JRDesignDataset.PROPERTY_GROUPS)) {
+			// this need to be done only inside the table editor
+			if (evt.getNewValue() != null && evt.getOldValue() == null && !getChildren().isEmpty()) {
+				MTableDetail detailNode = null;
+				for (INode child : getChildren()) {
+					if (child instanceof MTableDetail) {
+						detailNode = (MTableDetail) child;
+						break;
 					}
-					int detailIndex = getChildren().indexOf(detailNode);
-					JRDesignGroup jrGroup = (JRDesignGroup) evt.getNewValue();
-					MTableGroupHeader newHeader = new MTableGroupHeader(MTable.this,
-							(JRDesignComponentElement) getValue(), jrGroup, ""); //$NON-NLS-1$
-					addChild(newHeader, detailIndex);
-					detailIndex += 2;
-					MTableGroupFooter newFooter = new MTableGroupFooter(MTable.this,
-							(JRDesignComponentElement) getValue(), jrGroup, ""); //$NON-NLS-1$
-					addChild(newFooter, detailIndex);
-					List<BaseColumn> columns = getStandardTable().getColumns();
-					for (int i = 0; i < columns.size(); i++) {
-						BaseColumn bc = columns.get(i);
-						TableComponentFactory.createCellGroupHeader(newHeader, bc, i + 1, jrGroup.getName(), i);
-						TableComponentFactory.createCellGroupFooter(newFooter, bc, i + 1, jrGroup.getName(), i);
-					}
-				} else if (evt.getNewValue() == null && evt.getOldValue() != null) {
-					JRDesignGroup jrGroup = (JRDesignGroup) evt.getOldValue();
-					deleteGroup(jrGroup.getName());
 				}
-				// Run an event on the table to force a grapghical refresh of
-				// the columns
-				setChangedProperty(true, evt);
-				MTable.this.propertyChange(
-						new PropertyChangeEvent(getValue(), StandardTable.PROPERTY_COLUMNS, null, null));
+				int detailIndex = getChildren().indexOf(detailNode);
+				JRDesignGroup jrGroup = (JRDesignGroup) evt.getNewValue();
+				MTableGroupHeader newHeader = new MTableGroupHeader(MTable.this, (JRDesignComponentElement) getValue(),
+						jrGroup, ""); //$NON-NLS-1$
+				addChild(newHeader, detailIndex);
+				detailIndex += 2;
+				MTableGroupFooter newFooter = new MTableGroupFooter(MTable.this, (JRDesignComponentElement) getValue(),
+						jrGroup, ""); //$NON-NLS-1$
+				addChild(newFooter, detailIndex);
+				List<BaseColumn> columns = getStandardTable().getColumns();
+				for (int i = 0; i < columns.size(); i++) {
+					BaseColumn bc = columns.get(i);
+					TableComponentFactory.createCellGroupHeader(newHeader, bc, i + 1, jrGroup.getName(), i);
+					TableComponentFactory.createCellGroupFooter(newFooter, bc, i + 1, jrGroup.getName(), i);
+				}
+			} else if (evt.getNewValue() == null && evt.getOldValue() != null) {
+				JRDesignGroup jrGroup = (JRDesignGroup) evt.getOldValue();
+				deleteGroup(jrGroup.getName());
 			}
+			// Run an event on the table to force a grapghical refresh of
+			// the columns
+			setChangedProperty(true, evt);
+			MTable.this.propertyChange(new PropertyChangeEvent(getValue(), StandardTable.PROPERTY_COLUMNS, null, null));
 		}
 	};
 
@@ -179,12 +175,9 @@ public class MTable extends MGraphicElement
 
 	/**
 	 * 
-	 * @param parent
-	 *            the parent
-	 * @param jrTable
-	 *            the jr chart
-	 * @param newIndex
-	 *            the new index
+	 * @param parent   the parent
+	 * @param jrTable  the jr chart
+	 * @param newIndex the new index
 	 */
 	public MTable(ANode parent, JRDesignComponentElement jrTable, int newIndex, TableManager ctManager) {
 		super(parent, newIndex);
@@ -205,8 +198,7 @@ public class MTable extends MGraphicElement
 	/**
 	 * Creates the property descriptors.
 	 * 
-	 * @param desc
-	 *            the desc
+	 * @param desc the desc
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
@@ -218,7 +210,7 @@ public class MTable extends MGraphicElement
 		datasetRunD.setCategory(Messages.MTable_table_properties_category);
 		desc.add(datasetRunD);
 
-		whennodataD = new NamedEnumPropertyDescriptor<WhenNoDataTypeTableEnum>(StandardTable.PROPERTY_WHEN_NO_DATA_TYPE,
+		whennodataD = new NamedEnumPropertyDescriptor<>(StandardTable.PROPERTY_WHEN_NO_DATA_TYPE,
 				Messages.MTable_whennodatalabel, WhenNoDataTypeTableEnum.BLANK, NullEnum.NULL);
 		whennodataD.setDescription(Messages.MTable_whennodatadescription);
 		desc.add(whennodataD);
@@ -295,7 +287,7 @@ public class MTable extends MGraphicElement
 			jrTable.setWhenNoDataType((WhenNoDataTypeTableEnum) whennodataD.getEnumValue(value));
 		else if (id.equals(StandardTable.PROPERTY_DATASET_RUN)) {
 			MDatasetRun mdr = (MDatasetRun) value;
-			JRDesignDatasetRun dr = (JRDesignDatasetRun) mdr.getValue();
+			JRDesignDatasetRun dr = mdr.getValue();
 			if (dr.getDatasetName() != null)
 				jrTable.setDatasetRun(dr);
 			else
@@ -370,8 +362,7 @@ public class MTable extends MGraphicElement
 
 	public StandardTable getStandardTable() {
 		JRDesignComponentElement jrElement = (JRDesignComponentElement) getValue();
-		StandardTable jrTable = (StandardTable) jrElement.getComponent();
-		return jrTable;
+		return (StandardTable) jrElement.getComponent();
 	}
 
 	@Override
@@ -384,7 +375,7 @@ public class MTable extends MGraphicElement
 	@Override
 	public int getDefaultWidth() {
 		Object defaultValue = DefaultManager.INSTANCE.getDefaultPropertiesValue(this.getClass(),
-				JRDesignElement.PROPERTY_WIDTH);
+				JRBaseElement.PROPERTY_WIDTH);
 		return defaultValue != null ? (Integer) defaultValue : 200;
 	}
 
@@ -393,8 +384,8 @@ public class MTable extends MGraphicElement
 		JRDesignComponentElement jrElement = new JRDesignComponentElement(jasperDesign);
 		StandardTable component = new StandardTable();
 
-		((JRDesignComponentElement) jrElement).setComponent(component);
-		((JRDesignComponentElement) jrElement).setComponentKey(
+		jrElement.setComponent(component);
+		jrElement.setComponentKey(
 				new ComponentKey("http://jasperreports.sourceforge.net/jasperreports/components", "jr", "table")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		JRDesignDatasetRun datasetRun = new JRDesignDatasetRun();
 		component.setDatasetRun(datasetRun);
@@ -445,7 +436,10 @@ public class MTable extends MGraphicElement
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(JRDesignDatasetRun.PROPERTY_DATASET_NAME)) {
+		if (evt.getPropertyName().equals(StandardTable.PROPERTY_WHEN_NO_DATA_TYPE)) {
+			if (evt.getNewValue().equals(WhenNoDataTypeTableEnum.NO_DATA_CELL))
+				getStandardTable().setNoData(null);
+		} else if (evt.getPropertyName().equals(JRDesignDatasetRun.PROPERTY_DATASET_NAME)) {
 			getStandardTable().getEventSupport().firePropertyChange(new PropertyChangeEvent(evt.getSource(),
 					DSListener.REFRESH_DATASET, evt.getOldValue(), evt.getNewValue()));
 		} else if (evt.getPropertyName().equals(StandardTable.PROPERTY_DATASET_RUN)) {
@@ -470,12 +464,12 @@ public class MTable extends MGraphicElement
 			getTableManager().update();
 		}
 
-		if (!(evt.getPropertyName().equals(StandardColumn.PROPERTY_TABLE_FOOTER)
-				|| evt.getPropertyName().equals(StandardColumn.PROPERTY_TABLE_HEADER)
-				|| evt.getPropertyName().equals(StandardColumn.PROPERTY_COLUMN_HEADER)
-				|| evt.getPropertyName().equals(StandardColumn.PROPERTY_COLUMN_FOOTER)
-				|| evt.getPropertyName().equals(StandardColumn.PROPERTY_GROUP_HEADERS)
-				|| evt.getPropertyName().equals(StandardColumn.PROPERTY_GROUP_FOOTERS))) {
+		if (!(evt.getPropertyName().equals(StandardBaseColumn.PROPERTY_TABLE_FOOTER)
+				|| evt.getPropertyName().equals(StandardBaseColumn.PROPERTY_TABLE_HEADER)
+				|| evt.getPropertyName().equals(StandardBaseColumn.PROPERTY_COLUMN_HEADER)
+				|| evt.getPropertyName().equals(StandardBaseColumn.PROPERTY_COLUMN_FOOTER)
+				|| evt.getPropertyName().equals(StandardBaseColumn.PROPERTY_GROUP_HEADERS)
+				|| evt.getPropertyName().equals(StandardBaseColumn.PROPERTY_GROUP_FOOTERS))) {
 			super.propertyChange(evt);
 		} else {
 			if (!hasChangedProperty()) {
@@ -495,11 +489,11 @@ public class MTable extends MGraphicElement
 	@Override
 	public HashSet<String> generateGraphicalProperties() {
 		HashSet<String> properties = super.generateGraphicalProperties();
-		properties.add(DesignCell.PROPERTY_DEFAULT_STYLE_PROVIDER);
-		properties.add(DesignCell.PROPERTY_STYLE);
-		properties.add(DesignCell.PROPERTY_STYLE_NAME_REFERENCE);
+		properties.add(DesignBaseCell.PROPERTY_DEFAULT_STYLE_PROVIDER);
+		properties.add(DesignBaseCell.PROPERTY_STYLE);
+		properties.add(DesignBaseCell.PROPERTY_STYLE_NAME_REFERENCE);
 		properties.add(DesignCell.PROPERTY_ROW_SPAN);
-		properties.add(DesignCell.PROPERTY_HEIGHT);
+		properties.add(DesignBaseCell.PROPERTY_HEIGHT);
 		properties.add(JRDesignElement.PROPERTY_ELEMENT_GROUP);
 		properties.add(MColumn.PROPERTY_NAME);
 		properties.add(StandardBaseColumn.PROPERTY_WIDTH);
@@ -515,7 +509,7 @@ public class MTable extends MGraphicElement
 
 	@Override
 	public List<MDatasetRun> getDatasetRunList() {
-		List<MDatasetRun> datasetList = new ArrayList<MDatasetRun>();
+		List<MDatasetRun> datasetList = new ArrayList<>();
 		datasetList.add((MDatasetRun) getPropertyValue(StandardTable.PROPERTY_DATASET_RUN));
 		return datasetList;
 	}
@@ -537,8 +531,7 @@ public class MTable extends MGraphicElement
 	/**
 	 * Delete a group node from the table, both header and footer if present
 	 * 
-	 * @param groupName
-	 *            the name of the group
+	 * @param groupName the name of the group
 	 */
 	private void deleteGroup(String groupName) {
 		// Delete the model nodes
@@ -622,13 +615,12 @@ public class MTable extends MGraphicElement
 	/**
 	 * Return a list of every columns in the table, considering also the ColumnGroup
 	 * 
-	 * @param cols
-	 *            the current set of columns, it is a recursive method
+	 * @param cols the current set of columns, it is a recursive method
 	 * @return the list of columns contained in the passed parameter (considering
 	 *         also the subcolumns contained by the columns groups)
 	 */
 	protected List<BaseColumn> getAllColumns(List<BaseColumn> cols) {
-		List<BaseColumn> lst = new ArrayList<BaseColumn>();
+		List<BaseColumn> lst = new ArrayList<>();
 		for (BaseColumn bc : cols) {
 			if (bc instanceof ColumnGroup) {
 				lst.addAll(getAllColumns(((ColumnGroup) bc).getColumns()));

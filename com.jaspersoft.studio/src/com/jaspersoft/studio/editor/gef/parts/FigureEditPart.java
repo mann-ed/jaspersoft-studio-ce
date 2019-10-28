@@ -84,7 +84,7 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 		preferenceListener = new PreferenceListener();
 		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
 		if (getModel() != null)
-			((ANode) getModel()).getPropertyChangeSupport().addPropertyChangeListener(this);
+			getModel().getPropertyChangeSupport().addPropertyChangeListener(this);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 		if (preferenceListener != null)
 			JaspersoftStudioPlugin.getInstance().removePreferenceListener(preferenceListener);
 		if (getModel() != null)
-			((ANode) getModel()).getPropertyChangeSupport().removePropertyChangeListener(this);
+			getModel().getPropertyChangeSupport().removePropertyChangeListener(this);
 		super.deactivate();
 	}
 
@@ -115,9 +115,10 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 	}
 
 	/**
-	 * Instead of the default drag tracker an overridden one is returned, in this way we can control the edit part
-	 * targeted from a drag & drop operation, and if the target is isn't an IContainer then it's parent is returned Change
-	 * by Orlandin Marco
+	 * Instead of the default drag tracker an overridden one is returned, in
+	 * this way we can control the edit part targeted from a drag & drop
+	 * operation, and if the target is isn't an IContainer then it's parent is
+	 * returned Change by Orlandin Marco
 	 */
 	@Override
 	public org.eclipse.gef.DragTracker getDragTracker(org.eclipse.gef.Request request) {
@@ -143,7 +144,8 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 
 			Point tr = figure.getBounds().getTopRight();
 			figure.translateToAbsolute(tr);
-			if (figure instanceof ComponentFigure && ((ComponentFigure) figure).getDecorator(ErrorDecorator.class) != null
+			if (figure instanceof ComponentFigure
+					&& ((ComponentFigure) figure).getDecorator(ErrorDecorator.class) != null
 					&& tr.getDistance(r) < 20) {
 				ErrorDecorator dec = (ErrorDecorator) ((ComponentFigure) figure).getDecorator(ErrorDecorator.class);
 
@@ -185,7 +187,7 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 	public void setPrefsBorder(IFigure rect) {
 		if (pref == null) {
 			if (jConfig == null)
-				jConfig = ((ANode) getModel()).getJasperConfiguration();
+				jConfig = getModel().getJasperConfiguration();
 			pref = jConfig.getProperty(DesignerPreferencePage.P_ELEMENT_DESIGN_BORDER_STYLE, RECTANGLE);
 			String mcolor = jConfig.getProperty(DesignerPreferencePage.P_ELEMENT_DESIGN_BORDER_COLOR,
 					DesignerPreferencePage.DEFAULT_ELEMENT_DESIGN_BORDER_COLOR);
@@ -200,8 +202,7 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 	/**
 	 * Sets the up figure.
 	 * 
-	 * @param rect
-	 *          the new up figure
+	 * @param rect the new up figure
 	 */
 	protected void setupFigure(IFigure rect) {
 		ANode model = getModel();
@@ -235,10 +236,12 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
+	 * PropertyChangeEvent)
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
-		// not necessary, the refresh of every node is done by the page when a proprty changes
+		// not necessary, the refresh of every node is done by the page when a
+		// proprty changes
 		// refresh();
 		// refreshC(getModel());
 		// refreshVisuals();
@@ -247,13 +250,14 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 	/**
 	 * Refresh c.
 	 * 
-	 * @param n
-	 *          the n
+	 * @param n the n
 	 */
 	/*
-	 * private void refreshC(ANode n) { if (n.getChildren() != null) for (INode node : n.getChildren()) { EditPart ep =
-	 * (EditPart) getViewer().getEditPartRegistry().get(node); if (ep instanceof FigureEditPart) ((FigureEditPart)
-	 * ep).refreshVisuals(); refreshC((ANode) node); } }
+	 * private void refreshC(ANode n) { if (n.getChildren() != null) for (INode
+	 * node : n.getChildren()) { EditPart ep = (EditPart)
+	 * getViewer().getEditPartRegistry().get(node); if (ep instanceof
+	 * FigureEditPart) ((FigureEditPart) ep).refreshVisuals(); refreshC((ANode)
+	 * node); } }
 	 */
 
 	public void updateRulers() {
@@ -273,18 +277,20 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 			}
 		}
 	}
-	
+
 	/**
 	 * Return the edit part of the parent model of the parameter model
 	 * 
 	 * @param childEditPart not null edit part from where the model is read
-	 * @return the editpart that contains the model of the parent of the passed model
+	 * @return the editpart that contains the model of the parent of the passed
+	 * model
 	 */
 	public static EditPart getParentEditPart(EditPart childEditPart) {
 		if (childEditPart != null && childEditPart.getModel() != null) {
-			ANode child = (ANode)childEditPart.getModel();
+			ANode child = (ANode) childEditPart.getModel();
 			ANode parentModel = child.getParent();
-			// This use the model for the search because every EditPart in the report has the same father.
+			// This use the model for the search because every EditPart in the
+			// report has the same father.
 			for (Object actualChild : childEditPart.getParent().getChildren()) {
 				EditPart actualChildPart = (EditPart) actualChild;
 				if (parentModel == actualChildPart.getModel())
@@ -293,13 +299,15 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Return the editpart target of a drop operation when an element is released on this edit part
-	 * some elements doesn't support direct drop (like table..) because the must be edited in a subeditor
-	 * So the drop container is not always the real editpart where an element is dropped. This is 
-	 * mostly used to show the drop feedback since the generation of the commands with the correct
-	 * container is handled from the EdtiPartFactory of the element where the drop was done
+	 * Return the editpart target of a drop operation when an element is
+	 * released on this edit part some elements doesn't support direct drop
+	 * (like table..) because the must be edited in a subeditor So the drop
+	 * container is not always the real editpart where an element is dropped.
+	 * This is mostly used to show the drop feedback since the generation of the
+	 * commands with the correct container is handled from the EdtiPartFactory
+	 * of the element where the drop was done
 	 * 
 	 * @return a not null edit part
 	 */
@@ -309,7 +317,7 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 			if (parentEditPart != null) {
 				return parentEditPart;
 			}
-		} 
+		}
 		return this;
 	}
 

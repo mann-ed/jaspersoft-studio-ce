@@ -28,6 +28,7 @@ import com.jaspersoft.studio.components.table.editor.TableEditor;
 import com.jaspersoft.studio.components.table.figure.CellFigure;
 import com.jaspersoft.studio.components.table.figure.EmptyCellFigure;
 import com.jaspersoft.studio.components.table.figure.TableFigure;
+import com.jaspersoft.studio.components.table.figure.WhenNoDataCellFigure;
 import com.jaspersoft.studio.components.table.messages.Messages;
 import com.jaspersoft.studio.components.table.model.AMCollection;
 import com.jaspersoft.studio.components.table.model.MTable;
@@ -81,10 +82,15 @@ import com.jaspersoft.studio.components.table.model.columngroup.command.CreateCo
 import com.jaspersoft.studio.components.table.model.columngroup.command.MoveColumnIntoGroupCommand;
 import com.jaspersoft.studio.components.table.model.columngroup.command.MoveColumnOutsideGroupCommand;
 import com.jaspersoft.studio.components.table.model.columngroup.command.ReorderColumnGroupCommand;
+import com.jaspersoft.studio.components.table.model.nodata.MTableNoData;
+import com.jaspersoft.studio.components.table.model.nodata.action.CreateNoDataAction;
+import com.jaspersoft.studio.components.table.model.nodata.action.DeleteNoDataAction;
+import com.jaspersoft.studio.components.table.model.nodata.cmd.DeleteNoDataCommand;
 import com.jaspersoft.studio.components.table.model.table.command.CreateTableCommand;
 import com.jaspersoft.studio.components.table.model.table.command.DeleteTableCommand;
 import com.jaspersoft.studio.components.table.part.TableCellEditPart;
 import com.jaspersoft.studio.components.table.part.TableEditPart;
+import com.jaspersoft.studio.components.table.part.TableNoDataEditPart;
 import com.jaspersoft.studio.components.table.part.TablePageEditPart;
 import com.jaspersoft.studio.components.table.part.editpolicy.JSSCompoundTableCommand;
 import com.jaspersoft.studio.editor.AContextMenuProvider;
@@ -125,8 +131,10 @@ import com.jaspersoft.studio.property.SetValueCommand;
 import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.components.table.BaseCell;
 import net.sf.jasperreports.components.table.BaseColumn;
 import net.sf.jasperreports.components.table.Cell;
+import net.sf.jasperreports.components.table.DesignBaseCell;
 import net.sf.jasperreports.components.table.DesignCell;
 import net.sf.jasperreports.components.table.StandardBaseColumn;
 import net.sf.jasperreports.components.table.StandardColumn;
@@ -154,6 +162,7 @@ public class TableComponentFactory implements IComponentFactory {
 		knownClasses.add(MCell.class);
 		knownClasses.add(MColumnGroup.class);
 		knownClasses.add(MColumn.class);
+		knownClasses.add(MTableNoData.class);
 	}
 
 	public ANode createNode(final ANode parent, Object jrObject, int newIndex) {
@@ -185,12 +194,9 @@ public class TableComponentFactory implements IComponentFactory {
 	 * Remove the old dataset from the mpage of a table and add the new one, read
 	 * from the dataset run of the table
 	 * 
-	 * @param parent
-	 *            the mpage of the table editor
-	 * @param jd
-	 *            the jasperdesign
-	 * @param st
-	 *            the table element inside the table editor
+	 * @param parent the mpage of the table editor
+	 * @param jd     the jasperdesign
+	 * @param st     the table element inside the table editor
 	 */
 	public static void setDataset(ANode parent, final JasperDesign jd, StandardTable st) {
 		// Remove all the old dataset inside the page
@@ -218,8 +224,8 @@ public class TableComponentFactory implements IComponentFactory {
 	protected static ANode createTable(MTable mt) {
 		JRDesignComponentElement tbl = (JRDesignComponentElement) mt.getValue();
 		StandardTable table = (StandardTable) tbl.getComponent();
-		MTableHeader mth = new MTableHeader(mt, tbl, StandardColumn.PROPERTY_TABLE_HEADER);
-		MTableColumnHeader mch = new MTableColumnHeader(mt, tbl, StandardColumn.PROPERTY_COLUMN_HEADER);
+		MTableHeader mth = new MTableHeader(mt, tbl, StandardBaseColumn.PROPERTY_TABLE_HEADER);
+		MTableColumnHeader mch = new MTableColumnHeader(mt, tbl, StandardBaseColumn.PROPERTY_COLUMN_HEADER);
 
 		List<?> groupsList = TableUtil.getGroupList(table, mt.getJasperDesign());
 		List<MTableGroupHeader> grHeaders = new ArrayList<>();
@@ -239,12 +245,32 @@ public class TableComponentFactory implements IComponentFactory {
 				grFooters.add(new MTableGroupFooter(mt, tbl, jrGroup, ""));
 			}
 
-		MTableColumnFooter mtcf = new MTableColumnFooter(mt, tbl, StandardColumn.PROPERTY_COLUMN_FOOTER);
-		MTableFooter mtf = new MTableFooter(mt, tbl, StandardColumn.PROPERTY_TABLE_FOOTER);
+		MTableColumnFooter mtcf = new MTableColumnFooter(mt, tbl, StandardBaseColumn.PROPERTY_COLUMN_FOOTER);
+		MTableFooter mtf = new MTableFooter(mt, tbl, StandardBaseColumn.PROPERTY_TABLE_FOOTER);
 
 		createColumns(mt, table.getColumns(), mth, mch, mtd, mtcf, mtf, grHeaders, grFooters);
 
+		BaseCell cell = table.getNoData();
+		MTableNoData noData = new MTableNoData(mt, (DesignBaseCell) cell, -1);
+		if (cell != null)
+			ReportFactory.createElementsForBand(noData, cell.getChildren());
+
 		return mt;
+	}
+
+	public static Pair<Integer, Integer> createCellNoData(ANode mth, BaseColumn bc,
+			Pair<Integer, Integer> columnNumberIndex) {
+		if (bc instanceof StandardColumnGroup) {
+			StandardColumnGroup scg = (StandardColumnGroup) bc;
+			for (BaseColumn bcg : scg.getColumns()) {
+				columnNumberIndex = createCellDetail(mth, bcg, columnNumberIndex);
+			}
+		} else {
+			createColumnCell(mth, bc, columnNumberIndex.getKey(), ((StandardColumn) bc).getDetailCell(),
+					columnNumberIndex.getValue());
+			return new Pair<>(columnNumberIndex.getKey() + 1, columnNumberIndex.getValue() + 1);
+		}
+		return columnNumberIndex;
 	}
 
 	public static void createColumns(ANode parent, List<BaseColumn> columns, MTableHeader mth, MTableColumnHeader mch,
@@ -369,12 +395,9 @@ public class TableComponentFactory implements IComponentFactory {
 	 * 
 	 * @param parent
 	 * @param bc
-	 * @param i
-	 *            number of the cell used for the name
-	 * @param cell
-	 *            the cell used as value of the node
-	 * @param index
-	 *            index of the cell node
+	 * @param i      number of the cell used for the name
+	 * @param cell   the cell used as value of the node
+	 * @param index  index of the cell node
 	 * @return
 	 */
 	public static ANode createColumnCell(ANode parent, BaseColumn bc, int i, Cell cell, int index) {
@@ -407,6 +430,8 @@ public class TableComponentFactory implements IComponentFactory {
 
 		if (node instanceof MColumn && !(node instanceof MCell))
 			return new EmptyCellFigure();
+		if (node instanceof MTableNoData)
+			return new WhenNoDataCellFigure();
 		return null;
 	}
 
@@ -483,6 +508,9 @@ public class TableComponentFactory implements IComponentFactory {
 			return UnexecutableCommand.INSTANCE;
 		}
 
+		if (parent instanceof MTableNoData || child instanceof MTableNoData) {
+			return null;
+		}
 		if (child instanceof MCell) {
 			if (parent instanceof MColumnGroup) {
 				JSSCompoundTableCommand tableCommand = new JSSCompoundTableCommand(((MColumn) parent).getMTable());
@@ -685,6 +713,8 @@ public class TableComponentFactory implements IComponentFactory {
 			return new DeleteElementCommand((MCell) parent, (MGraphicElement) child);
 		if (child instanceof MElementGroup && parent instanceof MCell && child.getValue() != null)
 			return new DeleteElementGroupCommand((MCell) parent, (MElementGroup) child);
+		if (child instanceof MTableNoData && child.getValue() != null)
+			return new DeleteNoDataCommand((MTableNoData) child);
 		return null;
 	}
 
@@ -725,6 +755,10 @@ public class TableComponentFactory implements IComponentFactory {
 				tableCommand.add(new DeleteColumnCellCommand((ANode) parent, (MCell) child));
 				return tableCommand;
 			}
+		} else if (child instanceof MTableNoData) {
+			JSSCompoundTableCommand tableCommand = new JSSCompoundTableCommand(((MTableNoData) child).getMTable());
+			tableCommand.add(new DeleteNoDataCommand((MTableNoData) child));
+			return tableCommand;
 		}
 		return null;
 	}
@@ -902,25 +936,28 @@ public class TableComponentFactory implements IComponentFactory {
 
 		lst.add(SelectAllCellsAction.ID);
 		lst.add(SelectAllElementsAction.ID);
+
+		lst.add(CreateNoDataAction.ID);
+		lst.add(DeleteNoDataAction.ID);
 		return lst;
 	}
 
 	public EditPart createEditPart(EditPart context, Object model) {
 		if (model instanceof MRoot) {
 			ANode n = ModelUtils.getFirstChild((MRoot) model);
-			if (n != null && n instanceof MPage) {
-				for (INode child : n.getChildren()) {
+			if (n instanceof MPage)
+				for (INode child : n.getChildren())
 					if (child instanceof MTable)
 						return new TablePageEditPart();
-				}
-			}
 		}
 		if (model instanceof MTable)
 			return new TableEditPart();
 		if (model instanceof MCell)
 			return new TableCellEditPart();
-		else if (model instanceof MColumn)
+		if (model instanceof MColumn)
 			return new TableCellEditPart();
+		if (model instanceof MTableNoData)
+			return new TableNoDataEditPart();
 		return null;
 	}
 
@@ -932,9 +969,9 @@ public class TableComponentFactory implements IComponentFactory {
 	}
 
 	public AbstractVisualEditor getEditor(Object node, JasperReportsConfiguration jrContext) {
-		if (node != null && node instanceof JRDesignComponentElement) {
+		if (node instanceof JRDesignComponentElement) {
 			Component component = ((JRDesignComponentElement) node).getComponent();
-			if (component != null && component instanceof StandardTable)
+			if (component instanceof StandardTable)
 				return new TableEditor(jrContext);
 		}
 		return null;
