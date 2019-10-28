@@ -26,6 +26,7 @@ import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.handles.MoveHandle;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.jface.util.Util;
 
 import com.jaspersoft.studio.editor.java2d.J2DGraphics;
 import com.jaspersoft.studio.model.APropertyNode;
@@ -61,7 +62,10 @@ public class BandResizableEditPolicy extends ResizableEditPolicy {
 			setFeedbackText(oldBounds.height + (bWidth != null ? "," + oldBounds.width : "") + " px");
 		}
 		super.showChangeBoundsFeedback(request);
-
+		//fix for community issue 12061, look at RedrawingEditPolicy for more informations
+		if (Util.isLinux()) {
+			getHost().getViewer().getControl().redraw();
+		}
 	}
 
 	/**

@@ -33,6 +33,7 @@ import com.jaspersoft.studio.components.table.model.column.MColumn;
 import com.jaspersoft.studio.components.table.model.column.command.MoveColumnCommand;
 import com.jaspersoft.studio.components.table.part.TableCellEditPart;
 import com.jaspersoft.studio.editor.gef.figures.ComponentFigure;
+import com.jaspersoft.studio.editor.gef.parts.RedrawingEditPolicy;
 import com.jaspersoft.studio.editor.gef.parts.handles.CellMoveHandle;
 import com.jaspersoft.studio.editor.gef.parts.handles.CellResizeHandle2;
 import com.jaspersoft.studio.editor.gef.util.GEFUtil;
@@ -40,7 +41,7 @@ import com.jaspersoft.studio.editor.gef.util.GEFUtil;
 /*
  * The Class TableCellResizableEditPolicy.
  */
-public class TableCellResizableEditPolicy extends ResizableEditPolicy {
+public class TableCellResizableEditPolicy extends RedrawingEditPolicy {
 
 	public TableCellResizableEditPolicy() {
 		super();
@@ -162,6 +163,9 @@ public class TableCellResizableEditPolicy extends ResizableEditPolicy {
 		feedback.translateToRelative(rect);
 		feedback.setBounds(rect);
 		feedback.validate();
+		
+		//fix for community issue 12061, look at RedrawingEditPolicy for more informations
+		super.showChangeBoundsFeedback(request);
 	}
 
 	private MovePlacer movePlace = new MovePlacer();

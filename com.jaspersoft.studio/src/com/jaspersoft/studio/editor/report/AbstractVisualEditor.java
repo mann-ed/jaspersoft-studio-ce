@@ -46,6 +46,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -319,8 +320,10 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	public void layout() {
 		// this is a short running method so it can be executed synchronously
 		UIUtils.getDisplay().syncExec(() -> {
-			if (!rulerComp.isDisposed())
+			if (!rulerComp.isDisposed()) {
 				rulerComp.requestLayout();
+				rulerComp.redraw();
+			}
 		});
 	}
 
@@ -471,6 +474,10 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (isSame(part)) {
 			updateActions(getSelectionActions());
+			//fix for community issue 12061, look at RedrawingEditPolicy for more informations
+			if (Util.isLinux()) {
+				layout();
+			}
 		}
 	}
 
