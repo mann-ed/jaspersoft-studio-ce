@@ -7,8 +7,6 @@ package com.jaspersoft.studio.editor.gef.parts.editPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.jasperreports.engine.design.JRDesignElement;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Graphics;
@@ -20,7 +18,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.SharedCursors;
-import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.NonResizableHandleKit;
 import org.eclipse.gef.handles.ResizableHandleKit;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
@@ -29,9 +26,12 @@ import org.eclipse.gef.tools.ResizeTracker;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 
 import com.jaspersoft.studio.editor.gef.parts.FigureEditPart;
+import com.jaspersoft.studio.editor.gef.parts.RedrawingEditPolicy;
 import com.jaspersoft.studio.editor.gef.selection.ColoredSquareHandles;
 
-public class ElementResizableEditPolicy extends ResizableEditPolicy {
+import net.sf.jasperreports.engine.design.JRDesignElement;
+
+public class ElementResizableEditPolicy extends RedrawingEditPolicy {
 
 	/**
 	 * Instantiates a new band resizable edit policy.
@@ -110,6 +110,9 @@ public class ElementResizableEditPolicy extends ResizableEditPolicy {
 		((ElementFeedbackFigure) feedback).setText(s);
 
 		feedback.setBounds(rect.resize(-scaleW, -scaleH));
+		
+		//fix for community issue 12061, look at RedrawingEditPolicy for more informations
+		super.showChangeBoundsFeedback(request);
 	}
 
 	@Override
