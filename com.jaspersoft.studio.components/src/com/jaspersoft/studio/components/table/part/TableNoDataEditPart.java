@@ -92,7 +92,7 @@ public class TableNoDataEditPart extends APrefFigureEditPart implements IContain
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
 		if (key == IPropertySourceProvider.class || key == IPropertySource.class)
 			return super.getAdapter(key);
-		return getParent().getAdapter(key);
+		return getParent() != null ? getParent().getAdapter(key) : null;
 	}
 
 	@Override
