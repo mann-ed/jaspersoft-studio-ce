@@ -33,13 +33,14 @@ public class CreateNoDataCommand extends Command {
 	 */
 	@Override
 	public void execute() {
-		
+
 		if (jrCell == null) {
 			jrCell = new DesignBaseCell();
 			jrCell.setHeight(50);
 		}
 		tbl.setNoData(jrCell);
-		SelectionHelper.setSelection(cell, true);
+
+		SelectionHelper.setSelection(jrCell, true);
 	}
 
 	@Override
