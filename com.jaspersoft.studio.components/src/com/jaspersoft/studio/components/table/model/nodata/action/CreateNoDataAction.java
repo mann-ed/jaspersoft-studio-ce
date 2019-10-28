@@ -66,7 +66,8 @@ public class CreateNoDataAction extends ACachedSelectionAction {
 		List<Object> cells = editor.getSelectionCache().getSelectionModelForType(MTableNoData.class);
 		if (!cells.isEmpty()) {
 			MTable table = ((MTableNoData) cells.get(0)).getMTable();
-			if (table.getStandardTable().getWhenNoDataType().equals(WhenNoDataTypeTableEnum.NO_DATA_CELL)) {
+			if (table.getStandardTable() != null && table.getStandardTable().getWhenNoDataType() != null
+					&& table.getStandardTable().getWhenNoDataType().equals(WhenNoDataTypeTableEnum.NO_DATA_CELL)) {
 				JSSCompoundTableCommand compundTableCommand = new JSSCompoundTableCommand(table);
 				for (Object rawCell : cells) {
 					MTableNoData col = (MTableNoData) rawCell;
