@@ -35,26 +35,30 @@ public class WhenNoDataCellFigure extends CellFigure {
 	@Override
 	public void paint(Graphics graphics) {
 		Rectangle b = getHandleBounds();
-		graphics.setBackgroundColor(ColorConstants.white);
-		graphics.fillRectangle(b.x, b.y, b.width, b.height);
 
-		super.paint(graphics);
 		Graphics2D g = ComponentFigure.getG2D(graphics);
 		if (g != null) {
-			twriter.painText(g, this);
-
+			
 			Font currfont = g.getFont();
 			g.setFont(currfont.deriveFont(16f));
-
-			java.awt.Color currColor = g.getColor();
-			g.setColor(java.awt.Color.GRAY);
-
 			if (hintBounds == null) {
 				hintBounds = g.getFontMetrics().getStringBounds(HINT, g);
 			}
+			
 			int width = Math.max(b.width , (int) hintBounds.getWidth()) + APageFigure.PAGE_BORDER.left;
 			java.awt.Rectangle oldClip = g.getClipBounds();
 			g.setClip(oldClip.x, oldClip.y, width, oldClip.height);
+			
+			graphics.setBackgroundColor(ColorConstants.white);
+			graphics.fillRectangle(b.x, b.y, b.width, b.height);
+
+			super.paint(graphics);
+			
+			twriter.painText(g, this);
+
+
+			java.awt.Color currColor = g.getColor();
+			g.setColor(java.awt.Color.GRAY);
 
 			g.drawString(HINT, b.x, b.y - 15);
 			g.setColor(currColor);
