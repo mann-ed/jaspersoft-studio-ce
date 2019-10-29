@@ -32,7 +32,6 @@ public class CreateNoDataCommand extends Command {
 	 */
 	@Override
 	public void execute() {
-
 		if (jrCell == null) {
 			jrCell = new DesignBaseCell();
 			jrCell.setHeight(50);
@@ -44,7 +43,7 @@ public class CreateNoDataCommand extends Command {
 	public boolean canExecute() {
 		return tbl.getNoData() == null;
 	}
-	
+
 	public DesignBaseCell getCell() {
 		return jrCell;
 	}

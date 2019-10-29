@@ -19,7 +19,6 @@ import com.jaspersoft.studio.components.table.part.editpolicy.JSSCompoundTableCo
 import com.jaspersoft.studio.editor.action.ACachedSelectionAction;
 import com.jaspersoft.studio.utils.SelectionHelper;
 
-import net.sf.jasperreports.components.table.WhenNoDataTypeTableEnum;
 import net.sf.jasperreports.engine.JRChild;
 
 /**
@@ -59,51 +58,44 @@ public class CreateNoDataAction extends ACachedSelectionAction {
 		setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_NEW_WIZARD_DISABLED));
 		setEnabled(false);
 	}
-	
+
 	@Override
 	protected boolean calculateEnabled() {
 		List<Object> cells = editor.getSelectionCache().getSelectionModelForType(MTableNoData.class);
 		if (!cells.isEmpty()) {
-			MTable table = ((MTableNoData) cells.get(0)).getMTable();
-			if (table.getStandardTable() != null && table.getStandardTable().getWhenNoDataType() != null
-					&& table.getStandardTable().getWhenNoDataType().equals(WhenNoDataTypeTableEnum.NO_DATA_CELL)) {
-				for (Object rawCell : cells) {
-					MTableNoData col = (MTableNoData) rawCell;
-					if (col.getValue() == null) {
-						return true;
-					}
+			for (Object rawCell : cells) {
+				MTableNoData col = (MTableNoData) rawCell;
+				if (col.getValue() == null) {
+					return true;
 				}
 			}
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void run() {
 		List<Object> cells = editor.getSelectionCache().getSelectionModelForType(MTableNoData.class);
 		if (!cells.isEmpty()) {
 			MTable table = ((MTableNoData) cells.get(0)).getMTable();
-			if (table.getStandardTable().getWhenNoDataType().equals(WhenNoDataTypeTableEnum.NO_DATA_CELL)) {
-				JSSCompoundTableCommand compundTableCommand = new JSSCompoundTableCommand(table);
-				for (Object rawCell : cells) {
-					MTableNoData col = (MTableNoData) rawCell;
-					if (col.getValue() == null) {
-						compundTableCommand.add(new CreateNoDataCommand(col));
-					}
+
+			JSSCompoundTableCommand compundTableCommand = new JSSCompoundTableCommand(table);
+			for (Object rawCell : cells) {
+				MTableNoData col = (MTableNoData) rawCell;
+				if (col.getValue() == null)
+					compundTableCommand.add(new CreateNoDataCommand(col));
+			}
+			if (!compundTableCommand.isEmpty()) {
+				execute(compundTableCommand);
+				List<JRChild> createdElements = new ArrayList<>();
+				for (Command createCellCommand : compundTableCommand.getCommands()) {
+					createdElements.add(((CreateNoDataCommand) createCellCommand).getCell());
 				}
-				if (!compundTableCommand.isEmpty()) {
-					execute(compundTableCommand);
-					List<JRChild> createdElements = new ArrayList<>();
-					for(Command createCellCommand : compundTableCommand.getCommands()) {
-						createdElements.add(((CreateNoDataCommand)createCellCommand).getCell());
-					}
-					SelectionHelper.deselectAll();
-					SelectionHelper.setSelection(createdElements, false);
-				}
+				SelectionHelper.deselectAll();
+				SelectionHelper.setSelection(createdElements, false);
 			}
 		}
 	}
-	
 
 	/**
 	 * Create the command for the action for each selected column, excluding the
@@ -111,7 +103,7 @@ public class CreateNoDataAction extends ACachedSelectionAction {
 	 */
 	@Override
 	protected Command createCommand() {
-	
+
 		return null;
 	}
 }
