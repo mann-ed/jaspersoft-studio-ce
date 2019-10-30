@@ -703,6 +703,22 @@ public class TableComponentFactory implements IComponentFactory {
 		}
 		return null;
 	}
+	
+	/**
+	 * Custom delete command to remove the child of the cell before of the cell itself
+	 */
+	public static Command createDeleteCommand(ANode cell) {
+		JSSCompoundTableCommand tableCommand = new JSSCompoundTableCommand(((MTableNoData) cell).getMTable());
+		for(INode cellChild : cell.getChildren()) {
+			Command deleteCmd = OutlineTreeEditPartFactory.getDeleteCommand(cell, (ANode)cellChild);
+			if (deleteCmd != null) {
+				tableCommand.add(deleteCmd);
+			}
+		}
+		
+		tableCommand.add(new DeleteNoDataCommand((MTableNoData) cell));
+		return tableCommand;
+	}
 
 	public Command getDeleteCommand(ANode parent, ANode child) {
 		if (child instanceof MTable)
@@ -713,8 +729,9 @@ public class TableComponentFactory implements IComponentFactory {
 			return new DeleteElementCommand((MCell) parent, (MGraphicElement) child);
 		if (child instanceof MElementGroup && parent instanceof MCell && child.getValue() != null)
 			return new DeleteElementGroupCommand((MCell) parent, (MElementGroup) child);
-		if (child instanceof MTableNoData && child.getValue() != null)
-			return new DeleteNoDataCommand((MTableNoData) child);
+		if (child instanceof MTableNoData && child.getValue() != null) {
+			return createDeleteCommand(child);
+		}
 		return null;
 	}
 
@@ -756,9 +773,7 @@ public class TableComponentFactory implements IComponentFactory {
 				return tableCommand;
 			}
 		} else if (child instanceof MTableNoData) {
-			JSSCompoundTableCommand tableCommand = new JSSCompoundTableCommand(((MTableNoData) child).getMTable());
-			tableCommand.add(new DeleteNoDataCommand((MTableNoData) child));
-			return tableCommand;
+			return createDeleteCommand(child);
 		}
 		return null;
 	}

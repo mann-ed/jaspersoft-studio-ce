@@ -92,7 +92,7 @@ public class TableNoDataEditPart extends APrefFigureEditPart implements IContain
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
 		if (key == IPropertySourceProvider.class || key == IPropertySource.class)
 			return super.getAdapter(key);
-		return getParent().getAdapter(key);
+		return getParent() != null ? getParent().getAdapter(key) : null;
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class TableNoDataEditPart extends APrefFigureEditPart implements IContain
 					parent = getModel();
 				Rectangle b = getModel().getBounds();
 				int x = constraint.x - b.x;
-				int y = constraint.y - b.y - 30;
+				int y = constraint.y - b.y;
 				constraint = new Rectangle(x, y, constraint.width, constraint.height);
 
 				return super.getCreateCommand(parent, obj, constraint, index, request);
@@ -226,7 +226,7 @@ public class TableNoDataEditPart extends APrefFigureEditPart implements IContain
 
 							JRDesignElement jde = model.getValue();
 							int x = r.x + rect.x - jde.getX();
-							int y = r.y + rect.y - jde.getY() - 15;
+							int y = r.y + rect.y - jde.getY() - 20;
 							rect.setLocation(x, y);
 							cmd.setContext(getModel(), (ANode) child.getModel(), rect);
 
@@ -283,7 +283,7 @@ public class TableNoDataEditPart extends APrefFigureEditPart implements IContain
 		Rectangle bounds = model.getBounds();
 		if (bounds != null) {
 			int x = bounds.x;
-			int y = bounds.y + APageFigure.PAGE_BORDER.top;
+			int y = bounds.y + APageFigure.PAGE_BORDER.top - 30;
 			rect.setLocation(new Point(x, y));
 
 			rect.setToolTip(new Label(x + "," + y));
@@ -327,7 +327,7 @@ public class TableNoDataEditPart extends APrefFigureEditPart implements IContain
 			v.setProperty(ReportRuler.PROPERTY_VEND, h);
 		}
 		v.setProperty(ReportRuler.PROPERTY_HOFFSET, X_OFFSET);
-		int y = getModel().getBounds().y + Y_OFFSET + 30;
+		int y = getModel().getBounds().y + Y_OFFSET;
 		v.setProperty(ReportRuler.PROPERTY_VOFFSET, y);
 
 		v.setProperty(SnapToGrid.PROPERTY_GRID_ORIGIN, new Point(X_OFFSET, y));

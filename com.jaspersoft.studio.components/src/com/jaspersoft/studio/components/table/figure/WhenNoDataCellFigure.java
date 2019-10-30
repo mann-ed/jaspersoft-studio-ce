@@ -10,7 +10,6 @@ import java.awt.geom.Rectangle2D;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IClippingStrategy;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 import com.jaspersoft.studio.editor.gef.figures.APageFigure;
@@ -26,53 +25,57 @@ public class WhenNoDataCellFigure extends CellFigure {
 	private static final String HINT = "If the table will not contain any data, this cell will be printed instead.";
 	private FigureTextWriter twriter = new FigureTextWriter();
 	private Rectangle2D hintBounds;
-	private IClippingStrategy clippingStrategy = childFigure -> {
-		Rectangle b = childFigure.getBounds();
-		if (hintBounds != null && childFigure == WhenNoDataCellFigure.this)
-			return new Rectangle[] { new Rectangle(b.x, b.y,
-					Math.max(b.width, (int) hintBounds.getWidth() + APageFigure.PAGE_BORDER.left), b.height) };
-		return new Rectangle[] { b };
-	};
 
 	public WhenNoDataCellFigure() {
 		super();
 		twriter.setText("When No Data Cell");
 	}
 
+
 	@Override
 	public void paint(Graphics graphics) {
 		Rectangle b = getHandleBounds();
-		graphics.setBackgroundColor(ColorConstants.white);
-		graphics.fillRectangle(b.x, b.y, b.width, b.height);
 
-		super.paint(graphics);
 		Graphics2D g = ComponentFigure.getG2D(graphics);
 		if (g != null) {
-			twriter.painText(g, this);
-
+			
 			Font currfont = g.getFont();
 			g.setFont(currfont.deriveFont(16f));
+			if (hintBounds == null) {
+				hintBounds = g.getFontMetrics().getStringBounds(HINT, g);
+			}
+			
+			int width = Math.max(b.width , (int) hintBounds.getWidth()) + APageFigure.PAGE_BORDER.left;
+			java.awt.Rectangle oldClip = g.getClipBounds();
+			g.setClip(oldClip.x, oldClip.y, width, oldClip.height);
+			
+			graphics.setBackgroundColor(ColorConstants.white);
+			graphics.fillRectangle(b.x, b.y, b.width, b.height);
+
+			super.paint(graphics);
+			
+			twriter.painText(g, this);
+
 
 			java.awt.Color currColor = g.getColor();
 			g.setColor(java.awt.Color.GRAY);
 
-			hintBounds = g.getFontMetrics().getStringBounds(HINT, g);
-			getParent().setClippingStrategy(clippingStrategy);
-
 			g.drawString(HINT, b.x, b.y - 15);
 			g.setColor(currColor);
-
 			g.setFont(currfont);
-		}
-		if (getParent() instanceof APageFigure) {
-			GridPainter grid = ((APageFigure) getParent()).getGrid();
-			if (grid.isVisible()) {
-				grid.setBounds(b);
-				grid.paintGrid(graphics, this);
+			
+			if (getParent() instanceof APageFigure) {
+				GridPainter grid = ((APageFigure) getParent()).getGrid();
+				if (grid.isVisible()) {
+					grid.setBounds(b);
+					grid.paintGrid(graphics, this);
+				}
 			}
+			if (getBorder() != null) {
+				getBorder().paint(this, graphics, APageFigure.PAGE_BORDER);
+			}
+			g.setClip(oldClip.x, oldClip.y, oldClip.width, oldClip.height);
 		}
-		if (getBorder() != null)
-			getBorder().paint(this, graphics, APageFigure.PAGE_BORDER);
 	}
 
 	@Override

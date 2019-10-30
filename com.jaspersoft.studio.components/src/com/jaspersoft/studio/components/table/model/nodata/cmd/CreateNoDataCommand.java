@@ -7,7 +7,6 @@ package com.jaspersoft.studio.components.table.model.nodata.cmd;
 import org.eclipse.gef.commands.Command;
 
 import com.jaspersoft.studio.components.table.model.nodata.MTableNoData;
-import com.jaspersoft.studio.utils.SelectionHelper;
 
 import net.sf.jasperreports.components.table.DesignBaseCell;
 import net.sf.jasperreports.components.table.StandardTable;
@@ -33,19 +32,20 @@ public class CreateNoDataCommand extends Command {
 	 */
 	@Override
 	public void execute() {
-
 		if (jrCell == null) {
 			jrCell = new DesignBaseCell();
 			jrCell.setHeight(50);
 		}
 		tbl.setNoData(jrCell);
-
-		SelectionHelper.setSelection(jrCell, true);
 	}
 
 	@Override
 	public boolean canExecute() {
 		return tbl.getNoData() == null;
+	}
+
+	public DesignBaseCell getCell() {
+		return jrCell;
 	}
 
 	/*

@@ -378,7 +378,7 @@ public class MTableNoData extends APropertyNode implements IGraphicElement, IPas
 	}
 
 	public Integer getTopPadding() {
-		return getValue().getLineBox().getTopPadding() + 30;
+		return getValue().getLineBox().getTopPadding();
 	}
 
 	public Integer getLeftPadding() {
@@ -396,12 +396,23 @@ public class MTableNoData extends APropertyNode implements IGraphicElement, IPas
 	public Integer getPadding() {
 		return getValue().getLineBox().getPadding();
 	}
+	
+	protected int getTableWidth() {
+		ANode parent = getParent();
+		while (parent != null) {
+			if (parent instanceof MTable) {
+				return ((MTable)parent).getValue().getWidth();
+			}
+			parent = parent.getParent();
+		}
+		return 100;
+	}
 
 	@Override
 	public Dimension getSize() {
 		DesignBaseCell cell = getValue();
 		int h = cell != null && cell.getHeight() != null ? cell.getHeight() : 0;
-		return new Dimension(100, h);
+		return new Dimension(getTableWidth(), h);
 	}
 
 	@Override
@@ -564,7 +575,7 @@ public class MTableNoData extends APropertyNode implements IGraphicElement, IPas
 
 		int x = 0;
 		int y = tableLocation.height + tableLocation.y; // here should go after the last section
-		return new Rectangle(x, y, tableModel.getValue().getWidth(), h);
+		return new Rectangle(x, y + 30, tableModel.getValue().getWidth(), h);
 	}
 
 	@Override
