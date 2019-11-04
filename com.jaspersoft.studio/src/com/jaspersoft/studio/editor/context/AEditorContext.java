@@ -198,7 +198,7 @@ public class AEditorContext {
 		for (RepositoryService r : rs)
 			if (r instanceof DefaultRepositoryService)
 				((DefaultRepositoryService) r).setClassLoader(classLoader);
-		jConf.put(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER, javaclassloader);
+		jConf.put(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER, classLoader);
 	}
 
 	public void refreshClasspath() {
