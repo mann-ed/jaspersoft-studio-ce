@@ -7,6 +7,7 @@ package com.jaspersoft.studio.data.storage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -76,6 +77,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 
 	public FileDataAdapterStorage(IProject project) {
 		this.project = project;
+		this.daDescriptors = new LinkedHashMap<>();
 	}
 
 	@Override
@@ -85,10 +87,12 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 				IResource[] members = project.members();
 				if (members != null && members.length > 0) {
 					Job job = new WorkspaceJob(Messages.FileDataAdapterStorage_1) {
+						private IResourceChangeListener rcl;
+
 						public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 							listenWorkspace();
 							monitor.beginTask(Messages.FileDataAdapterStorage_2 + project.getName(), 10);
-							project.accept(new ResourceVisitor(), IResource.NONE,
+							project.accept(new ResourceVisitor(), IResource.DEPTH_INFINITE,
 									IContainer.EXCLUDE_DERIVED | IContainer.DO_NOT_CHECK_EXISTENCE);
 
 							if (monitor.isCanceled())
@@ -100,7 +104,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 
 						protected void listenWorkspace() {
 							IWorkspace wspace = ResourcesPlugin.getWorkspace();
-							IResourceChangeListener rcl = new IResourceChangeListener() {
+							rcl = new IResourceChangeListener() {
 								public void resourceChanged(IResourceChangeEvent event) {
 									final IResourceDelta delta = event.getDelta();
 									if (delta == null)
@@ -137,9 +141,14 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 								protected void processEvent(IResourceDelta delta) {
 									try {
 										delta.accept(new IResourceDeltaVisitor() {
-
 											public boolean visit(IResourceDelta delta) throws CoreException {
 												final IResource res = delta.getResource();
+												if (res.getType() == IResource.PROJECT && res.equals(project)
+														&& delta.getKind() == IResourceDelta.REMOVED) {
+													DataAdapterManager.removeProject((IProject) res);
+													wspace.removeResourceChangeListener(rcl);
+													return false;
+												}
 												if (res.getType() == IResource.FILE
 														&& "xml".equalsIgnoreCase(res.getFileExtension())) //$NON-NLS-1$
 													switch (delta.getKind()) {
