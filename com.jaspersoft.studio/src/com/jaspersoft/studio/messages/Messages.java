@@ -1619,6 +1619,8 @@ public class Messages extends NLS {
 	public static String MTextField_evaluation_group_description;
 	public static String MTextField_evaluation_time_description;
 	public static String MTextField_expression_description;
+	public static String MTextField_MTextField_text_adjust_description;
+	public static String MTextField_MTextField_text_adjust_label;
 	public static String MTextField_pattern_description;
 	public static String MTextField_patternExpressionTitle;
 	public static String MTextField_stretch_with_overflow;
