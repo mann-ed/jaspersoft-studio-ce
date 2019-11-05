@@ -28,6 +28,20 @@
 
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="javax.xml"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.apache.ant"/>
+      <import plugin="org.apache.xml.security"/>
+      <import plugin="com.jaspersoft.studio.bundles.batik"/>
+      <import plugin="org.apache.commons.commons-codec"/>
+      <import plugin="org.apache.commons.commons-collections4"/>
+      <import plugin="org.apache.commons.commons-compress"/>
+      <import plugin="org.apache.commons.logging"/>
+      <import plugin="org.apache.commons.math3"/>
+      <import plugin="com.jaspersoft.studio.bundles.xmlbeans"/>
+      <import plugin="org.bouncycastle.bcprov"/>
+      <import plugin="org.bouncycastle.bcpkix"/>
+      <import plugin="org.w3c.dom.events"/>
    </requires>
 
    <plugin
@@ -70,12 +84,6 @@
          download-size="0"
          install-size="0"
          version="2.1.7.js7_b01"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.poi"
-         download-size="0"
-         install-size="0"
-         version="4.0.1.1"/>
 
    <plugin
          id="joda-time"
@@ -223,5 +231,11 @@
          install-size="0"
          version="1.19.0"
          unpack="false"/>
+
+   <plugin
+         id="com.jaspersoft.studio.bundles.poi"
+         download-size="0"
+         install-size="0"
+         version="4.1.1.b01"/>
 
 </feature>
