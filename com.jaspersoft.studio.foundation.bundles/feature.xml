@@ -200,14 +200,14 @@
          id="org.apache.commons.commons-codec"
          download-size="0"
          install-size="0"
-         version="1.12.0"
+         version="1.13.0"
          unpack="false"/>
 
    <plugin
          id="org.apache.commons.commons-collections4"
          download-size="0"
          install-size="0"
-         version="4.2.0"
+         version="4.4.0"
          unpack="false"/>
 
    <plugin
@@ -218,10 +218,10 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.commons.compress"
+         id="org.apache.commons.commons-compress"
          download-size="0"
          install-size="0"
-         version="1.18.0.v20181121-2221"
+         version="1.19.0"
          unpack="false"/>
 
 </feature>
