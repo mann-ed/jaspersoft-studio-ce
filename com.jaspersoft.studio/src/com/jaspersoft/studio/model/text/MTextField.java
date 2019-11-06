@@ -27,7 +27,6 @@ import com.jaspersoft.studio.model.util.IIconDescriptor;
 import com.jaspersoft.studio.model.util.NodeIconDescriptor;
 import com.jaspersoft.studio.property.JSSStyleResolver;
 import com.jaspersoft.studio.property.descriptor.NullEnum;
-import com.jaspersoft.studio.property.descriptor.checkbox.CheckBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.checkbox.NullCheckBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.combo.RWComboBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
@@ -44,6 +43,7 @@ import net.sf.jasperreports.engine.JRDataset;
 import net.sf.jasperreports.engine.JRElement;
 import net.sf.jasperreports.engine.JRHyperlinkParameter;
 import net.sf.jasperreports.engine.JRTextField;
+import net.sf.jasperreports.engine.base.JRBaseStyle;
 import net.sf.jasperreports.engine.base.JRBaseTextField;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignDatasetRun;
@@ -54,6 +54,7 @@ import net.sf.jasperreports.engine.design.JRDesignStyle;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.EvaluationTimeEnum;
+import net.sf.jasperreports.engine.type.TextAdjustEnum;
 
 /*
  * The Class MTextField.
@@ -66,6 +67,7 @@ public class MTextField extends MTextElement {
 	private MHyperLink mHyperLink;
 
 	private static NamedEnumPropertyDescriptor<EvaluationTimeEnum> evaluationTimeD;
+	private static NamedEnumPropertyDescriptor<TextAdjustEnum> textAdjustD;
 
 	private IPropertyDescriptor[] descriptors;
 
@@ -90,12 +92,9 @@ public class MTextField extends MTextElement {
 	/**
 	 * Instantiates a new m text field.
 	 * 
-	 * @param parent
-	 *            the parent
-	 * @param jrStaticText
-	 *            the jr static text
-	 * @param newIndex
-	 *            the new index
+	 * @param parent the parent
+	 * @param jrStaticText the jr static text
+	 * @param newIndex the new index
 	 */
 	public MTextField(ANode parent, JRTextField jrStaticText, int newIndex) {
 		super(parent, newIndex);
@@ -128,8 +127,7 @@ public class MTextField extends MTextElement {
 	/**
 	 * Return the dataset nearest to this element
 	 * 
-	 * @param node
-	 *            the actual node
+	 * @param node the actual node
 	 * @return the dataset nearest to this element or null if it can't be found
 	 */
 	private JRDataset getElementDataset(ANode node) {
@@ -159,18 +157,21 @@ public class MTextField extends MTextElement {
 	/**
 	 * Creates the property descriptors.
 	 * 
-	 * @param desc
-	 *            the desc
+	 * @param desc the desc
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
 		super.createPropertyDescriptors(desc);
 
-		evaluationTimeD = new NamedEnumPropertyDescriptor<EvaluationTimeEnum>(
-				JRDesignTextField.PROPERTY_EVALUATION_TIME, Messages.common_evaluation_time, EvaluationTimeEnum.AUTO,
-				NullEnum.NOTNULL);
+		evaluationTimeD = new NamedEnumPropertyDescriptor<>(JRDesignTextField.PROPERTY_EVALUATION_TIME,
+				Messages.common_evaluation_time, EvaluationTimeEnum.AUTO, NullEnum.NOTNULL);
 		evaluationTimeD.setDescription(Messages.MTextField_evaluation_time_description);
 		desc.add(evaluationTimeD);
+
+		textAdjustD = new NamedEnumPropertyDescriptor<>(JRBaseTextField.PROPERTY_TEXT_ADJUST,
+				Messages.MTextField_MTextField_text_adjust_label, TextAdjustEnum.CUT_TEXT, NullEnum.NOTNULL);
+		textAdjustD.setDescription(Messages.MTextField_MTextField_text_adjust_description);
+		desc.add(textAdjustD);
 
 		evalGroupD = new RWComboBoxPropertyDescriptor(JRDesignTextField.PROPERTY_EVALUATION_GROUP,
 				Messages.MTextField_evaluation_group, new String[] { "" }, NullEnum.NULL); //$NON-NLS-1$
@@ -178,15 +179,9 @@ public class MTextField extends MTextElement {
 		desc.add(evalGroupD);
 
 		NullCheckBoxPropertyDescriptor blankWhenNullD = new NullCheckBoxPropertyDescriptor(
-				JRDesignStyle.PROPERTY_BLANK_WHEN_NULL, Messages.common_blank_when_null);
+				JRBaseStyle.PROPERTY_BLANK_WHEN_NULL, Messages.common_blank_when_null);
 		blankWhenNullD.setDescription(Messages.MTextField_blank_when_null_description);
 		desc.add(blankWhenNullD);
-
-		CheckBoxPropertyDescriptor stretchOverflowD = new CheckBoxPropertyDescriptor(
-				JRBaseTextField.PROPERTY_STRETCH_WITH_OVERFLOW, Messages.MTextField_stretch_with_overflow,
-				NullEnum.NOTNULL);
-		stretchOverflowD.setDescription(Messages.MTextField_stretch_with_overflow_description);
-		desc.add(stretchOverflowD);
 
 		JRExpressionPropertyDescriptor exprD = new JRExpressionPropertyDescriptor(JRDesignTextField.PROPERTY_EXPRESSION,
 				Messages.common_expression);
@@ -207,7 +202,7 @@ public class MTextField extends MTextElement {
 				"net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#chart_bookmarkLevel")); //$NON-NLS-1$
 		desc.add(bookmarkLevel);
 
-		PatternPropertyDescriptor patternD = new PatternPropertyDescriptor(JRDesignStyle.PROPERTY_PATTERN,
+		PatternPropertyDescriptor patternD = new PatternPropertyDescriptor(JRBaseStyle.PROPERTY_PATTERN,
 				Messages.common_pattern);
 		patternD.setDescription(Messages.MTextField_pattern_description);
 		desc.add(patternD);
@@ -231,9 +226,9 @@ public class MTextField extends MTextElement {
 		patternD.setCategory(Messages.MTextField_textfield_category);
 		exprD.setCategory(Messages.MTextField_textfield_category);
 		evaluationTimeD.setCategory(Messages.MTextField_textfield_category);
+		textAdjustD.setCategory(Messages.MTextField_textfield_category);
 		evalGroupD.setCategory(Messages.MTextField_textfield_category);
 		blankWhenNullD.setCategory(Messages.MTextField_textfield_category);
-		stretchOverflowD.setCategory(Messages.MTextField_textfield_category);
 		pexprD.setCategory(Messages.MTextField_textfield_category);
 	}
 
@@ -242,9 +237,9 @@ public class MTextField extends MTextElement {
 		Map<String, DefaultValue> defaultsMap = super.createDefaultsMap();
 
 		defaultsMap.put(JRDesignTextField.PROPERTY_EVALUATION_TIME, new DefaultValue(EvaluationTimeEnum.NOW, false));
-		defaultsMap.put(JRDesignStyle.PROPERTY_BLANK_WHEN_NULL, new DefaultValue(Boolean.FALSE, false));
-		defaultsMap.put(JRBaseTextField.PROPERTY_STRETCH_WITH_OVERFLOW, new DefaultValue(Boolean.FALSE, false));
-		defaultsMap.put(JRDesignStyle.PROPERTY_PATTERN, new DefaultValue(null, true));
+		defaultsMap.put(JRBaseTextField.PROPERTY_TEXT_ADJUST, new DefaultValue(TextAdjustEnum.CUT_TEXT, false));
+		defaultsMap.put(JRBaseStyle.PROPERTY_BLANK_WHEN_NULL, new DefaultValue(Boolean.FALSE, false));
+		defaultsMap.put(JRBaseStyle.PROPERTY_PATTERN, new DefaultValue(null, true));
 
 		defaultsMap.putAll(new MHyperLink(null).getDefaultsPropertiesMap());
 
@@ -255,9 +250,9 @@ public class MTextField extends MTextElement {
 	public Object getPropertyActualValue(Object id) {
 		JRDesignTextField jrElement = (JRDesignTextField) getValue();
 		JSSStyleResolver resolver = getStyleResolver();
-		if (id.equals(JRDesignStyle.PROPERTY_BLANK_WHEN_NULL)) {
+		if (id.equals(JRBaseStyle.PROPERTY_BLANK_WHEN_NULL)) {
 			return resolver.isBlankWhenNull(jrElement);
-		} else if (id.equals(JRDesignStyle.PROPERTY_PATTERN)) {
+		} else if (id.equals(JRBaseStyle.PROPERTY_PATTERN)) {
 			return resolver.getPattern(jrElement);
 		}
 
@@ -274,11 +269,11 @@ public class MTextField extends MTextElement {
 
 		if (id.equals(JRDesignTextField.PROPERTY_EVALUATION_TIME))
 			return jrElement.getEvaluationTimeValue();
-		if (id.equals(JRDesignStyle.PROPERTY_BLANK_WHEN_NULL))
+		if (id.equals(JRBaseTextField.PROPERTY_TEXT_ADJUST))
+			return textAdjustD.getIntValue(jrElement.getTextAdjust());
+		if (id.equals(JRBaseStyle.PROPERTY_BLANK_WHEN_NULL))
 			return jrElement.isOwnBlankWhenNull();
-		if (id.equals(JRBaseTextField.PROPERTY_STRETCH_WITH_OVERFLOW))
-			return new Boolean(jrElement.isStretchWithOverflow());
-		if (id.equals(JRDesignStyle.PROPERTY_PATTERN))
+		if (id.equals(JRBaseStyle.PROPERTY_PATTERN))
 			return jrElement.getOwnPattern();
 
 		if (id.equals(JRDesignTextField.PROPERTY_EVALUATION_GROUP)) {
@@ -329,7 +324,9 @@ public class MTextField extends MTextElement {
 			if (evalTime != null && !evalTime.equals(EvaluationTimeEnum.GROUP)) {
 				jrElement.setEvaluationGroup(null);
 			}
-		} else if (id.equals(JRDesignTextField.PROPERTY_EVALUATION_GROUP)) {
+		} else if (id.equals(JRBaseTextField.PROPERTY_TEXT_ADJUST))
+			jrElement.setTextAdjust(textAdjustD.getEnumValue(value));
+		else if (id.equals(JRDesignTextField.PROPERTY_EVALUATION_GROUP)) {
 			jrElement.setEvaluationGroup(ModelUtils.getGroupForProperty(value, (JRDesignDataset) getElementDataset()));
 		} else if (id.equals(JRDesignTextField.PROPERTY_EXPRESSION)) {
 			jrElement.setExpression(ExprUtil.setValues(jrElement.getExpression(), value));
@@ -347,9 +344,7 @@ public class MTextField extends MTextElement {
 			if (Misc.isNullOrEmpty((String) value))
 				value = null;
 			jrElement.setPattern((String) value);
-		} else if (id.equals(JRBaseTextField.PROPERTY_STRETCH_WITH_OVERFLOW))
-			jrElement.setStretchWithOverflow(((Boolean) value).booleanValue());
-		else if (id.equals(JRDesignHyperlink.PROPERTY_LINK_TARGET))
+		} else if (id.equals(JRDesignHyperlink.PROPERTY_LINK_TARGET))
 			jrElement.setLinkTarget((String) value);
 		else if (id.equals(JRDesignHyperlink.PROPERTY_LINK_TYPE))
 			jrElement.setLinkType((String) value);
@@ -385,8 +380,8 @@ public class MTextField extends MTextElement {
 	}
 
 	/**
-	 * Listener for the expression of the element. This will ask for the refresh of
-	 * its container or eventually of the containers of the element
+	 * Listener for the expression of the element. This will ask for the refresh
+	 * of its container or eventually of the containers of the element
 	 * 
 	 * @author Orlandin Marco
 	 *
@@ -422,28 +417,24 @@ public class MTextField extends MTextElement {
 	/**
 	 * Remove all the ExpressionNameChanged listeners from an expression element
 	 * 
-	 * @param expression
-	 *            the expression element
+	 * @param expression the expression element
 	 */
 	private void removeListeners(JRDesignExpression expression) {
-		List<PropertyChangeListener> listenersToRemove = new ArrayList<PropertyChangeListener>();
-		for (PropertyChangeListener listener : expression.getEventSupport().getPropertyChangeListeners()) {
-			if (listener instanceof ExpressionNameChanged) {
+		List<PropertyChangeListener> listenersToRemove = new ArrayList<>();
+		for (PropertyChangeListener listener : expression.getEventSupport().getPropertyChangeListeners())
+			if (listener instanceof ExpressionNameChanged)
 				listenersToRemove.add(listener);
-			}
-		}
-		for (PropertyChangeListener listener : listenersToRemove) {
+		for (PropertyChangeListener listener : listenersToRemove)
 			expression.getEventSupport().removePropertyChangeListener(listener);
-		}
 	}
 
 	/**
 	 * When the value of the element is set, it will be removed also all the
-	 * ExpressionNameChange from the expression of its value and will be set a new
-	 * ExpressionNameChange on the expression for the actual model. This is done to
-	 * avoid duplicate of the listener if for example the JRElement is moved from a
-	 * model to another. The listener is used to update the graphical appearance
-	 * after a refactor of something used in the expression
+	 * ExpressionNameChange from the expression of its value and will be set a
+	 * new ExpressionNameChange on the expression for the actual model. This is
+	 * done to avoid duplicate of the listener if for example the JRElement is
+	 * moved from a model to another. The listener is used to update the
+	 * graphical appearance after a refactor of something used in the expression
 	 */
 	@Override
 	public void setValue(Object value) {
@@ -484,7 +475,7 @@ public class MTextField extends MTextElement {
 		jrDesignTextField.setX(0);
 		jrDesignTextField.setY(0);
 		jrDesignTextField
-				.setExpression(new JRDesignExpression("\"".concat(Messages.MTextField_common_text_field).concat("\""))); //$NON-NLS-1$
+				.setExpression(new JRDesignExpression("\"".concat(Messages.MTextField_common_text_field).concat("\""))); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (applyDefault) {
 			DefaultManager.INSTANCE.applyDefault(this.getClass(), jrDesignTextField);
@@ -530,7 +521,7 @@ public class MTextField extends MTextElement {
 		if (getValue() != null) {
 			JRTextField jrTextField = (JRTextField) getValue();
 			if (jrTextField.getExpression() != null)
-				return getIconDescriptor().getTitle() + ": " + jrTextField.getExpression().getText();
+				return getIconDescriptor().getTitle() + ": " + jrTextField.getExpression().getText(); //$NON-NLS-1$
 		}
 		return getIconDescriptor().getToolTip();
 	}
@@ -538,6 +529,7 @@ public class MTextField extends MTextElement {
 	/**
 	 * Return the graphical properties for an MTextField
 	 */
+	@Override
 	public HashSet<String> generateGraphicalProperties() {
 		HashSet<String> result = super.generateGraphicalProperties();
 		result.add(JRDesignTextField.PROPERTY_EXPRESSION);
@@ -552,7 +544,7 @@ public class MTextField extends MTextElement {
 
 		jrTarget.setBlankWhenNull(jrSource.isOwnBlankWhenNull());
 		jrTarget.setPattern(getStringClone(jrSource.getOwnPattern()));
-		jrTarget.setStretchWithOverflow(jrSource.isStretchWithOverflow());
+		jrTarget.setTextAdjust(jrSource.getTextAdjust());
 	}
 
 	@Override
@@ -561,8 +553,8 @@ public class MTextField extends MTextElement {
 		if (getValue() == null)
 			return result;
 		JRDesignTextField jrElement = (JRDesignTextField) getValue();
-		result.put(JRDesignStyle.PROPERTY_PATTERN, jrElement.getOwnPattern());
-		result.put(JRDesignStyle.PROPERTY_BLANK_WHEN_NULL, jrElement.isBlankWhenNull());
+		result.put(JRBaseStyle.PROPERTY_PATTERN, jrElement.getOwnPattern());
+		result.put(JRBaseStyle.PROPERTY_BLANK_WHEN_NULL, jrElement.isBlankWhenNull());
 		return result;
 	}
 }

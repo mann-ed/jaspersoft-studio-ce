@@ -671,12 +671,12 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	}
 
 	public JRPropertiesMap getPropertiesMap() {
-		JRDesignElement jrElement = (JRDesignElement) getValue();
+		JRDesignElement jrElement =   getValue();
 		return jrElement.getPropertiesMap();
 	}
 
 	public Object getPropertyActualValue(Object id) {
-		JRDesignElement jrElement = (JRDesignElement) getValue();
+		JRDesignElement jrElement =   getValue();
 		JSSStyleResolver resolver = getStyleResolver();
 		if (id.equals(JRBaseStyle.PROPERTY_BACKCOLOR)) {
 			Color backcolor = resolver.getBackcolor(jrElement);

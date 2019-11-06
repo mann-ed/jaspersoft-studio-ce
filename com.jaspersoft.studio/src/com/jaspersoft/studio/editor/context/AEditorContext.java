@@ -164,7 +164,7 @@ public class AEditorContext {
 				if (project != null && project.exists() && project.getNature(JavaCore.NATURE_ID) != null) {
 					javaclassloader = JavaProjectClassLoader.instance(JavaCore.create(project), cl);
 					jConf.put(JavaProjectClassLoader.JAVA_PROJECT_CLASS_LOADER_KEY, javaclassloader);
-					jConf.setValue(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER, javaclassloader);
+					jConf.setValue(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER, cl);
 					classpathlistener = new JSSClasspathListener(this, jConf);
 					javaclassloader.addClasspathListener(classpathlistener);
 					cl = javaclassloader;
