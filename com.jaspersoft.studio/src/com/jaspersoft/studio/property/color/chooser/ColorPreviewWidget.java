@@ -4,6 +4,7 @@
  ******************************************************************************/
 package com.jaspersoft.studio.property.color.chooser;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -81,20 +82,28 @@ public class ColorPreviewWidget extends Composite{
 		super(parent, style);
 		setLayout(new GridLayout(2,false));
 		
-		Label newColorLabel = new Label(this, SWT.NONE);
+		Composite left = new Composite(this, SWT.NONE);
+		left.setLayout(new GridLayout(1, false));
+		left.setLayoutData(new GridData(GridData.FILL_VERTICAL));
+		
+		Composite right = new Composite(this, SWT.NONE);
+		right.setLayout(new GridLayout(1, false));
+		right.setLayoutData(new GridData(GridData.FILL_VERTICAL));
+		
+		Label newColorLabel = new Label(left, SWT.NONE);
 		newColorLabel.setText(Messages.ColorDialog_newColorLabel);
 		newColorLabel.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, false, false));
-		new Label(this, SWT.NONE);
 		
-		colorComposite = new Composite(this, SWT.BORDER);
+		colorComposite = new Composite(left, SWT.BORDER);
 		colorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-	  GridData previewData = new GridData();
-	  previewData.widthHint = 120;
-	  previewData.heightHint = 50;
-	  previewData.verticalAlignment = SWT.TOP;
-	  colorComposite.setLayoutData(previewData);
+		GridData previewData = new GridData();
+		previewData.widthHint = 120;
+		previewData.heightHint = 50;
+		previewData.verticalAlignment = SWT.TOP;
+		colorComposite.setLayoutData(previewData);
 		
-		additionalComponents = new Composite(this, SWT.NONE);
+		new Label(right, SWT.NONE);
+		additionalComponents = new Composite(right, SWT.NONE);
 		GridLayout additionalComponentLayout = new GridLayout(1,false);
 		additionalComponentLayout.horizontalSpacing = 0;
 		additionalComponentLayout.verticalSpacing = 0;
@@ -102,8 +111,9 @@ public class ColorPreviewWidget extends Composite{
 		additionalComponentLayout.marginWidth = 0;
 		additionalComponents.setLayout(additionalComponentLayout);
 		additionalComponents.setLayoutData(new GridData(GridData.FILL_BOTH));
+
 		
-		oldColorLabel = new Label(this, SWT.NONE);
+		oldColorLabel = new Label(left, SWT.NONE);
 		oldColorLabel.setText(Messages.ColorDialog_oldColorLabel);
 		GridData oldColorLabelData = new GridData(SWT.CENTER, SWT.TOP, false, false);
 		oldColorLabelData.exclude = true;

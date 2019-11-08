@@ -138,6 +138,8 @@ public class ColorDialog extends PersistentLocationDialog{
 		if (shellTitle != null){
 			newShell.setText(shellTitle);
 		}
+		defheight = 450;
+		defwidth = 600;
 	}
 	
 	/**
@@ -248,6 +250,11 @@ public class ColorDialog extends PersistentLocationDialog{
 		return  (SHOW_ALL == style || SHOW_HISTORY == style);
 	}
 	
+	@Override
+	protected boolean isResizable() {
+	    return true;
+	}
+	
 	/**
 	 * Create the controls of the dialog
 	 */
@@ -255,6 +262,7 @@ public class ColorDialog extends PersistentLocationDialog{
 	protected Control createDialogArea(Composite parent) {
 		 Composite dialogArea = (Composite) super.createDialogArea(parent);
 		 folder = new TabFolder(dialogArea, SWT.NONE);
+		 folder.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		 //Add the tabs depending on the stylebit
 		 if (isShowAdvanced()){
