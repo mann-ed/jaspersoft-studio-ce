@@ -97,6 +97,11 @@ public class JaspersoftStudioPlugin extends AbstractJRUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		// Force some default properties
+		String chromeEnabledproperty = "net.sf.jasperreports.chrome.enabled";
+		PreferencesUtils.getJaspersoftStudioPrefStore().setValue(chromeEnabledproperty, "true");
+		PreferencesUtils.storeJasperReportsProperty(chromeEnabledproperty, "true");
+		DefaultJasperReportsContext.getInstance().setProperty(chromeEnabledproperty, "true");
 	}
 
 	/**
