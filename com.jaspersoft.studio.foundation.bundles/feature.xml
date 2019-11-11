@@ -28,20 +28,10 @@
 
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="javax.xml"/>
+      <import plugin="org.apache.commons.logging" version="1.2.0" match="greaterOrEqual"/>
+      <import plugin="org.slf4j.api" version="1.7.2" match="greaterOrEqual"/>
+      <import plugin="com.jaspersoft.studio.bundles.jackson"/>
       <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.apache.ant"/>
-      <import plugin="org.apache.xml.security"/>
-      <import plugin="com.jaspersoft.studio.bundles.batik"/>
-      <import plugin="org.apache.commons.commons-codec"/>
-      <import plugin="org.apache.commons.commons-collections4"/>
-      <import plugin="org.apache.commons.commons-compress"/>
-      <import plugin="org.apache.commons.logging"/>
-      <import plugin="org.apache.commons.math3"/>
-      <import plugin="com.jaspersoft.studio.bundles.xmlbeans"/>
-      <import plugin="org.bouncycastle.bcprov"/>
-      <import plugin="org.bouncycastle.bcpkix"/>
-      <import plugin="org.w3c.dom.events"/>
    </requires>
 
    <plugin
@@ -237,5 +227,11 @@
          download-size="0"
          install-size="0"
          version="4.1.1.b01"/>
+
+   <plugin
+         id="com.jaspersoft.studio.bundles.cdt-java-client"
+         download-size="0"
+         install-size="0"
+         version="2.0.0.b01"/>
 
 </feature>
