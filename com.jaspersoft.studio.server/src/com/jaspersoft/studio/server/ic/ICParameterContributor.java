@@ -139,11 +139,11 @@ public class ICParameterContributor implements IParameterICContributor {
 		cOpt = new Combo(parent, SWT.READ_ONLY);
 		Class<?> pClazz = prm != null ? prm.getValueClass() : null;
 		if (pClazz != null && (Collection.class.isAssignableFrom(pClazz) || pClazz.isArray()))
-			cOpt.setItems("", "Existing From Repository", Messages.ICTypes_0, Messages.ICTypes_1, Messages.ICTypes_3,
-					Messages.ICTypes_6, Messages.ICTypes_5, Messages.ICTypes_8);
+			cOpt.setItems(new String[] {"", "Existing From Repository", Messages.ICTypes_0, Messages.ICTypes_1, Messages.ICTypes_3,
+					Messages.ICTypes_6, Messages.ICTypes_5, Messages.ICTypes_8});
 		else
-			cOpt.setItems("", "Existing From Repository", Messages.ICTypes_0, Messages.ICTypes_1, Messages.ICTypes_2,
-					Messages.ICTypes_7, Messages.ICTypes_4, Messages.ICTypes_9);
+			cOpt.setItems(new String[] {"", "Existing From Repository", Messages.ICTypes_0, Messages.ICTypes_1, Messages.ICTypes_2,
+					Messages.ICTypes_7, Messages.ICTypes_4, Messages.ICTypes_9});
 
 		cOpt.addModifyListener(e -> {
 			if (refresh)

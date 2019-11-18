@@ -392,7 +392,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		lbl.setText(Messages.ServerProfilePage_36);
 
 		bSSO = new Combo(cmp, SWT.READ_ONLY);
-		bSSO.setItems(Messages.ServerProfilePage_38, Messages.ServerProfilePage_45, Messages.ServerProfilePage_46);
+		bSSO.setItems(new String[]{Messages.ServerProfilePage_38, Messages.ServerProfilePage_45, Messages.ServerProfilePage_46});
 		bSSO.setText(Messages.ServerProfilePage_18);
 		bSSO.setToolTipText(Messages.ServerProfilePage_20);
 		bSSO.addSelectionListener(new SelectionAdapter() {
@@ -482,7 +482,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		lbl.setToolTipText(ttip);
 
 		bmime = new Combo(cmp, SWT.READ_ONLY);
-		bmime.setItems("MIME", "DIME"); //$NON-NLS-1$ //$NON-NLS-2$
+		bmime.setItems(new String[]{"MIME", "DIME"}); //$NON-NLS-1$ //$NON-NLS-2$
 		bmime.setToolTipText(ttip);
 
 		bUseSoap = new Button(cmp, SWT.CHECK);

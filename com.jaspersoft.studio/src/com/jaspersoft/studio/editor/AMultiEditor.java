@@ -75,7 +75,7 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 
 	@Override
 	protected void pageChange(int newPageIndex) {
-		IContextService service = getSite().getService(IContextService.class);
+		IContextService service = (IContextService)getSite().getService(IContextService.class);
 		if (activePage == 0) {
 			if (outlinePage != null)
 				tmpselection = outlinePage.getSite().getSelectionProvider().getSelection();
@@ -258,7 +258,7 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 			jrContext.dispose();
 		super.dispose();
 		if (context != null) {
-			IContextService service = getSite().getService(IContextService.class);
+			IContextService service = (IContextService)getSite().getService(IContextService.class);
 			service.deactivateContext(context);
 		}
 	}
@@ -402,7 +402,7 @@ public abstract class AMultiEditor extends MultiPageEditorPart implements IResou
 	private void updateContentOutline(int page) {
 		if (outlinePage == null)
 			return;
-		IContentOutlinePage outline = getEditor(page).getAdapter(IContentOutlinePage.class);
+		IContentOutlinePage outline = (IContentOutlinePage)getEditor(page).getAdapter(IContentOutlinePage.class);
 		if (outline == null)
 			outline = new EmptyOutlinePage();
 		outlinePage.setPageActive(outline);

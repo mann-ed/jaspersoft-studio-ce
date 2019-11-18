@@ -34,7 +34,7 @@ public class EditorContextCommand extends AbstractHandler {
 
 	private void listenSelection() {
 		IWorkbenchWindow w = JaspersoftStudioPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
-		ICommandService service = w.getService(ICommandService.class);
+		ICommandService service = (ICommandService)w.getService(ICommandService.class);
 		Command cmd = service.getCommand("com.jaspersoft.studio.editor.context.type");
 		ISelectionService ss = w.getSelectionService();
 		ss.addSelectionListener((part, selection) -> {

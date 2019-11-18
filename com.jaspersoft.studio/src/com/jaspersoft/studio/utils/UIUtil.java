@@ -626,4 +626,14 @@ public class UIUtil {
 			menuItem.setToolTipText(tooltipTxt);
 		}
 	}
+	
+	public static void safeRequestLayout(Composite control) {
+		String minSWTVersion = "3.105"; //$NON-NLS-1$
+		String currentSWTVersion = BundleCommonUtils.getBundleVersion("org.eclipse.swt"); //$NON-NLS-1$
+		if(currentSWTVersion!=null && currentSWTVersion.compareTo(minSWTVersion)>=0){
+			control.requestLayout();
+		} else {
+			control.layout(true, true);
+		}
+	}
 }

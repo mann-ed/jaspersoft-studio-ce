@@ -184,7 +184,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 					if (model != null) {
 						jasperReportsContext = model.getJasperConfiguration();
 						if (element == null) {
-							EditorContributor provider = part.getAdapter(EditorContributor.class);
+							EditorContributor provider = (EditorContributor)part.getAdapter(EditorContributor.class);
 							if (provider != null)
 								setEditDomain(provider.getEditDomain());
 							if (getElement() != model) {

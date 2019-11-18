@@ -185,6 +185,7 @@ import com.jaspersoft.studio.preferences.DesignerPreferencePage;
 import com.jaspersoft.studio.preferences.RulersGridPreferencePage;
 import com.jaspersoft.studio.style.view.TemplateViewProvider;
 import com.jaspersoft.studio.utils.SelectionHelper;
+import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
@@ -321,7 +322,7 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 		// this is a short running method so it can be executed synchronously
 		UIUtils.getDisplay().syncExec(() -> {
 			if (!rulerComp.isDisposed()) {
-				rulerComp.requestLayout();
+				UIUtil.safeRequestLayout(rulerComp);
 				rulerComp.redraw();
 			}
 		});
@@ -494,7 +495,7 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 				return isSame((IWorkbenchPart) spage);
 		}
 		if (part instanceof ContentOutline) {
-			IContentOutlinePage outPage = part.getAdapter(IContentOutlinePage.class);
+			IContentOutlinePage outPage = (IContentOutlinePage)part.getAdapter(IContentOutlinePage.class);
 			if (outPage instanceof MultiOutlineView)
 				return isSame(((MultiOutlineView) outPage).getEditor());
 			else if (outPage instanceof JDReportOutlineView) {
@@ -603,7 +604,7 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				IContextService service = PlatformUI.getWorkbench().getService(IContextService.class);
+				IContextService service = (IContextService)PlatformUI.getWorkbench().getService(IContextService.class);
 				if (context != null && service != null) {
 					// it could be activated somewhere else, we don't know, so I
 					// add this dirty :(
@@ -614,7 +615,7 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				IContextService service = PlatformUI.getWorkbench().getService(IContextService.class);
+				IContextService service = (IContextService)PlatformUI.getWorkbench().getService(IContextService.class);
 				if (service != null)
 					context = service.activateContext("com.jaspersoft.studio.context"); //$NON-NLS-1$
 			}
