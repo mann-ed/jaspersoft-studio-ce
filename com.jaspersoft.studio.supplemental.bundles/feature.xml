@@ -2,7 +2,7 @@
 <feature
       id="com.jaspersoft.studio.supplemental.bundles"
       label="Additional bundles for the Community Edition"
-      version="7.5.0.qualifier"
+      version="7.5.0.final"
       provider-name="Tibco Software Inc.">
 
    <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
@@ -27,7 +27,7 @@
          id="com.jaspersoft.studio.svgimporter"
          download-size="0"
          install-size="0"
-         version="7.5.0.qualifier"
+         version="7.5.0.final"
          unpack="false"/>
 
 </feature>
