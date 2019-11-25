@@ -74,6 +74,15 @@ public class Messages extends NLS {
 	public static String MCode39_interchar_gap_width_description;
 	public static String MCode39_properties_category;
 	public static String MCode39_wide_factor_description;
+	public static String MDataMatrix_10;
+	public static String MDataMatrix_2;
+	public static String MDataMatrix_3;
+	public static String MDataMatrix_4;
+	public static String MDataMatrix_5;
+	public static String MDataMatrix_6;
+	public static String MDataMatrix_7;
+	public static String MDataMatrix_8;
+	public static String MDataMatrix_9;
 	public static String MDataMatrix_properties_category;
 	public static String MDataMatrix_shape;
 	public static String MDataMatrix_shape_description;
