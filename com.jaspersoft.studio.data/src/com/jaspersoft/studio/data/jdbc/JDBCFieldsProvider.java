@@ -139,6 +139,7 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 				switch (type) {
 				case Types.CHAR:
 				case Types.VARCHAR:
+				case Types.NVARCHAR:
 				case Types.LONGVARCHAR:
 					return "java.lang.String";
 				case Types.NUMERIC:
@@ -216,6 +217,7 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 	static {
 		types.put("CHAR", "java.lang.String");
 		types.put("VARCHAR", "java.lang.String");
+		types.put("NVARCHAR", "java.lang.String");
 		types.put("LONGVARCHAR", "java.lang.String");
 		types.put("NUMERIC", "java.math.BigDecimal");
 		types.put("DECIMAL", "java.math.BigDecimal");

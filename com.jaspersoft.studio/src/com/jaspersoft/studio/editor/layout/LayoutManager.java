@@ -44,14 +44,14 @@ import net.sf.jasperreports.properties.StandardPropertyMetadata;
 public class LayoutManager {
 
 	public static void initMetadata() {
-		List<PropertyMetadata> pm = new ArrayList<PropertyMetadata>();
+		List<PropertyMetadata> pm = new ArrayList<>();
 
 		StandardPropertyMetadata spm = new StandardPropertyMetadata();
 		spm.setName(ILayout.KEY);
 		spm.setLabel("Layout");
 		spm.setDescription("Container Layout");
 		spm.setValueType(Class.class.getName());
-		List<PropertyScope> scopes = new ArrayList<PropertyScope>();
+		List<PropertyScope> scopes = new ArrayList<>();
 		scopes.add(PropertyScope.FRAME);
 		scopes.add(PropertyScope.BAND);
 		scopes.add(PropertyScope.CROSSTAB_CELL);
@@ -65,7 +65,7 @@ public class LayoutManager {
 		spm.setLabel("Grid x");
 		spm.setDescription("The key used to store the column position");
 		spm.setValueType(Integer.class.getName());
-		scopes = new ArrayList<PropertyScope>();
+		scopes = new ArrayList<>();
 		scopes.add(PropertyScope.ELEMENT);
 		spm.setScopes(scopes);
 		spm.setCategory("com.jaspersoft.studio.designer:layout");
@@ -76,7 +76,7 @@ public class LayoutManager {
 		spm.setLabel("Grid y");
 		spm.setDescription("The key used to store the row position");
 		spm.setValueType(Integer.class.getName());
-		scopes = new ArrayList<PropertyScope>();
+		scopes = new ArrayList<>();
 		scopes.add(PropertyScope.ELEMENT);
 		spm.setScopes(scopes);
 		spm.setCategory("com.jaspersoft.studio.designer:layout");
@@ -87,7 +87,7 @@ public class LayoutManager {
 		spm.setLabel("Column Span");
 		spm.setDescription("The key used to store the column span");
 		spm.setValueType(Integer.class.getName());
-		scopes = new ArrayList<PropertyScope>();
+		scopes = new ArrayList<>();
 		scopes.add(PropertyScope.ELEMENT);
 		spm.setScopes(scopes);
 		spm.setCategory("com.jaspersoft.studio.designer:layout");
@@ -98,7 +98,7 @@ public class LayoutManager {
 		spm.setLabel("Row Span");
 		spm.setDescription("The key used to store the row span");
 		spm.setValueType(Integer.class.getName());
-		scopes = new ArrayList<PropertyScope>();
+		scopes = new ArrayList<>();
 		scopes.add(PropertyScope.ELEMENT);
 		spm.setScopes(scopes);
 		spm.setCategory("com.jaspersoft.studio.designer:layout");
@@ -109,7 +109,7 @@ public class LayoutManager {
 		spm.setLabel("Column Weight");
 		spm.setDescription("The key used to store the column weight");
 		spm.setValueType(Float.class.getName());
-		scopes = new ArrayList<PropertyScope>();
+		scopes = new ArrayList<>();
 		scopes.add(PropertyScope.ELEMENT);
 		spm.setScopes(scopes);
 		spm.setCategory("com.jaspersoft.studio.designer:layout");
@@ -120,7 +120,7 @@ public class LayoutManager {
 		spm.setLabel("Row Weight");
 		spm.setDescription("The key used to store the row weight");
 		spm.setValueType(Float.class.getName());
-		scopes = new ArrayList<PropertyScope>();
+		scopes = new ArrayList<>();
 		scopes.add(PropertyScope.ELEMENT);
 		spm.setScopes(scopes);
 		spm.setCategory("com.jaspersoft.studio.designer:layout");
@@ -131,7 +131,7 @@ public class LayoutManager {
 		spm.setLabel("Is Fixed");
 		spm.setDescription("The key used to store the property for the fixed size of the element");
 		spm.setValueType(Boolean.class.getName());
-		scopes = new ArrayList<PropertyScope>();
+		scopes = new ArrayList<>();
 		scopes.add(PropertyScope.ELEMENT);
 		spm.setScopes(scopes);
 		spm.setCategory("com.jaspersoft.studio.designer:layout");
@@ -171,7 +171,7 @@ public class LayoutManager {
 	}
 
 	private static final Class<?>[] layouts = new Class<?>[] { HorizontalRowLayout.class, VerticalRowLayout.class,
-			JSSGridBagLayout.class, SpreadsheetLayout.class};
+			JSSGridBagLayout.class, SpreadsheetLayout.class };
 
 	private static ILayout[] LAYOUTNAMES;
 
@@ -205,7 +205,7 @@ public class LayoutManager {
 		if (LAYOUTNAMES == null) {
 			LAYOUTNAMES = new ILayout[] { new FreeLayout(), new HorizontalRowLayout(), new VerticalRowLayout(),
 					new JSSGridBagLayout(), new SpreadsheetLayout() };
-			layoutsMap = new HashMap<String, ILayout>();
+			layoutsMap = new HashMap<>();
 			for (ILayout layout : LAYOUTNAMES) {
 				layoutsMap.put(layout.getClass().getName(), layout);
 			}
@@ -235,9 +235,9 @@ public class LayoutManager {
 	/**
 	 * Get the properties holder of the current node if it can be found
 	 * 
-	 * @param node
-	 *          the node
-	 * @return the properties holder related to the node or null if it can't be found
+	 * @param node the node
+	 * @return the properties holder related to the node or null if it can't be
+	 * found
 	 */
 	public static JRPropertiesHolder getPropertyHolder(ANode node) {
 		if (node != null && node.getValue() instanceof JRPropertiesHolder) {
@@ -254,10 +254,10 @@ public class LayoutManager {
 	/**
 	 * Given a node return the property map associated to that node
 	 * 
-	 * @param node
-	 *          a not null node
-	 * @return the property map of the node if it can be found, null otherwise. The map could or couldn't be a copy,
-	 *         depends on the implementation of the methods used to return it
+	 * @param node a not null node
+	 * @return the property map of the node if it can be found, null otherwise.
+	 * The map could or couldn't be a copy, depends on the implementation of the
+	 * methods used to return it
 	 */
 	public static JRPropertiesMap getPropertyMap(ANode node) {
 		if (node != null) {
@@ -281,9 +281,9 @@ public class LayoutManager {
 	/**
 	 * Return the layout class type of the container node
 	 * 
-	 * @param container
-	 *          the container node
-	 * @return the layout class type. If a layout can't be found it return the free layout type
+	 * @param container the container node
+	 * @return the layout class type. If a layout can't be found it return the
+	 * free layout type
 	 */
 	public static Class<? extends ILayout> getContainerLayout(ANode container) {
 		if (container == null) {
@@ -314,9 +314,9 @@ public class LayoutManager {
 	/**
 	 * Return the size of the container considering also the padding size
 	 * 
-	 * @param containerToLayout
-	 *          the container to layout
-	 * @return a not null dimension that the elements can occupy inside the container
+	 * @param containerToLayout the container to layout
+	 * @return a not null dimension that the elements can occupy inside the
+	 * container
 	 */
 	public static Dimension getPaddedSize(IGraphicElementContainer containerToLayout) {
 		Dimension d = containerToLayout.getSize();
@@ -334,9 +334,9 @@ public class LayoutManager {
 	/**
 	 * Return the size of the container considering also the padding size
 	 * 
-	 * @param jce
-	 *          the container to layout
-	 * @return a not null dimension that the elements can occupy inside the container
+	 * @param jce the container to layout
+	 * @return a not null dimension that the elements can occupy inside the
+	 * container
 	 */
 	public static Dimension getPaddedSize(JRCommonElement jce) {
 		if (jce instanceof JRLineBox) {
@@ -351,36 +351,37 @@ public class LayoutManager {
 	}
 
 	/**
-	 * Return the size of the container considering also the padding size and also its padding information
+	 * Return the size of the container considering also the padding size and
+	 * also its padding information
 	 * 
-	 * @param jce
-	 *          the container to layout
-	 * @return a Pair where the key is a not null dimension that the elements can occupy inside the container, and the
-	 *         value is the padding information of the container. This can be null if the container doesn't support the
-	 *         padding
+	 * @param jce the container to layout
+	 * @return a Pair where the key is a not null dimension that the elements
+	 * can occupy inside the container, and the value is the padding information
+	 * of the container. This can be null if the container doesn't support the
+	 * padding
 	 */
 	public static Pair<Dimension, JRLineBox> getPaddedSizeAndBox(JRCommonElement jce) {
 		if (jce instanceof JRLineBox) {
 			Dimension d = new Dimension(jce.getWidth(), jce.getHeight());
-			return new Pair<Dimension, JRLineBox>(getPaddedSize((JRLineBox) jce, d), (JRLineBox) jce);
+			return new Pair<>(getPaddedSize((JRLineBox) jce, d), (JRLineBox) jce);
 		} else if (jce instanceof JRBoxContainer) {
 			JRBoxContainer boxContainer = (JRBoxContainer) jce;
 			Dimension d = new Dimension(jce.getWidth(), jce.getHeight());
-			return new Pair<Dimension, JRLineBox>(getPaddedSize(boxContainer, d), boxContainer.getLineBox());
+			return new Pair<>(getPaddedSize(boxContainer, d), boxContainer.getLineBox());
 		} else {
-			return new Pair<Dimension, JRLineBox>(new Dimension(jce.getWidth(), jce.getHeight()), null);
+			return new Pair<>(new Dimension(jce.getWidth(), jce.getHeight()), null);
 		}
 	}
 
 	/**
 	 * Reduce the size of a container considering the padding values
 	 * 
-	 * @param lineBox
-	 *          the box of the container where the padding informations are stored, if null the size of the container is
-	 *          the baseSize since there are no paddings
-	 * @param baseSize
-	 *          the full size of the container, must be not null
-	 * @return a not null dimension that the elements can occupy inside the container
+	 * @param lineBox the box of the container where the padding informations
+	 * are stored, if null the size of the container is the baseSize since there
+	 * are no paddings
+	 * @param baseSize the full size of the container, must be not null
+	 * @return a not null dimension that the elements can occupy inside the
+	 * container
 	 */
 	public static Dimension getPaddedSize(JRLineBox lineBox, Dimension baseSize) {
 		if (lineBox == null)
@@ -397,12 +398,12 @@ public class LayoutManager {
 	/**
 	 * Reduce the size of a container considering the padding values
 	 * 
-	 * @param boxContainer
-	 *          the box of the container where the padding informations are stored, if null the size of the container is
-	 *          the baseSize since there are no paddings
-	 * @param baseSize
-	 *          the full size of the container, must be not null
-	 * @return a not null dimension that the elements can occupy inside the container
+	 * @param boxContainer the box of the container where the padding
+	 * informations are stored, if null the size of the container is the
+	 * baseSize since there are no paddings
+	 * @param baseSize the full size of the container, must be not null
+	 * @return a not null dimension that the elements can occupy inside the
+	 * container
 	 */
 	public static Dimension getPaddedSize(JRBoxContainer boxContainer, Dimension baseSize) {
 		if (boxContainer == null)
@@ -413,10 +414,11 @@ public class LayoutManager {
 	/**
 	 * Create a layout command to layout the container passed as parameter
 	 * 
-	 * @param containerToLayout
-	 *          the container to layout, if null the result will be null
-	 * @return a layout command to do the layout of the passed container, can be null if the Container can not be layout
-	 *         (maybe it null or not a valid container)
+	 * @param containerToLayout the container to layout, if null the result will
+	 * be null
+	 * @return a layout command to do the layout of the passed container, can be
+	 * null if the Container can not be layout (maybe it null or not a valid
+	 * container)
 	 */
 	public static LayoutCommand createRelayoutCommand(ANode containerToLayout) {
 		if (containerToLayout == null)
@@ -467,10 +469,11 @@ public class LayoutManager {
 	}
 
 	/**
-	 * Try to create a layout command for a container and if it was possible to create it then it is executed
+	 * Try to create a layout command for a container and if it was possible to
+	 * create it then it is executed
 	 * 
-	 * @param containerToLayout
-	 *          the container to layout, if null this doesn't do anything
+	 * @param containerToLayout the container to layout, if null this doesn't do
+	 * anything
 	 */
 	public static void layoutContainer(ANode containerToLayout) {
 		LayoutCommand cmd = createRelayoutCommand(containerToLayout);
@@ -479,21 +482,26 @@ public class LayoutManager {
 	}
 
 	/**
-	 * Create a map that contains the position of every inside every the specified parent plus a list of passed elements
-	 * (that will be considered by the layout engine like the are inside the parent), layout with the container specified
-	 * layout. This is used to show visual feedback of a creation or a movement of a child into a container. It will use
-	 * the layout of the container to calculate the new positions but without change the current one, since the result of
-	 * the computation are simply returned
+	 * Create a map that contains the position of every inside every the
+	 * specified parent plus a list of passed elements (that will be considered
+	 * by the layout engine like the are inside the parent), layout with the
+	 * container specified layout. This is used to show visual feedback of a
+	 * creation or a movement of a child into a container. It will use the
+	 * layout of the container to calculate the new positions but without change
+	 * the current one, since the result of the computation are simply returned
 	 * 
-	 * @param containerToLayout
-	 *          the container to layout, if null this doesn't do anything
-	 * @param insertPosition the position where the elements will be inserted, -1 means at the end of the container
-	 * @param additionalElements
-	 *          elements that will be considered by the layout engine like additional children of the container
-	 * @return the map of every element inside the container, plus the additionalElements, which for every element show
-	 *         the position inside the container with its layout
+	 * @param containerToLayout the container to layout, if null this doesn't do
+	 * anything
+	 * @param insertPosition the position where the elements will be inserted,
+	 * -1 means at the end of the container
+	 * @param additionalElements elements that will be considered by the layout
+	 * engine like additional children of the container
+	 * @return the map of every element inside the container, plus the
+	 * additionalElements, which for every element show the position inside the
+	 * container with its layout
 	 */
-	public static Map<Object, Rectangle> createLayoutPosition(ANode containerToLayout, int insertPosition, List<Object> additionalElements) {
+	public static Map<Object, Rectangle> createLayoutPosition(ANode containerToLayout, int insertPosition,
+			List<Object> additionalElements) {
 		if (containerToLayout == null)
 			return null;
 		Object jrElement = containerToLayout.getValue();
@@ -546,25 +554,25 @@ public class LayoutManager {
 					str = FreeLayout.class.getName();
 			}
 			ILayout parentLayout = LayoutManager.getLayout(str);
-			List<Object> elements = new ArrayList<Object>();
+			List<Object> elements = new ArrayList<>();
 			JRElement[] childElements = jrGroup.getElements();
-			if (insertPosition < 0 || insertPosition >= jrGroup.getElements().length){
+			if (insertPosition < 0 || insertPosition >= jrGroup.getElements().length) {
 				for (JRElement element : childElements) {
 					elements.add(element);
 				}
 				elements.addAll(additionalElements);
 			} else {
-				for(int i = 0; i < childElements.length && i < insertPosition; i++){
+				for (int i = 0; i < childElements.length && i < insertPosition; i++) {
 					elements.add(childElements[i]);
 				}
 				elements.addAll(additionalElements);
-				for(int i = insertPosition; i < childElements.length; i++){
+				for (int i = insertPosition; i < childElements.length; i++) {
 					elements.add(childElements[i]);
-				}		
+				}
 			}
 
-
-			Map<Object, Rectangle> result = parentLayout.getLayoutPosition(elements.toArray(new Object[elements.size()]), insertPosition, d);
+			Map<Object, Rectangle> result = parentLayout
+					.getLayoutPosition(elements.toArray(new Object[elements.size()]), insertPosition, d);
 			if (result != null && (topPadding != 0 || leftPadding != 0)) {
 				for (Rectangle rect : result.values()) {
 					rect.setX(rect.x + leftPadding);

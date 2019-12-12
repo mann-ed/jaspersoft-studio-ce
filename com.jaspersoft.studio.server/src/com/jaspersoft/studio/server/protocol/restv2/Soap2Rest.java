@@ -352,12 +352,12 @@ public class Soap2Rest {
 		List<ResourceDescriptor> children = rd.getChildren();
 		List<ClientReferenceableInputControl> ics = cr.getInputControls();
 		if (ics == null) {
-			ics = new ArrayList<ClientReferenceableInputControl>();
+			ics = new ArrayList<>();
 			cr.setInputControls(ics);
 		}
 		Map<String, ClientReferenceableFile> icf = cr.getFiles();
 		if (icf == null) {
-			icf = new HashMap<String, ClientReferenceableFile>();
+			icf = new HashMap<>();
 			cr.setFiles(icf);
 		}
 		for (ResourceDescriptor r : children) {

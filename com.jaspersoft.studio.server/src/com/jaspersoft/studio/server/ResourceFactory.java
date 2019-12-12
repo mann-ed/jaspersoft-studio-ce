@@ -95,7 +95,7 @@ import net.sf.jasperreports.eclipse.util.Misc;
 
 public class ResourceFactory {
 
-	private Map<Class<? extends AMResource>, IWizardPage[]> pagemap = new HashMap<Class<? extends AMResource>, IWizardPage[]>();
+	private Map<Class<? extends AMResource>, IWizardPage[]> pagemap = new HashMap<>();
 
 	public IWizardPage[] getResourcePage(ANode parent, AMResource resource) {
 		if (resource.getWsClient() == null) {
@@ -340,7 +340,7 @@ public class ResourceFactory {
 		return new MUnknown(parent, resource, index);
 	}
 
-	private static Set<String> fileTypes = new HashSet<String>();
+	private static Set<String> fileTypes = new HashSet<>();
 	static {
 		fileTypes.add(ResourceDescriptor.TYPE_IMAGE);
 		fileTypes.add(ResourceDescriptor.TYPE_FONT);
@@ -352,6 +352,8 @@ public class ResourceFactory {
 		fileTypes.add(ResourceDescriptor.TYPE_XML_FILE);
 		fileTypes.add(ResourceDescriptor.TYPE_CSS_FILE);
 		fileTypes.add(ResourceDescriptor.TYPE_JSON_FILE);
+		fileTypes.add(ResourceDescriptor.TYPE_ACCESS_GRANT_SCHEMA);
+		fileTypes.add(ResourceDescriptor.TYPE_MONDRIAN_SCHEMA);
 	}
 
 	public static boolean isFileResourceType(ResourceDescriptor r) {
@@ -364,8 +366,8 @@ public class ResourceFactory {
 		return REST_FILETYPES;
 	}
 
-	private static Map<String, ImageDescriptor> tIcons = new HashMap<String, ImageDescriptor>();
-	private static Map<String, String> tName = new HashMap<String, String>();
+	private static Map<String, ImageDescriptor> tIcons = new HashMap<>();
+	private static Map<String, String> tName = new HashMap<>();
 
 	public static Image getIcon(String rtype) {
 		ImageDescriptor id = tIcons.get(rtype);
@@ -398,7 +400,7 @@ public class ResourceFactory {
 
 	public static Map<String, String> getTypeNames() {
 		if (typeNames == null) {
-			typeNames = new HashMap<String, String>();
+			typeNames = new HashMap<>();
 			for (String rtype : WsTypes.INST().getRestTypes())
 				typeNames.put(rtype, getName(rtype));
 			typeNames = Misc.sortByValues(typeNames);

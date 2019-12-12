@@ -24,8 +24,8 @@ import net.sf.jasperreports.components.items.StandardItem;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JRDatasetRun;
 import net.sf.jasperreports.engine.JRElementDataset;
+import net.sf.jasperreports.engine.type.DatasetResetTypeEnum;
 import net.sf.jasperreports.engine.type.IncrementTypeEnum;
-import net.sf.jasperreports.engine.type.ResetTypeEnum;
 
 public class ItemLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 	private DescriptorPropertyLabelProvider iplp;
@@ -82,7 +82,8 @@ public class ItemLabelProvider extends ColumnLabelProvider implements ITableLabe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
+	 * @see
+	 * org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
 	 */
 	@Override
 	public Image getImage(Object element) {
@@ -132,8 +133,8 @@ public class ItemLabelProvider extends ColumnLabelProvider implements ITableLabe
 			JRElementDataset ed = (JRElementDataset) element;
 			String str = ed.getDatasetRun() == null ? Messages.ItemLabelProvider_3 : getText(ed.getDatasetRun()) + "\n"; //$NON-NLS-1$
 			str += "\n"; //$NON-NLS-1$
-			str += Messages.ItemLabelProvider_11 + ed.getResetTypeValue();
-			if (ed.getResetTypeValue() == ResetTypeEnum.GROUP && ed.getResetGroup() != null)
+			str += Messages.ItemLabelProvider_11 + ed.getDatasetResetType();
+			if (ed.getDatasetResetType() == DatasetResetTypeEnum.GROUP && ed.getResetGroup() != null)
 				str += ed.getResetGroup().getName();
 			str += "\n"; //$NON-NLS-1$
 			str += Messages.ItemLabelProvider_13 + ed.getIncrementTypeValue();
@@ -175,7 +176,8 @@ public class ItemLabelProvider extends ColumnLabelProvider implements ITableLabe
 	protected String getToolTipText4ItemData(Object element) {
 		ItemData id = (ItemData) element;
 		JRElementDataset ds = id.getDataset();
-		return (ds != null ? getToolTipText(ds) + "\n" + id.getItems().size() + " Items" : Messages.ItemLabelProvider_18);
+		return (ds != null ? getToolTipText(ds) + "\n" + id.getItems().size() + " Items"
+				: Messages.ItemLabelProvider_18);
 	}
 
 	@Override

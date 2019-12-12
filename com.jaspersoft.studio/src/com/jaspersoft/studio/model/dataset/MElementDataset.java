@@ -34,6 +34,7 @@ import net.sf.jasperreports.engine.JRGroup;
 import net.sf.jasperreports.engine.design.JRDesignDatasetRun;
 import net.sf.jasperreports.engine.design.JRDesignElementDataset;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.DatasetResetTypeEnum;
 import net.sf.jasperreports.engine.type.IncrementTypeEnum;
 import net.sf.jasperreports.engine.type.ResetTypeEnum;
 
@@ -97,12 +98,12 @@ public class MElementDataset extends APropertyNode implements IContainer, IConta
 
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
-		resetTypeD = new NamedEnumPropertyDescriptor<ResetTypeEnum>(JRDesignElementDataset.PROPERTY_RESET_TYPE,
+		resetTypeD = new NamedEnumPropertyDescriptor<>(JRDesignElementDataset.PROPERTY_DATASET_RESET_TYPE,
 				Messages.common_reset_type, ResetTypeEnum.COLUMN, NullEnum.NOTNULL);
 		resetTypeD.setDescription(Messages.MElementDataset_reset_type_description);
 		desc.add(resetTypeD);
 
-		inctypeD = new NamedEnumPropertyDescriptor<IncrementTypeEnum>(JRDesignElementDataset.PROPERTY_INCREMENT_TYPE,
+		inctypeD = new NamedEnumPropertyDescriptor<>(JRDesignElementDataset.PROPERTY_INCREMENT_TYPE,
 				Messages.common_increment_type, IncrementTypeEnum.COLUMN, NullEnum.NOTNULL);
 		inctypeD.setDescription(Messages.MElementDataset_increment_type_description);
 		desc.add(inctypeD);
@@ -134,7 +135,7 @@ public class MElementDataset extends APropertyNode implements IContainer, IConta
 
 		setHelpPrefix(desc, "net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#dataset");
 	}
-	
+
 	@Override
 	protected void postDescriptors(IPropertyDescriptor[] descriptors) {
 		super.postDescriptors(descriptors);
@@ -194,8 +195,8 @@ public class MElementDataset extends APropertyNode implements IContainer, IConta
 		JRDesignElementDataset jrElement = (JRDesignElementDataset) getValue();
 		if (jrElement == null)
 			return null;
-		if (id.equals(JRDesignElementDataset.PROPERTY_RESET_TYPE))
-			return jrElement.getResetTypeValue();
+		if (id.equals(JRDesignElementDataset.PROPERTY_DATASET_RESET_TYPE))
+			return jrElement.getDatasetResetType();
 		if (id.equals(JRDesignElementDataset.PROPERTY_INCREMENT_TYPE))
 			return jrElement.getIncrementTypeValue();
 		if (id.equals(JRDesignElementDataset.PROPERTY_INCREMENT_WHEN_EXPRESSION))
@@ -250,18 +251,18 @@ public class MElementDataset extends APropertyNode implements IContainer, IConta
 			return;
 		if (id.equals(JRDesignElementDataset.PROPERTY_INCREMENT_TYPE))
 			jrElement.setIncrementType(EnumHelper.getEnumByObjectValue(IncrementTypeEnum.values(), value));
-		else if (id.equals(JRDesignElementDataset.PROPERTY_RESET_TYPE))
-			jrElement.setResetType(EnumHelper.getEnumByObjectValue(ResetTypeEnum.values(), value));
+		else if (id.equals(JRDesignElementDataset.PROPERTY_DATASET_RESET_TYPE))
+			jrElement.setResetType(EnumHelper.getEnumByObjectValue(DatasetResetTypeEnum.values(), value));
 		else if (id.equals(JRDesignElementDataset.PROPERTY_INCREMENT_WHEN_EXPRESSION))
 			jrElement.setIncrementWhenExpression(ExprUtil.setValues(jrElement.getIncrementWhenExpression(), value));
 		else if (id.equals(JRDesignElementDataset.PROPERTY_INCREMENT_GROUP)) {
 			if (value != null && !value.equals("")) { //$NON-NLS-1$
-				JRGroup group = (JRGroup) getJasperDesign().getGroupsMap().get(value);
+				JRGroup group = getJasperDesign().getGroupsMap().get(value);
 				jrElement.setIncrementGroup(group);
 			}
 		} else if (id.equals(JRDesignElementDataset.PROPERTY_RESET_GROUP)) {
 			if (value != null && !value.equals("")) { //$NON-NLS-1$
-				JRGroup group = (JRGroup) getJasperDesign().getGroupsMap().get(value);
+				JRGroup group = getJasperDesign().getGroupsMap().get(value);
 				jrElement.setResetGroup(group);
 			}
 		} else if (id.equals(JRDesignElementDataset.PROPERTY_DATASET_RUN)) {
@@ -269,7 +270,7 @@ public class MElementDataset extends APropertyNode implements IContainer, IConta
 				jrElement.setDatasetRun(null);
 			} else {
 				MDatasetRun mdr = (MDatasetRun) value;
-				JRDesignDatasetRun dr = (JRDesignDatasetRun) mdr.getValue();
+				JRDesignDatasetRun dr = mdr.getValue();
 				if (dr.getDatasetName() != null)
 					jrElement.setDatasetRun(dr);
 				else

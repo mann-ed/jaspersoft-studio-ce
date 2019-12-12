@@ -25,11 +25,11 @@ import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.conn.ssl.BrowserCompatHostnameVerifier;
+import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.SSLContexts;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -45,19 +45,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -73,12 +70,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
-import org.eclipse.ui.dialogs.ISelectionValidator;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.jasperserver.dto.authority.ClientRole;
 import com.jaspersoft.jasperserver.dto.serverinfo.ServerInfo;
@@ -179,13 +174,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 
 		Text turl = new Text(composite, SWT.BORDER);
 		turl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		turl.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				closeConnection();
-			}
-		});
+		turl.addModifyListener(e -> closeConnection());
 
 		new Label(composite, SWT.RIGHT);
 		cstatus = new Label(composite, SWT.RIGHT);
@@ -203,18 +192,11 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		new Label(gr, SWT.NONE).setText(Messages.ServerProfilePage_9);
 		Text torg = new Text(gr, SWT.BORDER);
 		torg.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		torg.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				closeConnection();
-			}
-		});
+		torg.addModifyListener(e -> closeConnection());
 
 		createCredentials(gr);
 
 		final Section expcmp = new Section(composite, ExpandableComposite.TREE_NODE);
-		expcmp.setTitleBarForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		UIUtil.setBold(expcmp);
 		expcmp.setText(Messages.ServerProfilePage_advancedsettings);
 		gd = new GridData(GridData.FILL_BOTH);
@@ -238,6 +220,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		tabFolder.setSelection(0);
 
 		expcmp.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				UIUtils.relayoutDialog(getShell(), 0, -1);
 			}
@@ -322,13 +305,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		tuser = new Text(cmpUP, SWT.BORDER);
 		tuser.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		tuser.setTextLimit(100);
-		tuser.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				closeConnection();
-			}
-		});
+		tuser.addModifyListener(e -> closeConnection());
 
 		new Label(cmpUP, SWT.NONE).setText(Messages.ServerProfilePage_11);
 		tpass = new WSecretText(cmpUP, SWT.BORDER | SWT.PASSWORD);
@@ -386,13 +363,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		tuserA = new Text(cmpAsk, SWT.BORDER);
 		tuserA.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		tuserA.setTextLimit(100);
-		tuserA.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				closeConnection();
-			}
-		});
+		tuserA.addModifyListener(e -> closeConnection());
 
 		if (value.isUseSSO()) {
 			stackLayout.topControl = cmpCAS;
@@ -403,7 +374,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		}
 	}
 
-	private List<SSOServer> ssoservers = new ArrayList<SSOServer>();
+	private List<SSOServer> ssoservers = new ArrayList<>();
 	private Composite cmpUP;
 	private Composite cmpCAS;
 	private StackLayout stackLayout;
@@ -421,8 +392,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		lbl.setText(Messages.ServerProfilePage_36);
 
 		bSSO = new Combo(cmp, SWT.READ_ONLY);
-		bSSO.setItems(new String[] { Messages.ServerProfilePage_38, Messages.ServerProfilePage_45,
-				Messages.ServerProfilePage_46 });
+		bSSO.setItems(new String[]{Messages.ServerProfilePage_38, Messages.ServerProfilePage_45, Messages.ServerProfilePage_46});
 		bSSO.setText(Messages.ServerProfilePage_18);
 		bSSO.setToolTipText(Messages.ServerProfilePage_20);
 		bSSO.addSelectionListener(new SelectionAdapter() {
@@ -449,11 +419,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 				}
 				cmpCredential.layout();
 				closeConnection();
-				UIUtils.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						dbc.updateTargets();
-					}
-				});
+				UIUtils.getDisplay().asyncExec(() -> dbc.updateTargets());
 			}
 		});
 		GridData gd = new GridData();
@@ -464,7 +430,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		lbl.setText(Messages.ServerProfilePage_jrversion);
 
 		cversion = new VersionCombo(cmp);
-		((Combo) cversion.getControl()).setItem(0, Messages.ServerProfilePage_25);
+		cversion.getControl().setItem(0, Messages.ServerProfilePage_25);
 		cversion.setVersion(JRXmlWriterHelper.LAST_VERSION);
 		gd = new GridData();
 		gd.horizontalSpan = 2;
@@ -516,7 +482,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		lbl.setToolTipText(ttip);
 
 		bmime = new Combo(cmp, SWT.READ_ONLY);
-		bmime.setItems(new String[] { "MIME", "DIME" }); //$NON-NLS-1$ //$NON-NLS-2$
+		bmime.setItems(new String[]{"MIME", "DIME"}); //$NON-NLS-1$ //$NON-NLS-2$
 		bmime.setToolTipText(ttip);
 
 		bUseSoap = new Button(cmp, SWT.CHECK);
@@ -600,30 +566,24 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 						IProject prj = FileUtils.getProject(new NullProgressMonitor());
 						if (prj != null)
 							root = prj.getFolder(sp.getName().replace(" ", "") + "-" + System.currentTimeMillis()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					} catch (JavaModelException e1) {
-						UIUtils.showError(e1);
 					} catch (CoreException e1) {
 						UIUtils.showError(e1);
 					}
 				}
 				ContainerSelectionDialog csd = new ContainerSelectionDialog(getShell(), root, true, null);
-				csd.setValidator(new ISelectionValidator() {
-
-					@Override
-					public String isValid(Object selection) {
-						if (selection instanceof Path) {
-							Path sp = (Path) selection;
-							String s0 = sp.segment(0);
-							for (IProject p : ResourcesPlugin.getWorkspace().getRoot().getProjects())
-								if (p.isOpen() && s0.equals(p.getName()))
-									return null;
-							return Messages.ServerProfilePage_37;
-						}
-						return null;
+				csd.setValidator(selection -> {
+					if (selection instanceof Path) {
+						Path spi = (Path) selection;
+						String s0 = spi.segment(0);
+						for (IProject p : ResourcesPlugin.getWorkspace().getRoot().getProjects())
+							if (p.isOpen() && s0.equals(p.getName()))
+								return null;
+						return Messages.ServerProfilePage_37;
 					}
+					return null;
 				});
 				csd.showClosedProjects(false);
-				if (csd.open() == Dialog.OK) {
+				if (csd.open() == Window.OK) {
 					Object[] selection = csd.getResult();
 					if (selection != null && selection.length > 0 && selection[0] instanceof Path) {
 						sprofile.setProjectPath(((Path) selection[0]).toPortableString());
@@ -679,11 +639,9 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 	public void showServerInfo() {
 		try {
 			txtInfo.setText(sprofile.getConnectionInfo());
-			// dbc.updateTargets();
 			IConnection c = sprofile.getWsClient();
 			if (c != null) {
 				ServerInfo si = c.getServerInfo(null);
-				// cversion.getControl().setEnabled(Version.isEstimated(si));
 				bdaterange.setEnabled(!Version.isDateRangeSupported(si));
 				cstatus.setText(Messages.ServerProfilePage_32);
 			} else
@@ -732,13 +690,11 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 						@Override
 						public boolean isTrusted(final X509Certificate[] chain, String authType)
 								throws CertificateException {
-							getContainer().getShell().getDisplay().syncExec(new Runnable() {
-								public void run() {
-									if (!shown) {
-										new CertificatesDialog(UIUtils.getShell(), "", chain[0], chain) //$NON-NLS-1$
-												.open();
-										shown = true;
-									}
+							getContainer().getShell().getDisplay().syncExec(() -> {
+								if (!shown) {
+									new CertificatesDialog(UIUtils.getShell(), "", chain[0], chain) //$NON-NLS-1$
+											.open();
+									shown = true;
 								}
 							});
 
@@ -746,17 +702,17 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 						}
 					});
 					SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build(),
-							new BrowserCompatHostnameVerifier());
+							new DefaultHostnameVerifier());
 
 					URL targetURL = sp.getURL();
 
 					final Executor exec = Executor
 							.newInstance(HttpClientBuilder.create().setSSLSocketFactory(sslsf).build());
 					HttpUtils.setupProxy(exec, targetURL.toURI());
-					HttpHost proxy = HttpUtils.getUnauthProxy(exec, targetURL.toURI());
+					HttpHost pr = HttpUtils.getUnauthProxy(exec, targetURL.toURI());
 					final Request req = Request.Get(targetURL.toString());
-					if (proxy != null)
-						req.viaProxy(proxy);
+					if (pr != null)
+						req.viaProxy(pr);
 					if (pmd != null) {
 						pmd.getProgressMonitor().setCanceled(true);
 					}
@@ -776,9 +732,11 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 										}
 
 										public void completed(final Content content) {
+											// do nothing
 										}
 
 										public void cancelled() {
+											// do nothing
 										}
 
 									});
@@ -795,9 +753,9 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 							}
 						}
 					});
+				} catch (SSLHandshakeException ex) {
+					return;
 				} catch (Exception ex) {
-					if (ex instanceof SSLHandshakeException)
-						return;
 					UIUtils.showError(ex);
 				} finally {
 					ssLabel.addMouseListener(mlistener);
@@ -805,29 +763,24 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 			}
 		};
 
-		public String getUrl() throws MalformedURLException, URISyntaxException {
-			UIUtils.getDisplay().asyncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						if (sp.getUrl() != null && sp.getUrl().trim().startsWith("https://")) { //$NON-NLS-1$
-							ssLabel.addMouseListener(mlistener);
-							setSslIcon();
-							ssLabel.setCursor(new Cursor(ssLabel.getDisplay(), SWT.CURSOR_HAND));
-							ssLabel.getParent().getParent().layout(true);
-							return;
-						}
-					} catch (MalformedURLException e) {
-					} catch (URISyntaxException e) {
+		public String getUrl() {
+			UIUtils.getDisplay().asyncExec(() -> {
+				try {
+					if (sp.getUrl() != null && sp.getUrl().trim().startsWith("https://")) { //$NON-NLS-1$
+						ssLabel.addMouseListener(mlistener);
+						setSslIcon();
+						ssLabel.setCursor(new Cursor(ssLabel.getDisplay(), SWT.CURSOR_HAND));
+						ssLabel.getParent().getParent().layout(true);
+						return;
 					}
-
-					ssLabel.removeMouseListener(mlistener);
-					ssLabel.setImage(null);
-					ssLabel.setCursor(null);
-
-					ssLabel.getParent().getParent().layout(true);
+				} catch (MalformedURLException | URISyntaxException e) {
 				}
+
+				ssLabel.removeMouseListener(mlistener);
+				ssLabel.setImage(null);
+				ssLabel.setCursor(null);
+
+				ssLabel.getParent().getParent().layout(true);
 			});
 
 			return sp.getUrlString();
@@ -890,6 +843,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 				break;
 			}
 		}
+
 	}
 
 	@Override
@@ -907,39 +861,24 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 
 	@Override
 	public void performCancelInvoked() {
-
+		// do nothing
 	}
 
 	public void connect() {
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				if (drvtab != null)
-					drvtab.dispose();
-				if (sprofile != null && sprofile.getWsClient() != null
-						&& sprofile.getWsClient().getServerProfile() != null)
-					sprofile.getWsClient().getServerProfile().setClientUser(null);
-			}
+		UIUtils.getDisplay().asyncExec(() -> {
+			if (drvtab != null)
+				drvtab.dispose();
+			if (sprofile != null && sprofile.getWsClient() != null && sprofile.getWsClient().getServerProfile() != null)
+				sprofile.getWsClient().getServerProfile().setClientUser(null);
 		});
 	}
 
 	public void connectionOK() {
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				if (drvtab != null)
-					drvtab.dispose();
-				createJdbcDrivers(tabFolder);
-				try {
-					proxy.getUrl();
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				}
-			}
+		UIUtils.getDisplay().asyncExec(() -> {
+			if (drvtab != null)
+				drvtab.dispose();
+			createJdbcDrivers(tabFolder);
+			proxy.getUrl();
 		});
 	}
 
@@ -1022,22 +961,15 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 							}
 						}
 					});
-				} catch (InvocationTargetException e1) {
-					UIUtils.showError(e1.getCause());
-				} catch (InterruptedException e1) {
+				} catch (InvocationTargetException | InterruptedException e1) {
 					UIUtils.showError(e1.getCause());
 				}
 			}
 		});
 		bUpld.setEnabled(!Misc.isNullOrEmpty(cpath.getClasspaths()) && !Misc.isNullOrEmpty(dname.getText()));
-
-		dname.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				driver.setClassname(dname.getText());
-				bUpld.setEnabled(!Misc.isNullOrEmpty(cpath.getClasspaths()) && !Misc.isNullOrEmpty(dname.getText()));
-			}
+		dname.addModifyListener(e -> {
+			driver.setClassname(dname.getText());
+			bUpld.setEnabled(!Misc.isNullOrEmpty(cpath.getClasspaths()) && !Misc.isNullOrEmpty(dname.getText()));
 		});
 
 		drvtab.setControl(cmp);
@@ -1050,12 +982,6 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		if (drvtab != null)
 			drvtab.dispose();
 		showServerInfo();
-		try {
-			proxy.getUrl();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		proxy.getUrl();
 	}
 }

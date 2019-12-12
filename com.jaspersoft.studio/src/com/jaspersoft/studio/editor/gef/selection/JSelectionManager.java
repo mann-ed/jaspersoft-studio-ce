@@ -234,6 +234,11 @@ public class JSelectionManager extends SelectionManager {
 		super.deselectAll();
 	}
 	
+	@Override
+	public EditPartViewer getViewer() {
+		return super.getViewer();
+	}
+	
 	/**
 	 * Check if for the current selection should be shown a group selection. This is done looking if the current
 	 * selection is bigger than one element and if the key for the group selection is pressed

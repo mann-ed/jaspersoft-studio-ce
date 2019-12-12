@@ -52,7 +52,8 @@ public class DataAdapterManager {
 	private static Map<Object, ADataAdapterStorage> storages = new HashMap<>();
 
 	static {
-		// Listener used to clear the cache when something about the data adapters
+		// Listener used to clear the cache when something about the data
+		// adapters
 		// definition change in the preferences
 		JaspersoftStudioPlugin.getInstance().getPreferenceStore()
 				.addPropertyChangeListener(new IPropertyChangeListener() {
@@ -101,8 +102,8 @@ public class DataAdapterManager {
 
 	/**
 	 * Add a DataAdapterFactory to the list of DataAdapterFactories in
-	 * JaspersoftStudio. The new type of data adapter will then be visible when a
-	 * new data adapter is created.
+	 * JaspersoftStudio. The new type of data adapter will then be visible when
+	 * a new data adapter is created.
 	 * 
 	 * @param factory
 	 */
@@ -193,11 +194,15 @@ public class DataAdapterManager {
 		ADataAdapterStorage s = storages.get(key);
 		if (s == null) {
 			s = new FileDataAdapterStorage(key);
+			storages.put(key, s);
 			s.findAll();
 			s.getDataAdapterDescriptors();
-			storages.put(key, s);
 		}
 		return s;
+	}
+
+	public static void removeProject(IProject prj) {
+		storages.remove(prj);
 	}
 
 	/**
@@ -258,8 +263,8 @@ public class DataAdapterManager {
 	/**
 	 * Creates a copy of a data adapter looking for the right Factory.
 	 * 
-	 * A NullPointerException is raised is the dataAdapter is null or if a suitable
-	 * DataAdapterFactory is not found.
+	 * A NullPointerException is raised is the dataAdapter is null or if a
+	 * suitable DataAdapterFactory is not found.
 	 * 
 	 * @param dataAdapter
 	 * @return

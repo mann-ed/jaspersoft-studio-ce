@@ -35,7 +35,7 @@ import com.jaspersoft.studio.components.crosstab.model.cell.command.OrphanElemen
 import com.jaspersoft.studio.components.crosstab.model.nodata.MCrosstabWhenNoData;
 import com.jaspersoft.studio.components.crosstab.model.nodata.MCrosstabWhenNoDataCell;
 import com.jaspersoft.studio.editor.gef.commands.SetPageConstraintCommand;
-import com.jaspersoft.studio.editor.gef.figures.ReportPageFigure;
+import com.jaspersoft.studio.editor.gef.figures.APageFigure;
 import com.jaspersoft.studio.editor.gef.figures.borders.ShadowBorder;
 import com.jaspersoft.studio.editor.gef.figures.borders.SimpleShadowBorder;
 import com.jaspersoft.studio.editor.gef.parts.FigureEditPart;
@@ -76,6 +76,7 @@ public class CrosstabWhenNoDataEditPart extends ACrosstabCellEditPart {
 
 				private RectangleFigure targetFeedback;
 
+				@Override
 				protected void eraseLayoutTargetFeedback(Request request) {
 					super.eraseLayoutTargetFeedback(request);
 					if (targetFeedback != null) {
@@ -115,13 +116,15 @@ public class CrosstabWhenNoDataEditPart extends ACrosstabCellEditPart {
 					return targetFeedback;
 				}
 
+				@Override
 				protected void showLayoutTargetFeedback(Request request) {
 					super.showLayoutTargetFeedback(request);
 					getLayoutTargetFeedback(request);
 				}
 
 				@Override
-				protected Command getCreateCommand(ANode parent, Object obj, Rectangle constraint, int index, Request request) {
+				protected Command getCreateCommand(ANode parent, Object obj, Rectangle constraint, int index,
+						Request request) {
 					if (parent instanceof MPage)
 						parent = getModel();
 					Rectangle b = ((MCell) getModel()).getBounds();
@@ -143,7 +146,7 @@ public class CrosstabWhenNoDataEditPart extends ACrosstabCellEditPart {
 							MGraphicElement model = (MGraphicElement) child.getModel();
 							Rectangle r = model.getBounds();
 
-							JRDesignElement jde = (JRDesignElement) model.getValue();
+							JRDesignElement jde = model.getValue();
 							int x = r.x + rect.x - jde.getX() + 1;
 							int y = r.y + rect.y - jde.getY() + 1;
 							rect.setLocation(x, y);
@@ -176,7 +179,7 @@ public class CrosstabWhenNoDataEditPart extends ACrosstabCellEditPart {
 		IGraphicElement model = (IGraphicElement) getModel();
 		rect.setToolTip(new Label(((ANode) model).getToolTip()));
 
-		Rectangle bounds = ((IGraphicElement) model).getBounds();
+		Rectangle bounds = model.getBounds();
 		int x = bounds.x;
 		int y = bounds.y;
 
@@ -184,10 +187,11 @@ public class CrosstabWhenNoDataEditPart extends ACrosstabCellEditPart {
 
 		JSSDrawVisitor dv = getDrawVisitor();
 		if (rect instanceof EmptyCellFigure)
-			((EmptyCellFigure) rect).setJRElement(null, dv, new Dimension(bounds.width, bounds.height));
+			((EmptyCellFigure) rect).setJRElement(dv, new Dimension(bounds.width, bounds.height));
 		else if (getModel() instanceof MCell)
 			((CellFigure) rect).setJRElement((JRDesignCellContents) getModel().getValue(), dv);
-		rect.setSize(bounds.width + ReportPageFigure.PAGE_BORDER.left + ReportPageFigure.PAGE_BORDER.right, bounds.height + 30 + ReportPageFigure.PAGE_BORDER.top + ReportPageFigure.PAGE_BORDER.bottom);
+		rect.setSize(bounds.width + APageFigure.PAGE_BORDER.left + APageFigure.PAGE_BORDER.right,
+				bounds.height + 30 + APageFigure.PAGE_BORDER.top + APageFigure.PAGE_BORDER.bottom);
 		updateRulers();
 
 		if (getSelected() == 1)
@@ -234,6 +238,7 @@ public class CrosstabWhenNoDataEditPart extends ACrosstabCellEditPart {
 		return fig;
 	}
 
+	@Override
 	public void setPrefsBorder(IFigure rect) {
 		if (jConfig == null)
 			jConfig = getModel().getJasperConfiguration();

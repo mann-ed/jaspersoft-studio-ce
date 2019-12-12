@@ -4,7 +4,7 @@
  ******************************************************************************/
 package com.jaspersoft.studio.model.parameter;
 
-import net.sf.jasperreports.engine.JRConstants;
+import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -16,6 +16,8 @@ import com.jaspersoft.studio.model.ANode;
 import com.jaspersoft.studio.model.MCollection;
 import com.jaspersoft.studio.model.util.IIconDescriptor;
 import com.jaspersoft.studio.model.util.NodeIconDescriptor;
+
+import net.sf.jasperreports.engine.JRConstants;
 
 /*
  * The Class MParameters.
@@ -66,9 +68,35 @@ public class MParameters<T> extends MCollection {
 	 * @see com.jaspersoft.studio.model.INode#getImagePath()
 	 */
 	public ImageDescriptor getImagePath() {
-		if (SortParametersAction.areParametersSorted(getJasperConfiguration())){
-			return ResourceManager.getPluginImageDescriptor(JaspersoftStudioPlugin.PLUGIN_ID, "/icons/resources/parameters_ordered-16.png");
+		if (SortParametersAction.areParametersSorted(getJasperConfiguration())) {
+			return ResourceManager.getPluginImageDescriptor(JaspersoftStudioPlugin.PLUGIN_ID,
+					"/icons/resources/parameters_ordered-16.png");
 		}
 		return getIconDescriptor().getIcon16();
+	}
+
+	@Override
+	public Object getPropertyValue(Object id) {
+		return null;
+	}
+
+	@Override
+	public void setPropertyValue(Object id, Object value) {
+		// nothing to do here, no properties
+	}
+
+	@Override
+	public void setDescriptors(IPropertyDescriptor[] descriptors1) {
+		descriptors = descriptors1;
+	}
+
+	@Override
+	public IPropertyDescriptor[] getDescriptors() {
+		return descriptors;
+	}
+
+	@Override
+	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
+		// nothing to do here, no properties
 	}
 }

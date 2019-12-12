@@ -26,12 +26,12 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
-import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.DragEditPartsTracker;
 import org.eclipse.ui.IEditorPart;
 
 import com.jaspersoft.studio.editor.JrxmlEditor;
+import com.jaspersoft.studio.editor.gef.parts.RedrawingEditPolicy;
 import com.jaspersoft.studio.editor.gef.parts.ReportPageEditPart;
 import com.jaspersoft.studio.model.ANode;
 import com.jaspersoft.studio.property.SetValueCommand;
@@ -78,7 +78,7 @@ public class BackgroundImageEditPart extends AbstractGraphicalEditPart  implemen
 	
 	@Override
 	protected void createEditPolicies() {
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new ResizableEditPolicy(){
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new RedrawingEditPolicy(){
 			
 			@Override
 			protected Command getResizeCommand(ChangeBoundsRequest request) {
@@ -181,6 +181,9 @@ public class BackgroundImageEditPart extends AbstractGraphicalEditPart  implemen
 				((BackgroundFeedbackFigure) feedback).setText(s);
 
 				feedback.setBounds(rect.resize(-scaleW, -scaleH));
+				
+				//fix for community issue 12061, look at RedrawingEditPolicy for more informations
+				super.showChangeBoundsFeedback(request);
 			}
 			
 			protected IFigure createDragSourceFeedbackFigure() {
@@ -243,7 +246,9 @@ public class BackgroundImageEditPart extends AbstractGraphicalEditPart  implemen
 			
 			@Override
 			protected void performSelection() {
-				if (isSelectable()) super.performSelection();
+				if (isSelectable()) {
+					super.performSelection();
+				}
 			}
 		};
 	}

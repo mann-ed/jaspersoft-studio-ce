@@ -115,7 +115,9 @@ public class DataSnapshotManager {
 
 	public static void removeSnapshotFile(Map<String, Object> parameters) {
 		ReportContext context = (ReportContext) parameters.get(JRParameter.REPORT_CONTEXT);
-		context.setParameterValue(SAVE_SNAPSHOT, null);
+		if (context != null) {
+			context.setParameterValue(SAVE_SNAPSHOT, null);
+		}
 	}
 
 	public static void saveSnapshot(final String fname, final Date creationTimestamp, final DataSnapshot snapshot) {

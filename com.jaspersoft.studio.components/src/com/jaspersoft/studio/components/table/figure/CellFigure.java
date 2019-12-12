@@ -4,18 +4,18 @@
  ******************************************************************************/
 package com.jaspersoft.studio.components.table.figure;
 
-import net.sf.jasperreports.components.table.DesignCell;
-import net.sf.jasperreports.components.table.StandardBaseColumn;
-import net.sf.jasperreports.engine.JRElement;
-import net.sf.jasperreports.engine.JRLineBox;
-
 import org.eclipse.draw2d.LineBorder;
 
 import com.jaspersoft.studio.editor.gef.figures.FrameFigure;
 import com.jaspersoft.studio.jasper.JSSDrawVisitor;
 
+import net.sf.jasperreports.components.table.DesignBaseCell;
+import net.sf.jasperreports.components.table.StandardBaseColumn;
+import net.sf.jasperreports.engine.JRElement;
+import net.sf.jasperreports.engine.JRLineBox;
+
 public class CellFigure extends FrameFigure {
-	private DesignCell cell;
+	protected DesignBaseCell cell;
 	private StandardBaseColumn column;
 
 	public CellFigure() {
@@ -23,7 +23,7 @@ public class CellFigure extends FrameFigure {
 		setBorder(new LineBorder(1));
 	}
 
-	public void setJRElement(DesignCell cell, StandardBaseColumn column, JSSDrawVisitor drawVisitor) {
+	public void setJRElement(DesignBaseCell cell, StandardBaseColumn column, JSSDrawVisitor drawVisitor) {
 		this.cell = cell;
 		this.column = column;
 		super.setJRElement(null, drawVisitor);
@@ -33,10 +33,11 @@ public class CellFigure extends FrameFigure {
 	@Override
 	protected JRLineBox getLineBox() {
 		JRLineBox box = null;
-		box = cell.getLineBox();
-		if (box == null && cell.getStyle() != null)
-			box = cell.getStyle().getLineBox();
-
+		if (cell != null) {
+			box = cell.getLineBox();
+			if (box == null && cell.getStyle() != null)
+				box = cell.getStyle().getLineBox();
+		}
 		return box;
 	}
 

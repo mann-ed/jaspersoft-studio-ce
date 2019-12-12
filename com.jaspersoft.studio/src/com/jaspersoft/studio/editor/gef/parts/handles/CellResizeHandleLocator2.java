@@ -26,13 +26,13 @@ public class CellResizeHandleLocator2 extends RelativeLocator {
 	private GraphicalEditPart editPart;
 
 	/**
-	 * Constructs a RelativeLocator with the given reference figure and relative location. The location is a constant from
-	 * {@link PositionConstants} used as a convenient and readable way to set both the relativeX and relativeY values.
+	 * Constructs a RelativeLocator with the given reference figure and relative
+	 * location. The location is a constant from {@link PositionConstants} used
+	 * as a convenient and readable way to set both the relativeX and relativeY
+	 * values.
 	 * 
-	 * @param reference
-	 *          the reference figure
-	 * @param location
-	 *          one of NORTH, NORTH_EAST, etc.
+	 * @param reference the reference figure
+	 * @param location one of NORTH, NORTH_EAST, etc.
 	 * @since 2.0
 	 */
 	public CellResizeHandleLocator2(GraphicalEditPart editPart, int location) {
@@ -64,7 +64,11 @@ public class CellResizeHandleLocator2 extends RelativeLocator {
 	@Override
 	public void relocate(IFigure target) {
 		IFigure reference = getReferenceFigure();
-		Rectangle referenceBox = ((HandleBounds) reference).getHandleBounds();
+		Rectangle referenceBox = null;
+		if (reference instanceof HandleBounds)
+			referenceBox = ((HandleBounds) reference).getHandleBounds();
+		else
+			referenceBox = reference.getBounds();
 		Rectangle targetBounds = new PrecisionRectangle(referenceBox.getResized(-1, -1));
 		reference.translateToAbsolute(targetBounds);
 		target.translateToRelative(targetBounds);
@@ -76,7 +80,7 @@ public class CellResizeHandleLocator2 extends RelativeLocator {
 		Dimension d = targetSize;
 		if (editPart instanceof IContainerPart) {
 			d = ((IContainerPart) editPart).getContaierSize();
-			// Commented for back-compatibility in 3.6. 
+			// Commented for back-compatibility in 3.6.
 			// Replaced with the following 3 lines.
 			// d = d.getCopy().setHeight(d.height + 18).scale(xzoom);
 			Dimension dcopy = d.getCopy();
@@ -89,25 +93,25 @@ public class CellResizeHandleLocator2 extends RelativeLocator {
 		switch (direction & PositionConstants.NORTH_SOUTH) {
 		case PositionConstants.NORTH:
 			w = d.width + 1;
-			targetBounds.y += (int) (targetBounds.height * relativeY - ((targetSize.height)));// + 1;
+			targetBounds.y += (int) (targetBounds.height * relativeY - (targetSize.height));
 			targetBounds.x = (int) Math.floor(10 * xzoom);
 			break;
 		case PositionConstants.SOUTH:
 			w = d.width + 1;
-			targetBounds.y += (int) (targetBounds.height * relativeY - ((targetSize.height))) - 1;// + 1) / 2)) + 1;
+			targetBounds.y += (int) (targetBounds.height * relativeY - (targetSize.height)) - 1;
 			targetBounds.x = (int) Math.floor(10 * xzoom);
 			break;
 		}
 		switch (direction & PositionConstants.EAST_WEST) {
 		case PositionConstants.WEST:
 			h = d.height - (int) Math.floor(10 * xzoom);
-			targetBounds.y = (int) Math.floor(7 * xzoom);// += (int) relativeY - 1;
-			targetBounds.x += (int) (targetBounds.width * relativeX - (targetSize.width));// + 1;// + 1;
+			targetBounds.y = (int) Math.floor(7 * xzoom);
+			targetBounds.x += (int) (targetBounds.width * relativeX - (targetSize.width));
 			break;
 		case PositionConstants.EAST:
 			h = d.height - (int) Math.floor(10 * xzoom);
-			targetBounds.y = (int) Math.floor(7 * xzoom);// += (int) relativeY - 1;
-			targetBounds.x += (int) (targetBounds.width * relativeX - (targetSize.width)) - 1;// / 2);// + 1;
+			targetBounds.y = (int) Math.floor(7 * xzoom);
+			targetBounds.x += (int) (targetBounds.width * relativeX - (targetSize.width)) - 1;
 			break;
 		}
 		targetBounds.setSize(w + 1, h + 1);

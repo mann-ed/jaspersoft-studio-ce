@@ -39,8 +39,9 @@ open "/Volumes/TIBCO Jaspersoft Studio"
 #echo "Sleeping for 3 seconds"
 sleep 3
 
-# Remove junk file
+# Remove junk files
 rm -Rf "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio/test.txt"
+rm -Rf "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio/"Icon*
 
 # Rename folder Jaspersoft Studio 1.0 to the new version
 mv "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio" "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio $1.app"
@@ -78,7 +79,7 @@ echo '
 
 
 # Unmount the Jaspersoft Studio image
-hdiutil detach "/Volumes/TIBCO Jaspersoft Studio"
+hdiutil detach "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio $1.app"
 
 # Remove the dmg in case it already exists...
 rm jaspersoftstudio.dmg

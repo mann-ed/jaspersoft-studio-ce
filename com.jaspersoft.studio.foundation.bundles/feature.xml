@@ -2,7 +2,7 @@
 <feature
       id="com.jaspersoft.studio.foundation.bundles"
       label="Jaspersoft Studio Required Bundles Feature"
-      version="1.0.13"
+      version="1.0.14"
       provider-name="TIBCO Software Inc.">
 
    <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
@@ -28,6 +28,10 @@
 
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.logging" version="1.2.0" match="greaterOrEqual"/>
+      <import plugin="org.slf4j.api" version="1.7.2" match="greaterOrEqual"/>
+      <import plugin="com.jaspersoft.studio.bundles.jackson"/>
+      <import plugin="org.eclipse.osgi"/>
    </requires>
 
    <plugin
@@ -72,12 +76,6 @@
          version="2.1.7.js7_b01"/>
 
    <plugin
-         id="org.apache.servicemix.bundles.poi"
-         download-size="0"
-         install-size="0"
-         version="4.0.1.1"/>
-
-   <plugin
          id="joda-time"
          download-size="0"
          install-size="0"
@@ -109,7 +107,7 @@
          id="com.jaspersoft.studio.bundles.xmlbeans"
          download-size="0"
          install-size="0"
-         version="3.0.2.b01"
+         version="3.1.0.b01"
          unpack="false"/>
 
    <plugin
@@ -179,7 +177,7 @@
          id="com.jaspersoft.studio.bundles.jackson"
          download-size="0"
          install-size="0"
-         version="2.9.9.b01"
+         version="2.10.0.b01"
          unpack="false"/>
 
    <plugin
@@ -200,14 +198,14 @@
          id="org.apache.commons.commons-codec"
          download-size="0"
          install-size="0"
-         version="1.12.0"
+         version="1.13.0"
          unpack="false"/>
 
    <plugin
          id="org.apache.commons.commons-collections4"
          download-size="0"
          install-size="0"
-         version="4.2.0"
+         version="4.4.0"
          unpack="false"/>
 
    <plugin
@@ -218,10 +216,22 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.commons.compress"
+         id="org.apache.commons.commons-compress"
          download-size="0"
          install-size="0"
-         version="1.18.0.v20181121-2221"
+         version="1.19.0"
          unpack="false"/>
+
+   <plugin
+         id="com.jaspersoft.studio.bundles.poi"
+         download-size="0"
+         install-size="0"
+         version="4.1.1.b01"/>
+
+   <plugin
+         id="com.jaspersoft.studio.bundles.cdt-java-client"
+         download-size="0"
+         install-size="0"
+         version="2.0.0.b01"/>
 
 </feature>

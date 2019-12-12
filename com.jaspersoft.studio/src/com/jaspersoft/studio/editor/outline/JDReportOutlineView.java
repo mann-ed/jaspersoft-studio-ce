@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.ResourceTransfer;
@@ -156,9 +157,14 @@ public class JDReportOutlineView extends ContentOutlinePage implements IAdaptabl
 		IActionBars bars = pageSite.getActionBars();
 		for (Iterator<IAction> it = registry.getActions(); it.hasNext();) {
 			IAction ia = it.next();
-			bars.setGlobalActionHandler(ia.getId(), ia);
-			JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
+			//it is necessary to do this because otherwise the save handler will be binded to a different context
+			//this will cause the save button in the toolbar not set as enabled when the report is edited by an
+			//outline action (like a creation of a field)
+			if (!ActionFactory.SAVE.getId().equals(ia.getId())) {
+				bars.setGlobalActionHandler(ia.getId(), ia);
+			}
 		}
+		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
 
 		bars.updateActionBars();
 	}

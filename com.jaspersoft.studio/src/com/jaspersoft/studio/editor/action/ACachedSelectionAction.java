@@ -99,13 +99,12 @@ public abstract class ACachedSelectionAction extends SetWorkbenchAction {
 	}
 
 	/**
-	 * Verifies that there is only one EditPart selected referring to a model object
-	 * of the allowed class types.
+	 * Verifies that there is only one EditPart selected referring to a model
+	 * object of the allowed class types.
 	 * 
-	 * @param classes
-	 *            the allowed type(s) for the model object
-	 * @return <code>true</code> the single model object is instance of one of the
-	 *         allowed types,<code>false</code> otherwise
+	 * @param classes the allowed type(s) for the model object
+	 * @return <code>true</code> the single model object is instance of one of
+	 * the allowed types,<code>false</code> otherwise
 	 */
 	public boolean checkSingleSelectedObject(Class<?>... classes) {
 		if (getSelectedObjects().size() != 1)
@@ -119,16 +118,15 @@ public abstract class ACachedSelectionAction extends SetWorkbenchAction {
 	}
 
 	/**
-	 * Verifies that all the currently selected objects are EditParts referring to
-	 * model objects of the allowed class types.
+	 * Verifies that all the currently selected objects are EditParts referring
+	 * to model objects of the allowed class types.
 	 * 
-	 * @param classes
-	 *            the allowed type(s) for the model objects
+	 * @param classes the allowed type(s) for the model objects
 	 * @return <code>true</code> all model objects are instances of one of the
-	 *         allowed types,<code>false</code> otherwise
+	 * allowed types,<code>false</code> otherwise
 	 */
 	public boolean checkAllSelectedObjects(Class<?>... classes) {
-		List<Object> elements = new ArrayList<Object>();
+		List<Object> elements = new ArrayList<>();
 		for (Class<?> clazz : classes) {
 			List<Object> lst = editor.getSelectionCache().getSelectionModelForType(clazz);
 			if (!Misc.isNullOrEmpty(lst))
@@ -147,8 +145,8 @@ public abstract class ACachedSelectionAction extends SetWorkbenchAction {
 	}
 
 	/**
-	 * Set the selection on the last children of the parent of the current selected
-	 * part
+	 * Set the selection on the last children of the parent of the current
+	 * selected part
 	 */
 	protected void setSelectionOnLastSibling() {
 		ISelection s = getSelection();
@@ -172,8 +170,7 @@ public abstract class ACachedSelectionAction extends SetWorkbenchAction {
 	 * Set the selection on a specified children of the parent of the selected
 	 * editpart
 	 * 
-	 * @param the
-	 *            value of the model node of the edit part to select
+	 * @param the value of the model node of the edit part to select
 	 */
 	protected void setSelectionOnSiblingElement(JRChild element) {
 		ISelection s = getSelection();
@@ -199,18 +196,18 @@ public abstract class ACachedSelectionAction extends SetWorkbenchAction {
 	}
 
 	/**
-	 * Method used to know if the action is dirty, this can be used by the action
-	 * contributor (ie {@link DynamicActionContributionItem} ) to refresh the action
-	 * widget
+	 * Method used to know if the action is dirty, this can be used by the
+	 * action contributor (ie {@link DynamicActionContributionItem} ) to refresh
+	 * the action widget
 	 */
 	public boolean isDirty() {
 		return false;
 	}
 
 	/**
-	 * Method used to know if the action is dynamic, this can be used by the action
-	 * contributor (ie {@link DynamicActionContributionItem} ) to refresh the action
-	 * widget
+	 * Method used to know if the action is dynamic, this can be used by the
+	 * action contributor (ie {@link DynamicActionContributionItem} ) to refresh
+	 * the action widget
 	 */
 	public boolean isDynamic() {
 		return false;

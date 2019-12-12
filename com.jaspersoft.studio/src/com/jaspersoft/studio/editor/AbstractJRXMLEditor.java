@@ -809,7 +809,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 				}
 			}
 			String ver = JRXmlWriterHelper.getVersion(getCurrentFile(), jrContext, false);
-			IContextService service = PlatformUI.getWorkbench().getService(IContextService.class);
+			IContextService service = (IContextService)PlatformUI.getWorkbench().getService(IContextService.class);
 			switch (newPageIndex) {
 			case PAGE_DESIGNER:
 				if (activePage == PAGE_SOURCEEDITOR && !xmlFresh) {
@@ -935,7 +935,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	protected void updateContentOutline(int page) {
 		if (outlinePage == null)
 			return;
-		IContentOutlinePage outline = getEditor(page).getAdapter(IContentOutlinePage.class);
+		IContentOutlinePage outline = (IContentOutlinePage)getEditor(page).getAdapter(IContentOutlinePage.class);
 		if (outline == null)
 			outline = new EmptyOutlinePage();
 		outlinePage.setPageActive(outline);
@@ -1120,7 +1120,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 			jrContext.dispose();
 		super.dispose();
 		if (context != null) {
-			IContextService service = getSite().getService(IContextService.class);
+			IContextService service = (IContextService)getSite().getService(IContextService.class);
 			service.deactivateContext(context);
 		}
 	}

@@ -17,6 +17,8 @@ import com.jaspersoft.studio.model.util.IIconDescriptor;
 
 import net.sf.jasperreports.components.table.BaseColumn;
 import net.sf.jasperreports.components.table.StandardBaseColumn;
+import net.sf.jasperreports.components.table.StandardRow;
+import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
 
@@ -39,8 +41,7 @@ public class MTableColumnFooter extends AMFooterHeaderCollection {
 	/** The descriptors. */
 	protected static IPropertyDescriptor[] descriptors;
 
-	public MTableColumnFooter(ANode parent, JRDesignComponentElement jrDataset,
-			String property) {
+	public MTableColumnFooter(ANode parent, JRDesignComponentElement jrDataset, String property) {
 		super(parent, jrDataset, property);
 	}
 
@@ -71,12 +72,35 @@ public class MTableColumnFooter extends AMFooterHeaderCollection {
 	public void createColumn(ANode mth, BaseColumn bc, int i, int index) {
 		TableComponentFactory.createCellColumnFooter(mth, bc, i, index);
 	}
-	
+
 	@Override
 	public Color getForeground() {
-		for(INode child : getChildren()){
-			if (child.getValue() != null && ((StandardBaseColumn)child.getValue()).getColumnFooter() != null) return ColorConstants.black;
+		for (INode child : getChildren()) {
+			if (child.getValue() != null && ((StandardBaseColumn) child.getValue()).getColumnFooter() != null)
+				return ColorConstants.black;
 		}
 		return ColorConstants.gray;
+	}
+
+	@Override
+	public void setDescriptors(IPropertyDescriptor[] descriptors1) {
+		descriptors = descriptors1;
+	}
+
+	@Override
+	public IPropertyDescriptor[] getDescriptors() {
+		return descriptors;
+	}
+
+	@Override
+	protected StandardRow getRow(boolean set) {
+		JRDesignComponentElement jrElement = getValue();
+		StandardTable st = (StandardTable) jrElement.getComponent();
+		StandardRow r = (StandardRow) st.getColumnFooter();
+		if (set && r == null) {
+			r = new StandardRow();
+			st.setColumnFooter(r);
+		}
+		return r;
 	}
 }

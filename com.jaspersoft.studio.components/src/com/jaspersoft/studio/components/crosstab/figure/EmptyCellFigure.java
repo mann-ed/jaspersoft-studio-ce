@@ -7,8 +7,6 @@ package com.jaspersoft.studio.components.crosstab.figure;
 import java.awt.Graphics2D;
 import java.awt.TexturePaint;
 
-import net.sf.jasperreports.crosstabs.design.JRDesignCellContents;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -33,7 +31,7 @@ public class EmptyCellFigure extends FrameFigure {
 
 	private Dimension d;
 
-	public void setJRElement(JRDesignCellContents column, JSSDrawVisitor drawVisitor, Dimension d) {
+	public void setJRElement(JSSDrawVisitor drawVisitor, Dimension d) {
 		this.d = d;
 		super.setJRElement(null, drawVisitor);
 		setSize(getElementWidth() + 3, getElementHeight() + 3);
@@ -51,7 +49,7 @@ public class EmptyCellFigure extends FrameFigure {
 
 	@Override
 	public void paint(Graphics graphics) {
-		Rectangle b = (this instanceof HandleBounds) ? ((HandleBounds) this).getHandleBounds() : this.getBounds();
+		Rectangle b = (this instanceof HandleBounds) ? this.getHandleBounds() : this.getBounds();
 
 		Graphics2D g = ComponentFigure.getG2D(graphics);
 		if (g != null) {

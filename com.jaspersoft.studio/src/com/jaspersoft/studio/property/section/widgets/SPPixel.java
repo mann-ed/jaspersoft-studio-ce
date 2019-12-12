@@ -22,6 +22,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -48,6 +49,7 @@ import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.property.section.report.util.PHolderUtil;
 import com.jaspersoft.studio.property.section.report.util.Unit;
 import com.jaspersoft.studio.property.section.report.util.Unit.PixelConversionException;
+import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
@@ -134,10 +136,12 @@ public class SPPixel extends ASPropertyWidget<PixelPropertyDescriptor> {
 	private JasperReportsConfiguration jConfig;
 
 	/**
-	 * Used to store the last text set into the Textfield, needed to prevent that
+	 * Values used to store the last text set into the Textfield, needed to prevent that
 	 * the lost focus event do multiple update
 	 */
 	private String lastSetValue;
+	
+	private String lastSetText;
 
 	// Flag used to overcome the problem of focus events in Mac OS X
 	// - JSS Bugzilla 42999
@@ -150,13 +154,15 @@ public class SPPixel extends ASPropertyWidget<PixelPropertyDescriptor> {
 	protected void handleFocusLost() {
 		super.handleFocusLost();
 		if (UIUtil.isMacAndEclipse4() && !editHappened)
-			insertField.setText(Misc.nvl(lastSetValue));
-		// Focus lost, do the change only if the text is changed
+			insertField.setText(Misc.nvl(lastSetText));
+		//Focus lost, do the change only if the text is changed
 		if (lastSetValue == null || !lastSetValue.equals(insertField.getText()))
 			updateValue();
 		if (UIUtil.isMacAndEclipse4())
 			editHappened = false;
 	}
+	
+
 
 	/**
 	 * Listener that handle the double click on the Text, made the contextual menu
@@ -902,9 +908,33 @@ public class SPPixel extends ASPropertyWidget<PixelPropertyDescriptor> {
 		int tstyle = SWT.BORDER;
 		if (pDescriptor instanceof PixelPropertyDescriptor && pDescriptor.isReadOnly())
 			tstyle = tstyle | SWT.READ_ONLY;
-		insertField = section.getWidgetFactory().createText(parent, "", tstyle); //$NON-NLS-1$
+		insertField = new Text(parent, tstyle) {
+			
+			private Color ownBackgroundColor;
+			
+			@Override
+			protected void checkSubclass() {
+			}
+			
+			@Override
+			public void setBackground(Color color) {
+				//fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=346361
+				if (!ModelUtils.safeEquals(color, ownBackgroundColor)) {
+					if (isFocusControl() && UIUtil.isMacAndEclipse4()) {
+						setEnabled(false);
+						super.setBackground(color);
+						setEnabled(true);
+						setFocus();
+					} else {
+						super.setBackground(color);
+					}
+					ownBackgroundColor = color;
+				}
+			}
+			
+		}; //$NON-NLS-1$
 		if (UIUtil.isMacAndEclipse4())
-			insertField.addModifyListener(e -> editHappened = true);
+			insertField.addModifyListener(e -> {editHappened = true; lastSetText = insertField.getText();});
 		insertField.addKeyListener(new KeyAdapter() {
 
 			@Override

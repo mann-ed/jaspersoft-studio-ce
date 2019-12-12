@@ -19,6 +19,8 @@ import com.jaspersoft.studio.model.util.IIconDescriptor;
 import net.sf.jasperreports.components.table.BaseColumn;
 import net.sf.jasperreports.components.table.Cell;
 import net.sf.jasperreports.components.table.StandardBaseColumn;
+import net.sf.jasperreports.components.table.StandardRow;
+import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
@@ -79,13 +81,38 @@ public class MTableGroupHeader extends AMFooterHeaderCollection {
 
 	@Override
 	public Color getForeground() {
-		for(INode child : getChildren()){
-			if (child.getValue() != null){
-				StandardBaseColumn currentCol = (StandardBaseColumn)child.getValue();
+		for (INode child : getChildren()) {
+			if (child.getValue() != null) {
+				StandardBaseColumn currentCol = (StandardBaseColumn) child.getValue();
 				Cell headerCell = currentCol.getGroupHeader(jrDesignGroup.getName());
-				if (headerCell != null) return ColorConstants.black;
+				if (headerCell != null)
+					return ColorConstants.black;
 			}
 		}
 		return ColorConstants.gray;
+	}
+
+	@Override
+	public void setDescriptors(IPropertyDescriptor[] descriptors1) {
+		descriptors = descriptors1;
+	}
+
+	@Override
+	public IPropertyDescriptor[] getDescriptors() {
+		return descriptors;
+	}
+
+	@Override
+	protected StandardRow getRow(boolean set) {
+		JRDesignComponentElement jrElement = getValue();
+		StandardTable st = (StandardTable) jrElement.getComponent(); 
+		String name = getJrDesignGroup().getName();
+		StandardRow r = (StandardRow) st.getGroupHeader(name);
+		if (set && r == null) {
+			r = new StandardRow();
+			st.setGroupHeader(name,  r);
+		}
+		return r;
+		
 	}
 }

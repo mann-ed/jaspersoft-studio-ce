@@ -6,10 +6,6 @@ package com.jaspersoft.studio.property.section.graphic.borders;
 
 import java.awt.Graphics2D;
 
-import net.sf.jasperreports.engine.JRPrintElement;
-import net.sf.jasperreports.engine.JRStyle;
-import net.sf.jasperreports.engine.base.JRBasePrintText;
-
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -18,8 +14,12 @@ import com.jaspersoft.studio.editor.gef.figures.ComponentFigure;
 import com.jaspersoft.studio.model.ILineBox;
 import com.jaspersoft.studio.model.style.MStyle;
 
+import net.sf.jasperreports.engine.JRPrintElement;
+import net.sf.jasperreports.engine.base.JRBasePrintText;
+
 /**
- * Widget that contains the method to represent the border of an element and permit to view or edit their properties
+ * Widget that contains the method to represent the border of an element and
+ * permit to view or edit their properties
  * 
  * @author Marco Orlandin
  * 
@@ -57,11 +57,12 @@ public class LineBoxRectangle extends RectangleFigure {
 				pe.setY(b.y + 10);
 				pe.setWidth(b.width - 20);
 				pe.setHeight(b.height - 20);
-				if (section.getElement() instanceof ILineBox && section.getElement() != null)
+				if (section.getElement() instanceof ILineBox
+						&& ((ILineBox) section.getElement()).getBoxContainer() != null)
 					bd.drawBox(g, ((ILineBox) section.getElement()).getBoxContainer().getLineBox(), pe);
 				else if (section.getElement() instanceof MStyle) {
 					MStyle styleModel = (MStyle) section.getElement();
-					bd.drawBox(g, ((JRStyle) styleModel.getValue()).getLineBox(), pe);
+					bd.drawBox(g, styleModel.getValue().getLineBox(), pe);
 				}
 			} else {
 				graphics.drawRectangle(0, 0, 100, 100);

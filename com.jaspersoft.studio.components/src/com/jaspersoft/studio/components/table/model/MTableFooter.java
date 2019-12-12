@@ -17,6 +17,8 @@ import com.jaspersoft.studio.model.util.IIconDescriptor;
 
 import net.sf.jasperreports.components.table.BaseColumn;
 import net.sf.jasperreports.components.table.StandardBaseColumn;
+import net.sf.jasperreports.components.table.StandardRow;
+import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
 
@@ -73,9 +75,32 @@ public class MTableFooter extends AMFooterHeaderCollection {
 
 	@Override
 	public Color getForeground() {
-		for(INode child : getChildren()){
-			if (child.getValue() != null && ((StandardBaseColumn)child.getValue()).getTableFooter() != null) return ColorConstants.black;
+		for (INode child : getChildren()) {
+			if (child.getValue() != null && ((StandardBaseColumn) child.getValue()).getTableFooter() != null)
+				return ColorConstants.black;
 		}
 		return ColorConstants.gray;
+	}
+
+	@Override
+	public void setDescriptors(IPropertyDescriptor[] descriptors1) {
+		descriptors = descriptors1;
+	}
+
+	@Override
+	public IPropertyDescriptor[] getDescriptors() {
+		return descriptors;
+	}
+
+	@Override
+	protected StandardRow getRow(boolean set) {
+		JRDesignComponentElement jrElement = getValue();
+		StandardTable st = (StandardTable) jrElement.getComponent();
+		StandardRow r = (StandardRow) st.getTableFooter();
+		if (set && r == null) {
+			r = new StandardRow();
+			st.setTableFooter(r);
+		}
+		return r;
 	}
 }

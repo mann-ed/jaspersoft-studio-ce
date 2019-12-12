@@ -73,6 +73,7 @@ public class AEditorContext {
 		if (javaclassloader != null)
 			javaclassloader.removeClasspathListener(classpathlistener);
 		jConf.remove(JavaProjectClassLoader.JAVA_PROJECT_CLASS_LOADER_KEY);
+		jConf.remove(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER);
 	}
 
 	private List<RepositoryService> repositoryServices;
@@ -154,14 +155,16 @@ public class AEditorContext {
 		if (javaclassloader != null && classpathlistener != null) {
 			javaclassloader.removeClasspathListener(classpathlistener);
 			jConf.remove(JavaProjectClassLoader.JAVA_PROJECT_CLASS_LOADER_KEY);
+			jConf.remove(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER);
 		}
 		try {
 			ClassLoader cl = Thread.currentThread().getContextClassLoader();
 			if (f != null) {
 				IProject project = f.getProject();
-				if (project != null && project.getNature(JavaCore.NATURE_ID) != null) {
+				if (project != null && project.exists() && project.getNature(JavaCore.NATURE_ID) != null) {
 					javaclassloader = JavaProjectClassLoader.instance(JavaCore.create(project), cl);
 					jConf.put(JavaProjectClassLoader.JAVA_PROJECT_CLASS_LOADER_KEY, javaclassloader);
+					jConf.setValue(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER, cl);
 					classpathlistener = new JSSClasspathListener(this, jConf);
 					javaclassloader.addClasspathListener(classpathlistener);
 					cl = javaclassloader;

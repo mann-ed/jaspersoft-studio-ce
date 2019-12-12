@@ -51,6 +51,7 @@ import net.sf.jasperreports.engine.design.JRDesignDatasetRun;
 import net.sf.jasperreports.engine.design.JRDesignElementDataset;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.DatasetResetTypeEnum;
 import net.sf.jasperreports.engine.type.IncrementTypeEnum;
 import net.sf.jasperreports.engine.type.ResetTypeEnum;
 
@@ -68,25 +69,23 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 	private DatasetRunWidget dsRun;
 	private ExpressionContext expContext;
 	private List<DatasetRunSelectionListener> dsRunSelectionListeners;
-	
+
 	/**
-	 * Map to store the dataset run created when switching the combo. This
-	 * allow to avoid to reset the values of a dataset run when switching to another
-	 * one and then go back
+	 * Map to store the dataset run created when switching the combo. This allow to
+	 * avoid to reset the values of a dataset run when switching to another one and
+	 * then go back
 	 */
-	private HashMap<String, JRDesignDatasetRun> datasetRunMap = new HashMap<String, JRDesignDatasetRun>();
-	
-	
+	private HashMap<String, JRDesignDatasetRun> datasetRunMap = new HashMap<>();
+
 	public CTabFolder ctFolder;
 
 	public ElementDatasetWidget(Composite parent) {
-		this.dsRunSelectionListeners = new ArrayList<DatasetRunSelectionListener>();
+		this.dsRunSelectionListeners = new ArrayList<>();
 		createDataset(parent);
 		bindData();
 	}
 
-	public void setDataset(JRDesignElementDataset eDataset,
-			JasperDesign jrDesign) {
+	public void setDataset(JRDesignElementDataset eDataset, JasperDesign jrDesign) {
 		this.eDataset = eDataset;
 		this.jrDesign = jrDesign;
 		fillData();
@@ -114,7 +113,7 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 	}
 
 	private void fillIncrement() {
-		List<String> lsIncs = new ArrayList<String>();
+		List<String> lsIncs = new ArrayList<>();
 		lsIncs.add(IncrementTypeEnum.REPORT.getName());
 		lsIncs.add(IncrementTypeEnum.PAGE.getName());
 		lsIncs.add(IncrementTypeEnum.COLUMN.getName());
@@ -126,13 +125,11 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 		cbIncrement.setItems(lsIncs.toArray(new String[lsIncs.size()]));
 
 		IncrementTypeEnum rst = eDataset.getIncrementTypeValue();
-		String grname = eDataset.getIncrementGroup() != null ? eDataset
-				.getIncrementGroup().getName() : null;
+		String grname = eDataset.getIncrementGroup() != null ? eDataset.getIncrementGroup().getName() : null;
 		for (int i = 0; i < lsIncs.size(); i++) {
 			String rsttype = lsIncs.get(i);
 			if (rst.equals(IncrementTypeEnum.GROUP)) {
-				if (rsttype.startsWith(GROUPPREFIX)
-						&& grname.equals(rsttype.substring(GROUPPREFIX.length()))) {
+				if (rsttype.startsWith(GROUPPREFIX) && grname.equals(rsttype.substring(GROUPPREFIX.length()))) {
 					cbIncrement.select(i);
 					break;
 				}
@@ -145,22 +142,22 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 
 	private void fillResetGroup() {
 		JRDataset jrds = getJRdataset(eDataset);
-		List<String> lsRsts = new ArrayList<String>();
+		List<String> lsRsts = new ArrayList<>();
 		lsRsts.add(ResetTypeEnum.REPORT.getName());
 		lsRsts.add(ResetTypeEnum.COLUMN.getName());
 		lsRsts.add(ResetTypeEnum.PAGE.getName());
 
-		for (JRGroup gr : jrds.getGroups()){
+		for (JRGroup gr : jrds.getGroups()) {
 			lsRsts.add(GROUPPREFIX + gr.getName());
 		}
 		lsRsts.add(ResetTypeEnum.NONE.getName());
 		cbReset.setItems(lsRsts.toArray(new String[lsRsts.size()]));
 
-		ResetTypeEnum rst = eDataset.getResetTypeValue();
+		DatasetResetTypeEnum rst = eDataset.getDatasetResetType();
 		String grname = eDataset.getResetGroup() != null ? eDataset.getResetGroup().getName() : null;
 		for (int i = 0; i < lsRsts.size(); i++) {
 			String rsttype = lsRsts.get(i);
-			if (rst.equals(ResetTypeEnum.GROUP)) {
+			if (rst.equals(DatasetResetTypeEnum.GROUP)) {
 				if (rsttype.startsWith(GROUPPREFIX) && grname.equals(rsttype.substring(GROUPPREFIX.length()))) {
 					cbReset.select(i);
 					break;
@@ -181,22 +178,22 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 					eDataset.setIncrementGroup(null);
 					cbIncrement.select(0);
 				}
-				if (eDataset.getResetTypeValue().equals(ResetTypeEnum.GROUP)) {
-					eDataset.setResetType(ResetTypeEnum.REPORT);
+				if (eDataset.getDatasetResetType().equals(DatasetResetTypeEnum.GROUP)) {
+					eDataset.setResetType(DatasetResetTypeEnum.REPORT);
 					eDataset.setResetGroup(null);
 					cbReset.select(0);
 				}
 				if (dsCombo.getSelectionIndex() == 0) {
 					eDataset.setDatasetRun(null);
 				} else {
-					
+
 					JRDesignDatasetRun datasetRun = datasetRunMap.get(dsCombo.getText());
-					if (datasetRun == null){
+					if (datasetRun == null) {
 						datasetRun = new JRDesignDatasetRun();
 						datasetRun.setDatasetName(dsCombo.getText());
 						datasetRunMap.put(dsCombo.getText(), datasetRun);
 					}
-				
+
 					eDataset.setDatasetRun(datasetRun);
 				}
 				dsRun.setData((JRDesignDatasetRun) eDataset.getDatasetRun());
@@ -212,7 +209,7 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 		});
 		bindIncrementGroup();
 		bindResetGroup();
-		
+
 		returnValue.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -221,30 +218,30 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 				WizardDialog dialog = new WizardDialog(returnValue.getParent().getShell(), wizard);
 				dialog.create();
 				UIUtils.resizeAndCenterShell(dialog.getShell(), RVPropertyPage.WIDTH_HINT, -1);
-				if (dialog.open() == Dialog.OK){
+				if (dialog.open() == Dialog.OK) {
 					datasetModel.setPropertyValue(JRDesignDatasetRun.PROPERTY_RETURN_VALUES, wizard.getValue());
 				}
 			}
 		});
 
 		prmItem.addSelectionListener(new SelectionAdapter() {
-
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				JRDesignDatasetRun datasetRun = (JRDesignDatasetRun) eDataset.getDatasetRun();
-				ComboParameterEditor wizard = new ComboParameterEditor(new MDatasetRun(eDataset.getDatasetRun(), jrDesign));
+				ComboParameterEditor wizard = new ComboParameterEditor(
+						new MDatasetRun(eDataset.getDatasetRun(), jrDesign));
 				wizard.setValue(GenericJSSParameter.convertFrom(datasetRun.getParameters()));
 				wizard.setExpressionContext(expContext);
-				WizardDialog dialog = new WizardDialog(btnIncrement.getShell(),
-						wizard);
+				WizardDialog dialog = new WizardDialog(btnIncrement.getShell(), wizard);
 				dialog.create();
 				if (dialog.open() == Dialog.OK) {
 					JRDatasetParameter[] params = GenericJSSParameter.convertToDataset(wizard.getValue());
 
-					for (JRDatasetParameter prm : datasetRun.getParameters()){
+					for (JRDatasetParameter prm : datasetRun.getParameters()) {
 						datasetRun.removeParameter(prm);
 					}
 
-					for (JRDatasetParameter param : params){
+					for (JRDatasetParameter param : params) {
 						try {
 							datasetRun.addParameter(param);
 						} catch (JRException er) {
@@ -256,18 +253,16 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 		});
 
 		prmMapItem.addSelectionListener(new SelectionAdapter() {
-
+			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(!ExpressionEditorSupportUtil.isExpressionEditorDialogOpen()) {
+				if (!ExpressionEditorSupportUtil.isExpressionEditorDialogOpen()) {
 					JRExpressionEditor wizard = new JRExpressionEditor();
-					wizard.setValue((JRDesignExpression) eDataset.getDatasetRun()
-							.getParametersMapExpression());
+					wizard.setValue((JRDesignExpression) eDataset.getDatasetRun().getParametersMapExpression());
 					wizard.setExpressionContext(expContext);
-					WizardDialog dialog = 
-							ExpressionEditorSupportUtil.getExpressionEditorWizardDialog(btnIncrement.getShell(),wizard);
+					WizardDialog dialog = ExpressionEditorSupportUtil
+							.getExpressionEditorWizardDialog(btnIncrement.getShell(), wizard);
 					if (dialog.open() == Dialog.OK) {
-						((JRDesignDatasetRun) eDataset.getDatasetRun())
-								.setParametersMapExpression(wizard.getValue());
+						((JRDesignDatasetRun) eDataset.getDatasetRun()).setParametersMapExpression(wizard.getValue());
 					}
 				}
 			}
@@ -287,15 +282,14 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 
 			public void widgetSelected(SelectionEvent e) {
 				String newval = cbReset.getText();
-				ResetTypeEnum val = EnumHelper.getEnumByObjectValue(ResetTypeEnum.values(), newval);
+				DatasetResetTypeEnum val = EnumHelper.getEnumByObjectValue(DatasetResetTypeEnum.values(), newval);
 				if (val != null) {
 					eDataset.setResetType(val);
 				} else {
-					eDataset.setResetType(ResetTypeEnum.GROUP);
+					eDataset.setResetType(DatasetResetTypeEnum.GROUP);
 					JRDataset jrds = getJRdataset(eDataset);
 					for (JRGroup gr : jrds.getGroups()) {
-						if (gr.getName().equals(
-								newval.substring(GROUPPREFIX.length()))) {
+						if (gr.getName().equals(newval.substring(GROUPPREFIX.length()))) {
 							eDataset.setResetGroup(gr);
 							break;
 						}
@@ -322,8 +316,7 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 					eDataset.setIncrementType(IncrementTypeEnum.GROUP);
 					JRDataset jrds = getJRdataset(eDataset);
 					for (JRGroup gr : jrds.getGroups()) {
-						if (gr.getName().equals(
-								newval.substring(GROUPPREFIX.length()))) {
+						if (gr.getName().equals(newval.substring(GROUPPREFIX.length()))) {
 							eDataset.setIncrementGroup(gr);
 							break;
 						}
@@ -339,23 +332,20 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 		btnIncrement.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				if(!ExpressionEditorSupportUtil.isExpressionEditorDialogOpen()) {
+				if (!ExpressionEditorSupportUtil.isExpressionEditorDialogOpen()) {
 					JRExpressionEditor wizard = new JRExpressionEditor();
-					wizard.setValue((JRDesignExpression) eDataset
-							.getIncrementWhenExpression());
+					wizard.setValue((JRDesignExpression) eDataset.getIncrementWhenExpression());
 					// Increment when expression should rely on the dataset run
 					// information.
 					JRDatasetRun datasetRun = eDataset.getDatasetRun();
 					JRDesignDataset dds = jrDesign.getMainDesignDataset();
 					if (datasetRun != null && datasetRun.getDatasetName() != null) {
-						dds = ModelUtils.getDesignDatasetByName(jrDesign,
-								datasetRun.getDatasetName());
+						dds = ModelUtils.getDesignDatasetByName(jrDesign, datasetRun.getDatasetName());
 					}
-					ExpressionContext ec = new ExpressionContext(dds, expContext
-							.getJasperReportsConfiguration());
+					ExpressionContext ec = new ExpressionContext(dds, expContext.getJasperReportsConfiguration());
 					wizard.setExpressionContext(ec);
-					WizardDialog dialog = 
-							ExpressionEditorSupportUtil.getExpressionEditorWizardDialog(btnIncrement.getShell(),wizard);
+					WizardDialog dialog = ExpressionEditorSupportUtil
+							.getExpressionEditorWizardDialog(btnIncrement.getShell(), wizard);
 					if (dialog.open() == Dialog.OK) {
 						eDataset.setIncrementWhenExpression(wizard.getValue());
 					}
@@ -371,18 +361,18 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 	private JRDataset getJRdataset(final JRDesignElementDataset jrDataset) {
 		if (jrDataset != null && jrDataset.getDatasetRun() != null) {
 			String dsname = jrDataset.getDatasetRun().getDatasetName();
-			if (jrDesign.getDatasetMap().containsKey(dsname)){
+			if (jrDesign.getDatasetMap().containsKey(dsname)) {
 				return jrDesign.getDatasetMap().get(dsname);
 			}
 		}
-		//Fallback on the main dataset
+		// Fallback on the main dataset
 		return jrDesign.getMainDataset();
 	}
 
 	public void createDataset(Composite composite) {
 		Composite grDataset = new Composite(composite, SWT.NONE);
 		grDataset.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		grDataset.setLayout(new GridLayout(1,false));
+		grDataset.setLayout(new GridLayout(1, false));
 
 		ctFolder = new CTabFolder(grDataset, SWT.TOP);
 		ctFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -405,21 +395,22 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 
 		Composite leftComposite = new Composite(composite, SWT.NONE);
 		leftComposite.setLayout(new GridLayout(3, false));
-		leftComposite.setLayoutData(new GridData(GridData.FILL_BOTH
-				| GridData.VERTICAL_ALIGN_BEGINNING));
+		leftComposite.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.VERTICAL_ALIGN_BEGINNING));
 
 		new Label(leftComposite, SWT.NONE).setText(Messages.ElementDatasetWidget_incrementOnLabel);
-		cbIncrement = new Combo(leftComposite, SWT.BORDER | SWT.READ_ONLY| SWT.SINGLE);
+		cbIncrement = new Combo(leftComposite, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE);
 		cbIncrement.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		cbIncrement.setToolTipText("Define the moment during the execution of the report when the chart will read the current and use its values to populate itslef. None means each record, report only at the end, page and column each page or column or group when the group changes");
+		cbIncrement.setToolTipText(
+				"Define the moment during the execution of the report when the chart will read the current and use its values to populate itslef. None means each record, report only at the end, page and column each page or column or group when the group changes");
 		btnIncrement = new Button(leftComposite, SWT.PUSH);
 		btnIncrement.setText("..."); //$NON-NLS-1$
 		btnIncrement.setToolTipText(Messages.ElementDatasetWidget_buttonTooltip);
 
 		new Label(leftComposite, SWT.NONE).setText(Messages.ElementDatasetWidget_resetOnLabel);
-		cbReset = new Combo(leftComposite, SWT.BORDER | SWT.READ_ONLY| SWT.SINGLE);
+		cbReset = new Combo(leftComposite, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE);
 		cbReset.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		cbReset.setToolTipText("Define the moment during the execution when the chart delete the acquired data from the previous record and start from the current record. This can be used when the chart is printed on more paged and it need to show only a subset of the dataset record in the moment it is printed");
+		cbReset.setToolTipText(
+				"Define the moment during the execution when the chart delete the acquired data from the previous record and start from the current record. This can be used when the chart is printed on more paged and it need to show only a subset of the dataset record in the moment it is printed");
 
 		new Label(leftComposite, SWT.NONE);
 
@@ -445,10 +436,10 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 		dsCombo.setItems(new String[] { "main dataset" }); //$NON-NLS-1$
 
 		ToolBar toolBar = new ToolBar(composite, SWT.FLAT | SWT.HORIZONTAL | SWT.WRAP | SWT.RIGHT);
-		
+
 		returnValue = new ToolItem(toolBar, SWT.PUSH);
 		returnValue.setText(com.jaspersoft.studio.messages.Messages.common_return_values);
-		
+
 		prmItem = new ToolItem(toolBar, SWT.PUSH);
 		prmItem.setText(Messages.ElementDatasetWidget_parametersLabel);
 
@@ -466,13 +457,11 @@ public class ElementDatasetWidget implements IExpressionContextSetter {
 		this.expContext = expContext;
 	}
 
-	public void addDatasetRunSelectionListener(
-			DatasetRunSelectionListener listener) {
+	public void addDatasetRunSelectionListener(DatasetRunSelectionListener listener) {
 		dsRunSelectionListeners.add(listener);
 	}
 
-	public void removeDatasetRunSelectionListener(
-			DatasetRunSelectionListener listener) {
+	public void removeDatasetRunSelectionListener(DatasetRunSelectionListener listener) {
 		dsRunSelectionListeners.remove(listener);
 	}
 

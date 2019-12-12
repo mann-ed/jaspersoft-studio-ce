@@ -179,6 +179,7 @@ public class ReportNewWizard extends JSSWizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		try {
+			getContainer().getCurrentPage().getNextPage();
 			JDTUtils.restoreLinkedResourcesSupport();
 			Map<String, Object> settings = getSettings();
 			// Store in the settings some information from the location step

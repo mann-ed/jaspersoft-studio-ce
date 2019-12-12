@@ -30,10 +30,8 @@ public class CellResizeHandle extends ResizeHandle {
 	/**
 	 * Constructor for SectionResizeHandle.
 	 * 
-	 * @param owner
-	 *          the owner
-	 * @param direction
-	 *          the direction
+	 * @param owner the owner
+	 * @param direction the direction
 	 */
 	public CellResizeHandle(GraphicalEditPart owner, int direction) {
 		super(owner, direction);
@@ -61,9 +59,10 @@ public class CellResizeHandle extends ResizeHandle {
 		return ColorConstants.blue;
 	}
 
+	@Override
 	protected DragTracker createDragTracker() {
 		return new JSSCompoundResizeTracker(getOwner(), cursorDirection) {
-			
+
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
 			protected List createOperationSet() {
@@ -71,11 +70,11 @@ public class CellResizeHandle extends ResizeHandle {
 				res.add(getOwner());
 				return res;
 			}
-			
+
 			@Override
 			protected void showSourceFeedback() {
 				Command command = getCurrentCommand();
-				if (command != null && command.canExecute()){
+				if (command != null && command.canExecute()) {
 					super.showSourceFeedback();
 				}
 			}

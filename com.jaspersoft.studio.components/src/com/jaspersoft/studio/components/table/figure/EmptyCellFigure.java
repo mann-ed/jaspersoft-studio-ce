@@ -52,7 +52,7 @@ public class EmptyCellFigure extends FrameFigure {
 
 	@Override
 	public void paint(Graphics graphics) {
-		Rectangle b = (this instanceof HandleBounds) ? ((HandleBounds) this).getHandleBounds() : this.getBounds();
+		Rectangle b = (this instanceof HandleBounds) ? this.getHandleBounds() : this.getBounds();
 
 		Graphics2D g = ComponentFigure.getG2D(graphics);
 		if (g != null) {

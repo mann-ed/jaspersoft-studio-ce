@@ -18,13 +18,13 @@ public class CellResizeHandleLocator extends RelativeLocator {
 	private int direction;
 
 	/**
-	 * Constructs a RelativeLocator with the given reference figure and relative location. The location is a constant from
-	 * {@link PositionConstants} used as a convenient and readable way to set both the relativeX and relativeY values.
+	 * Constructs a RelativeLocator with the given reference figure and relative
+	 * location. The location is a constant from {@link PositionConstants} used
+	 * as a convenient and readable way to set both the relativeX and relativeY
+	 * values.
 	 * 
-	 * @param reference
-	 *          the reference figure
-	 * @param location
-	 *          one of NORTH, NORTH_EAST, etc.
+	 * @param reference the reference figure
+	 * @param location one of NORTH, NORTH_EAST, etc.
 	 * @since 2.0
 	 */
 	public CellResizeHandleLocator(GraphicalEditPart editPart, int location) {
@@ -55,7 +55,11 @@ public class CellResizeHandleLocator extends RelativeLocator {
 	@Override
 	public void relocate(IFigure target) {
 		IFigure reference = getReferenceFigure();
-		Rectangle referenceBox = ((HandleBounds) reference).getHandleBounds();
+		Rectangle referenceBox = null;
+		if (reference instanceof HandleBounds)
+			referenceBox = ((HandleBounds) reference).getHandleBounds();
+		else
+			referenceBox = reference.getBounds();
 		Rectangle targetBounds = new PrecisionRectangle(referenceBox.getResized(-1, -1));
 		reference.translateToAbsolute(targetBounds);
 		target.translateToRelative(targetBounds);
@@ -66,7 +70,7 @@ public class CellResizeHandleLocator extends RelativeLocator {
 		switch (direction & PositionConstants.NORTH_SOUTH) {
 		case PositionConstants.NORTH:
 			w = targetBounds.width;
-			targetBounds.y += (int) (targetBounds.height * relativeY - ((h / 2))) + 1;
+			targetBounds.y += (int) (targetBounds.height * relativeY - (h / 2)) + 1;
 			break;
 		case PositionConstants.SOUTH:
 			w = targetBounds.width;

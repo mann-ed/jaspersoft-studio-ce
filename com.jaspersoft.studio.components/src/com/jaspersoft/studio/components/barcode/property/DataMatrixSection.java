@@ -18,16 +18,19 @@ public class DataMatrixSection extends AbstractSection {
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite,
 	 *      org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
 	 */
-	public void createControls(Composite parent,
-			TabbedPropertySheetPage tabbedPropertySheetPage) {
+	public void createControls(Composite parent, TabbedPropertySheetPage tabbedPropertySheetPage) {
 		super.createControls(parent, tabbedPropertySheetPage);
 
-		Composite group = getWidgetFactory().createSection(parent,
-				"DataMatrix", false, 2);
+		Composite group = getWidgetFactory().createSection(parent, "DataMatrix", false, 2);
 
 		createWidget4Property(group, DataMatrixComponent.PROPERTY_SHAPE);
+
+		createWidget4Property(group, DataMatrixComponent.PROPERTY_MIN_SYMBOL_HEIGHT);
+		createWidget4Property(group, DataMatrixComponent.PROPERTY_MAX_SYMBOL_HEIGHT);
+		createWidget4Property(group, DataMatrixComponent.PROPERTY_MIN_SYMBOL_WIDTH);
+		createWidget4Property(group, DataMatrixComponent.PROPERTY_MAX_SYMBOL_WIDTH);
 	}
-	
+
 	@Override
 	protected void initializeProvidedProperties() {
 		super.initializeProvidedProperties();

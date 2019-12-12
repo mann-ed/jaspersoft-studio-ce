@@ -32,6 +32,7 @@ import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.gef.util.EditPartUtilities;
+import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -584,6 +585,11 @@ public class NotMovablePartDragTracker extends SelectEditPartTracker {
 			eraseTargetFeedback();
 			selectedEditParts = calculateMarqueeSelectedEditParts();
 			showTargetFeedback();
+			
+			//fix for community issue 12061, look at RedrawingEditPolicy for more informations
+			if (Util.isLinux()) {
+				getCurrentViewer().getControl().redraw();
+			}
 		}
 		return true;
 	}

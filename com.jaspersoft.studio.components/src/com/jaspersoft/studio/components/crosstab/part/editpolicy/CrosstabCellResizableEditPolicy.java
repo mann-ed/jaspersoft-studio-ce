@@ -22,20 +22,20 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.MoveHandle;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 
 import com.jaspersoft.studio.components.crosstab.part.ACrosstabCellEditPart;
 import com.jaspersoft.studio.components.table.part.TableCellEditPart;
 import com.jaspersoft.studio.editor.gef.figures.ComponentFigure;
+import com.jaspersoft.studio.editor.gef.parts.RedrawingEditPolicy;
 import com.jaspersoft.studio.editor.gef.parts.handles.CellMoveHandle;
 import com.jaspersoft.studio.editor.gef.parts.handles.CellResizeHandle2;
 
 /*
  * The Class BandResizableEditPolicy.
  */
-public class CrosstabCellResizableEditPolicy extends ResizableEditPolicy {
+public class CrosstabCellResizableEditPolicy extends RedrawingEditPolicy {
 
 	/**
 	 * Instantiates a new band resizable edit policy.
@@ -129,6 +129,9 @@ public class CrosstabCellResizableEditPolicy extends ResizableEditPolicy {
 		feedback.translateToRelative(rect);
 		feedback.setBounds(rect);
 		feedback.validate();
+		
+		//fix for community issue 12061, look at RedrawingEditPolicy for more informations
+		super.showChangeBoundsFeedback(request);
 	}
 
 	protected IFigure createDragSourceFeedbackFigure() {

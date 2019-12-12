@@ -24,6 +24,7 @@ import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.ResizeTracker;
+import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 import com.jaspersoft.studio.editor.gef.parts.FigureEditPart;
@@ -100,7 +101,7 @@ public class GroupSelectionEditPart extends AbstractGraphicalEditPart {
 	}
 
 	/**
-	 * Create the edit policies to resize this figure and show the correct fidback.
+	 * Create the edit policies to resize this figure and show the correct feedback.
 	 */
 	@Override
 	protected void createEditPolicies() {
@@ -126,6 +127,11 @@ public class GroupSelectionEditPart extends AbstractGraphicalEditPart {
 				feedback.translateToRelative(rect);
 
 				feedback.setBounds(rect);
+				
+				//fix for community issue 12061, look at RedrawingEditPolicy for more informations
+				if (Util.isLinux()) {
+					selectionManager.getViewer().getControl().redraw();
+				}
 			}
 			
 			protected Command getResizeCommand(ChangeBoundsRequest request) {

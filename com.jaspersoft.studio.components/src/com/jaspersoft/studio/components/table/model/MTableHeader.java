@@ -18,8 +18,10 @@ import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.model.util.IIconDescriptor;
 
 import net.sf.jasperreports.components.table.BaseColumn;
+import net.sf.jasperreports.components.table.Row;
 import net.sf.jasperreports.components.table.StandardBaseColumn;
 import net.sf.jasperreports.components.table.StandardColumnGroup;
+import net.sf.jasperreports.components.table.StandardRow;
 import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
@@ -43,8 +45,7 @@ public class MTableHeader extends AMFooterHeaderCollection {
 	/** The descriptors. */
 	protected static IPropertyDescriptor[] descriptors;
 
-	public MTableHeader(ANode parent, JRDesignComponentElement jrDataset,
-			String property) {
+	public MTableHeader(ANode parent, JRDesignComponentElement jrDataset, String property) {
 		super(parent, jrDataset, property);
 	}
 
@@ -73,18 +74,19 @@ public class MTableHeader extends AMFooterHeaderCollection {
 
 	@Override
 	public void propertyChange(final PropertyChangeEvent evt) {
-		// because MTableDetail do not contains ColumnGroups it will lose the event performed
-		//on the columns inside a group, so this will reroute the event also to it.
+		// because MTableDetail do not contains ColumnGroups it will lose the event
+		// performed
+		// on the columns inside a group, so this will reroute the event also to it.
 		if (evt.getPropertyName().equals(StandardTable.PROPERTY_COLUMNS)) {
-				if (evt.getSource() instanceof StandardColumnGroup) {
-					//redirect the event to the detail section
-					for (INode n : getParent().getChildren()) {
-						if (n instanceof MTableDetail) {
-							n.propertyChange(evt);
-							break;
-						}
+			if (evt.getSource() instanceof StandardColumnGroup) {
+				// redirect the event to the detail section
+				for (INode n : getParent().getChildren()) {
+					if (n instanceof MTableDetail) {
+						n.propertyChange(evt);
+						break;
 					}
 				}
+			}
 		}
 		super.propertyChange(evt);
 	}
@@ -93,12 +95,35 @@ public class MTableHeader extends AMFooterHeaderCollection {
 	public void createColumn(ANode mth, BaseColumn bc, int i, int index) {
 		TableComponentFactory.createCellTableHeader(mth, bc, i, index);
 	}
-	
+
 	@Override
 	public Color getForeground() {
-		for(INode child : getChildren()){
-			if (child.getValue() != null && ((StandardBaseColumn)child.getValue()).getTableHeader() != null) return ColorConstants.black;
+		for (INode child : getChildren()) {
+			if (child.getValue() != null && ((StandardBaseColumn) child.getValue()).getTableHeader() != null)
+				return ColorConstants.black;
 		}
 		return ColorConstants.gray;
+	}
+
+	@Override
+	public void setDescriptors(IPropertyDescriptor[] descriptors1) {
+		descriptors = descriptors1;
+	}
+
+	@Override
+	public IPropertyDescriptor[] getDescriptors() {
+		return descriptors;
+	}
+
+	@Override
+	protected StandardRow getRow(boolean set) {
+		JRDesignComponentElement jrElement = getValue();
+		StandardTable st = (StandardTable) jrElement.getComponent();
+		StandardRow r = (StandardRow) st.getTableHeader();
+		if (set && r == null) {
+			r = new StandardRow();
+			st.setTableHeader(r);
+		}
+		return r;
 	}
 }

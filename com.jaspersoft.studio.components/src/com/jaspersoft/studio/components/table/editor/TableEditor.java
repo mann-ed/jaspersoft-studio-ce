@@ -37,6 +37,8 @@ import com.jaspersoft.studio.components.table.model.column.action.DeleteColumnCe
 import com.jaspersoft.studio.components.table.model.column.action.DeleteRowAction;
 import com.jaspersoft.studio.components.table.model.columngroup.action.GroupColumnsAction;
 import com.jaspersoft.studio.components.table.model.columngroup.action.UnGroupColumnsAction;
+import com.jaspersoft.studio.components.table.model.nodata.action.CreateNoDataAction;
+import com.jaspersoft.studio.components.table.model.nodata.action.DeleteNoDataAction;
 import com.jaspersoft.studio.editor.gef.parts.JSSGraphicalViewerKeyHandler;
 import com.jaspersoft.studio.editor.gef.parts.JasperDesignEditPartFactory;
 import com.jaspersoft.studio.editor.gef.parts.MainDesignerRootEditPart;
@@ -201,6 +203,14 @@ public class TableEditor extends NamedSubeditor {
 		action = new ContextualDatasetAction(this);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
+
+		action = new CreateNoDataAction(this);
+		registry.registerAction(action);
+		selectionActions.add(CreateNoDataAction.ID);
+
+		action = new DeleteNoDataAction(this);
+		registry.registerAction(action);
+		selectionActions.add(DeleteNoDataAction.ID);
 	}
 
 	@Override
