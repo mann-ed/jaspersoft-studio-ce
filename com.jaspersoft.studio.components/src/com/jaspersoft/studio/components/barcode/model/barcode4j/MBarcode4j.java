@@ -69,12 +69,9 @@ public class MBarcode4j extends MBarcode {
 	/**
 	 * Instantiates a new m barcode.
 	 * 
-	 * @param parent
-	 *            the parent
-	 * @param jrBarcode
-	 *            the jr barcode
-	 * @param newIndex
-	 *            the new index
+	 * @param parent    the parent
+	 * @param jrBarcode the jr barcode
+	 * @param newIndex  the new index
 	 */
 	public MBarcode4j(ANode parent, JRDesignComponentElement jrBarcode, int newIndex) {
 		super(parent, newIndex);
@@ -83,8 +80,7 @@ public class MBarcode4j extends MBarcode {
 
 	@Override
 	public JRDesignComponentElement createJRElement(JasperDesign jasperDesign) {
-		JRDesignComponentElement el = new JRDesignComponentElement(jasperDesign);
-		return el;
+		return new JRDesignComponentElement(jasperDesign);
 	}
 
 	/*
@@ -131,8 +127,7 @@ public class MBarcode4j extends MBarcode {
 	/**
 	 * Creates the property descriptors.
 	 * 
-	 * @param desc
-	 *            the desc
+	 * @param desc the desc
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {

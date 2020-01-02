@@ -28,6 +28,7 @@ public class QRCodeSection extends AbstractSection {
 
 		createWidget4Property(group, QRCodeComponent.PROPERTY_ERROR_CORRECTION_LEVEL);
 		createWidget4Property(group, QRCodeComponent.PROPERTY_MARGIN);
+		createWidget4Property(group, QRCodeComponent.PROPERTY_QR_VERSION);
 		createWidget4Property(group, Barcode4jComponent.PROPERTY_TEXT_POSITION);
 	}
 
@@ -36,6 +37,7 @@ public class QRCodeSection extends AbstractSection {
 		super.initializeProvidedProperties();
 		addProvidedProperties(QRCodeComponent.PROPERTY_ERROR_CORRECTION_LEVEL, "Error correction level");
 		addProvidedProperties(QRCodeComponent.PROPERTY_MARGIN, "Margin");
+		addProvidedProperties(QRCodeComponent.PROPERTY_QR_VERSION, "Qr Version");
 		addProvidedProperties(Barcode4jComponent.PROPERTY_TEXT_POSITION, Messages.MBarcode4j_text_position);
 		addProvidedProperties(Barcode4jComponent.PROPERTY_VERTICAL_QUIET_ZONE, Messages.MBarcode4j_vertical_quiet_zone);
 	}
