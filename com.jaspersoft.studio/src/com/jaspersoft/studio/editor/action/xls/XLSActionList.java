@@ -47,7 +47,7 @@ public class XLSActionList extends CustomSelectionAction {
 		this.attributeIds = attributeIds;
 		setId(actionId);
 		// the property need to be registered
-		PropertiesList.AddItem(actionId);
+		PropertiesList.addItem(actionId);
 		setText(actionName);
 		this.values = values;
 		actionCheckId = -1;
@@ -58,7 +58,7 @@ public class XLSActionList extends CustomSelectionAction {
 		super(part, IAction.AS_CHECK_BOX);
 		this.attributeIds = attributeIds;
 		setId(actionId);
-		PropertiesList.AddItem(actionId);
+		PropertiesList.addItem(actionId);
 		setText(actionName);
 		this.values = values;
 		this.actionCheckId = actionCheckId;

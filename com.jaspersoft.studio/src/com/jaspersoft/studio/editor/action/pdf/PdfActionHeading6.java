@@ -33,7 +33,7 @@ public class PdfActionHeading6 extends PdfActionAbstract {
 	 * method to return the property name 
 	 * @return Property for which one the value must be changed
 	 */
-	protected String GetPropertyName(){
+	protected String getPropertyName(){
 		return "net.sf.jasperreports.export.pdf.tag.h6";
 	}
 

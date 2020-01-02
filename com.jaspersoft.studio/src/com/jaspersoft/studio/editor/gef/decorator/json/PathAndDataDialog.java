@@ -9,8 +9,6 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -28,8 +26,6 @@ import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.text.MStaticText;
 import com.jaspersoft.studio.model.text.MTextElement;
 import com.jaspersoft.studio.model.text.MTextField;
-import com.jaspersoft.studio.swt.events.ExpressionModifiedEvent;
-import com.jaspersoft.studio.swt.events.ExpressionModifiedListener;
 import com.jaspersoft.studio.swt.widgets.WTextExpression;
 import com.jaspersoft.studio.utils.ModelUtils;
 
@@ -53,15 +49,12 @@ import net.sf.jasperreports.engine.design.JRDesignTextField;
  */
 public class PathAndDataDialog extends ATitledDialog {
 
-	/**
-	 * The textfield where the string is typed
-	 */
-	private Text tPath;
 	private MTextElement mtext;
 	/**
-	 * Contain the value of inserted in the textfield after the button "ok" is pressed. This field is used because after
-	 * the button ok is pressed then all the widget in the dialog are automatically disposed, and so the content of the
-	 * text field need to be saved here
+	 * Contain the value of inserted in the textfield after the button "ok" is
+	 * pressed. This field is used because after the button ok is pressed then
+	 * all the widget in the dialog are automatically disposed, and so the
+	 * content of the text field need to be saved here
 	 */
 	private String path;
 	private JRExpression data;
@@ -99,7 +92,8 @@ public class PathAndDataDialog extends ATitledDialog {
 			}
 		}
 		repeat = Misc.nvl(
-				Boolean.valueOf(v.getPropertiesMap().getProperty(JSONPathDataAction.JSON_EXPORTER_REPEAT_VALUE_PROPERTY)),
+				Boolean.valueOf(
+						v.getPropertiesMap().getProperty(JSONPathDataAction.JSON_EXPORTER_REPEAT_VALUE_PROPERTY)),
 				false);
 		JRPropertyExpression[] pExpr = v.getPropertyExpressions();
 		if (pExpr != null)
@@ -113,8 +107,8 @@ public class PathAndDataDialog extends ATitledDialog {
 	}
 
 	/**
-	 * Return the value in the text field after the button ok is pressed, or the value used to initialize the textfield
-	 * before the button ok is pressed
+	 * Return the value in the text field after the button ok is pressed, or the
+	 * value used to initialize the textfield before the button ok is pressed
 	 */
 	public String getName() {
 		if (Misc.isNullOrEmpty(path))
@@ -146,21 +140,16 @@ public class PathAndDataDialog extends ATitledDialog {
 
 		new Label(cmp, SWT.NONE).setText(Messages.PathAndDataDialog_7);
 
-		tPath = new Text(cmp, SWT.BORDER);
+		Text tPath = new Text(cmp, SWT.BORDER);
 		tPath.setText(Misc.nvl(path));
 		GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
 		gd.widthHint = 200;
 		gd.horizontalSpan = 1;
 		tPath.setLayoutData(gd);
-		tPath.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				path = tPath.getText();
-				validate(path);
-				setEnabledWidgets(path);
-			}
-
+		tPath.addModifyListener(e -> {
+			path = tPath.getText();
+			validate(path);
+			setEnabledWidgets(path);
 		});
 
 		new Label(cmp, SWT.NONE);
@@ -208,22 +197,10 @@ public class PathAndDataDialog extends ATitledDialog {
 		else
 			wtExp.setExpressionContext(ModelUtils.getElementExpressionContext(mtext.getValue(), mtext));
 		wtExp.setExpression((JRDesignExpression) data);
-		wtExp.addModifyListener(new ExpressionModifiedListener() {
-
-			@Override
-			public void expressionModified(ExpressionModifiedEvent event) {
-				data = wtExp.getExpression();
-			}
-		});
+		wtExp.addModifyListener(event -> data = wtExp.getExpression());
 
 		setEnabledWidgets(path);
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				validate(path);
-			}
-		});
+		UIUtils.getDisplay().asyncExec(() -> validate(path));
 
 		return area;
 	}
@@ -245,7 +222,7 @@ public class PathAndDataDialog extends ATitledDialog {
 			return;
 		}
 		if (tels == null) {
-			tels = new ArrayList<JRDesignElement>();
+			tels = new ArrayList<>();
 			List<JRDesignElement> els = ModelUtils.getAllGElements(mtext.getJasperDesign());
 			for (JRDesignElement de : els)
 				if (de instanceof JRTextElement && de != mtext.getValue())

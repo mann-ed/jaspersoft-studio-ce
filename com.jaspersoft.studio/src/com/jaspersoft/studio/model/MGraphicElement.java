@@ -100,7 +100,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	 * negative value for the size of an element and a position too far from the
 	 * editor
 	 */
-	private List<AbstractJSSCellEditorValidator> positionValidators = new ArrayList<AbstractJSSCellEditorValidator>();
+	private List<AbstractJSSCellEditorValidator> positionValidators = new ArrayList<>();
 
 	/**
 	 * Special propery id to force the refresh of the graphic element
@@ -250,8 +250,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	 * jasperreports.engine.design.JasperDesign)
 	 */
 	public JRDesignElement createJRElement(JasperDesign jasperDesign, boolean applyDefault) {
-		JRDesignGenericElement jrDesignGenericElement = new JRDesignGenericElement(jasperDesign);
-		return jrDesignGenericElement;
+		return new JRDesignGenericElement(jasperDesign);
 	}
 
 	public JRDesignElement createJRElement(JasperDesign jasperDesign) {
@@ -329,7 +328,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 
 	@Override
 	public Rectangle getJRBounds() {
-		JRElement jr = (JRElement) getValue();
+		JRElement jr = getValue();
 		return new Rectangle(jr.getX(), jr.getY(), jr.getWidth(), jr.getHeight());
 	}
 
@@ -387,13 +386,13 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 
 	@Override
 	public HashMap<String, Object> getStylesDescriptors() {
-		HashMap<String, Object> result = new HashMap<String, Object>();
+		HashMap<String, Object> result = new HashMap<>();
 		if (getValue() == null)
 			return result;
-		JRDesignElement element = (JRDesignElement) getValue();
-		result.put(JRDesignStyle.PROPERTY_BACKCOLOR, element.getOwnBackcolor());
-		result.put(JRDesignStyle.PROPERTY_FORECOLOR, element.getOwnForecolor());
-		result.put(JRDesignStyle.PROPERTY_MODE, element.getOwnModeValue());
+		JRDesignElement element = getValue();
+		result.put(JRBaseStyle.PROPERTY_BACKCOLOR, element.getOwnBackcolor());
+		result.put(JRBaseStyle.PROPERTY_FORECOLOR, element.getOwnForecolor());
+		result.put(JRBaseStyle.PROPERTY_MODE, element.getOwnModeValue());
 		return result;
 	}
 
@@ -438,7 +437,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		desc.add(heightD);
 		positionValidators.add(heightValidator);
 
-		JSSPixelLocationValidator widthValidator = new JSSPixelLocationValidator(JRDesignElement.PROPERTY_WIDTH);
+		JSSPixelLocationValidator widthValidator = new JSSPixelLocationValidator(JRBaseElement.PROPERTY_WIDTH);
 		widthValidator.setTargetNode(this);
 		PixelPropertyDescriptor widthD = new PixelPropertyDescriptor(JRBaseElement.PROPERTY_WIDTH,
 				Messages.MGraphicElement_width);
@@ -489,29 +488,29 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		opaqueDBool.setDescription(Messages.MGraphicElement_opaque_description);
 		desc.add(opaqueDBool);
 
-		positionTypeD = new NamedEnumPropertyDescriptor<PositionTypeEnum>(JRDesignElement.PROPERTY_POSITION_TYPE,
+		positionTypeD = new NamedEnumPropertyDescriptor<>(JRBaseElement.PROPERTY_POSITION_TYPE,
 				Messages.common_position_type, PositionTypeEnum.FIX_RELATIVE_TO_BOTTOM, NullEnum.NOTNULL);
 		positionTypeD.setDescription(Messages.MGraphicElement_position_type_description);
 		desc.add(positionTypeD);
 		positionTypeD.setCategory(Messages.MGraphicElement_location_category);
 
 		CheckBoxPropertyDescriptor printRVAlueD = new CheckBoxPropertyDescriptor(
-				JRDesignElement.PROPERTY_PRINT_REPEATED_VALUES, Messages.MGraphicElement_print_repeated_values);
+				JRBaseElement.PROPERTY_PRINT_REPEATED_VALUES, Messages.MGraphicElement_print_repeated_values);
 		printRVAlueD.setDescription(Messages.MGraphicElement_print_repeated_values_description);
 		desc.add(printRVAlueD);
 
 		CheckBoxPropertyDescriptor rmLineWBlankD = new CheckBoxPropertyDescriptor(
-				JRDesignElement.PROPERTY_REMOVE_LINE_WHEN_BLANK, Messages.MGraphicElement_remove_line_when_blank);
+				JRBaseElement.PROPERTY_REMOVE_LINE_WHEN_BLANK, Messages.MGraphicElement_remove_line_when_blank);
 		rmLineWBlankD.setDescription(Messages.MGraphicElement_remove_line_when_blank_description);
 		desc.add(rmLineWBlankD);
 
 		CheckBoxPropertyDescriptor printInFirstWholeBandD = new CheckBoxPropertyDescriptor(
-				JRDesignElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND, Messages.MGraphicElement_print_in_first_whole_band);
+				JRBaseElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND, Messages.MGraphicElement_print_in_first_whole_band);
 		printInFirstWholeBandD.setDescription(Messages.MGraphicElement_print_in_first_whole_band_description);
 		desc.add(printInFirstWholeBandD);
 
 		CheckBoxPropertyDescriptor printWhenDetailOverflowsD = new CheckBoxPropertyDescriptor(
-				JRDesignElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS,
+				JRBaseElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS,
 				Messages.MGraphicElement_print_when_detail_overflows);
 		printWhenDetailOverflowsD.setDescription(Messages.MGraphicElement_print_when_detail_overflows_desription);
 		printWhenDetailOverflowsD.setCategory(Messages.MGraphicElement_print_when);
@@ -532,7 +531,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 
 		setHelpPrefix(desc, "net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#reportElement");
 
-		stretchTypeD = new NamedEnumPropertyDescriptor<StretchTypeEnum>(JRDesignElement.PROPERTY_STRETCH_TYPE,
+		stretchTypeD = new NamedEnumPropertyDescriptor<>(JRBaseElement.PROPERTY_STRETCH_TYPE,
 				Messages.common_stretch_type, StretchTypeEnum.NO_STRETCH, NullEnum.NOTNULL);
 		stretchTypeD.setCategory(Messages.common_size);
 		stretchTypeD.setDescription(Messages.MGraphicElement_stretch_type_description);
@@ -562,16 +561,16 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 
 		int positionDefault = NamedEnumPropertyDescriptor.getIntValue(PositionTypeEnum.FIX_RELATIVE_TO_TOP,
 				NullEnum.NOTNULL, PositionTypeEnum.FIX_RELATIVE_TO_TOP);
-		defaultsMap.put(JRDesignElement.PROPERTY_POSITION_TYPE, new DefaultValue(positionDefault, false));
+		defaultsMap.put(JRBaseElement.PROPERTY_POSITION_TYPE, new DefaultValue(positionDefault, false));
 
 		StretchTypeEnum stretchDefault = NamedEnumPropertyDescriptor.getEnumValue(StretchTypeEnum.NO_STRETCH,
 				NullEnum.NOTNULL, StretchTypeEnum.NO_STRETCH);
-		defaultsMap.put(JRDesignElement.PROPERTY_STRETCH_TYPE, new DefaultValue(stretchDefault, false));
+		defaultsMap.put(JRBaseElement.PROPERTY_STRETCH_TYPE, new DefaultValue(stretchDefault, false));
 
-		defaultsMap.put(JRDesignElement.PROPERTY_PRINT_REPEATED_VALUES, new DefaultValue(Boolean.TRUE, true));
-		defaultsMap.put(JRDesignElement.PROPERTY_REMOVE_LINE_WHEN_BLANK, new DefaultValue(Boolean.FALSE, true));
-		defaultsMap.put(JRDesignElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND, new DefaultValue(Boolean.FALSE, true));
-		defaultsMap.put(JRDesignElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS, new DefaultValue(Boolean.FALSE, true));
+		defaultsMap.put(JRBaseElement.PROPERTY_PRINT_REPEATED_VALUES, new DefaultValue(Boolean.TRUE, true));
+		defaultsMap.put(JRBaseElement.PROPERTY_REMOVE_LINE_WHEN_BLANK, new DefaultValue(Boolean.FALSE, true));
+		defaultsMap.put(JRBaseElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND, new DefaultValue(Boolean.FALSE, true));
+		defaultsMap.put(JRBaseElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS, new DefaultValue(Boolean.FALSE, true));
 		defaultsMap.put(JRDesignElement.PROPERTY_PRINT_WHEN_EXPRESSION, new DefaultValue(null, true));
 		return defaultsMap;
 	}
@@ -581,7 +580,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	 * removed style then it is also removed from the element
 	 */
 	protected JRStyle getActualStyle() {
-		JRDesignElement jrElement = (JRDesignElement) getValue();
+		JRDesignElement jrElement = getValue();
 		// Check if the used style is valid otherwise set it to null
 		if (jrElement.getStyle() != null
 				&& !getJasperDesign().getStylesMap().containsKey(jrElement.getStyle().getName())) {
@@ -630,9 +629,9 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 			return getPropertiesMapClone(jrElement);
 		if (id.equals(JRDesignElement.PROPERTY_HEIGHT))
 			return new Integer(jrElement.getHeight());
-		if (id.equals(JRDesignElement.PROPERTY_WIDTH))
+		if (id.equals(JRBaseElement.PROPERTY_WIDTH))
 			return new Integer(jrElement.getWidth());
-		if (id.equals(JRDesignElement.PROPERTY_X))
+		if (id.equals(JRBaseElement.PROPERTY_X))
 			return new Integer(jrElement.getX());
 		if (id.equals(JRDesignElement.PROPERTY_Y))
 			return new Integer(jrElement.getY());
@@ -646,18 +645,18 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 			ModeEnum modeValue = jrElement.getOwnModeValue();
 			return modeValue != null ? modeValue.equals(ModeEnum.TRANSPARENT) : null;
 		}
-		if (id.equals(JRDesignElement.PROPERTY_POSITION_TYPE))
+		if (id.equals(JRBaseElement.PROPERTY_POSITION_TYPE))
 			return positionTypeD.getIntValue(jrElement.getPositionTypeValue());
-		if (id.equals(JRDesignElement.PROPERTY_STRETCH_TYPE))
+		if (id.equals(JRBaseElement.PROPERTY_STRETCH_TYPE))
 			return stretchTypeD.getIntValue(jrElement.getStretchTypeValue());
 
-		if (id.equals(JRDesignElement.PROPERTY_PRINT_REPEATED_VALUES))
+		if (id.equals(JRBaseElement.PROPERTY_PRINT_REPEATED_VALUES))
 			return new Boolean(jrElement.isPrintRepeatedValues());
-		if (id.equals(JRDesignElement.PROPERTY_REMOVE_LINE_WHEN_BLANK))
+		if (id.equals(JRBaseElement.PROPERTY_REMOVE_LINE_WHEN_BLANK))
 			return new Boolean(jrElement.isRemoveLineWhenBlank());
-		if (id.equals(JRDesignElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND))
+		if (id.equals(JRBaseElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND))
 			return new Boolean(jrElement.isPrintInFirstWholeBand());
-		if (id.equals(JRDesignElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS))
+		if (id.equals(JRBaseElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS))
 			return new Boolean(jrElement.isPrintWhenDetailOverflows());
 
 		return null;
@@ -671,12 +670,13 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	}
 
 	public JRPropertiesMap getPropertiesMap() {
-		JRDesignElement jrElement =   getValue();
+		JRDesignElement jrElement = getValue();
 		return jrElement.getPropertiesMap();
 	}
 
+	@Override
 	public Object getPropertyActualValue(Object id) {
-		JRDesignElement jrElement =   getValue();
+		JRDesignElement jrElement = getValue();
 		JSSStyleResolver resolver = getStyleResolver();
 		if (id.equals(JRBaseStyle.PROPERTY_BACKCOLOR)) {
 			Color backcolor = resolver.getBackcolor(jrElement);
@@ -782,9 +782,9 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 			}
 		} else if (id.equals(JRDesignElement.PROPERTY_HEIGHT)) {
 			jrElement.setHeight((Integer) Misc.nvl(value, Integer.valueOf(0)));
-		} else if (id.equals(JRDesignElement.PROPERTY_WIDTH)) {
+		} else if (id.equals(JRBaseElement.PROPERTY_WIDTH)) {
 			jrElement.setWidth((Integer) Misc.nvl(value, Integer.valueOf(0)));
-		} else if (id.equals(JRDesignElement.PROPERTY_X)) {
+		} else if (id.equals(JRBaseElement.PROPERTY_X)) {
 			jrElement.setX((Integer) Misc.nvl(value, Integer.valueOf(0)));
 		} else if (id.equals(JRDesignElement.PROPERTY_Y)) {
 			jrElement.setY((Integer) Misc.nvl(value, Integer.valueOf(0)));
@@ -803,20 +803,20 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 				jrElement.setMode(ModeEnum.TRANSPARENT);
 			else
 				jrElement.setMode(ModeEnum.OPAQUE);
-		else if (id.equals(JRDesignElement.PROPERTY_POSITION_TYPE)) {
+		else if (id.equals(JRBaseElement.PROPERTY_POSITION_TYPE)) {
 			if (positionTypeD == null)
 				getPropertyDescriptors();
 			jrElement.setPositionType(positionTypeD.getEnumValue(value));
-		} else if (id.equals(JRDesignElement.PROPERTY_STRETCH_TYPE))
+		} else if (id.equals(JRBaseElement.PROPERTY_STRETCH_TYPE))
 			jrElement.setStretchType(stretchTypeD.getEnumValue(value));
 
-		else if (id.equals(JRDesignElement.PROPERTY_PRINT_REPEATED_VALUES))
+		else if (id.equals(JRBaseElement.PROPERTY_PRINT_REPEATED_VALUES))
 			jrElement.setPrintRepeatedValues(((Boolean) value).booleanValue());
-		else if (id.equals(JRDesignElement.PROPERTY_REMOVE_LINE_WHEN_BLANK))
+		else if (id.equals(JRBaseElement.PROPERTY_REMOVE_LINE_WHEN_BLANK))
 			jrElement.setRemoveLineWhenBlank(((Boolean) value).booleanValue());
-		else if (id.equals(JRDesignElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND))
+		else if (id.equals(JRBaseElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND))
 			jrElement.setPrintInFirstWholeBand(((Boolean) value).booleanValue());
-		else if (id.equals(JRDesignElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS))
+		else if (id.equals(JRBaseElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS))
 			jrElement.setPrintWhenDetailOverflows(((Boolean) value).booleanValue());
 		else if (id.equals(PROPERTY_MAP)) {
 			JRPropertiesMap originalMap = jrElement.getPropertiesMap().cloneProperties();
@@ -863,8 +863,8 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		result.add(FORCE_GRAPHICAL_REFRESH);
 		result.add(JRDesignElement.PROPERTY_PARENT_STYLE);
 		result.add(JRDesignElement.PROPERTY_HEIGHT);
-		result.add(JRDesignElement.PROPERTY_WIDTH);
-		result.add(JRDesignElement.PROPERTY_X);
+		result.add(JRBaseElement.PROPERTY_WIDTH);
+		result.add(JRBaseElement.PROPERTY_X);
 		result.add(JRDesignElement.PROPERTY_Y);
 		result.add(JRBaseStyle.PROPERTY_FORECOLOR);
 		result.add(JRBaseStyle.PROPERTY_BACKCOLOR);
@@ -876,7 +876,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	 * Static cache map of the graphic properties for every type of element. The
 	 * cache is created when the element graphical properties are requested
 	 */
-	private static HashMap<Class<?>, HashSet<String>> cachedGraphicalProperties = new HashMap<Class<?>, HashSet<String>>();
+	private static HashMap<Class<?>, HashSet<String>> cachedGraphicalProperties = new HashMap<>();
 
 	/**
 	 * Return the graphical property for the actual type of element. If the are
@@ -1148,11 +1148,11 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 			}
 		}
 		if (!isValidPosition) {
-			List<ValidationError> error = new ArrayList<ValidationError>();
-			List<String> lst = new ArrayList<String>();
+			List<ValidationError> error = new ArrayList<>();
+			List<String> lst = new ArrayList<>();
 			lst.add(JRDesignElement.PROPERTY_HEIGHT);
-			lst.add(JRDesignElement.PROPERTY_WIDTH);
-			lst.add(JRDesignElement.PROPERTY_X);
+			lst.add(JRBaseElement.PROPERTY_WIDTH);
+			lst.add(JRBaseElement.PROPERTY_X);
 			lst.add(JRDesignElement.PROPERTY_Y);
 			error.add(new ValidationError(lst, Messages.ErrorDecorator_PositionErrorToolTip));
 			return error;

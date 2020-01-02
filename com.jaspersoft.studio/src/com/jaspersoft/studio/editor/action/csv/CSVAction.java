@@ -53,7 +53,7 @@ public class CSVAction extends CustomSelectionAction {
 		super(part, IAction.AS_CHECK_BOX);
 		setId(actionId);
 		// the property need to be registered
-		PropertiesList.AddItem(actionId);
+		PropertiesList.addItem(actionId);
 		setText(actionName);
 		attributeToRemove = null;
 	}
