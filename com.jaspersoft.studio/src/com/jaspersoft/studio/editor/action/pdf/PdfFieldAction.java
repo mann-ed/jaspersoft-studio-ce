@@ -216,6 +216,9 @@ public class PdfFieldAction extends APdfAction {
 				buildList(cmp);
 				break;
 			case RADIO:
+				buildList(cmp);
+				buildCheck(cmp);
+				break;
 			case CHECK:
 				buildCheck(cmp);
 				break;
