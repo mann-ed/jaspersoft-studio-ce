@@ -212,10 +212,10 @@ public class PdfFieldAction extends APdfAction {
 				buildText(cmp);
 				break;
 			case LIST:
-			case RADIO:
 			case COMBO:
 				buildList(cmp);
 				break;
+			case RADIO:
 			case CHECK:
 				buildCheck(cmp);
 				break;
