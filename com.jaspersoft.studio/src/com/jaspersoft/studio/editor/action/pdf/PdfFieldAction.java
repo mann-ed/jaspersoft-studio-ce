@@ -20,11 +20,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.model.MGraphicElement;
 import com.jaspersoft.studio.property.descriptor.NullEnum;
+import com.jaspersoft.studio.property.descriptor.propexpr.dialog.HintsPropertiesList;
 import com.jaspersoft.studio.utils.EnumHelper;
-import com.jaspersoft.studio.utils.UIUtil;
 
 import net.sf.jasperreports.eclipse.ui.ATitledDialog;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
@@ -34,10 +35,13 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.type.PdfFieldBorderStyleEnum;
 import net.sf.jasperreports.engine.export.type.PdfFieldCheckTypeEnum;
 import net.sf.jasperreports.engine.export.type.PdfFieldTypeEnum;
+import net.sf.jasperreports.properties.PropertyMetadata;
 
 public class PdfFieldAction extends APdfAction {
 
-	public static final String ID_PDF_FIELD_ACTION = "ID_PDF_FIELD_ACTION";
+	public static final String ID_PDF_FIELD_ACTION = "ID_PDF_FIELD_ACTION"; //$NON-NLS-1$
+	private static final Map<String, PropertyMetadata> props = new HashMap<>();
+
 	private Map<String, String> values = new HashMap<>();
 
 	public PdfFieldAction(IWorkbenchPart part) {
@@ -47,8 +51,8 @@ public class PdfFieldAction extends APdfAction {
 	@Override
 	protected void initUI() {
 		setId(ID_PDF_FIELD_ACTION);
-		setText("Field");
-		setToolTipText("Setup PDF field");
+		setText(Messages.PdfFieldAction_1);
+		setToolTipText(Messages.PdfFieldAction_2);
 		setImageDescriptor(null); // $NON-NLS-1$
 		setDisabledImageDescriptor(null); // $NON-NLS-1$
 	}
@@ -62,19 +66,18 @@ public class PdfFieldAction extends APdfAction {
 
 	@Override
 	protected Set<String> getPropertyNames() {
-		Set<String> props = new HashSet<>();
-		props.add(JRPdfExporter.PDF_FIELD_BORDER_STYLE);
-		props.add(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
-		props.add(JRPdfExporter.PDF_FIELD_CHECKED);
-		props.add(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
-		props.add(JRPdfExporter.PDF_FIELD_CHOICES);
-		props.add(JRPdfExporter.PDF_FIELD_COMBO_EDIT);
-		props.add(JRPdfExporter.PDF_FIELD_NAME);
-		props.add(JRPdfExporter.PDF_FIELD_READ_ONLY);
-		props.add(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
-		props.add(JRPdfExporter.PDF_FIELD_TYPE);
-
-		return props;
+		Set<String> p = new HashSet<>();
+		p.add(JRPdfExporter.PDF_FIELD_BORDER_STYLE);
+		p.add(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
+		p.add(JRPdfExporter.PDF_FIELD_CHECKED);
+		p.add(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
+		p.add(JRPdfExporter.PDF_FIELD_CHOICES);
+		p.add(JRPdfExporter.PDF_FIELD_COMBO_EDIT);
+		p.add(JRPdfExporter.PDF_FIELD_NAME);
+		p.add(JRPdfExporter.PDF_FIELD_READ_ONLY);
+		p.add(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
+		p.add(JRPdfExporter.PDF_FIELD_TYPE);
+		return p;
 	}
 
 	@Override
@@ -95,13 +98,29 @@ public class PdfFieldAction extends APdfAction {
 		private Text cName;
 		private Button cRonly;
 		private Combo cBorder;
+		private MGraphicElement m;
 
 		private Map<String, Control> controls = new HashMap<>();
 
 		protected FieldDialog(Shell parentShell) {
 			super(parentShell);
+			defwidth = 450;
+			defheight = 300;
 			setTitle(PdfFieldAction.this.getText());
 			setDescription(PdfFieldAction.this.getToolTipText());
+			List<Object> graphicalElements = editor.getSelectionCache().getSelectionModelForType(MGraphicElement.class);
+			m = (MGraphicElement) graphicalElements.get(0);
+			if (props.isEmpty()) {
+				List<PropertyMetadata> pms = HintsPropertiesList.getPropertiesMetadata(m.getValue(),
+						m.getJasperConfiguration());
+				pms.stream().filter(pm -> getPropertyNames().contains(pm.getName()))
+						.forEach(pm -> props.put(pm.getName(), pm));
+			}
+		}
+
+		@Override
+		protected boolean isResizable() {
+			return false;
 		}
 
 		@Override
@@ -111,23 +130,27 @@ public class PdfFieldAction extends APdfAction {
 			cmp.setLayout(new GridLayout(4, false));
 			cmp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-			new Label(cmp, SWT.NONE).setText("Name");
+			Label lbl = buildLabel(cmp, JRPdfExporter.PDF_FIELD_NAME, Messages.PdfFieldAction_3);
+			GridData gd = new GridData();
+			gd.widthHint = 150;
+			lbl.setLayoutData(gd);
 
 			cName = new Text(cmp, SWT.NONE);
-			GridData gd = new GridData();
+			cName.setToolTipText(lbl.getToolTipText());
+			gd = new GridData();
 			gd.horizontalSpan = 3;
 			gd.widthHint = 300;
 			cName.setLayoutData(gd);
 			cName.addModifyListener(e -> values.put(JRPdfExporter.PDF_FIELD_NAME, cName.getText()));
 
-			new Label(cmp, SWT.NONE).setText("Border Style");
+			lbl = buildLabel(cmp, JRPdfExporter.PDF_FIELD_BORDER_STYLE, Messages.PdfFieldAction_4);
 
 			cBorder = new Combo(cmp, SWT.READ_ONLY);
+			cBorder.setToolTipText(lbl.getToolTipText());
 			cBorder.setItems(EnumHelper.getEnumNames(PdfFieldBorderStyleEnum.values(), NullEnum.NOTNULL));
 			cBorder.addModifyListener(e -> values.put(JRPdfExporter.PDF_FIELD_BORDER_STYLE, cBorder.getText()));
 
-			cRonly = new Button(cmp, SWT.CHECK);
-			cRonly.setText("Read Only");
+			cRonly = buildButton(cmp, JRPdfExporter.PDF_FIELD_READ_ONLY, Messages.PdfFieldAction_5, SWT.CHECK);
 			gd = new GridData();
 			gd.horizontalSpan = 2;
 			cRonly.setLayoutData(gd);
@@ -138,9 +161,10 @@ public class PdfFieldAction extends APdfAction {
 				}
 			});
 
-			new Label(cmp, SWT.NONE).setText("Field Type");
+			lbl = buildLabel(cmp, JRPdfExporter.PDF_FIELD_TYPE, Messages.PdfFieldAction_6);
 
 			cType = new Combo(cmp, SWT.READ_ONLY);
+			cType.setToolTipText(lbl.getToolTipText());
 			gd = new GridData();
 			gd.horizontalSpan = 3;
 			cType.setLayoutData(gd);
@@ -175,14 +199,15 @@ public class PdfFieldAction extends APdfAction {
 				buildCheck(cmp);
 				break;
 			default:
-				UIUtils.showInformation("Hmm, type is not supported!");
+				UIUtils.showInformation(Messages.PdfFieldAction_7);
 			}
 		}
 
 		private void buildList(Composite cmp) {
-			buildLabel(cmp, JRPdfExporter.PDF_FIELD_CHOICES, "Choices");
+			Label lbl = buildDynamicLabel(cmp, JRPdfExporter.PDF_FIELD_CHOICES, Messages.PdfFieldAction_8);
 
 			Text cChoices = new Text(cmp, SWT.NONE);
+			cChoices.setToolTipText(lbl.getToolTipText());
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 3;
 			cChoices.setLayoutData(gd);
@@ -190,9 +215,10 @@ public class PdfFieldAction extends APdfAction {
 			controls.put(JRPdfExporter.PDF_FIELD_CHOICES, cChoices);
 			cChoices.setText(Misc.nvl(values.get(JRPdfExporter.PDF_FIELD_CHOICES)));
 
-			buildLabel(cmp, JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS, "Choice Separators");
+			lbl = buildDynamicLabel(cmp, JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS, Messages.PdfFieldAction_9);
 
 			Text cChoiceSep = new Text(cmp, SWT.NONE);
+			cChoiceSep.setToolTipText(lbl.getToolTipText());
 			gd = new GridData();
 			gd.horizontalSpan = 3;
 			cChoiceSep.setLayoutData(gd);
@@ -203,9 +229,10 @@ public class PdfFieldAction extends APdfAction {
 		}
 
 		private void buildCheck(Composite cmp) {
-			buildLabel(cmp, JRPdfExporter.PDF_FIELD_CHECK_TYPE, "Check Type");
+			Label lbl = buildDynamicLabel(cmp, JRPdfExporter.PDF_FIELD_CHECK_TYPE, Messages.PdfFieldAction_10);
 
 			Combo cCheckType = new Combo(cmp, SWT.READ_ONLY);
+			cCheckType.setToolTipText(lbl.getToolTipText());
 			cCheckType.setItems(EnumHelper.getEnumNames(PdfFieldCheckTypeEnum.values(), NullEnum.NOTNULL));
 			cCheckType.addModifyListener(e -> {
 				String v = cCheckType.getText();
@@ -216,8 +243,7 @@ public class PdfFieldAction extends APdfAction {
 				cCheckType.setText(c);
 			controls.put(JRPdfExporter.PDF_FIELD_CHECK_TYPE, cCheckType);
 
-			Button cChecked = new Button(cmp, SWT.CHECK);
-			cChecked.setText("Checked");
+			Button cChecked = buildButton(cmp, JRPdfExporter.PDF_FIELD_CHECKED, Messages.PdfFieldAction_11, SWT.CHECK);
 			GridData gd = new GridData();
 			gd.horizontalSpan = 2;
 			cChecked.setLayoutData(gd);
@@ -234,8 +260,8 @@ public class PdfFieldAction extends APdfAction {
 		}
 
 		private void buildText(Composite cmp) {
-			Button cMulti = new Button(cmp, SWT.CHECK);
-			cMulti.setText("Text Multiline");
+			Button cMulti = buildButton(cmp, JRPdfExporter.PDF_FIELD_TEXT_MULTILINE, Messages.PdfFieldAction_12,
+					SWT.CHECK);
 			GridData gd = new GridData();
 			gd.horizontalSpan = 2;
 			cMulti.setLayoutData(gd);
@@ -252,8 +278,7 @@ public class PdfFieldAction extends APdfAction {
 		}
 
 		private void initWidgets(Composite cmp) {
-			List<Object> graphicalElements = editor.getSelectionCache().getSelectionModelForType(MGraphicElement.class);
-			MGraphicElement m = (MGraphicElement) graphicalElements.get(0);
+
 			JRPropertiesMap v = (JRPropertiesMap) m.getPropertyValue(APropertyNode.PROPERTY_MAP);
 			if (v == null)
 				v = new JRPropertiesMap();
@@ -298,10 +323,26 @@ public class PdfFieldAction extends APdfAction {
 			changeType(type, cmp);
 		}
 
-		private void buildLabel(Composite cmp, String prop, String label) {
+		private Label buildDynamicLabel(Composite cmp, String prop, String label) {
+			Label lbl = buildLabel(cmp, prop, label);
+			controls.put(prop + "label", lbl); //$NON-NLS-1$
+			return lbl;
+		}
+
+		private Label buildLabel(Composite cmp, String prop, String label) {
 			Label lbl = new Label(cmp, SWT.NONE);
-			lbl.setText(label);
-			controls.put(prop + "label", lbl);
+			PropertyMetadata pm = props.get(prop);
+			lbl.setText(Misc.nvl(pm.getLabel(), label));
+			lbl.setToolTipText(Misc.nvl(pm.getDescription()));
+			return lbl;
+		}
+
+		private Button buildButton(Composite cmp, String prop, String label, int style) {
+			Button b = new Button(cmp, style);
+			PropertyMetadata pm = props.get(prop);
+			b.setText(Misc.nvl(pm.getLabel(), label));
+			b.setToolTipText(Misc.nvl(pm.getDescription()));
+			return b;
 		}
 
 	}

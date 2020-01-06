@@ -1792,6 +1792,18 @@ public class Messages extends NLS {
 	public static String PdfAction_Full;
 	public static String PdfAction_None;
 	public static String PdfAction_Start;
+	public static String PdfFieldAction_1;
+	public static String PdfFieldAction_10;
+	public static String PdfFieldAction_11;
+	public static String PdfFieldAction_12;
+	public static String PdfFieldAction_2;
+	public static String PdfFieldAction_3;
+	public static String PdfFieldAction_4;
+	public static String PdfFieldAction_5;
+	public static String PdfFieldAction_6;
+	public static String PdfFieldAction_7;
+	public static String PdfFieldAction_8;
+	public static String PdfFieldAction_9;
 	public static String PDF508ElementDecorator_Heading4;
 	public static String PDF508ElementDecorator_Heading5;
 	public static String PDF508ElementDecorator_Heading6;
