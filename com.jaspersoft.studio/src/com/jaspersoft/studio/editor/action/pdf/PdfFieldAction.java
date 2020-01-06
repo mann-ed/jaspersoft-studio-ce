@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,6 +26,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.model.MGraphicElement;
+import com.jaspersoft.studio.model.text.MTextElement;
 import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptor.propexpr.dialog.HintsPropertiesList;
 import com.jaspersoft.studio.utils.EnumHelper;
@@ -168,15 +172,32 @@ public class PdfFieldAction extends APdfAction {
 			gd = new GridData();
 			gd.horizontalSpan = 3;
 			cType.setLayoutData(gd);
-			cType.setItems(EnumHelper.getEnumNames(PdfFieldTypeEnum.values(), NullEnum.NOTNULL));
+			String[] types = EnumHelper.getEnumNames(PdfFieldTypeEnum.values(), NullEnum.NOTNULL);
+			if (!(m instanceof MTextElement))
+				types = (String[]) ArrayUtils.removeElement(types, PdfFieldTypeEnum.TEXT.getName());
+			cType.setItems(types);
 
 			initWidgets(cmp);
-			cType.addModifyListener(e -> {
-				String v = cType.getText();
-				values.put(JRPdfExporter.PDF_FIELD_TYPE, v);
-				changeType(v, cmp);
-				UIUtils.getDisplay().asyncExec(() -> UIUtils.relayoutDialogHeight(getShell(), defheight));
-			});
+
+			ModifyListener ml = new ModifyListener() {
+
+				@Override
+				public void modifyText(ModifyEvent e) {
+					String v = cType.getText();
+					if (!(m instanceof MTextElement) && v.equals(PdfFieldTypeEnum.TEXT.getName())) {
+						UIUtils.showInformation("You can use Text type only with TextField and StaticText");
+						cType.removeModifyListener(this);
+						cType.setText(values.get(JRPdfExporter.PDF_FIELD_TYPE));
+						cType.addModifyListener(this);
+						return;
+					}
+					values.put(JRPdfExporter.PDF_FIELD_TYPE, v);
+					changeType(v, cmp);
+					UIUtils.getDisplay().asyncExec(() -> UIUtils.relayoutDialogHeight(getShell(), defheight));
+				}
+			};
+
+			cType.addModifyListener(ml);
 			UIUtils.getDisplay().asyncExec(() -> UIUtils.resizeAndCenterShell(getShell(), defwidth, defheight));
 
 			return area;
@@ -287,7 +308,7 @@ public class PdfFieldAction extends APdfAction {
 			if (type != null)
 				values.put(JRPdfExporter.PDF_FIELD_TYPE, type);
 			else
-				type = PdfFieldTypeEnum.TEXT.getName();
+				type = PdfFieldTypeEnum.CHECK.getName();
 			cType.setText(type);
 
 			String t = v.getProperty(JRPdfExporter.PDF_FIELD_NAME);
