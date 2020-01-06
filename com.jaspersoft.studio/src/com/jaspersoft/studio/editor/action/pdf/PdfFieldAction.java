@@ -209,17 +209,28 @@ public class PdfFieldAction extends APdfAction {
 			controls.clear();
 			switch (PdfFieldTypeEnum.getByName(type)) {
 			case TEXT:
+				values.remove(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
+				values.remove(JRPdfExporter.PDF_FIELD_CHOICES);
+				values.remove(JRPdfExporter.PDF_FIELD_CHECKED);
+				values.remove(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
 				buildText(cmp);
 				break;
 			case LIST:
 			case COMBO:
+				values.remove(JRPdfExporter.PDF_FIELD_CHECKED);
+				values.remove(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
+				values.remove(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
 				buildList(cmp);
 				break;
 			case RADIO:
+				values.remove(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
 				buildList(cmp);
 				buildCheck(cmp);
 				break;
 			case CHECK:
+				values.remove(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
+				values.remove(JRPdfExporter.PDF_FIELD_CHOICES);
+				values.remove(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
 				buildCheck(cmp);
 				break;
 			default:
