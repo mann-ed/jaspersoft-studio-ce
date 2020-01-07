@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -40,8 +41,10 @@ public class WClassName extends AWControl {
 		cmb.addModifyListener(e -> {
 			if (refresh)
 				return;
+			int caret = cmb.getCaretPosition();
 			aw.setValue(cmb.getText());
 			cmb.setToolTipText(aw.getToolTipText());
+			cmb.setSelection(new Point(caret, caret));
 		});
 
 		Button button = new Button(cmp, SWT.PUSH);
