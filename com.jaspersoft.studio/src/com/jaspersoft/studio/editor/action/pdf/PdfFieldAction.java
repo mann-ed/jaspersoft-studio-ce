@@ -151,8 +151,13 @@ public class PdfFieldAction extends APdfAction {
 
 			cBorder = new Combo(cmp, SWT.READ_ONLY);
 			cBorder.setToolTipText(lbl.getToolTipText());
-			cBorder.setItems(EnumHelper.getEnumNames(PdfFieldBorderStyleEnum.values(), NullEnum.NOTNULL));
-			cBorder.addModifyListener(e -> values.put(JRPdfExporter.PDF_FIELD_BORDER_STYLE, cBorder.getText()));
+			cBorder.setItems(EnumHelper.getEnumNames(PdfFieldBorderStyleEnum.values(), NullEnum.NULL));
+			cBorder.addModifyListener(e -> {
+				if (cBorder.getSelectionIndex() == 0)
+					values.remove(JRPdfExporter.PDF_FIELD_BORDER_STYLE);
+				else
+					values.put(JRPdfExporter.PDF_FIELD_BORDER_STYLE, cBorder.getText());
+			});
 
 			cRonly = buildButton(cmp, JRPdfExporter.PDF_FIELD_READ_ONLY, Messages.PdfFieldAction_5, SWT.CHECK);
 			gd = new GridData();
