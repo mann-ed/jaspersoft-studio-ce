@@ -16,19 +16,19 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
 import org.eclipse.ui.dialogs.PatternFilter;
 
-
 /**
- * The custom pattern filter used in conjunction with FilteredTree when dealing with properties dialog.
- * In order to determine if a node should be filtered it uses the content and label provider of the tree to do pattern matching on its children.
- * This causes the entire tree structure to be realized. 
- *  
+ * The custom pattern filter used in conjunction with FilteredTree when dealing
+ * with properties dialog. In order to determine if a node should be filtered it
+ * uses the content and label provider of the tree to do pattern matching on its
+ * children. This causes the entire tree structure to be realized.
+ * 
  * @author mrabbi
  *
  */
 public class PropertiesPatternFilter extends PatternFilter {
-	
+
 	/* A cache to store the keyword collections for every properties node */
-	private Map<IPropertiesViewerNode,Collection<String>> keywordCache = new HashMap<IPropertiesViewerNode,Collection<String>>();
+	private Map<IPropertiesViewerNode, Collection<String>> keywordCache = new HashMap<>();
 
 	public PropertiesPatternFilter() {
 		super();
@@ -38,21 +38,20 @@ public class PropertiesPatternFilter extends PatternFilter {
 	 * Retrieves the list of keywords from the selected element.
 	 */
 	private String[] getKeywords(Object element) {
-		List<String> keywordList = new ArrayList<String>();
+		List<String> keywordList = new ArrayList<>();
 		if (element instanceof IPropertiesViewerNode) {
 			IPropertiesViewerNode node = (IPropertiesViewerNode) element;
 
-			Collection<String> keywordCollection = (Collection<String>) keywordCache
-					.get(element);
+			Collection<String> keywordCollection = keywordCache.get(element);
 			if (keywordCollection == null) {
 				keywordCollection = node.getNodeKeywords();
 				keywordCache.put(node, keywordCollection);
 			}
-			if (!keywordCollection.isEmpty()){
+			if (!keywordCollection.isEmpty()) {
 				keywordList.addAll(keywordCollection);
 			}
 		}
-		return (String[]) keywordList.toArray(new String[keywordList.size()]);
+		return keywordList.toArray(new String[keywordList.size()]);
 	}
 
 	@Override
@@ -62,23 +61,22 @@ public class PropertiesPatternFilter extends PatternFilter {
 
 	@Override
 	public boolean isElementVisible(Viewer viewer, Object element) {
-	    if (WorkbenchActivityHelper.restrictUseOf(element))
-	        return false;
-	    
-		// Nodes are not differentiated based on category since 
+		if (WorkbenchActivityHelper.restrictUseOf(element))
+			return false;
+
+		// Nodes are not differentiated based on category since
 		// categories are selectable nodes.
 		if (isLeafMatch(viewer, element)) {
 			return true;
 		}
 
-		ITreeContentProvider contentProvider = 
-				(ITreeContentProvider) ((TreeViewer) viewer).getContentProvider();
+		ITreeContentProvider contentProvider = (ITreeContentProvider) ((TreeViewer) viewer).getContentProvider();
 		IPropertiesViewerNode node = (IPropertiesViewerNode) element;
 		Object[] children = contentProvider.getChildren(node);
 		// Will return true if any subnode of the element matches the search
 		if (filter(viewer, element, children).length > 0) {
 			return true;
-		}		
+		}
 		return false;
 	}
 
@@ -93,7 +91,7 @@ public class PropertiesPatternFilter extends PatternFilter {
 
 		// Also need to check the keywords
 		String[] keywords = getKeywords(node);
-		for (int i = 0; i < keywords.length; i++){
+		for (int i = 0; i < keywords.length; i++) {
 			if (wordMatches(keywords[i])) {
 				return true;
 			}

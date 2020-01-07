@@ -15,19 +15,21 @@ import org.eclipse.ui.IWorkbenchPart;
 import com.jaspersoft.studio.JSSCompoundCommand;
 import com.jaspersoft.studio.editor.action.CustomSelectionAction;
 import com.jaspersoft.studio.messages.Messages;
+import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.model.MGraphicElement;
 import com.jaspersoft.studio.property.SetValueCommand;
 
 /**
- * The Class PdfActionAbstract implements common action (most UI related) of the pdf action
+ * The Class PdfActionAbstract implements common action (most UI related) of the
+ * pdf action
  */
 public abstract class PdfActionAbstract extends CustomSelectionAction {
 
 	/** Id of the actions */
-	public final String ID_Full; //$NON-NLS-1$
-	public final String ID_Start; //$NON-NLS-1$
+	public final String ID_Full; // $NON-NLS-1$
+	public final String ID_Start; // $NON-NLS-1$
 	public final String ID_End;
-	public final String ID_None; //$NON-NLS-1$
+	public final String ID_None; // $NON-NLS-1$
 
 	/** Possible values of the action: start, end, full or none */
 	protected Position action_position;
@@ -37,23 +39,17 @@ public abstract class PdfActionAbstract extends CustomSelectionAction {
 	 * 
 	 * @return Property for which one the value must be changed
 	 */
-	protected abstract String GetPropertyName();
+	protected abstract String getPropertyName();
 
 	/**
 	 * Base constructor, construct the inner common object of an action
 	 * 
-	 * @param part
-	 *          The part for this action
-	 * @param action_position
-	 *          Identify The position of the label
-	 * @param ID_Full
-	 *          Id of the action when click on full
-	 * @param ID_Start
-	 *          Id of the action when click on Start
-	 * @param ID_End
-	 *          Id of the action when click on End
-	 * @param ID_None
-	 *          Id of the action when click on None
+	 * @param part The part for this action
+	 * @param action_position Identify The position of the label
+	 * @param ID_Full Id of the action when click on full
+	 * @param ID_Start Id of the action when click on Start
+	 * @param ID_End Id of the action when click on End
+	 * @param ID_None Id of the action when click on None
 	 */
 	public PdfActionAbstract(IWorkbenchPart part, Position action_position, String ID_Full, String ID_Start,
 			String ID_End, String ID_None) {
@@ -64,7 +60,7 @@ public abstract class PdfActionAbstract extends CustomSelectionAction {
 		this.ID_End = ID_End;
 		this.ID_None = ID_None;
 		// the property need to be registered
-		PropertiesList.AddItem(GetPropertyName());
+		PropertiesList.addItem(getPropertyName());
 		initUI();
 	}
 
@@ -75,11 +71,11 @@ public abstract class PdfActionAbstract extends CustomSelectionAction {
 		if (graphicalElements.isEmpty()) {
 			ischecked = false;
 		} else {
-			String attributeId = GetPropertyName();
-			String value = GetPropertyValue();
+			String attributeId = getPropertyName();
+			String value = getPropertyValue();
 			for (Object element : graphicalElements) {
 				MGraphicElement model = (MGraphicElement) element;
-				JRPropertiesMap v = (JRPropertiesMap) model.getPropertiesMap();
+				JRPropertiesMap v = model.getPropertiesMap();
 				if (v == null) {
 					ischecked = false;
 					break;
@@ -104,41 +100,40 @@ public abstract class PdfActionAbstract extends CustomSelectionAction {
 			setId(ID_Full);
 			setText(Messages.PdfAction_Full);
 			setToolTipText(null);
-			setImageDescriptor(null); //$NON-NLS-1$
-			setDisabledImageDescriptor(null); //$NON-NLS-1$
+			setImageDescriptor(null); // $NON-NLS-1$
+			setDisabledImageDescriptor(null); // $NON-NLS-1$
 			break;
-
 		case Start:
 			setId(ID_Start);
 			setText(Messages.PdfAction_Start);
 			setToolTipText(null);
-			setImageDescriptor(null); //$NON-NLS-1$
-			setDisabledImageDescriptor(null); //$NON-NLS-1$
+			setImageDescriptor(null); // $NON-NLS-1$
+			setDisabledImageDescriptor(null); // $NON-NLS-1$
 			break;
-
 		case End:
 			setId(ID_End);
 			setText(Messages.PdfAction_End);
 			setToolTipText(null);
-			setImageDescriptor(null); //$NON-NLS-1$
-			setDisabledImageDescriptor(null); //$NON-NLS-1$
+			setImageDescriptor(null); // $NON-NLS-1$
+			setDisabledImageDescriptor(null); // $NON-NLS-1$
 			break;
 		case None:
 			setId(ID_None);
 			setText(Messages.PdfAction_None);
 			setToolTipText(null);
-			setImageDescriptor(null); //$NON-NLS-1$
-			setDisabledImageDescriptor(null); //$NON-NLS-1$
+			setImageDescriptor(null); // $NON-NLS-1$
+			setDisabledImageDescriptor(null); // $NON-NLS-1$
 			break;
 		}
 	}
 
 	/**
-	 * Return a string that represent the property value, associating a <code>Position</code> to a string
+	 * Return a string that represent the property value, associating a
+	 * <code>Position</code> to a string
 	 * 
 	 * @return a string representing the position value
 	 */
-	protected String GetPropertyValue() {
+	protected String getPropertyValue() {
 		String value = "";
 		switch (action_position) {
 		case Full:
@@ -161,16 +156,15 @@ public abstract class PdfActionAbstract extends CustomSelectionAction {
 	/**
 	 * Create the command for the selected action
 	 * 
-	 * @param model
-	 *          Model of the selected item
+	 * @param model Model of the selected item
 	 * @return the command to execute
 	 */
 	public Command createCommand(MGraphicElement model) {
 		SetValueCommand cmd = new SetValueCommand();
 		cmd.setTarget(model);
-		cmd.setPropertyId(MGraphicElement.PROPERTY_MAP);
-		String name = GetPropertyName();
-		JRPropertiesMap v = (JRPropertiesMap) model.getPropertyValue(MGraphicElement.PROPERTY_MAP);
+		cmd.setPropertyId(APropertyNode.PROPERTY_MAP);
+		String name = getPropertyName();
+		JRPropertiesMap v = (JRPropertiesMap) model.getPropertyValue(APropertyNode.PROPERTY_MAP);
 		Object oldValue = null;
 		if (v == null) {
 			v = new JRPropertiesMap();
@@ -178,7 +172,7 @@ public abstract class PdfActionAbstract extends CustomSelectionAction {
 			oldValue = v.getProperty(name);
 			v.removeProperty(name);
 		}
-		String value = GetPropertyValue();
+		String value = getPropertyValue();
 		if (value != null && !value.equals(oldValue))
 			v.setProperty(name, value);
 		cmd.setPropertyValue(v);
@@ -202,6 +196,7 @@ public abstract class PdfActionAbstract extends CustomSelectionAction {
 	/**
 	 * Performs the create action on the selected objects.
 	 */
+	@Override
 	public void run() {
 		execute(createCommand());
 	}

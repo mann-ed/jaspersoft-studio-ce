@@ -31,6 +31,7 @@ import com.jaspersoft.studio.editor.action.pdf.PdfActionTable;
 import com.jaspersoft.studio.editor.action.pdf.PdfActionTableDetail;
 import com.jaspersoft.studio.editor.action.pdf.PdfActionTableHeader;
 import com.jaspersoft.studio.editor.action.pdf.PdfActionTableRow;
+import com.jaspersoft.studio.editor.action.pdf.PdfFieldAction;
 import com.jaspersoft.studio.editor.action.pdf.Position;
 import com.jaspersoft.studio.editor.gef.decorator.chainable.ChainableDecorator;
 import com.jaspersoft.studio.editor.gef.decorator.chainable.ChainableElementDecorator;
@@ -40,14 +41,14 @@ import com.jaspersoft.studio.editor.report.AbstractVisualEditor;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.MGraphicElement;
 
-public class PDF508ElementDecorator extends ChainableElementDecorator{
+public class PDF508ElementDecorator extends ChainableElementDecorator {
 
 	private PDFDecorator decorator = new PDFDecorator();
-	
+
 	private List<String> actionIDs;
 
 	public static final String PDF_MENU_ID = "com.jaspersoft.studio.editor.gef.decorator.pdf.menu"; //$NON-NLS-1$
-	
+
 	@Override
 	public void setupFigure(ComponentFigure fig, FigureEditPart editPart) {
 		super.setupFigure(fig, editPart);
@@ -60,8 +61,8 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 
 	@Override
 	public RetargetAction[] buildMenuActions() {
-		return new RetargetAction[] { new RetargetAction(ShowPDFTagsAction.ID, Messages.ShowPDFTagsAction_title,
-				IAction.AS_CHECK_BOX) };
+		return new RetargetAction[] {
+				new RetargetAction(ShowPDFTagsAction.ID, Messages.ShowPDFTagsAction_title, IAction.AS_CHECK_BOX) };
 	}
 
 	private void registerHeading(ActionRegistry registry, IWorkbenchPart part, List<String> selectionActions) {
@@ -112,51 +113,51 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		action = new PdfActionHeading3(part, Position.None);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading4(part, Position.Full);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading4(part, Position.Start);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading4(part, Position.End);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading4(part, Position.None);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading5(part, Position.Full);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading5(part, Position.Start);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading5(part, Position.End);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading5(part, Position.None);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading6(part, Position.Full);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading6(part, Position.Start);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading6(part, Position.End);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionHeading6(part, Position.None);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
@@ -233,7 +234,7 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 	}
-	
+
 	public void registerListItemActions(ActionRegistry registry, IWorkbenchPart part, List<String> selectionActions) {
 		IAction action = new PdfActionListItem(part, PdfActionListItem.TYPE.END);
 		registry.registerAction(action);
@@ -242,11 +243,11 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		action = new PdfActionListItem(part, PdfActionListItem.TYPE.FULL);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionListItem(part, PdfActionListItem.TYPE.START);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionListItem(part, PdfActionListItem.TYPE.NONE);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
@@ -260,16 +261,22 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		action = new PdfActionList(part, PdfActionList.TYPE.FULL);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionList(part, PdfActionList.TYPE.START);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
-		
+
 		action = new PdfActionList(part, PdfActionList.TYPE.NONE);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 	}
-	
+
+	public void registerFieldActions(ActionRegistry registry, IWorkbenchPart part, List<String> selectionActions) {
+		IAction action = new PdfFieldAction(part);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+	}
+
 	public void registerActions(ActionRegistry registry, List<String> selectionActions, IWorkbenchPart part) {
 		registerHeading(registry, part, selectionActions);
 		registerTable(registry, part, selectionActions);
@@ -278,6 +285,7 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		registerTableDetail(registry, part, selectionActions);
 		registerListActions(registry, part, selectionActions);
 		registerListItemActions(registry, part, selectionActions);
+		registerFieldActions(registry, part, selectionActions);
 	}
 
 	@Override
@@ -290,17 +298,19 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 	}
 
 	public void fillContextMenu(ActionRegistry registry, IMenuManager menu, IStructuredSelection sel) {
-		//Check if the menu item of the PDF tags is already present, if it is then add this item to 
-		//it otherwise create a new one
+		// Check if the menu item of the PDF tags is already present, if it is
+		// then add this item to
+		// it otherwise create a new one
 		MenuManager submenu = null;
-		for(IContributionItem item : menu.getItems()){
-			if (item.getId() != null && item.getId().equals(PDF508ElementDecorator.PDF_MENU_ID)){
-				submenu = (MenuManager)item;
+		for (IContributionItem item : menu.getItems()) {
+			if (item.getId() != null && item.getId().equals(PDF508ElementDecorator.PDF_MENU_ID)) {
+				submenu = (MenuManager) item;
 				break;
 			}
 		}
-		if (submenu == null){
-			 submenu = new MenuManager(Messages.PDF508ElementDecorator_Menu_PDF508Tags, null, PDF508ElementDecorator.PDF_MENU_ID);
+		if (submenu == null) {
+			submenu = new MenuManager(Messages.PDF508ElementDecorator_Menu_PDF508Tags, null,
+					PDF508ElementDecorator.PDF_MENU_ID);
 		}
 
 		MenuManager submenuHeading = new MenuManager(Messages.PDF508ElementDecorator_Menu_Heading);
@@ -371,7 +381,7 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		submenuHeading4.add(action);
 		action = registry.getAction(PdfActionHeading4.ID_Heading4_None);
 		submenuHeading4.add(action);
-		
+
 		// Adding actions for Heading 5
 		action = registry.getAction(PdfActionHeading5.ID_Heading5_Full);
 		submenuHeading5.add(action);
@@ -381,7 +391,7 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		submenuHeading5.add(action);
 		action = registry.getAction(PdfActionHeading5.ID_Heading5_None);
 		submenuHeading5.add(action);
-		
+
 		// Adding actions for Heading 6
 		action = registry.getAction(PdfActionHeading6.ID_Heading6_Full);
 		submenuHeading6.add(action);
@@ -391,7 +401,7 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		submenuHeading6.add(action);
 		action = registry.getAction(PdfActionHeading6.ID_Heading6_None);
 		submenuHeading6.add(action);
-		
+
 		// Adding actions for Table
 		action = registry.getAction(PdfActionTable.ID_Table_Full);
 		submenuTable.add(action);
@@ -431,8 +441,8 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		submenuTableDetails.add(action);
 		action = registry.getAction(PdfActionTableDetail.ID_TableDetail_None);
 		submenuTableDetails.add(action);
-		
-		//adding actions for list
+
+		// adding actions for list
 		action = registry.getAction(PdfActionList.ID_FULL);
 		submenuList.add(action);
 		action = registry.getAction(PdfActionList.ID_START);
@@ -441,8 +451,8 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		submenuList.add(action);
 		action = registry.getAction(PdfActionList.ID_NONE);
 		submenuList.add(action);
-		
-		//adding actions for the list item
+
+		// adding actions for the list item
 		action = registry.getAction(PdfActionListItem.ID_FULL);
 		submenuListItem.add(action);
 		action = registry.getAction(PdfActionListItem.ID_START);
@@ -451,6 +461,9 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 		submenuListItem.add(action);
 		action = registry.getAction(PdfActionListItem.ID_NONE);
 		submenuListItem.add(action);
+
+		action = registry.getAction(PdfFieldAction.ID_PDF_FIELD_ACTION);
+		submenu.add(action);
 
 		menu.add(submenu);
 	}
@@ -474,7 +487,7 @@ public class PDF508ElementDecorator extends ChainableElementDecorator{
 	@Override
 	public List<String> getActionIDs() {
 		if (actionIDs == null) {
-			actionIDs = new ArrayList<String>(1);
+			actionIDs = new ArrayList<>(1);
 			actionIDs.add(ShowPDFTagsAction.ID);
 		}
 		return actionIDs;

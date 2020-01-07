@@ -123,11 +123,13 @@ public class Messages extends NLS {
 	public static String MPOSTNET_properties_category;
 	public static String MPOSTNET_short_bar_height;
 	public static String MPOSTNET_short_bar_height_description;
+	public static String MQRCode_0;
 	public static String MQRCode_2;
 	public static String MQRCode_3;
 	public static String MQRCode_4;
 	public static String MQRCode_5;
 	public static String MQRCode_6;
+	public static String MQRCode_desc;
 	public static String MUPCA_checksum_mode_description;
 	public static String MUPCA_properties_category;
 	public static String MUPCE_checksum_mode_description;

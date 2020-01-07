@@ -6,19 +6,19 @@ package com.jaspersoft.studio.editor.action.json;
 
 import java.util.List;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.engine.JRPropertiesMap;
-import net.sf.jasperreports.export.JsonMetadataReportConfiguration;
-
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchPart;
 
 import com.jaspersoft.studio.editor.gef.decorator.json.SchemaDialog;
 import com.jaspersoft.studio.messages.Messages;
-import com.jaspersoft.studio.model.MGraphicElement;
+import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.model.MReport;
 import com.jaspersoft.studio.property.SetValueCommand;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.engine.JRPropertiesMap;
+import net.sf.jasperreports.export.JsonMetadataReportConfiguration;
 
 /**
  * 
@@ -39,7 +39,7 @@ public class JSONSchemaAction extends JSONAction {
 		if (element == null)
 			return;
 		SchemaDialog dialog = new SchemaDialog(UIUtils.getShell(), element);
-		if (dialog.open() == Dialog.OK) {
+		if (dialog.open() == Window.OK) {
 			path = dialog.getName();
 			execute(createCommand());
 		}
@@ -58,7 +58,7 @@ public class JSONSchemaAction extends JSONAction {
 		if (model == null)
 			return false;
 
-		JRPropertiesMap colDataMap = (JRPropertiesMap) model.getValue().getPropertiesMap();
+		JRPropertiesMap colDataMap = model.getValue().getPropertiesMap();
 		return colDataMap.containsProperty(JsonMetadataReportConfiguration.JSON_EXPORTER_JSON_SCHEMA);
 	}
 
@@ -68,8 +68,8 @@ public class JSONSchemaAction extends JSONAction {
 	}
 
 	/**
-	 * Create the commands necessary to transform a textual element into a JSON column or to remove it is it is already a
-	 * JSON column
+	 * Create the commands necessary to transform a textual element into a JSON
+	 * column or to remove it is it is already a JSON column
 	 * 
 	 */
 	@Override
@@ -78,7 +78,7 @@ public class JSONSchemaAction extends JSONAction {
 		if (n == null)
 			return null;
 
-		JRPropertiesMap map = (JRPropertiesMap) n.getPropertyValue(MGraphicElement.PROPERTY_MAP);
+		JRPropertiesMap map = (JRPropertiesMap) n.getPropertyValue(APropertyNode.PROPERTY_MAP);
 		if (map == null)
 			map = new JRPropertiesMap();
 
@@ -89,7 +89,7 @@ public class JSONSchemaAction extends JSONAction {
 
 		SetValueCommand cmd = new SetValueCommand();
 		cmd.setTarget(n);
-		cmd.setPropertyId(MGraphicElement.PROPERTY_MAP);
+		cmd.setPropertyId(APropertyNode.PROPERTY_MAP);
 		cmd.setPropertyValue(map);
 		cmd.setDebugLabel(getText());
 

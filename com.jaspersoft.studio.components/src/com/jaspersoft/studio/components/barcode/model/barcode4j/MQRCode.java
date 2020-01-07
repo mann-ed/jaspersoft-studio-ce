@@ -8,19 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.jasperreports.components.barbecue.StandardBarbecueComponent;
-import net.sf.jasperreports.components.barcode4j.Barcode4jComponent;
-import net.sf.jasperreports.components.barcode4j.ErrorCorrectionLevelEnum;
-import net.sf.jasperreports.components.barcode4j.QRCodeComponent;
-import net.sf.jasperreports.eclipse.util.Misc;
-import net.sf.jasperreports.engine.JRConstants;
-import net.sf.jasperreports.engine.JRElement;
-import net.sf.jasperreports.engine.component.ComponentKey;
-import net.sf.jasperreports.engine.design.JRDesignComponentElement;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.type.EvaluationTimeEnum;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -34,9 +21,23 @@ import com.jaspersoft.studio.model.util.IIconDescriptor;
 import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
 import com.jaspersoft.studio.property.descriptors.DoublePropertyDescriptor;
+import com.jaspersoft.studio.property.descriptors.IntegerPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptors.PixelPropertyDescriptor;
 import com.jaspersoft.studio.utils.EnumHelper;
+
+import net.sf.jasperreports.components.barbecue.StandardBarbecueComponent;
+import net.sf.jasperreports.components.barcode4j.Barcode4jComponent;
+import net.sf.jasperreports.components.barcode4j.ErrorCorrectionLevelEnum;
+import net.sf.jasperreports.components.barcode4j.QRCodeComponent;
+import net.sf.jasperreports.eclipse.util.Misc;
+import net.sf.jasperreports.engine.JRConstants;
+import net.sf.jasperreports.engine.JRElement;
+import net.sf.jasperreports.engine.component.ComponentKey;
+import net.sf.jasperreports.engine.design.JRDesignComponentElement;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.EvaluationTimeEnum;
 
 public class MQRCode extends MBarcode {
 
@@ -130,16 +131,14 @@ public class MQRCode extends MBarcode {
 	/**
 	 * Creates the property descriptors.
 	 * 
-	 * @param desc
-	 *            the desc
+	 * @param desc the desc
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
 		super.createPropertyDescriptors(desc);
 
-		errLevelD = new NamedEnumPropertyDescriptor<ErrorCorrectionLevelEnum>(
-				QRCodeComponent.PROPERTY_ERROR_CORRECTION_LEVEL, Messages.MQRCode_2, ErrorCorrectionLevelEnum.H,
-				NullEnum.NOTNULL);
+		errLevelD = new NamedEnumPropertyDescriptor<>(QRCodeComponent.PROPERTY_ERROR_CORRECTION_LEVEL,
+				Messages.MQRCode_2, ErrorCorrectionLevelEnum.H, NullEnum.NOTNULL);
 		errLevelD.setDescription(Messages.MQRCode_3);
 		errLevelD.setCategory(Messages.MQRCode_4);
 		desc.add(errLevelD);
@@ -155,6 +154,12 @@ public class MQRCode extends MBarcode {
 		vertQuietZoneD.setDescription(Messages.MBarcode4j_vertical_quiet_zone_description);
 		desc.add(vertQuietZoneD);
 		vertQuietZoneD.setCategory(Messages.common_properties_category);
+
+		IntegerPropertyDescriptor qrVersion = new IntegerPropertyDescriptor(QRCodeComponent.PROPERTY_QR_VERSION,
+				Messages.MQRCode_0);
+		qrVersion.setDescription(Messages.MQRCode_desc);
+		desc.add(qrVersion);
+		qrVersion.setCategory(Messages.common_properties_category);
 	}
 
 	@Override
@@ -177,6 +182,8 @@ public class MQRCode extends MBarcode {
 			return errLevelD.getIntValue(qrCodeComponent.getErrorCorrectionLevel());
 		if (id.equals(QRCodeComponent.PROPERTY_MARGIN))
 			return qrCodeComponent.getMargin();
+		if (id.equals(QRCodeComponent.PROPERTY_QR_VERSION))
+			return qrCodeComponent.getQrVersion();
 		if (id.equals(StandardBarbecueComponent.PROPERTY_CODE_EXPRESSION))
 			return ExprUtil.getExpression(qrCodeComponent.getCodeExpression());
 		if (id.equals(StandardBarbecueComponent.PROPERTY_EVALUATION_TIME))
@@ -193,6 +200,8 @@ public class MQRCode extends MBarcode {
 			qrcodeComponent.setErrorCorrectionLevel(errLevelD.getEnumValue(value));
 		else if (id.equals(QRCodeComponent.PROPERTY_MARGIN))
 			qrcodeComponent.setMargin((Integer) value);
+		else if (id.equals(QRCodeComponent.PROPERTY_QR_VERSION))
+			qrcodeComponent.setQrVersion((Integer) value);
 		else if (id.equals(StandardBarbecueComponent.PROPERTY_CODE_EXPRESSION))
 			qrcodeComponent.setCodeExpression(ExprUtil.setValues(qrcodeComponent.getCodeExpression(), value, null));
 		else if (id.equals(StandardBarbecueComponent.PROPERTY_EVALUATION_TIME)) {
@@ -216,6 +225,7 @@ public class MQRCode extends MBarcode {
 		QRCodeComponent jrTargetBarcode = (QRCodeComponent) jrTargetElement.getComponent();
 
 		jrTargetBarcode.setMargin(jrSourceBarcode.getMargin());
+		jrTargetBarcode.setQrVersion(jrSourceBarcode.getQrVersion());
 		jrTargetBarcode.setErrorCorrectionLevel(jrSourceBarcode.getErrorCorrectionLevel());
 	}
 

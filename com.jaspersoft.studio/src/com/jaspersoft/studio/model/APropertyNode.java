@@ -27,51 +27,52 @@ import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 
 public abstract class APropertyNode extends ANode implements IJSSPropertySource, IPropertySource2 {
-	
+
 	/**
-	 * Static default map used to keep the defaults value of every implementation of a property node.
+	 * Static default map used to keep the defaults value of every
+	 * implementation of a property node.
 	 */
-	public HashMap<Class<? extends APropertyNode>, Map<String, DefaultValue>> defaultsMap = 
-			new HashMap<Class<? extends APropertyNode>, Map<String,DefaultValue>>();
-	
+	public HashMap<Class<? extends APropertyNode>, Map<String, DefaultValue>> defaultsMap = new HashMap<Class<? extends APropertyNode>, Map<String, DefaultValue>>();
+
 	public static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
 
 	public static final String PROPERTY_MAP = "PROPERTY_MAP"; //$NON-NLS-1$
-	
+
 	public APropertyNode() {
 		super();
 	}
 
 	public APropertyNode(ANode parent, int newIndex) {
 		super(parent, newIndex);
-		
+
 	}
 
 	public abstract void setDescriptors(IPropertyDescriptor[] descriptors1);
-	
+
 	public abstract IPropertyDescriptor[] getDescriptors();
-	
+
 	public abstract void createPropertyDescriptors(List<IPropertyDescriptor> desc);
 
 	@Deprecated
-	public Map<String, Object> getDefaultsMap(){
+	public Map<String, Object> getDefaultsMap() {
 		return null;
 	}
-	
+
 	@Deprecated
-	public void createPropertyDescriptors(List<IPropertyDescriptor> desc, Map<String, Object> defaultsMap){
+	public void createPropertyDescriptors(List<IPropertyDescriptor> desc, Map<String, Object> defaultsMap) {
 		createPropertyDescriptors(desc);
 	}
-	
+
 	@Deprecated
-	public void setDescriptors(IPropertyDescriptor[] descriptors1, Map<String, Object> defaultsMap1){
+	public void setDescriptors(IPropertyDescriptor[] descriptors1, Map<String, Object> defaultsMap1) {
 		setDescriptors(descriptors1);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
+	 * @see
+	 * org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
 	 */
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		// if we cache sections ... we have to return descriptors always
@@ -79,8 +80,8 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 		// return new IPropertyDescriptor[0];
 		IPropertyDescriptor[] descriptors = getDescriptors();
 		if (descriptors == null) {
-			Map<String, Object> defaultsMap = new HashMap<String, Object>();
-			List<IPropertyDescriptor> desc = new ArrayList<IPropertyDescriptor>();
+			Map<String, Object> defaultsMap = new HashMap<>();
+			List<IPropertyDescriptor> desc = new ArrayList<>();
 
 			createPropertyDescriptors(desc, defaultsMap);
 
@@ -90,39 +91,47 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 		postDescriptors(descriptors);
 		return descriptors;
 	}
-	
+
 	/**
 	 * @param descriptors
 	 */
 	protected void postDescriptors(IPropertyDescriptor[] descriptors) {
 		// Property descriptors that involve the use of an expression
 		// should have an expression context.
-		// Most of the times the right context can be get using directly the node information.
-		// Sometimes the context must be customized (i.e: dataset run related expressions).
-		// In this case the clients should override this method, but also be sure to call
-		// the superclass one first in order not to break the expression context setting of
+		// Most of the times the right context can be get using directly the
+		// node information.
+		// Sometimes the context must be customized (i.e: dataset run related
+		// expressions).
+		// In this case the clients should override this method, but also be
+		// sure to call
+		// the superclass one first in order not to break the expression context
+		// setting of
 		// other property descriptors.
 		try {
 			for (IPropertyDescriptor desc : descriptors) {
 				if (desc instanceof IExpressionContextSetter) {
-					ExpressionContext elementExpressionContext = getExpressionContext(Misc.toStringObject(desc.getId()));
+					ExpressionContext elementExpressionContext = getExpressionContext(
+							Misc.toStringObject(desc.getId()));
 					((IExpressionContextSetter) desc).setExpressionContext(elementExpressionContext);
 				}
 			}
 		} catch (Exception ex) {
-			// Unable to get a valid context expression, a default one will be used.
+			// Unable to get a valid context expression, a default one will be
+			// used.
 			// Maybe we should log for debug purpose.
 		}
 	}
 
 	/**
-	 * Tries to get a proper expression context for the current node.
-	 * First step is trying to get the expression context through a valid adapter from the node object.
+	 * Tries to get a proper expression context for the current node. First step
+	 * is trying to get the expression context through a valid adapter from the
+	 * node object.
 	 * <p>
 	 * 
-	 * NOTE: subclasses that override this method <em>SHOULD NOT</em> call superclass implementation,
-	 * since it can lead to StackOverflowError exceptions.
-	 *  
+	 * NOTE: subclasses that override this method <em>SHOULD NOT</em> call
+	 * superclass implementation, since it can lead to StackOverflowError
+	 * exceptions.
+	 * 
 	 * @return a valid expression context, <code>null</code> otherwise
 	 * @see #getAdapter(Class)
 	 * @see ExpressionContext
@@ -138,16 +147,19 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 		}
 		return elementExpressionContext;
 	}
-	
+
 	/**
 	 * <p>
-	 * Sometimes a more specific expression context is needed for some properties of a generic node.</br>
-	 * Using the following method is possible to retrieve the dedicated expression context for a 
-	 * specific node property using its id.
+	 * Sometimes a more specific expression context is needed for some
+	 * properties of a generic node.</br>
+	 * Using the following method is possible to retrieve the dedicated
+	 * expression context for a specific node property using its id.
 	 * </p>
 	 * 
-	 * <p>The default implementation returns the "generic" expression context.<br/>
-	 * Sub-classes should override the following method to provide a special behavior
+	 * <p>
+	 * The default implementation returns the "generic" expression context.<br/>
+	 * Sub-classes should override the following method to provide a special
+	 * behavior
 	 * </p>
 	 * 
 	 * @param propertyID the id of the node property
@@ -174,7 +186,8 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 	/**
 	 * Return a list of the attribute descriptor that depends from a style
 	 * 
-	 * @return Hashmap where the key is the attribute id, and the value it's the attribute itself
+	 * @return Hashmap where the key is the attribute id, and the value it's the
+	 * attribute itself
 	 */
 	public HashMap<String, Object> getStylesDescriptors() {
 		return new HashMap<String, Object>();
@@ -183,7 +196,9 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
+	 * @see
+	 * org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.
+	 * Object)
 	 */
 	public boolean isPropertySet(Object id) {
 		try {
@@ -210,7 +225,9 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
+	 * @see
+	 * org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.
+	 * lang.Object)
 	 */
 	public void resetPropertyValue(Object id) {
 		try {
@@ -218,7 +235,7 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 		} catch (Exception e) {
 		}
 	}
-	
+
 	@Override
 	public Object getResetValue(Object id) {
 		try {
@@ -231,10 +248,10 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 	/**
 	 * By default the children are not resetted
 	 */
-	public boolean forcePropertyChildrenReset(Object id){
+	public boolean forcePropertyChildrenReset(Object id) {
 		return false;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -245,13 +262,15 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 	}
 
 	/**
-	 * Returns a custom title that should be shown in the property sheets page when the node is selected.<br>
-	 * Actually this method returns <code>null</code>, so the standard behavior provided by the contributed label provider
-	 * {@link ElementLabelProvider} is used.
+	 * Returns a custom title that should be shown in the property sheets page
+	 * when the node is selected.<br>
+	 * Actually this method returns <code>null</code>, so the standard behavior
+	 * provided by the contributed label provider {@link ElementLabelProvider}
+	 * is used.
 	 * <p>
 	 * 
-	 * Nodes (sub-classes) that want to provide a different behavior should override this method and provide a meaningful
-	 * human-readable text.
+	 * Nodes (sub-classes) that want to provide a different behavior should
+	 * override this method and provide a meaningful human-readable text.
 	 * 
 	 * @return a custom title
 	 * 
@@ -260,67 +279,69 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 	public String getCustomPropertyTitle() {
 		return null;
 	}
-	
+
 	/**
-	 * Return the default map of this node. First is chekced if it is already available
-	 * in the cache map, in that case is returned otherwise it is created, stored and returned
+	 * Return the default map of this node. First is chekced if it is already
+	 * available in the cache map, in that case is returned otherwise it is
+	 * created, stored and returned
 	 * 
 	 * @return a map of the default value, could be null
 	 */
-	public Map<String, DefaultValue> getDefaultsPropertiesMap(){
+	public Map<String, DefaultValue> getDefaultsPropertiesMap() {
 		Map<String, DefaultValue> result = defaultsMap.get(this.getClass());
-		if (result == null){
+		if (result == null) {
 			result = createDefaultsMap();
 			defaultsMap.put(this.getClass(), result);
 		}
 		return result;
 	}
-	
-	protected Map<String, DefaultValue> createDefaultsMap(){
-		return new HashMap<String, DefaultValue>();
+
+	protected Map<String, DefaultValue> createDefaultsMap() {
+		return new HashMap<>();
 	}
 
 	/**
-	 * Return the actual value of an attribute, so the value that the system is using, not considering if it's inherited
-	 * or of the element
+	 * Return the actual value of an attribute, so the value that the system is
+	 * using, not considering if it's inherited or of the element
 	 * 
-	 * @param id
-	 *          of the attribute
+	 * @param id of the attribute
 	 * @return the attribute value.
 	 */
 	public Object getPropertyActualValue(Object id) {
 		return getPropertyValue(id);
 	}
-	
+
 	/**
 	 * @param id
 	 * @return default value
 	 */
 	public Object getPropertyDefaultValue(String id) throws Exception {
 		Map<String, DefaultValue> defaultsMap = getDefaultsPropertiesMap();
-		if (defaultsMap != null && defaultsMap.containsKey(id)) return defaultsMap.get(id).getValue();
+		if (defaultsMap != null && defaultsMap.containsKey(id))
+			return defaultsMap.get(id).getValue();
 		Map<String, Object> oldDefaultsMap = getDefaultsMap();
-		if (oldDefaultsMap != null && oldDefaultsMap.containsKey(id)) return oldDefaultsMap.get(id);
+		if (oldDefaultsMap != null && oldDefaultsMap.containsKey(id))
+			return oldDefaultsMap.get(id);
 		throw new Exception("Key not found"); //$NON-NLS-1$
 	}
-	
+
 	public boolean isPropertyResettable(Object id) {
 		return true;
 	}
-	
+
 	/**
 	 * Return the style resolver of the current report
 	 * 
-	 * @return a {@link JSSStyleResolver}, it never return null. If the {@link JasperReportsConfiguration} is
-	 * not available to get the current style resolver then a default one is returned
+	 * @return a {@link JSSStyleResolver}, it never return null. If the
+	 * {@link JasperReportsConfiguration} is not available to get the current
+	 * style resolver then a default one is returned
 	 */
-	public JSSStyleResolver getStyleResolver(){
+	public JSSStyleResolver getStyleResolver() {
 		JasperReportsConfiguration jConfg = getJasperConfiguration();
-		if (jConfg != null){
+		if (jConfg != null) {
 			return jConfg.getStyleResolver();
 		} else {
 			return JSSStyleResolver.DEFAULT_INSTANCE;
 		}
 	}
 }
-

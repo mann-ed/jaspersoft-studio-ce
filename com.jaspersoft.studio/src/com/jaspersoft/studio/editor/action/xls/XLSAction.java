@@ -63,7 +63,7 @@ public class XLSAction extends CustomSelectionAction {
 		this.attributeId = attributeId;
 		this.value = value;
 		// the property need to be registered
-		PropertiesList.AddItem(actionId);
+		PropertiesList.addItem(actionId);
 		setText(actionName);
 		attributeToRemove = null;
 	}

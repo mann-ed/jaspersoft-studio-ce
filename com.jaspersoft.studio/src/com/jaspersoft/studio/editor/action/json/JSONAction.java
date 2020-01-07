@@ -6,8 +6,6 @@ package com.jaspersoft.studio.editor.action.json;
 
 import java.util.List;
 
-import net.sf.jasperreports.engine.JRPropertiesMap;
-
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchPart;
@@ -22,8 +20,11 @@ import com.jaspersoft.studio.model.MGraphicElement;
 import com.jaspersoft.studio.model.MRoot;
 import com.jaspersoft.studio.property.SetValueCommand;
 
+import net.sf.jasperreports.engine.JRPropertiesMap;
+
 /**
- * Base action to set the JSON attributes that can be represented with a true or false value
+ * Base action to set the JSON attributes that can be represented with a true or
+ * false value
  * 
  * @author Veaceslav Chicu
  * 
@@ -36,14 +37,15 @@ public class JSONAction extends CustomSelectionAction {
 		super(part, IAction.AS_CHECK_BOX);
 		setId(actionId);
 		// the property need to be registered
-		PropertiesList.AddItem(actionId);
+		PropertiesList.addItem(actionId);
 		setText(actionName);
 		attributeToRemove = null;
 	}
 
 	/**
-	 * Uses the attribute to remove parameter to define the attribute that should be removed when the attributeId is set.
-	 * This is done to define attribute mutually exclusive with the others
+	 * Uses the attribute to remove parameter to define the attribute that
+	 * should be removed when the attributeId is set. This is done to define
+	 * attribute mutually exclusive with the others
 	 */
 	public JSONAction(IWorkbenchPart part, String actionId, String actionName, String[] attributeToRemove) {
 		this(part, actionId, actionName);
@@ -51,12 +53,14 @@ public class JSONAction extends CustomSelectionAction {
 	}
 
 	/**
-	 * Take the selected nodes and use the first of them to reach the root of the report. The root could be and MReport if
-	 * we are in the main editor or an MRoot if we are editing an element in its own editor (table, list and crosstab). In
-	 * this last case we need to reach the MPage of the subeditor and from there it is possible read and write the
-	 * properties of the root.
+	 * Take the selected nodes and use the first of them to reach the root of
+	 * the report. The root could be and MReport if we are in the main editor or
+	 * an MRoot if we are editing an element in its own editor (table, list and
+	 * crosstab). In this last case we need to reach the MPage of the subeditor
+	 * and from there it is possible read and write the properties of the root.
 	 * 
-	 * @return the root of the report (typically an MReport or a MPage), or null is the root is unreachable
+	 * @return the root of the report (typically an MReport or a MPage), or null
+	 * is the root is unreachable
 	 */
 	protected APropertyNode getRoot() {
 		List<Object> nodes = editor.getSelectionCache().getSelectionModelForType(APropertyNode.class);
@@ -64,12 +68,14 @@ public class JSONAction extends CustomSelectionAction {
 	}
 
 	/**
-	 * Take the passed list of nodes and use the first of them to reach the root. The root could be and MReport if we are
-	 * in the main editor or an MRoot if we are editing an element in its own editor (table, list and crosstab). In this
-	 * last case we need to reach the MPage of the subeditor and from there it is possible read and write the properties
-	 * of the root.
+	 * Take the passed list of nodes and use the first of them to reach the
+	 * root. The root could be and MReport if we are in the main editor or an
+	 * MRoot if we are editing an element in its own editor (table, list and
+	 * crosstab). In this last case we need to reach the MPage of the subeditor
+	 * and from there it is possible read and write the properties of the root.
 	 * 
-	 * @return the root of the report (typically an MReport or a MPage), or null is the root is unreachable
+	 * @return the root of the report (typically an MReport or a MPage), or null
+	 * is the root is unreachable
 	 */
 	protected APropertyNode getRoot(List<Object> nodes) {
 		if (nodes.isEmpty()) {
@@ -88,18 +94,20 @@ public class JSONAction extends CustomSelectionAction {
 	}
 
 	/**
-	 * Check if the attribute associated to the id of the action has value true and then return true, otherwise (so if
-	 * even if the attribute is undefined) return null.
+	 * Check if the attribute associated to the id of the action has value true
+	 * and then return true, otherwise (so if even if the attribute is
+	 * undefined) return null.
 	 */
+	@Override
 	public boolean isChecked() {
 		if (!freshChecked) {
 			freshChecked = true;
 			ischecked = true;
 			APropertyNode model = getRoot();
-			if (model == null || !(model instanceof MGraphicElement)) {
+			if (!(model instanceof MGraphicElement)) {
 				ischecked = false;
 			} else {
-				JRPropertiesMap v = (JRPropertiesMap) ((MGraphicElement) model).getPropertiesMap();
+				JRPropertiesMap v = ((MGraphicElement) model).getPropertiesMap();
 				if (v == null)
 					ischecked = false;
 				else {
@@ -113,10 +121,10 @@ public class JSONAction extends CustomSelectionAction {
 	}
 
 	/**
-	 * Remove from the property map all the attributes in the attributeToRemove array
+	 * Remove from the property map all the attributes in the attributeToRemove
+	 * array
 	 * 
-	 * @param map
-	 *          location from where the attributes are removed
+	 * @param map location from where the attributes are removed
 	 */
 	protected void removeAttributes(JRPropertiesMap map) {
 		if (attributeToRemove != null) {
@@ -126,18 +134,18 @@ public class JSONAction extends CustomSelectionAction {
 	}
 
 	/**
-	 * Create the command for the selected action. Try to set the specified attribute id with the value true on the root
-	 * element. If the attirbute it is already present with the value true then it is removed
+	 * Create the command for the selected action. Try to set the specified
+	 * attribute id with the value true on the root element. If the attirbute it
+	 * is already present with the value true then it is removed
 	 * 
-	 * @param model
-	 *          Model of the selected item
+	 * @param model Model of the selected item
 	 * @return the command to execute
 	 */
 	public Command createCommand(APropertyNode model) {
 		SetValueCommand cmd = new SetValueCommand();
 		cmd.setTarget(model);
-		cmd.setPropertyId(MGraphicElement.PROPERTY_MAP);
-		JRPropertiesMap v = (JRPropertiesMap) model.getPropertyValue(MGraphicElement.PROPERTY_MAP);
+		cmd.setPropertyId(APropertyNode.PROPERTY_MAP);
+		JRPropertiesMap v = (JRPropertiesMap) model.getPropertyValue(APropertyNode.PROPERTY_MAP);
 		if (v == null)
 			v = new JRPropertiesMap();
 		if (v.containsProperty(getId()))
@@ -159,11 +167,12 @@ public class JSONAction extends CustomSelectionAction {
 	}
 
 	/**
-	 * Returns a container with the command for the editing of the action id attribute. See {@createCommand} method to
-	 * have more information
+	 * Returns a container with the command for the editing of the action id
+	 * attribute. See {@createCommand} method to have more information
 	 * 
-	 * @return a stack of commands that contain only the command to change a single attribute on the root of the document.
-	 *         If the root is not found the stack will be empty
+	 * @return a stack of commands that contain only the command to change a
+	 * single attribute on the root of the document. If the root is not found
+	 * the stack will be empty
 	 */
 	protected JSSCompoundCommand createCompoundCommand() {
 		ANode root = getRoot();

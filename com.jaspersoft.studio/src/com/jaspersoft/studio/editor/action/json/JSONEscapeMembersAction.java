@@ -10,7 +10,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.ui.IWorkbenchPart;
 
 import com.jaspersoft.studio.messages.Messages;
-import com.jaspersoft.studio.model.MGraphicElement;
+import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.model.MReport;
 import com.jaspersoft.studio.property.SetValueCommand;
 
@@ -48,9 +48,9 @@ public class JSONEscapeMembersAction extends JSONAction {
 		MReport model = getSelectedElement();
 		if (model == null)
 			return false;
-		boolean escape = JRPropertiesUtil.getInstance(model.getJasperConfiguration()).getBooleanProperty(
-				JsonMetadataReportConfiguration.JSON_EXPORTER_ESCAPE_MEMBERS, true);
-		JRPropertiesMap colDataMap = (JRPropertiesMap) model.getValue().getPropertiesMap();
+		boolean escape = JRPropertiesUtil.getInstance(model.getJasperConfiguration())
+				.getBooleanProperty(JsonMetadataReportConfiguration.JSON_EXPORTER_ESCAPE_MEMBERS, true);
+		JRPropertiesMap colDataMap = model.getValue().getPropertiesMap();
 		String esc = colDataMap.getProperty(JsonMetadataReportConfiguration.JSON_EXPORTER_ESCAPE_MEMBERS);
 		if (esc != null)
 			escape = Misc.nvl(Boolean.valueOf(esc), escape);
@@ -63,8 +63,8 @@ public class JSONEscapeMembersAction extends JSONAction {
 	}
 
 	/**
-	 * Create the commands necessary to transform a textual element into a JSON column or to remove it is it is already a
-	 * JSON column
+	 * Create the commands necessary to transform a textual element into a JSON
+	 * column or to remove it is it is already a JSON column
 	 * 
 	 */
 	@Override
@@ -73,7 +73,7 @@ public class JSONEscapeMembersAction extends JSONAction {
 		if (n == null)
 			return null;
 
-		JRPropertiesMap map = (JRPropertiesMap) n.getPropertyValue(MGraphicElement.PROPERTY_MAP);
+		JRPropertiesMap map = (JRPropertiesMap) n.getPropertyValue(APropertyNode.PROPERTY_MAP);
 		if (map == null)
 			map = new JRPropertiesMap();
 
@@ -84,7 +84,7 @@ public class JSONEscapeMembersAction extends JSONAction {
 
 		SetValueCommand cmd = new SetValueCommand();
 		cmd.setTarget(n);
-		cmd.setPropertyId(MGraphicElement.PROPERTY_MAP);
+		cmd.setPropertyId(APropertyNode.PROPERTY_MAP);
 		cmd.setPropertyValue(map);
 		cmd.setDebugLabel(getText());
 

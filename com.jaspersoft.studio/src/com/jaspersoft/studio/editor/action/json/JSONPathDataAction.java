@@ -6,15 +6,9 @@ package com.jaspersoft.studio.editor.action.json;
 
 import java.util.List;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.engine.JRExpression;
-import net.sf.jasperreports.engine.JRPropertiesMap;
-import net.sf.jasperreports.engine.JRPropertiesUtil;
-import net.sf.jasperreports.engine.design.JRDesignElement;
-
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchPart;
 
 import com.jaspersoft.studio.editor.gef.decorator.json.PathAndDataDialog;
@@ -25,10 +19,18 @@ import com.jaspersoft.studio.property.SetValueCommand;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionDTO;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.engine.JRExpression;
+import net.sf.jasperreports.engine.JRPropertiesMap;
+import net.sf.jasperreports.engine.JRPropertiesUtil;
+import net.sf.jasperreports.engine.design.JRDesignElement;
+
 /**
- * This class implement a JSON action that create a new column in the JSON. This action can be performed only on textual
- * elements (Textfield and static text). When a column is created it is asked using a dialog the column name. The order
- * of the column in the JSON will be the same order of creation, anyway this can be changed using an appropriate action
+ * This class implement a JSON action that create a new column in the JSON. This
+ * action can be performed only on textual elements (Textfield and static text).
+ * When a column is created it is asked using a dialog the column name. The
+ * order of the column in the JSON will be the same order of creation, anyway
+ * this can be changed using an appropriate action
  * 
  * @author Veaceslav Chicu
  * 
@@ -38,36 +40,32 @@ public class JSONPathDataAction extends JSONAction {
 	private String path;
 	private JRExpression data;
 	private boolean repeat = false;
-	
+
 	public static final String JSON_EXPORTER_PROPERTIES_PREFIX = JRPropertiesUtil.PROPERTY_PREFIX + "export.json.";
 	public static final String JSON_EXPORTER_PATH_PROPERTY = JSON_EXPORTER_PROPERTIES_PREFIX + "path";
 	public static final String JSON_EXPORTER_REPEAT_VALUE_PROPERTY = JSON_EXPORTER_PROPERTIES_PREFIX + "repeat.value";
 	public static final String JSON_EXPORTER_DATA_PROPERTY = JSON_EXPORTER_PROPERTIES_PREFIX + "data";
 
-
 	/**
 	 * Create the action with id @JSONAction.PROP_DATA
 	 * 
 	 * @param part
-	 * @param actionName
-	 *          the textual description of the action
+	 * @param actionName the textual description of the action
 	 */
 	public JSONPathDataAction(IWorkbenchPart part) {
 		super(part, JSON_EXPORTER_PATH_PROPERTY, Messages.JSONPathDataAction_0);
 	}
 
 	/**
-	 * If an element is already a column than the property is removed from it, otherwise it will became a csw column with
-	 * a column name defined by the user
+	 * If an element is already a column than the property is removed from it,
+	 * otherwise it will became a csw column with a column name defined by the
+	 * user
 	 */
 	@Override
 	public void run() {
 		if (checkFrameParent()) {
-			boolean dialogResult = MessageDialog
-					.openQuestion(
-							UIUtils.getShell(),
-							Messages.JSONPathDataAction_1,
-							Messages.JSONPathDataAction_2);
+			boolean dialogResult = MessageDialog.openQuestion(UIUtils.getShell(), Messages.JSONPathDataAction_1,
+					Messages.JSONPathDataAction_2);
 			if (!dialogResult)
 				return;
 		}
@@ -75,7 +73,7 @@ public class JSONPathDataAction extends JSONAction {
 		if (element == null)
 			return;
 		PathAndDataDialog dialog = new PathAndDataDialog(UIUtils.getShell(), element);
-		if (dialog.open() == Dialog.OK) {
+		if (dialog.open() == Window.OK) {
 			path = dialog.getName();
 			data = dialog.getData();
 			repeat = dialog.isRepeat();
@@ -97,7 +95,7 @@ public class JSONPathDataAction extends JSONAction {
 			return false;
 		for (Object element : textElements) {
 			MTextElement model = (MTextElement) element;
-			JRPropertiesMap colDataMap = (JRPropertiesMap) model.getPropertiesMap();
+			JRPropertiesMap colDataMap = model.getPropertiesMap();
 			return colDataMap.containsProperty(JSON_EXPORTER_PATH_PROPERTY);
 		}
 		return true;
@@ -119,8 +117,8 @@ public class JSONPathDataAction extends JSONAction {
 	}
 
 	/**
-	 * Create the commands necessary to transform a textual element into a JSON column or to remove it is it is already a
-	 * JSON column
+	 * Create the commands necessary to transform a textual element into a JSON
+	 * column or to remove it is it is already a JSON column
 	 * 
 	 */
 	@Override
@@ -129,7 +127,8 @@ public class JSONPathDataAction extends JSONAction {
 		if (n == null)
 			return null;
 
-		PropertyExpressionsDTO peDTO = (PropertyExpressionsDTO) n.getPropertyValue(JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS);
+		PropertyExpressionsDTO peDTO = (PropertyExpressionsDTO) n
+				.getPropertyValue(JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS);
 
 		if (path == null) {
 			peDTO.removeProperty(JSON_EXPORTER_PATH_PROPERTY, false);
@@ -147,7 +146,7 @@ public class JSONPathDataAction extends JSONAction {
 			removeDataPropertyExpression(peDTO);
 		else {
 			PropertyExpressionDTO dpe = peDTO.getProperty(JSON_EXPORTER_DATA_PROPERTY, true);
-			if (dpe == null){
+			if (dpe == null) {
 				peDTO.addProperty(JSON_EXPORTER_DATA_PROPERTY, data.getText(), true);
 			} else {
 				dpe.setValue(data.getText());
