@@ -1862,33 +1862,15 @@
   </handler>
 	</extension>
 	<extension id="com.jaspersoft.studio.menus.saveReportTo" point="org.eclipse.ui.menus">
-		<menuContribution locationURI="menu:file?after=export">
+		<menuContribution locationURI="popup:net.sf.jasperreports.menu1">
 			<command commandId="com.jaspersoft.studio.command.exportFilesTo"
 				icon="icons/eclipseicons/save.gif" label="%ExportFiles" style="push">
 			</command>
-		</menuContribution>
-		<menuContribution locationURI="menu:file?after=export">
-			<command commandId="com.jaspersoft.studio.command.exportAsTemplate"
-				icon="icons/eclipseicons/save.gif" label="%ExportTemplate" style="push">
-			</command>
-		</menuContribution>
-  <menuContribution
-        locationURI="popup:org.eclipse.ui.popup.any?after=export">
      <command
-           commandId="com.jaspersoft.studio.translation.CreateTranslationFragmentCommand"
-           icon="icons/resources/installLanguageIcon.png"
-           id="com.jaspersoft.studio.installTranslationAction"
-           label="%installTranslationItem"
+           commandId="com.jaspersoft.studio.command.exportAsTemplate"
+           icon="icons/eclipseicons/save.gif"
+           label="%ExportTemplate"
            style="push">
-        <visibleWhen
-              checkEnabled="false">
-           <and>
-              <test
-                    forcePluginActivation="true"
-                    property="com.jaspersoft.translation.action.checkNature">
-              </test>
-           </and>
-        </visibleWhen>
      </command>
      <command
            commandId="com.jaspersoft.studio.wizards.dataadapter.CreateAdapterJarCommand"
@@ -1906,6 +1888,30 @@
            </and>
         </visibleWhen>
      </command>
+     <separator
+           name="com.jaspersoft.studio.separator3"
+           visible="true">
+     </separator>
+     <command
+           commandId="com.jaspersoft.studio.translation.CreateTranslationFragmentCommand"
+           icon="icons/resources/installLanguageIcon.png"
+           id="com.jaspersoft.studio.installTranslationAction"
+           label="%installTranslationItem"
+           style="push">
+        <visibleWhen
+              checkEnabled="false">
+           <and>
+              <test
+                    forcePluginActivation="true"
+                    property="com.jaspersoft.translation.action.checkNature">
+              </test>
+           </and>
+        </visibleWhen>
+     </command>
+     <separator
+           name="com.jaspersoft.studio.separator4"
+           visible="true">
+     </separator>
      <command
            commandId="com.jaspersoft.studio.compileJrxmlFile"
            icon="icons/build_tab.gif"
@@ -1922,27 +1928,10 @@
            </and>
         </visibleWhen>
      </command>
-  </menuContribution>
-  <menuContribution
-        locationURI="popup:org.eclipse.ui.popup.any?after=export">
-     <command
-           commandId="com.jaspersoft.studio.command.exportFilesTo"
-           icon="icons/eclipseicons/save.gif"
-           label="%ExportFiles"
-           style="push">
-     </command>
-  </menuContribution>
-  <menuContribution
-        allPopups="false"
-        locationURI="popup:org.eclipse.ui.popup.any?before=import">
-     <menu
-           id="com.jaspersoft.studio.refactor"
-           label="Refactor">
-     </menu>
-  </menuContribution>
-  <menuContribution
-        allPopups="false"
-        locationURI="popup:com.jaspersoft.studio.refactor">
+     <separator
+           name="com.jaspersoft.studio.separator5"
+           visible="true">
+     </separator>
      <command
            commandId="com.jaspersoft.studio.refactor.uuid"
            label="Reset UUIDs"
@@ -1958,10 +1947,10 @@
            </and>
         </visibleWhen>
      </command>
-  </menuContribution>
-  <menuContribution
-        allPopups="false"
-        locationURI="popup:org.eclipse.ui.popup.any?endof=export">
+     <separator
+           name="com.jaspersoft.studio.separator6"
+           visible="true">
+     </separator>
      <menu
            id="com.jaspersoft.studio.editor.context.type"
            label="Report Repository Type">
@@ -1969,34 +1958,35 @@
               checkEnabled="false">
            <with
                  variable="activeMenuSelection">
-                 <iterate
-                             ifEmpty="false"
-                             operator="and">
-                         <or>
-                            <adapt
-                                  type="org.eclipse.core.resources.IProject">
-                            </adapt>
-                            <adapt
-                                  type="org.eclipse.core.resources.IFolder">
-                               <not>
-                                  <test
-                                        property="org.eclipse.core.resources.name"
-                                        value="JR-INF">
-                                  </test>
-                               </not>
-                            </adapt>
-                         </or>
-                       </iterate>
-                       <count
-                             value="1">
-                       </count>
-                 
-                 
-               
+              <iterate
+                    ifEmpty="false"
+                    operator="and">
+                 <or>
+                    <adapt
+                          type="org.eclipse.core.resources.IProject">
+                    </adapt>
+                    <adapt
+                          type="org.eclipse.core.resources.IFolder">
+                       <not>
+                          <test
+                                property="org.eclipse.core.resources.name"
+                                value="JR-INF">
+                          </test>
+                       </not>
+                    </adapt>
+                 </or>
+              </iterate>
+              <count
+                    value="1">
+              </count>
            </with>
         </visibleWhen>
      </menu>
-  </menuContribution>
+     <separator
+           name="com.jaspersoft.studio.separator7"
+           visible="true">
+     </separator>
+		</menuContribution>
   <menuContribution
         allPopups="false"
         locationURI="popup:com.jaspersoft.studio.editor.context.type">
