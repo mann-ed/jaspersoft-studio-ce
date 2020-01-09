@@ -158,6 +158,7 @@ public class MQRCode extends MBarcode {
 		IntegerPropertyDescriptor qrVersion = new IntegerPropertyDescriptor(QRCodeComponent.PROPERTY_QR_VERSION,
 				Messages.MQRCode_0);
 		qrVersion.setDescription(Messages.MQRCode_desc);
+		qrVersion.setBounds(1, 40);
 		desc.add(qrVersion);
 		qrVersion.setCategory(Messages.common_properties_category);
 	}
