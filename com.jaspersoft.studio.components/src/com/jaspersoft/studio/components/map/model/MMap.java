@@ -68,9 +68,9 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 
 	public static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
 
-	private IPropertyDescriptor[] descriptors;
+	private transient IPropertyDescriptor[] descriptors;
 
-	private NamedEnumPropertyDescriptor<OnErrorTypeEnum> onErrorTypeD;
+	private transient NamedEnumPropertyDescriptor<OnErrorTypeEnum> onErrorTypeD;
 
 	public MMap() {
 		super();
@@ -138,14 +138,13 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 	/**
 	 * Creates the property descriptors.
 	 * 
-	 * @param desc
-	 *            the desc
+	 * @param desc the desc
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
 		super.createPropertyDescriptors(desc);
 
-		NamedEnumPropertyDescriptor<EvaluationTimeEnum> evaluationTimeD = new NamedEnumPropertyDescriptor<EvaluationTimeEnum>(
+		NamedEnumPropertyDescriptor<EvaluationTimeEnum> evaluationTimeD = new NamedEnumPropertyDescriptor<>(
 				StandardMapComponent.PROPERTY_EVALUATION_TIME, Messages.MMap_evaluation_time, EvaluationTimeEnum.NOW,
 				NullEnum.NOTNULL);
 		evaluationTimeD.setDescription(Messages.MMap_evaluation_time_description);
@@ -156,7 +155,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		evaluationGroupNameD.setDescription(Messages.MMap_evaluation_group_description);
 		desc.add(evaluationGroupNameD);
 
-		onErrorTypeD = new NamedEnumPropertyDescriptor<OnErrorTypeEnum>(StandardMapComponent.PROPERTY_ON_ERROR_TYPE,
+		onErrorTypeD = new NamedEnumPropertyDescriptor<>(StandardMapComponent.PROPERTY_ON_ERROR_TYPE,
 				Messages.MMap_OnErrorType, OnErrorTypeEnum.BLANK, NullEnum.NULL);
 		onErrorTypeD.setDescription(Messages.MMap_OnErrorTypeDescription);
 		desc.add(onErrorTypeD);
@@ -217,12 +216,12 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		mapTypeD = getMapTypeD();
 		desc.add(mapTypeD);
 
-		mapScaleD = new NamedEnumPropertyDescriptor<MapScaleEnum>(StandardMapComponent.PROPERTY_MAP_SCALE,
+		mapScaleD = new NamedEnumPropertyDescriptor<>(StandardMapComponent.PROPERTY_MAP_SCALE,
 				Messages.MMap_mapScaleTitle, MapScaleEnum.ONE, NullEnum.NOTNULL);
 		mapScaleD.setDescription(Messages.MMap_mapScaleDescription);
 		desc.add(mapScaleD);
 
-		imageTypeD = new NamedEnumPropertyDescriptor<MapImageTypeEnum>(StandardMapComponent.PROPERTY_IMAGE_TYPE,
+		imageTypeD = new NamedEnumPropertyDescriptor<>(StandardMapComponent.PROPERTY_IMAGE_TYPE,
 				Messages.MMap_imageTypeTitle, MapImageTypeEnum.GIF, NullEnum.NOTNULL);
 		imageTypeD.setDescription(Messages.MMap_imageTypeDescription);
 		desc.add(imageTypeD);
@@ -335,7 +334,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		} else if (id.equals(MapComponent.PROPERTY_GOOGLE_VERSION)) {
 			// FIXME - This will be soon removed
 			return getJasperDesign().getProperty(MapComponent.PROPERTY_GOOGLE_VERSION);
-		} else if (id.equals(MapComponent.PROPERTY_GOOGLE_VERSION)){
+		} else if (id.equals(MapComponent.PROPERTY_GOOGLE_VERSION)) {
 			return getJasperDesign().getProperty(MapComponent.PROPERTY_GOOGLE_VERSION);
 		}
 
@@ -411,7 +410,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 				getJasperDesign().removeProperty(MapComponent.PROPERTY_SIGNATURE);
 			}
 		} else if (id.equals(MapComponent.PROPERTY_GOOGLE_VERSION)) {
-			// FIXME - This will be soon removed 
+			// FIXME - This will be soon removed
 			if (value instanceof String && !Misc.isNullOrEmptyString(value)) {
 				getJasperDesign().setProperty(MapComponent.PROPERTY_GOOGLE_VERSION, (String) value);
 			} else {
@@ -422,7 +421,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 				getJasperDesign().setProperty(MapComponent.PROPERTY_GOOGLE_VERSION, (String) value);
 			} else {
 				getJasperDesign().removeProperty(MapComponent.PROPERTY_GOOGLE_VERSION);
-			}			
+			}
 		} else if (id.equals(StandardMapComponent.PROPERTY_MARKER_DATA_LIST)) {
 			if (value instanceof List<?>) {
 				@SuppressWarnings("unchecked")
@@ -461,7 +460,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 	protected List<ValidationError> doValidation() {
 		List<ValidationError> errors = super.doValidation();
 		if (errors == null)
-			errors = new ArrayList<ValidationError>();
+			errors = new ArrayList<>();
 
 		JRDesignComponentElement jrElement = (JRDesignComponentElement) getValue();
 		StandardMapComponent tm = (StandardMapComponent) jrElement.getComponent();
@@ -470,7 +469,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		JRExpression latExp = tm.getLatitudeExpression();
 		JRExpression adrExp = tm.getAddressExpression();
 		if ((lonExp == null || latExp == null) && adrExp == null) {
-			List<String> ids = new ArrayList<String>();
+			List<String> ids = new ArrayList<>();
 			if (lonExp == null)
 				ids.add(StandardMapComponent.PROPERTY_LONGITUDE_EXPRESSION);
 			if (latExp == null)
@@ -539,7 +538,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 	 */
 	public NamedEnumPropertyDescriptor<MapTypeEnum> getMapTypeD() {
 		if (mapTypeD == null) {
-			mapTypeD = new NamedEnumPropertyDescriptor<MapTypeEnum>(StandardMapComponent.PROPERTY_MAP_TYPE,
+			mapTypeD = new NamedEnumPropertyDescriptor<>(StandardMapComponent.PROPERTY_MAP_TYPE,
 					Messages.MMap_mapTypeTitle, MapTypeEnum.HYBRID, NullEnum.NOTNULL);
 		}
 		return mapTypeD;
@@ -608,7 +607,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 
 	@Override
 	public List<MDatasetRun> getDatasetRunList() {
-		Set<JRDatasetRun> dsr = new HashSet<JRDatasetRun>();
+		Set<JRDatasetRun> dsr = new HashSet<>();
 		for (ItemData id : getMapComponent().getMarkerDataList()) {
 			if (id.getDataset() != null && id.getDataset().getDatasetRun() != null)
 				dsr.add(id.getDataset().getDatasetRun());
@@ -622,7 +621,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 				dsr.add(id.getDataset().getDatasetRun());
 		}
 		JasperDesign jd = getJasperDesign();
-		List<MDatasetRun> datasetList = new ArrayList<MDatasetRun>();
+		List<MDatasetRun> datasetList = new ArrayList<>();
 		for (JRDatasetRun dr : dsr)
 			datasetList.add(new MDatasetRun(dr, jd));
 		return datasetList;

@@ -81,6 +81,7 @@ public class PdfFieldAction extends APdfAction {
 		p.add(JRPdfExporter.PDF_FIELD_READ_ONLY);
 		p.add(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
 		p.add(JRPdfExporter.PDF_FIELD_TYPE);
+		p.add(JRPdfExporter.PDF_FIELD_VALUE);
 		return p;
 	}
 
@@ -255,6 +256,17 @@ public class PdfFieldAction extends APdfAction {
 			controls.put(JRPdfExporter.PDF_FIELD_CHOICES, cChoices);
 			cChoices.setText(Misc.nvl(values.get(JRPdfExporter.PDF_FIELD_CHOICES)));
 
+			lbl = buildDynamicLabel(cmp, JRPdfExporter.PDF_FIELD_VALUE, "Selected Choice Value");
+
+			Text cValue = new Text(cmp, SWT.NONE);
+			cValue.setToolTipText(lbl.getToolTipText());
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = 3;
+			cValue.setLayoutData(gd);
+			cValue.addModifyListener(e -> values.put(JRPdfExporter.PDF_FIELD_VALUE, cChoices.getText()));
+			controls.put(JRPdfExporter.PDF_FIELD_VALUE, cChoices);
+			cValue.setText(Misc.nvl(values.get(JRPdfExporter.PDF_FIELD_VALUE)));
+
 			lbl = buildDynamicLabel(cmp, JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS, Messages.PdfFieldAction_9);
 
 			Text cChoiceSep = new Text(cmp, SWT.NONE);
@@ -359,6 +371,18 @@ public class PdfFieldAction extends APdfAction {
 			t = v.getProperty(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
 			if (t != null)
 				values.put(JRPdfExporter.PDF_FIELD_CHECK_TYPE, t);
+
+			t = v.getProperty(JRPdfExporter.PDF_FIELD_VALUE);
+			if (t != null)
+				values.put(JRPdfExporter.PDF_FIELD_VALUE, t);
+
+			t = v.getProperty(JRPdfExporter.PDF_FIELD_CHOICES);
+			if (t != null)
+				values.put(JRPdfExporter.PDF_FIELD_CHOICES, t);
+
+			t = v.getProperty(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
+			if (t != null)
+				values.put(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS, t);
 
 			changeType(type, cmp);
 		}
