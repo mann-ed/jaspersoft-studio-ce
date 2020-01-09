@@ -14,6 +14,7 @@ import net.sf.jasperreports.eclipse.util.Misc;
 
 public abstract class AWControl {
 	protected AWidget aw;
+	private Label lbl;
 
 	public AWControl(AWidget aw) {
 		this.aw = aw;
@@ -26,7 +27,7 @@ public abstract class AWControl {
 	protected abstract void fillValue();
 
 	protected void createLabel(Composite parent, TColumn c) {
-		Label lbl = new Label(parent, SWT.NONE);
+		lbl = new Label(parent, SWT.NONE);
 		lbl.setText(Misc.nvl(c.getLabel(), c.getPropertyName()));
 	}
 
@@ -35,4 +36,9 @@ public abstract class AWControl {
 	}
 
 	public abstract void setEnabled(boolean en);
+
+	public void dispose() {
+		if (lbl != null && !lbl.isDisposed())
+			lbl.dispose();
+	}
 }

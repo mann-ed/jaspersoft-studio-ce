@@ -8,8 +8,10 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -132,6 +134,11 @@ public class WJRProperty extends AWidget {
 					Class<?> clazz = Class.forName(c.getPropertyType());
 					if (clazz.isEnum()) {
 						Object[] obj = clazz.getEnumConstants();
+						Set<?> hev = c.getHideEnumValues();
+						if (hev != null)
+							for (Object h : hev)
+								obj = ArrayUtils.removeElement(obj, h);
+
 						String[][] items = new String[obj.length][2];
 						for (int i = 0; i < obj.length; i++) {
 							items[i][1] = obj[i].toString();
@@ -268,6 +275,10 @@ public class WJRProperty extends AWidget {
 	private Control lbl;
 	private Text lblText;
 
+	public Control getLabel() {
+		return lbl;
+	}
+
 	@Override
 	protected String getToolTipText() {
 		if (isPropertyExpressions(element)) {
@@ -295,6 +306,16 @@ public class WJRProperty extends AWidget {
 	}
 
 	private WItemProperty wip;
+
+	@Override
+	public void dispose() {
+		if (wip != null)
+			wip.dispose();
+		if (lbl != null)
+			lbl.dispose();
+		if (lblText != null)
+			lblText.dispose();
+	}
 
 	@Override
 	public void setValue(Object value) {
@@ -473,4 +494,5 @@ public class WJRProperty extends AWidget {
 			((JRDesignDataset) element).addPropertyExpression(pe);
 		}
 	}
+
 }

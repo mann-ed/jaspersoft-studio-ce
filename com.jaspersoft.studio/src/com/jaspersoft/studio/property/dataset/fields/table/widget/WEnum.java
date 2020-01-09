@@ -28,7 +28,7 @@ public class WEnum extends AWControl {
 	}
 
 	protected void createControl(final Composite parent) {
-		Composite cmp = new Composite(parent, SWT.NONE);
+		cmp = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -80,6 +80,7 @@ public class WEnum extends AWControl {
 	}
 
 	protected boolean refresh = false;
+	private Composite cmp;
 
 	protected void fillValue() {
 		Object obj = aw.getValue();
@@ -116,5 +117,12 @@ public class WEnum extends AWControl {
 	@Override
 	public void setEnabled(boolean en) {
 		cmb.setEnabled(en);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (cmp != null && !cmp.isDisposed())
+			cmp.dispose();
 	}
 }

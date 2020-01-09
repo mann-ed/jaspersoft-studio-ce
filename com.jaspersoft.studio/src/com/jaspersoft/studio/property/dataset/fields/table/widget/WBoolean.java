@@ -19,10 +19,11 @@ public class WBoolean extends AWControl {
 
 	protected boolean refresh = false;
 	protected Combo cmb;
+	private Composite cmp;
 
 	@Override
 	protected void createControl(Composite parent) {
-		Composite cmp = new Composite(parent, SWT.NONE);
+		cmp = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -72,5 +73,12 @@ public class WBoolean extends AWControl {
 	@Override
 	public void setEnabled(boolean en) {
 		cmb.setEnabled(en);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (cmp != null && !cmp.isDisposed())
+			cmp.dispose();
 	}
 }

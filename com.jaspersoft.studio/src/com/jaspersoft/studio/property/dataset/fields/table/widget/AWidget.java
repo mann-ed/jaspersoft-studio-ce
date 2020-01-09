@@ -145,4 +145,8 @@ public abstract class AWidget {
 	public void setElement(Object element) {
 		this.element = element;
 	}
+
+	public void dispose() {
+
+	}
 }
