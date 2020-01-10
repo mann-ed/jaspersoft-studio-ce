@@ -180,6 +180,13 @@ public class PdfFieldAction extends APdfAction {
 
 				)
 					return;
+				if ((PdfFieldTypeEnum.RADIO.getName().equalsIgnoreCase((String) evt.getNewValue())
+						&& PdfFieldTypeEnum.CHECK.getName().equalsIgnoreCase((String) evt.getOldValue()))
+						|| (PdfFieldTypeEnum.CHECK.getName().equalsIgnoreCase((String) evt.getNewValue())
+								&& PdfFieldTypeEnum.RADIO.getName().equalsIgnoreCase((String) evt.getOldValue()))
+
+				)
+					return;
 				changeType(t, cmp);
 
 				UIUtils.getDisplay().asyncExec(() -> UIUtils.relayoutDialogHeight(getShell(), defheight));
