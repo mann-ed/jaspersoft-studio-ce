@@ -169,7 +169,7 @@ public class PdfFieldAction extends APdfAction {
 			final JRPropertiesMap v = eClone.getPropertiesMap();
 			v.getEventSupport().addPropertyChangeListener(JRPdfExporter.PDF_FIELD_TYPE, evt -> {
 				String t = getType(v);
-				if (!(m instanceof MTextElement) && t.equals(PdfFieldTypeEnum.TEXT.getName())) {
+				if (!(m instanceof MTextElement) && PdfFieldTypeEnum.TEXT.getName().equalsIgnoreCase(t)) {
 					UIUtils.showInformation("You can use Text type only with TextField and StaticText");
 					return;
 				}
@@ -220,10 +220,6 @@ public class PdfFieldAction extends APdfAction {
 				buildList(cmp);
 				break;
 			case RADIO:
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
-				buildList(cmp);
-				buildCheck(cmp);
-				break;
 			case CHECK:
 				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
 				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICES);

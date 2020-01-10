@@ -143,13 +143,16 @@ public class WJRProperty extends AWidget {
 						String[][] items = new String[obj.length][2];
 						for (int i = 0; i < obj.length; i++) {
 							items[i][1] = obj[i].toString();
-							if (obj[i] instanceof JREnum)
+							if (obj[i] instanceof JREnum) {
 								items[i][0] = ((JREnum) obj[i]).getName();
-							else if (obj[i] instanceof NamedValueEnum)
+								items[i][1] = ((JREnum) obj[i]).getName();
+							} else if (obj[i] instanceof NamedValueEnum) {
 								items[i][0] = ((NamedValueEnum<?>) obj[i]).getName();
-							else if(obj[i] instanceof NamedEnum)
+								items[i][1] = ((NamedValueEnum<?>) obj[i]).getName();
+							} else if (obj[i] instanceof NamedEnum) {
 								items[i][0] = ((NamedEnum) obj[i]).getName();
-							else
+								items[i][1] = ((NamedEnum) obj[i]).getName();
+							} else
 								items[i][0] = ((Enum<?>) obj[i]).name();
 						}
 						ipd = new ComboItemPropertyDescription<>(pname, c.getLabel(), c.getDescription(), false,
