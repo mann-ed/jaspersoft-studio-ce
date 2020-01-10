@@ -1457,6 +1457,11 @@ public class ModelUtils {
 		}
 
 		if (element != null) {
+			if(element instanceof JRDesignComponentElement) {
+				ExpressionContext ec = getExpressionContext4Component(node);
+				if (ec != null)
+					return ec;
+			}
 			JRElementGroup group = getTopElementGroup(element);
 			if (group instanceof JRDesignCellContents) {
 				// Inside the cell of a cross=tab
