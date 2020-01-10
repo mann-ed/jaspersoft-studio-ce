@@ -69,6 +69,7 @@ import net.sf.jasperreports.engine.design.JRDesignParameter;
 import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.JREnum;
+import net.sf.jasperreports.engine.type.NamedEnum;
 import net.sf.jasperreports.engine.type.NamedValueEnum;
 import net.sf.jasperreports.engine.type.PropertyEvaluationTimeEnum;
 
@@ -146,6 +147,8 @@ public class WJRProperty extends AWidget {
 								items[i][0] = ((JREnum) obj[i]).getName();
 							else if (obj[i] instanceof NamedValueEnum)
 								items[i][0] = ((NamedValueEnum<?>) obj[i]).getName();
+							else if(obj[i] instanceof NamedEnum)
+								items[i][0] = ((NamedEnum) obj[i]).getName();
 							else
 								items[i][0] = ((Enum<?>) obj[i]).name();
 						}
