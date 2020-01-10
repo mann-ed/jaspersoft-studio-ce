@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -24,9 +23,7 @@ import com.jaspersoft.studio.property.dataset.fields.table.TColumn;
 import com.jaspersoft.studio.property.dataset.fields.table.TColumnFactory;
 import com.jaspersoft.studio.property.dataset.fields.table.widget.AWidget;
 import com.jaspersoft.studio.property.dataset.fields.table.widget.WJRProperty;
-import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptor.propexpr.dialog.HintsPropertiesList;
-import com.jaspersoft.studio.utils.EnumHelper;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.ATitledDialog;
@@ -160,7 +157,6 @@ public class PdfFieldAction extends APdfAction {
 			TColumnFactory.addWidget(tc, cmp, eClone, jConf);
 
 			tc = TColumnFactory.getTColumn(props.get(JRPdfExporter.PDF_FIELD_TYPE));
-			String[] types = EnumHelper.getEnumNames(PdfFieldTypeEnum.values(), NullEnum.NOTNULL);
 			if (!(m instanceof MTextElement)) {
 				Set<PdfFieldTypeEnum> hev = new HashSet<>();
 				hev.add(PdfFieldTypeEnum.TEXT);
@@ -177,10 +173,10 @@ public class PdfFieldAction extends APdfAction {
 					UIUtils.showInformation("You can use Text type only with TextField and StaticText");
 					return;
 				}
-				if ((evt.getNewValue().equals(PdfFieldTypeEnum.LIST.getName().toUpperCase())
-						&& evt.getOldValue().equals(PdfFieldTypeEnum.COMBO.getName().toUpperCase()))
-						|| (evt.getNewValue().equals(PdfFieldTypeEnum.COMBO.getName().toUpperCase())
-								&& evt.getOldValue().equals(PdfFieldTypeEnum.LIST.getName().toUpperCase()))
+				if ((PdfFieldTypeEnum.LIST.getName().equalsIgnoreCase((String) evt.getNewValue())
+						&& PdfFieldTypeEnum.COMBO.getName().equalsIgnoreCase((String) evt.getOldValue()))
+						|| (PdfFieldTypeEnum.COMBO.getName().equalsIgnoreCase((String) evt.getNewValue())
+								&& PdfFieldTypeEnum.LIST.getName().equalsIgnoreCase((String) evt.getOldValue()))
 
 				)
 					return;
