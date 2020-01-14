@@ -201,8 +201,8 @@ public class PdfFieldAction extends APdfAction {
 			String type = v.getProperty(JRPdfExporter.PDF_FIELD_TYPE);
 			if (type != null)
 				values.put(JRPdfExporter.PDF_FIELD_TYPE, type);
-			else
-				type = PdfFieldTypeEnum.CHECK.getName();
+//			else
+//				type = PdfFieldTypeEnum.CHECK.getName();
 			return type;
 		}
 
@@ -211,30 +211,32 @@ public class PdfFieldAction extends APdfAction {
 				c.dispose();
 			controls.clear();
 			JRPropertiesMap pm = eClone.getPropertiesMap();
-			switch (PdfFieldTypeEnum.getByName(WordUtils.capitalize(type.toLowerCase()))) {
-			case TEXT:
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICES);
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECKED);
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
-				buildText(cmp);
-				break;
-			case LIST:
-			case COMBO:
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECKED);
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
-				buildList(cmp);
-				break;
-			case RADIO:
-			case CHECK:
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICES);
-				pm.removeProperty(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
-				buildCheck(cmp);
-				break;
-			default:
-				UIUtils.showInformation(Messages.PdfFieldAction_7);
+			if (type != null) {
+				switch (PdfFieldTypeEnum.getByName(WordUtils.capitalize(type.toLowerCase()))) {
+				case TEXT:
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICES);
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECKED);
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
+					buildText(cmp);
+					break;
+				case LIST:
+				case COMBO:
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECKED);
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
+					buildList(cmp);
+					break;
+				case RADIO:
+				case CHECK:
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICES);
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
+					buildCheck(cmp);
+					break;
+				default:
+					UIUtils.showInformation(Messages.PdfFieldAction_7);
+				}
 			}
 		}
 

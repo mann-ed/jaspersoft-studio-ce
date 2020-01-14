@@ -38,7 +38,6 @@ import com.jaspersoft.studio.widgets.framework.WItemProperty;
 import com.jaspersoft.studio.widgets.framework.ui.BigDecimalPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.ClassItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.ColorPropertyDescription;
-import com.jaspersoft.studio.widgets.framework.ui.ComboItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.FloatPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.IntegerPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.ItemPropertyDescription;
@@ -155,7 +154,7 @@ public class WJRProperty extends AWidget {
 							} else
 								items[i][0] = ((Enum<?>) obj[i]).name();
 						}
-						ipd = new ComboItemPropertyDescription<>(pname, c.getLabel(), c.getDescription(), false,
+						ipd = new SelectableComboItemPropertyDescription<>(pname, c.getLabel(), c.getDescription(), false,
 								c.getDefaultValue(), items);
 					}
 				} catch (ClassNotFoundException e) {

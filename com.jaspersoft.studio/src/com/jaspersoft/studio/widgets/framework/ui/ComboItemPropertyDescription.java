@@ -89,7 +89,8 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 			v[i] = keyValues[i][1];
 		return v;
 	}
-
+	
+	@Override
 	public void handleEdit(Control txt, IWItemProperty wProp) {
 		super.handleEdit(txt, wProp);
 		if (txt instanceof Combo) {
@@ -118,6 +119,7 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		return result;
 	}
 
+	@Override
 	public Control createControl(final IWItemProperty wiProp, Composite parent) {
 		DoubleControlComposite cmp = new DoubleControlComposite(parent, SWT.NONE);
 		cmp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -134,16 +136,12 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		simpleControl.setLayoutData(comboData);
 		
 		simpleControl.setItems(convert2Value(keyValues));
-		simpleControl.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
+		simpleControl.addModifyListener(e -> {
 				if (wiProp.isRefresh())
 					return;
 				Point p = simpleControl.getSelection();
 				handleEdit(simpleControl, wiProp);
 				simpleControl.setSelection(p);
-			}
 		});
 		
 		if (isReadOnly()){
@@ -190,7 +188,7 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 	
 	@Override
 	public ItemPropertyDescription<T> clone(){
-		ComboItemPropertyDescription<T> result = new ComboItemPropertyDescription<T>();
+		ComboItemPropertyDescription<T> result = new ComboItemPropertyDescription<>();
 		result.defaultValue = defaultValue;
 		result.description = description;
 		result.jConfig = jConfig;
@@ -211,7 +209,7 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 				i18nOpts[i][0] = opts[i][0];
 				i18nOpts[i][1] = cd.getLocalizedString(opts[i][1]);
 			}
-			ComboItemPropertyDescription<String> result = new ComboItemPropertyDescription<String>(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), cpd.getDefaultValue(), i18nOpts);
+			ComboItemPropertyDescription<String> result = new ComboItemPropertyDescription<>(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), cpd.getDefaultValue(), i18nOpts);
 			result.setReadOnly(cpd.isReadOnly());
 			result.setFallbackValue(cpd.getFallbackValue());
 			return result;
