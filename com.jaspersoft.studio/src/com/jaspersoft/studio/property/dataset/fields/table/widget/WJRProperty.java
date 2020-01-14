@@ -264,6 +264,7 @@ public class WJRProperty extends AWidget {
 				@Override
 				public void removeProperty(String propertyName) {
 					removePropertyExpression(element, propertyName);
+					
 				}
 			});
 			wip.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -453,9 +454,10 @@ public class WJRProperty extends AWidget {
 	public void removePropertyExpression(Object element, String name) {
 		if (element instanceof JRDesignField)
 			((JRDesignField) element).removePropertyExpression(name);
-		else if (element instanceof JRElement)
+		else if (element instanceof JRElement) {
 			((JRDesignElement) element).removePropertyExpression(name);
-		else if (element instanceof JasperDesign)
+			((JRDesignElement) element).getPropertiesMap().removeProperty(name);
+		}else if (element instanceof JasperDesign)
 			((JasperDesign) element).removePropertyExpression(name);
 		else if (element instanceof JRDesignDataset)
 			((JRDesignDataset) element).removePropertyExpression(name);
