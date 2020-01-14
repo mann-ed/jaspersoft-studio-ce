@@ -98,7 +98,7 @@ public abstract class APdfAction extends CustomSelectionAction {
 		for (String name : getPropertyNames()) {
 			Object oldValue = v.getProperty(name);
 			String value = getPropertyValue(name);
-			if (value != null && !value.equals(oldValue))
+			if ((value == null && oldValue != null) || (value != null && !value.equals(oldValue)))
 				cmds.add(new SetPropertyValueCommand(v, name, value));
 		}
 		if (!cmds.isEmpty()) {
