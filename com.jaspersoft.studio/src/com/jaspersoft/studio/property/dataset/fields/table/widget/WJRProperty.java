@@ -154,8 +154,8 @@ public class WJRProperty extends AWidget {
 							} else
 								items[i][0] = ((Enum<?>) obj[i]).name();
 						}
-						ipd = new SelectableComboItemPropertyDescription<>(pname, c.getLabel(), c.getDescription(), false,
-								c.getDefaultValue(), items);
+						ipd = new SelectableComboItemPropertyDescription<>(pname, c.getLabel(), c.getDescription(),
+								false, c.getDefaultValue(), items);
 					}
 				} catch (ClassNotFoundException e) {
 				}
@@ -263,7 +263,7 @@ public class WJRProperty extends AWidget {
 				@Override
 				public void removeProperty(String propertyName) {
 					removePropertyExpression(element, propertyName);
-					
+
 				}
 			});
 			wip.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -326,38 +326,48 @@ public class WJRProperty extends AWidget {
 	@Override
 	public void setValue(Object value) {
 		dto = null;
+		String cName = c.getPropertyName();
 		if (element instanceof JRPropertiesHolder) {
 			final JRPropertiesHolder field = (JRPropertiesHolder) element;
-			if (isPropertyExpressions(element) && value instanceof PropertyExpressionDTO) {
-				PropertyExpressionDTO tdto = (PropertyExpressionDTO) value;
-				if (tdto.isExpression()) {
-					if (tdto.getValue() == null || tdto.getValue().isEmpty())
-						removePropertyExpression(element, c.getPropertyName());
-					else {
-						removePropertyExpression(element, c.getPropertyName());
-						if (tdto instanceof DatasetPropertyExpressionDTO)
-							addPropertyExpression(element, c.getPropertyName(), tdto.getValueAsExpression(),
-									((DatasetPropertyExpressionDTO) tdto).getEvalTime());
+			if (isPropertyExpressions(element)
+					&& (value instanceof PropertyExpressionDTO || value instanceof JRDesignExpression)) {
+				if (value instanceof PropertyExpressionDTO) {
+					PropertyExpressionDTO tdto = (PropertyExpressionDTO) value;
+					if (tdto.isExpression()) {
+						if (tdto.getValue() == null || tdto.getValue().isEmpty())
+							removePropertyExpression(element, cName);
+						else {
+							removePropertyExpression(element, cName);
+							if (tdto instanceof DatasetPropertyExpressionDTO)
+								addPropertyExpression(element, cName, tdto.getValueAsExpression(),
+										((DatasetPropertyExpressionDTO) tdto).getEvalTime());
+							else
+								addPropertyExpression(element, cName, tdto.getValueAsExpression(), null);
+						}
+					} else {
+						removePropertyExpression(element, cName);
+						if (tdto.getValue() == null || tdto.getValue().isEmpty())
+							field.getPropertiesMap().removeProperty(cName);
 						else
-							addPropertyExpression(element, c.getPropertyName(), tdto.getValueAsExpression(), null);
+							field.getPropertiesMap().setProperty(cName, tdto.getValue());
 					}
-				} else {
-					removePropertyExpression(element, c.getPropertyName());
-					if (tdto.getValue() == null || tdto.getValue().isEmpty())
-						field.getPropertiesMap().removeProperty(c.getPropertyName());
-					else
-						field.getPropertiesMap().setProperty(c.getPropertyName(), tdto.getValue());
+				} else if (value instanceof JRDesignExpression) {
+					removePropertyExpression(element, cName);
+					addPropertyExpression(element, cName, (JRExpression) value, null);
+					field.getPropertiesMap().removeProperty(cName);
 				}
 			} else {
 				if (value == null || value.toString().isEmpty())
-					field.getPropertiesMap().removeProperty(c.getPropertyName());
-				else
-					field.getPropertiesMap().setProperty(c.getPropertyName(), value.toString());
+					field.getPropertiesMap().removeProperty(cName);
+				else {
+					removePropertyExpression(field, cName);
+					field.getPropertiesMap().setProperty(cName, value.toString());
+				}
 			}
 		} else if (element instanceof PropertyExpressionsDTO) {
 			PropertyExpressionsDTO d = (PropertyExpressionsDTO) element;
 			for (PropertyExpressionDTO tdto : d.getProperties())
-				if (tdto.getName().equals(c.getPropertyName())) {
+				if (tdto.getName().equals(cName)) {
 					tdto.setExpression(value instanceof JRDesignExpression);
 					tdto.setValue(value instanceof JRDesignExpression ? ((JRDesignExpression) value).getText()
 							: value.toString());
@@ -367,11 +377,11 @@ public class WJRProperty extends AWidget {
 			if (element instanceof DatasetPropertyExpressionsDTO)
 				if (value instanceof PropertyExpressionDTO) {
 					PropertyExpressionDTO pedto = (PropertyExpressionDTO) value;
-					tdto = new DatasetPropertyExpressionDTO(pedto.isExpression(), c.getPropertyName(),
+					tdto = new DatasetPropertyExpressionDTO(pedto.isExpression(), cName,
 							pedto.isExpression() ? pedto.getValueAsExpression().toString() : pedto.getValue(),
 							PropertyEvaluationTimeEnum.LATE);
 				} else
-					tdto = new DatasetPropertyExpressionDTO(value instanceof JRDesignExpression, c.getPropertyName(),
+					tdto = new DatasetPropertyExpressionDTO(value instanceof JRDesignExpression, cName,
 							value instanceof JRDesignExpression ? ((JRDesignExpression) value).getText()
 									: value.toString(),
 							PropertyEvaluationTimeEnum.LATE);
@@ -379,14 +389,14 @@ public class WJRProperty extends AWidget {
 				if (value instanceof PropertyExpressionDTO)
 					tdto = (PropertyExpressionDTO) value;
 				else
-					tdto = new PropertyExpressionDTO(value instanceof JRDesignExpression, c.getPropertyName(),
+					tdto = new PropertyExpressionDTO(value instanceof JRDesignExpression, cName,
 							value instanceof JRDesignExpression ? ((JRDesignExpression) value).getText()
 									: value.toString());
 			}
 			((PropertyExpressionsDTO) element).getProperties().add(tdto);
 		} else if (element instanceof JRPropertiesMap) {
 			JRPropertiesMap map = (JRPropertiesMap) element;
-			map.setProperty(c.getPropertyName(), (String) value);
+			map.setProperty(cName, (String) value);
 		}
 	}
 
@@ -456,7 +466,7 @@ public class WJRProperty extends AWidget {
 		else if (element instanceof JRElement) {
 			((JRDesignElement) element).removePropertyExpression(name);
 			((JRDesignElement) element).getPropertiesMap().removeProperty(name);
-		}else if (element instanceof JasperDesign)
+		} else if (element instanceof JasperDesign)
 			((JasperDesign) element).removePropertyExpression(name);
 		else if (element instanceof JRDesignDataset)
 			((JRDesignDataset) element).removePropertyExpression(name);

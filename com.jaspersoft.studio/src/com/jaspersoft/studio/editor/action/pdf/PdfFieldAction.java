@@ -29,6 +29,7 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import net.sf.jasperreports.eclipse.ui.ATitledDialog;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.JRPropertiesMap;
+import net.sf.jasperreports.engine.JRPropertyExpression;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.type.PdfFieldTypeEnum;
@@ -82,9 +83,21 @@ public class PdfFieldAction extends APdfAction {
 	}
 
 	@Override
-	protected String getPropertyValue(String name) {
-		if (dialog != null && dialog.getValue() != null && dialog.getValue().getPropertiesMap() != null)
-			return dialog.getValue().getPropertiesMap().getProperty(name);
+	protected Object getPropertyValue(String name) {
+		if (dialog != null && dialog.getValue() != null) {
+			JRDesignElement dv = dialog.getValue();
+			if (dv.getPropertiesMap() != null) {
+				String v = dv.getPropertiesMap().getProperty(name);
+				if (v != null)
+					return v;
+			}
+			if (dv.getPropertyExpressionsList() != null) {
+				for (JRPropertyExpression pe : dv.getPropertyExpressionsList()) {
+					if (pe.getName().equals(name))
+						return pe;
+				}
+			}
+		}
 		return null;
 	}
 
