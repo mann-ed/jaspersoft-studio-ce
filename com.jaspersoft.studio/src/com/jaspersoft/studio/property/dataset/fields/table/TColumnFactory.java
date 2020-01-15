@@ -146,13 +146,13 @@ public class TColumnFactory {
 		return null;
 	}
 
-	public static void addWidget(TColumn c, Composite parent, Object element, JasperReportsConfiguration jConfig) {
+	public static AWidget addWidget(TColumn c, Composite parent, Object element, JasperReportsConfiguration jConfig) {
 		Class<? extends AWidget> clazz = wmap.get(c.getType());
 		if (clazz != null) {
 			try {
 				Constructor<? extends AWidget> constr = clazz.asSubclass(AWidget.class).getConstructor(Composite.class,
 						TColumn.class, Object.class, JasperReportsConfiguration.class);
-				constr.newInstance(parent, c, element, jConfig);
+				return constr.newInstance(parent, c, element, jConfig);
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
@@ -167,6 +167,7 @@ public class TColumnFactory {
 				e.printStackTrace();
 			}
 		}
+		return null;
 	}
 
 	private static Map<String, Class<? extends AWidget>> wmap = new HashMap<>();

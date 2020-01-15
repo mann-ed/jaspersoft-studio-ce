@@ -65,7 +65,7 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 		}
 
 		protected ItemDataDialog createItemDataDialog(List<ItemData> clones, StandardItemData itemData) {
-			ItemDataDialog dialog = new ItemDataDialog(UIUtils.getShell(), Messages.MMap_markersDescription,
+			return new ItemDataDialog(UIUtils.getShell(), Messages.MMap_markersDescription,
 					Messages.SPMarker_MarkersListBtn, clones, itemData,
 					(JasperReportsConfiguration) section.getJasperReportsContext(), getDescriptor(), expContext,
 					pnode) {
@@ -92,11 +92,7 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 						@Override
 						public void widgetSelected(SelectionEvent e) {
 							if (tabFolder.getSelection() == tabItem) {
-								UIUtils.getDisplay().asyncExec(new Runnable() {
-									public void run() {
-										pmap.refresh();
-									}
-								});
+								UIUtils.getDisplay().asyncExec(() -> pmap.refresh());
 							} else if (itemsViewer.getTable().isVisible()) {
 								itemsViewer.setInput(itemData.getItems());
 								itemsViewer.refresh();
@@ -286,7 +282,7 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 
 							@Override
 							protected void handleRemoveMarker(int[] mIndxs) {
-								CopyOnWriteArrayList<Item> itms = new CopyOnWriteArrayList<Item>();
+								CopyOnWriteArrayList<Item> itms = new CopyOnWriteArrayList<>();
 								for (int i : mIndxs)
 									itms.add(itemData.getItems().get(i));
 								for (Item it : itms)
@@ -357,7 +353,6 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 				}
 
 			};
-			return dialog;
 		}
 
 		@Override
@@ -441,6 +436,7 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 		descriptor = new MarkersDescriptor();
 	}
 
+	@Override
 	protected SPItemDataList createSPWidget(Composite parent, AbstractSection section) {
 		return new SPMarkerItemDataList(parent, section, this, false);
 	}

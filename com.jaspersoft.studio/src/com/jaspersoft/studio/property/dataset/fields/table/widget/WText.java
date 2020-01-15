@@ -58,4 +58,10 @@ public class WText extends AWControl {
 		txt.setEnabled(en);
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (txt != null && !txt.isDisposed())
+			txt.dispose();
+	}
 }

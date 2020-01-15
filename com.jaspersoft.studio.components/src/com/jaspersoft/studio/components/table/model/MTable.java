@@ -436,10 +436,7 @@ public class MTable extends MGraphicElement
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals(StandardTable.PROPERTY_WHEN_NO_DATA_TYPE)) {
-			if (evt.getNewValue().equals(WhenNoDataTypeTableEnum.NO_DATA_CELL))
-				getStandardTable().setNoData(null);
-		} else if (evt.getPropertyName().equals(JRDesignDatasetRun.PROPERTY_DATASET_NAME)) {
+		if (evt.getPropertyName().equals(JRDesignDatasetRun.PROPERTY_DATASET_NAME)) {
 			getStandardTable().getEventSupport().firePropertyChange(new PropertyChangeEvent(evt.getSource(),
 					DSListener.REFRESH_DATASET, evt.getOldValue(), evt.getNewValue()));
 		} else if (evt.getPropertyName().equals(StandardTable.PROPERTY_DATASET_RUN)) {

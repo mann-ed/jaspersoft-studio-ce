@@ -378,30 +378,45 @@ public class MTableNoData extends APropertyNode implements IGraphicElement, IPas
 	}
 
 	public Integer getTopPadding() {
-		return getValue().getLineBox().getTopPadding();
+		DesignBaseCell v = getValue();
+		if (v == null)
+			return 0;
+		return v.getLineBox().getTopPadding();
 	}
 
 	public Integer getLeftPadding() {
-		return getValue().getLineBox().getLeftPadding();
+		DesignBaseCell v = getValue();
+		if (v == null)
+			return 0;
+		return v.getLineBox().getLeftPadding();
 	}
 
 	public Integer getBottomPadding() {
-		return getValue().getLineBox().getBottomPadding();
+		DesignBaseCell v = getValue();
+		if (v == null)
+			return 0;
+		return v.getLineBox().getBottomPadding();
 	}
 
 	public Integer getRightPadding() {
-		return getValue().getLineBox().getRightPadding();
+		DesignBaseCell v = getValue();
+		if (v == null)
+			return 0;
+		return v.getLineBox().getRightPadding();
 	}
 
 	public Integer getPadding() {
-		return getValue().getLineBox().getPadding();
+		DesignBaseCell v = getValue();
+		if (v == null)
+			return 0;
+		return v.getLineBox().getPadding();
 	}
-	
+
 	protected int getTableWidth() {
 		ANode parent = getParent();
 		while (parent != null) {
 			if (parent instanceof MTable) {
-				return ((MTable)parent).getValue().getWidth();
+				return ((MTable) parent).getValue().getWidth();
 			}
 			parent = parent.getParent();
 		}

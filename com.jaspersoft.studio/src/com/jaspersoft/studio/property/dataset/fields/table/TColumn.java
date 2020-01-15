@@ -3,6 +3,8 @@
  ******************************************************************************/
 package com.jaspersoft.studio.property.dataset.fields.table;
 
+import java.util.Set;
+
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.properties.PropertyMetadata;
 
@@ -20,6 +22,15 @@ public class TColumn {
 	private transient Object value;
 	private transient Object value1;
 	private transient boolean labelEditable = false;
+	private transient Set<?> hideEnumValues;
+
+	public void setHideEnumValues(Set<?> hev) {
+		hideEnumValues = hev;
+	}
+
+	public Set<?> getHideEnumValues() {
+		return hideEnumValues;
+	}
 
 	public void setLabelEditable(boolean labelEditable) {
 		this.labelEditable = labelEditable;
