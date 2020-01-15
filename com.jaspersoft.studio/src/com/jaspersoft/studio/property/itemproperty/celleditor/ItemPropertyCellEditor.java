@@ -43,6 +43,7 @@ public class ItemPropertyCellEditor extends JSSDialogCellEditor {
 		if (sip == null)
 			sip = new StandardItemProperty(id, null, null);
 		ItemPropertyElementDialog dialog = new ItemPropertyElementDialog(UIUtils.getShell(), descriptor.getDescription(id), sip.getValue(), sip.getValueExpression(), expContext);
+		dialog.setHelpAvailable(false);
 		if (dialog.open() == Dialog.OK)
 			return new StandardItemProperty(id, dialog.getStaticValue(), dialog.getExpressionValue());
 		return null;

@@ -125,6 +125,7 @@ public class ArrayDialog extends PersistentLocationDialog {
 					protected void createExpressionCheckbox(Composite dialogArea) {
 					}
 				};
+				dialog.setHelpAvailable(false);
 				if (dialog.open() == IDialogConstants.OK_ID) {
 					return dialog.getStaticValue();
 				}

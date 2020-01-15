@@ -365,6 +365,7 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 				return super.createDialogArea(parent);
 			}
 		};
+		result.setHelpAvailable(false);
 		result.setForceExpressionMode(wItemProp.hasForcedExpression());
 		return result;
 	}

@@ -382,6 +382,7 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 			dialog = ((IDialogProvider)ipDesc).getDialog(this);
 		} else {
 			dialog = new ItemPropertyElementDialog(UIUtils.getShell(), ipDesc, this);
+			dialog.setHelpAvailable(false);
 			dialog.setForceExpressionMode(hasForcedExpression());
 		}
 		if (dialog.open() == Dialog.OK) {
