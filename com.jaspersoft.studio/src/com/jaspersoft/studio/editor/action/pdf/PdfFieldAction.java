@@ -186,22 +186,9 @@ public class PdfFieldAction extends APdfAction {
 					UIUtils.showInformation("You can use Text type only with TextField and StaticText");
 					return;
 				}
-				if ((PdfFieldTypeEnum.LIST.getName().equalsIgnoreCase((String) evt.getNewValue())
-						&& PdfFieldTypeEnum.COMBO.getName().equalsIgnoreCase((String) evt.getOldValue()))
-						|| (PdfFieldTypeEnum.COMBO.getName().equalsIgnoreCase((String) evt.getNewValue())
-								&& PdfFieldTypeEnum.LIST.getName().equalsIgnoreCase((String) evt.getOldValue()))
-
-				)
-					return;
-				if ((PdfFieldTypeEnum.RADIO.getName().equalsIgnoreCase((String) evt.getNewValue())
-						&& PdfFieldTypeEnum.CHECK.getName().equalsIgnoreCase((String) evt.getOldValue()))
-						|| (PdfFieldTypeEnum.CHECK.getName().equalsIgnoreCase((String) evt.getNewValue())
-								&& PdfFieldTypeEnum.RADIO.getName().equalsIgnoreCase((String) evt.getOldValue()))
-
-				)
-					return;
 				changeType(t, cmp);
-
+				cmp.update();
+				cmp.layout(true);
 				UIUtils.getDisplay().asyncExec(() -> UIUtils.relayoutDialogHeight(getShell(), defheight));
 			});
 
@@ -214,8 +201,6 @@ public class PdfFieldAction extends APdfAction {
 			String type = v.getProperty(JRPdfExporter.PDF_FIELD_TYPE);
 			if (type != null)
 				values.put(JRPdfExporter.PDF_FIELD_TYPE, type);
-//			else
-//				type = PdfFieldTypeEnum.CHECK.getName();
 			return type;
 		}
 
