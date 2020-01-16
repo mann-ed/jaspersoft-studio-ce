@@ -64,6 +64,7 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 			super(parent, section, pDescriptor, showElements);
 		}
 
+		@Override
 		protected ItemDataDialog createItemDataDialog(List<ItemData> clones, StandardItemData itemData) {
 			return new ItemDataDialog(UIUtils.getShell(), Messages.MMap_markersDescription,
 					Messages.SPMarker_MarkersListBtn, clones, itemData,
@@ -124,20 +125,20 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 										else if (mapInfo.getAddress() != null)
 											setAddress(mapInfo.getAddress());
 										else {
-											addPostCreateCommand(StandardMapComponent.PROPERTY_LATITUDE_EXPRESSION,
-													getMapCenter().getLat());
-											addPostCreateCommand(StandardMapComponent.PROPERTY_LONGITUDE_EXPRESSION,
-													getMapCenter().getLng());
+//											addPostCreateCommand(StandardMapComponent.PROPERTY_LATITUDE_EXPRESSION,
+//													getMapCenter().getLat());
+//											addPostCreateCommand(StandardMapComponent.PROPERTY_LONGITUDE_EXPRESSION,
+//													getMapCenter().getLng());
 										}
 										if (mapInfo.getMapType() != null)
 											setMapType(MapType.fromStringID(mapInfo.getMapType().getName()));
-										else
-											addPostCreateCommand(StandardMapComponent.PROPERTY_MAP_TYPE, getMapType());
+//										else
+//											addPostCreateCommand(StandardMapComponent.PROPERTY_MAP_TYPE, getMapType());
 										if (mapInfo.getZoom() != 0)
 											setZoomLevel(mapInfo.getZoom());
-										else
-											addPostCreateCommand(StandardMapComponent.PROPERTY_ZOOM_EXPRESSION,
-													getZoomLevel());
+//										else
+//											addPostCreateCommand(StandardMapComponent.PROPERTY_ZOOM_EXPRESSION,
+//													getZoomLevel());
 									}
 								} finally {
 									initMarkers = false;

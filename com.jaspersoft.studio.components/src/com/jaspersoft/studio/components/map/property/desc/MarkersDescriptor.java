@@ -74,9 +74,8 @@ public class MarkersDescriptor extends ADescriptor {
 					break;
 				}
 			}
-			if (!found) {
+			if (!found)
 				((StandardItem) item).addItemProperty(new StandardItemProperty(propertyName, value, valueExpression));
-			}
 		}
 
 		@Override
@@ -123,7 +122,7 @@ public class MarkersDescriptor extends ADescriptor {
 				new DoublePropertyDescription(MapComponent.ITEM_PROPERTY_latitude, Messages.MarkerPage_LatitudeColumn,
 						"", false, 37.7833d, -85d, 85d),
 				new DoublePropertyDescription(MapComponent.ITEM_PROPERTY_longitude, Messages.MarkerPage_LongitudeColumn,
-						"", false,-122.4167d, -180d, 180d),
+						"", false, -122.4167d, -180d, 180d),
 
 				new TextPropertyDescription<String>(MapComponent.ITEM_PROPERTY_address, Messages.MarkersDescriptor_3,
 						Messages.MarkersDescriptor_4, false),
@@ -140,49 +139,41 @@ public class MarkersDescriptor extends ADescriptor {
 				new TextPropertyDescription<String>(MapComponent.ITEM_PROPERTY_MARKER_ICON_url,
 						Messages.MarkersDescriptor_16, Messages.MarkersDescriptor_17, false),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_ICON_width,
-						Messages.MarkersDescriptor_18, Messages.MarkersDescriptor_19, false, new Integer(0), null),
+						Messages.MarkersDescriptor_18, Messages.MarkersDescriptor_19, false, 0, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_ICON_height,
-						Messages.MarkersDescriptor_20, Messages.MarkersDescriptor_21, false, new Integer(0), null),
+						Messages.MarkersDescriptor_20, Messages.MarkersDescriptor_21, false, 0, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_ICON_ORIGIN_x,
-						Messages.MarkersDescriptor_22, Messages.MarkersDescriptor_23, false, new Integer(0), null,
-						null),
+						Messages.MarkersDescriptor_22, Messages.MarkersDescriptor_23, false, 0, null, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_ICON_ORIGIN_y,
-						Messages.MarkersDescriptor_24, Messages.MarkersDescriptor_25, false, new Integer(0), null,
-						null),
+						Messages.MarkersDescriptor_24, Messages.MarkersDescriptor_25, false, 0, null, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_ICON_ANCHOR_x,
-						Messages.MarkersDescriptor_26, Messages.MarkersDescriptor_27, false, new Integer(0), null,
-						null),
+						Messages.MarkersDescriptor_26, Messages.MarkersDescriptor_27, false, 0, null, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_ICON_ANCHOR_y,
-						Messages.MarkersDescriptor_28, Messages.MarkersDescriptor_29, false, new Integer(0), null,
-						null),
+						Messages.MarkersDescriptor_28, Messages.MarkersDescriptor_29, false, 0, null, null),
 
 				new TextPropertyDescription<String>(MapComponent.ITEM_PROPERTY_MARKER_shadow,
 						Messages.MarkersDescriptor_30, Messages.MarkersDescriptor_31, false),
 				new TextPropertyDescription<String>(MapComponent.ITEM_PROPERTY_MARKER_SHADOW_url,
 						Messages.MarkersDescriptor_32, Messages.MarkersDescriptor_33, false),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_SHADOW_width,
-						Messages.MarkersDescriptor_34, Messages.MarkersDescriptor_35, false, new Integer(0), null),
+						Messages.MarkersDescriptor_34, Messages.MarkersDescriptor_35, false, 0, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_SHADOW_height,
-						Messages.MarkersDescriptor_36, Messages.MarkersDescriptor_37, false, new Integer(0), null),
+						Messages.MarkersDescriptor_36, Messages.MarkersDescriptor_37, false, 0, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_SHADOW_ORIGIN_x,
-						Messages.MarkersDescriptor_38, Messages.MarkersDescriptor_39, false, new Integer(0), null,
-						null),
+						Messages.MarkersDescriptor_38, Messages.MarkersDescriptor_39, false, 0, null, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_SHADOW_ORIGIN_y,
-						Messages.MarkersDescriptor_40, Messages.MarkersDescriptor_41, false, new Integer(0), null,
-						null),
+						Messages.MarkersDescriptor_40, Messages.MarkersDescriptor_41, false, 0, null, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_SHADOW_ANCHOR_x,
-						Messages.MarkersDescriptor_42, Messages.MarkersDescriptor_43, false, new Integer(0), null,
-						null),
+						Messages.MarkersDescriptor_42, Messages.MarkersDescriptor_43, false, 0, null, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_SHADOW_ANCHOR_y,
-						Messages.MarkersDescriptor_44, Messages.MarkersDescriptor_45, false, new Integer(0), null,
-						null),
+						Messages.MarkersDescriptor_44, Messages.MarkersDescriptor_45, false, 0, null, null),
 
 				new TextPropertyDescription<String>(MapComponent.ITEM_PROPERTY_MARKER_INFOWINDOW_content,
 						Messages.MarkersDescriptor_46, Messages.MarkersDescriptor_47, false),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_INFOWINDOW_pixelOffset,
 						Messages.MarkersDescriptor_48, Messages.MarkersDescriptor_49, false, null, null),
 				new IntegerPropertyDescription(MapComponent.ITEM_PROPERTY_MARKER_INFOWINDOW_maxWidth,
-						Messages.MarkersDescriptor_50, Messages.MarkersDescriptor_51, false, new Integer(0), null),
+						Messages.MarkersDescriptor_50, Messages.MarkersDescriptor_51, false, 0, null),
 
 				new ColorPropertyDescription<String>(MapComponent.ITEM_PROPERTY_MARKER_color,
 						Messages.MarkersDescriptor_52, Messages.MarkersDescriptor_53, false),
@@ -216,8 +207,7 @@ public class MarkersDescriptor extends ADescriptor {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.jaspersoft.studio.tibcomaps.property.desc.AItemDescriptor#
-	 * validateItem (java.util.List,
-	 * net.sf.jasperreports.components.map.ItemData,
+	 * validateItem (java.util.List, net.sf.jasperreports.components.map.ItemData,
 	 * net.sf.jasperreports.components.map.Item,
 	 * net.sf.jasperreports.components.map.ItemProperty)
 	 */

@@ -213,17 +213,13 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		langExprD.setHelpRefBuilder(new HelpReferenceBuilder(
 				"net.sf.jasperreports.doc/docs/components.schema.reference.html#languageExpression")); //$NON-NLS-1$
 
-		mapTypeD = getMapTypeD();
+		getMapTypeD();
 		desc.add(mapTypeD);
 
-		mapScaleD = new NamedEnumPropertyDescriptor<>(StandardMapComponent.PROPERTY_MAP_SCALE,
-				Messages.MMap_mapScaleTitle, MapScaleEnum.ONE, NullEnum.NOTNULL);
-		mapScaleD.setDescription(Messages.MMap_mapScaleDescription);
+		getMapScaleD();
 		desc.add(mapScaleD);
 
-		imageTypeD = new NamedEnumPropertyDescriptor<>(StandardMapComponent.PROPERTY_IMAGE_TYPE,
-				Messages.MMap_imageTypeTitle, MapImageTypeEnum.GIF, NullEnum.NOTNULL);
-		imageTypeD.setDescription(Messages.MMap_imageTypeDescription);
+		getMapImageTypeD();
 		desc.add(imageTypeD);
 
 		NTextPropertyDescriptor mapKeyD = new NTextPropertyDescriptor(MapComponent.PROPERTY_KEY,
@@ -425,7 +421,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		} else if (id.equals(StandardMapComponent.PROPERTY_MARKER_DATA_LIST)) {
 			if (value instanceof List<?>) {
 				@SuppressWarnings("unchecked")
-				List<ItemData> itemDatas = new ArrayList<ItemData>((List<ItemData>) value);
+				List<ItemData> itemDatas = new ArrayList<>((List<ItemData>) value);
 				Object[] existing = component.getMarkerDataList().toArray();
 				for (Object p : existing)
 					component.removeMarkerData((ItemData) p);
@@ -528,7 +524,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 			evaluationGroupNameD.setItems(items);
 	}
 
-	private RComboBoxPropertyDescriptor evaluationGroupNameD;
+	private transient RComboBoxPropertyDescriptor evaluationGroupNameD;
 	private static NamedEnumPropertyDescriptor<MapTypeEnum> mapTypeD;
 	private static NamedEnumPropertyDescriptor<MapImageTypeEnum> imageTypeD;
 	private static NamedEnumPropertyDescriptor<MapScaleEnum> mapScaleD;
@@ -536,12 +532,31 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 	/**
 	 * @return the mapTypeD
 	 */
-	public NamedEnumPropertyDescriptor<MapTypeEnum> getMapTypeD() {
-		if (mapTypeD == null) {
+	public static NamedEnumPropertyDescriptor<MapTypeEnum> getMapTypeD() {
+		if (mapTypeD == null)
 			mapTypeD = new NamedEnumPropertyDescriptor<>(StandardMapComponent.PROPERTY_MAP_TYPE,
 					Messages.MMap_mapTypeTitle, MapTypeEnum.HYBRID, NullEnum.NOTNULL);
-		}
 		return mapTypeD;
+	}
+
+	public static NamedEnumPropertyDescriptor<MapScaleEnum> getMapScaleD() {
+		if (mapScaleD == null) {
+			mapScaleD = new NamedEnumPropertyDescriptor<>(StandardMapComponent.PROPERTY_MAP_SCALE,
+					Messages.MMap_mapScaleTitle, MapScaleEnum.ONE, NullEnum.NOTNULL);
+			mapScaleD.setDescription(Messages.MMap_mapScaleDescription);
+		}
+
+		return mapScaleD;
+	}
+
+	public static NamedEnumPropertyDescriptor<MapImageTypeEnum> getMapImageTypeD() {
+		if (imageTypeD == null) {
+			imageTypeD = new NamedEnumPropertyDescriptor<>(StandardMapComponent.PROPERTY_IMAGE_TYPE,
+					Messages.MMap_imageTypeTitle, MapImageTypeEnum.GIF, NullEnum.NOTNULL);
+			imageTypeD.setDescription(Messages.MMap_mapScaleDescription);
+		}
+
+		return imageTypeD;
 	}
 
 	@Override
