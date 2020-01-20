@@ -119,7 +119,7 @@ public class PdfFieldAction extends APdfAction {
 		private Map<String, WJRProperty> controls = new HashMap<>();
 
 		protected FieldDialog(Shell parentShell) {
-			super(parentShell);
+			super(parentShell, false);
 			setTitle(PdfFieldAction.this.getText());
 			setDescription(PdfFieldAction.this.getToolTipText());
 			List<Object> graphicalElements = editor.getSelectionCache().getSelectionModelForType(MGraphicElement.class);
@@ -243,6 +243,7 @@ public class PdfFieldAction extends APdfAction {
 		}
 
 		private void buildText(Composite cmp) {
+			buildProp(cmp, JRPdfExporter.PDF_FIELD_VALUE, "Selected Choice Value");
 			buildProp(cmp, JRPdfExporter.PDF_FIELD_TEXT_MULTILINE, Messages.PdfFieldAction_12);
 		}
 
