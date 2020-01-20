@@ -209,6 +209,10 @@ public class PdfFieldAction extends APdfAction {
 					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICES);
 					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECKED);
 					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_CHOICES);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_CHECKED);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
 					buildText(cmp);
 					break;
 				case LIST:
@@ -216,6 +220,9 @@ public class PdfFieldAction extends APdfAction {
 					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECKED);
 					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
 					pm.removeProperty(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_CHECKED);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_CHECK_TYPE);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
 					buildList(cmp);
 					break;
 				case RADIO:
@@ -223,6 +230,11 @@ public class PdfFieldAction extends APdfAction {
 					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
 					pm.removeProperty(JRPdfExporter.PDF_FIELD_CHOICES);
 					pm.removeProperty(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
+					pm.removeProperty(JRPdfExporter.PDF_FIELD_VALUE);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_CHOICE_SEPARATORS);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_CHOICES);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_TEXT_MULTILINE);
+					eClone.removePropertyExpression(JRPdfExporter.PDF_FIELD_VALUE);
 					buildCheck(cmp);
 					break;
 				default:
