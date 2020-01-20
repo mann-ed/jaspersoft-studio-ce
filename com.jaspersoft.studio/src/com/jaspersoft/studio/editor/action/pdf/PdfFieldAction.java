@@ -120,8 +120,6 @@ public class PdfFieldAction extends APdfAction {
 
 		protected FieldDialog(Shell parentShell) {
 			super(parentShell);
-			defwidth = 450;
-			defheight = 400;
 			setTitle(PdfFieldAction.this.getText());
 			setDescription(PdfFieldAction.this.getToolTipText());
 			List<Object> graphicalElements = editor.getSelectionCache().getSelectionModelForType(MGraphicElement.class);
@@ -134,11 +132,6 @@ public class PdfFieldAction extends APdfAction {
 				pms.stream().filter(pm -> getPropertyNames().contains(pm.getName()))
 						.forEach(pm -> props.put(pm.getName(), pm));
 			}
-		}
-
-		@Override
-		protected boolean isResizable() {
-			return false;
 		}
 
 		public JRDesignElement getValue() {
