@@ -437,7 +437,7 @@ public class WJRProperty extends AWidget {
 			String value = field.getProperty(c.getPropertyName());
 			return new PropertyExpressionDTO(false, c.getPropertyName(), value);
 		}
-		dto = new PropertyExpressionDTO(false, c.getPropertyName(), "");
+		dto = new PropertyExpressionDTO(false, c.getPropertyName(), null);
 		return dto;
 	}
 

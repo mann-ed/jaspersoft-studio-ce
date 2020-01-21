@@ -115,7 +115,7 @@ public class SelectableComboItemPropertyDescription<T> extends ComboItemProperty
 				i18nOpts[i][0] = opts[i][0];
 				i18nOpts[i][1] = cd.getLocalizedString(opts[i][1]);
 			}
-			SelectableComboItemPropertyDescription<String> result = new SelectableComboItemPropertyDescription<String>(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), cpd.getDefaultValue(), i18nOpts);
+			SelectableComboItemPropertyDescription<String> result = new SelectableComboItemPropertyDescription<>(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), cpd.getDefaultValue(), i18nOpts);
 			result.setReadOnly(cpd.isReadOnly());
 			result.setFallbackValue(cpd.getFallbackValue());
 			return result;
