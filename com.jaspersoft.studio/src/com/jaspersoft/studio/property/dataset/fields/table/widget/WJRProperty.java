@@ -273,7 +273,7 @@ public class WJRProperty extends AWidget {
 			if (lbl != null)
 				lbl.setToolTipText(getToolTipText());
 			if (lblText != null)
-				lblText.setToolTipText(getToolTipText());
+				lblText.setToolTipText(lbl != null ? lbl.getToolTipText() : getToolTipText());
 		} else
 			super.initControl(parent, c);
 	}
@@ -294,6 +294,8 @@ public class WJRProperty extends AWidget {
 				if (exp != null)
 					tt = exp.getText();
 			}
+			if (tt == null)
+				tt = "null";
 			if (!Misc.isNullOrEmpty(tt))
 				tt += "\n\n";
 			if (c.getType().equals("jrProperty"))

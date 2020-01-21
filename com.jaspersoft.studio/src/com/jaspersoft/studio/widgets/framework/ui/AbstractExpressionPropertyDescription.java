@@ -28,30 +28,31 @@ import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 /**
- * Superclass of every {@link ItemPropertyDescription}. Since a widget is composed of both expression part
- * and simple control part, this class implement the part regardig the expression, since its logic is shared between
+ * Superclass of every {@link ItemPropertyDescription}. Since a widget is
+ * composed of both expression part and simple control part, this class
+ * implement the part regardig the expression, since its logic is shared between
  * the widgets
  * 
  * @author Orlandin Marco
  */
 public abstract class AbstractExpressionPropertyDescription<T> implements ItemPropertyDescription<T> {
-	
+
 	protected String name;
-	
+
 	protected String label;
-	
+
 	protected String description;
-	
+
 	protected boolean mandatory;
-	
+
 	protected T defaultValue;
-	
+
 	protected T fallbackValue;
-	
+
 	protected boolean readOnly;
-	
+
 	protected JasperReportsConfiguration jConfig;
-	
+
 	public AbstractExpressionPropertyDescription() {
 	}
 
@@ -63,7 +64,8 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 		this(name, label, description, mandatory, null);
 	}
 
-	public AbstractExpressionPropertyDescription(String name, String label, String description, boolean mandatory, T defaultValue) {
+	public AbstractExpressionPropertyDescription(String name, String label, String description, boolean mandatory,
+			T defaultValue) {
 		super();
 		this.name = name;
 		this.label = label;
@@ -132,47 +134,48 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 	public void setDefaultValue(T defaultValue) {
 		this.defaultValue = defaultValue;
 	}
-	
+
 	@Override
 	public T getFallbackValue() {
 		return fallbackValue;
 	}
-	
-	public void setFallbackValue(T fallbackValue){
+
+	public void setFallbackValue(T fallbackValue) {
 		this.fallbackValue = fallbackValue;
 	}
 
 	public void handleEdit(Control txt, IWItemProperty wiProp) {
 		if (wiProp == null)
 			return;
-		if (wiProp.isExpressionMode() && txt instanceof Text){
+		if (wiProp.isExpressionMode() && txt instanceof Text) {
 			String tvalue = ((Text) txt).getText();
 			if (tvalue != null && tvalue.isEmpty())
 				tvalue = null;
 			wiProp.setValue(null, new JRDesignExpression(Misc.nvl(tvalue)));
 		}
 	}
-	
+
 	/**
-	 * This is used to created the expression controls in a lazy way, doing this the expression 
-	 * control can be created only when the expression mode should be shown. It also check to 
-	 * avoid to create it multiple times
+	 * This is used to created the expression controls in a lazy way, doing this
+	 * the expression control can be created only when the expression mode
+	 * should be shown. It also check to avoid to create it multiple times
 	 */
-	protected void lazyCreateExpressionControl(IWItemProperty wiProp, DoubleControlComposite cmp){
-		if (wiProp.isExpressionMode() && cmp.getFirstContainer().getChildren().length == 0){
+	protected void lazyCreateExpressionControl(IWItemProperty wiProp, DoubleControlComposite cmp) {
+		if (wiProp.isExpressionMode() && cmp.getFirstContainer().getChildren().length == 0) {
 			Control expressionControl = createExpressionControl(wiProp, cmp.getFirstContainer());
 			cmp.getFirstContainer().setData(expressionControl);
 			cmp.setExpressionControlToHighlight(expressionControl);
 		}
 	}
-	
+
 	/**
 	 * Create the control to input the expression
 	 */
-	protected Control createExpressionControl(final IWItemProperty wiProp, Composite parent){
+	protected Control createExpressionControl(final IWItemProperty wiProp, Composite parent) {
 		Text textExpression = new Text(parent, SWT.BORDER | SWT.WRAP);
-		//The expression control always fill the available area in both directions
-		GridData textData = new GridData(GridData.FILL_BOTH); 
+		// The expression control always fill the available area in both
+		// directions
+		GridData textData = new GridData(GridData.FILL_BOTH);
 		textExpression.setLayoutData(textData);
 		textExpression.addFocusListener(new FocusAdapter() {
 
@@ -198,8 +201,8 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 				((Text) e.getSource()).setSelection(p);
 			}
 		});
-		
-		if (isReadOnly()){
+
+		if (isReadOnly()) {
 			textExpression.setEnabled(false);
 		}
 
@@ -212,7 +215,7 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 
 	protected void setupContextMenu(final Control c, final IWItemProperty wiProp) {
 		IMenuProvider provider = wiProp.getContextualMenuProvider();
-		if (provider != null){
+		if (provider != null) {
 			provider.setupMenu(wiProp, this, c);
 		}
 	}
@@ -220,10 +223,10 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 	public void update(Control c, IWItemProperty wip) {
 		if (c instanceof Text) {
 			Text txtExpr = (Text) c;
-			if (wip.isExpressionMode()){
+			if (wip.isExpressionMode()) {
 				JRExpression expression = wip.getExpressionValue();
 				String txt = Misc.nvl(expression != null ? expression.getText() : null);
-				
+
 				Point oldSelection = txtExpr.getSelection();
 
 				txtExpr.setText(txt);
@@ -237,28 +240,29 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 					tooltip += "\n\n" + txt;
 				tooltip += "\n" + getToolTip();
 				txtExpr.setToolTipText(tooltip.trim());
-			} 
+			}
 		}
 	}
-	
-	protected void changeFallbackForeground(boolean isUsingFallback, Control control){
-		if (isUsingFallback && !ModelUtils.safeEquals(control.getForeground(), ColorConstants.gray)){
+
+	protected void changeFallbackForeground(boolean isUsingFallback, Control control) {
+		if (isUsingFallback && !ModelUtils.safeEquals(control.getForeground(), ColorConstants.gray)) {
 			control.setForeground(ColorConstants.gray);
-		} else if (!isUsingFallback && !ModelUtils.safeEquals(control.getForeground(), ColorConstants.black)){
+		} else if (!isUsingFallback && !ModelUtils.safeEquals(control.getForeground(), ColorConstants.black)) {
 			control.setForeground(ColorConstants.black);
 		}
 	}
-	
+
 	public String getToolTip() {
-		String tt = Misc.nvl(getDescription());
-		tt += "\n" + (isMandatory() ? "Mandatory" : "Optional");
+		String tt = getName() + "\n\n";
+		tt += Misc.nvl(getDescription());
+		tt += "\n\n" + (isMandatory() ? "Mandatory" : "Optional");
 		if (!Misc.isNullOrEmpty(getDefaultValueString()))
-			tt += "\nDefault: " + getDefaultValueString();
+			tt += "\n\nDefault: " + getDefaultValueString();
 		return tt;
 	}
-	
+
 	/**
-	 * Clone the current descriptor 
+	 * Clone the current descriptor
 	 * 
 	 * @return the cloned {@link ItemPropertyDescription}
 	 */
