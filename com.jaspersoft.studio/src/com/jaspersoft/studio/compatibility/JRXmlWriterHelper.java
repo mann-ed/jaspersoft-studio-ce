@@ -6,8 +6,10 @@ package com.jaspersoft.studio.compatibility;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +43,7 @@ import net.sf.jasperreports.engine.xml.JRXmlWriter;
  */
 public class JRXmlWriterHelper {
 
-	private static final Set<String> writers = new HashSet<String>();
+	private static final Set<String> writers = new HashSet<>();
 
 	static {
 		for (Field f : JRConstants.class.getFields()) {
@@ -60,11 +62,30 @@ public class JRXmlWriterHelper {
 	}
 
 	public static String[][] getVersions() {
-		List<String> sl = new ArrayList<String>(writers);
-		Collections.sort(sl);
+		List<String> sl = new ArrayList<>(writers);
+		sl.sort((String o1, String o2) -> {
+			if (o1 == null || o2 == null) {
+				int o2null = o2 == null ? 0 : -1;
+				return o1 == null ? o2null : 1;
+			}
+			String[] v1 = o1.split("\\.");
+			String[] v2 = o2.split("\\.");
+			for (int i = 0; i < Math.min(v1.length, v2.length); i++) {
+				char c1 = v1[i].charAt(0);
+				char c2 = v2[i].charAt(0);
+				int cmp = 0;
+				if (c1 >= '0' && c1 <= '9' && c2 >= 0 && c2 <= '9')
+					cmp = new BigInteger(v1[i]).compareTo(new BigInteger(v2[i]));
+				if (cmp == 0)
+					cmp = v1[i].compareTo(v2[i]);
+				if (cmp != 0)
+					return cmp;
+			}
+			return v1.length - v2.length;
+		});
 		Collections.reverse(sl);
 		String[][] r = new String[sl.size() + 1][2];
-		r[0] = new String[] { Messages.JRXmlWriterHelper_1, "last" }; //$NON-NLS-2$
+		r[0] = new String[] { Messages.JRXmlWriterHelper_1, "last" }; // $NON-NLS-2$
 		int i = 1;
 		for (String key : sl) {
 			r[i][0] = "JasperReports " + key.replace('_', '.'); //$NON-NLS-1$
@@ -80,14 +101,15 @@ public class JRXmlWriterHelper {
 		return writers;
 	}
 
-	public static String writeReport(JasperReportsConfiguration jrContext, JRReport report, IFile file, boolean showDialog)
-			throws Exception {
+	public static String writeReport(JasperReportsConfiguration jrContext, JRReport report, IFile file,
+			boolean showDialog) throws Exception {
 
-		return writeReport(jrContext, report, fixencoding(FileUtils.UTF8_ENCODING), getVersion(file, jrContext, showDialog));
+		return writeReport(jrContext, report, fixencoding(FileUtils.UTF8_ENCODING),
+				getVersion(file, jrContext, showDialog));
 	}
 
 	public static String writeReport(JasperReportsContext jrContext, JRReport report, String version) throws Exception {
-		return writeReport(jrContext, report, fixencoding(FileUtils.UTF8_ENCODING), version); //$NON-NLS-1$
+		return writeReport(jrContext, report, fixencoding(FileUtils.UTF8_ENCODING), version); // $NON-NLS-1$
 	}
 
 	public static String writeReport(JasperReportsContext jrContext, JRReport report, String encoding, String version)
@@ -107,9 +129,11 @@ public class JRXmlWriterHelper {
 			jrContext.setProperty(JRXmlBaseWriter.PROPERTY_REPORT_VERSION, version);
 		String xml = null;
 		try {
-			// jrContext.setProperty("net.sf.jasperreports.components.table.version", version);
+			// jrContext.setProperty("net.sf.jasperreports.components.table.version",
+			// version);
 			xml = new JRXmlWriter(jrContext).write(report, encoding);
-			// request Bug 37455 - [Case #48613] Simple jrxml timestamp on Save or Save As
+			// request Bug 37455 - [Case #48613] Simple jrxml timestamp on Save
+			// or Save As
 			// + community bug #3936 over-aggressive time stamp
 			String timestamp = ""; //$NON-NLS-1$
 			if (jrContext instanceof JasperReportsConfiguration) {
@@ -124,10 +148,9 @@ public class JRXmlWriterHelper {
 			}
 			// Get JSS bundle version
 			String jssPluginVersion = JaspersoftStudioPlugin.getInstance().getBundle().getVersion().toString();
-			String jrVersionTxt = Messages.JRXmlWriterHelper_9 + version + " "; //$NON-NLS-2$
-			xml = xml
-					.replaceFirst(
-							"<jasperReport ", "<!-- Created with Jaspersoft Studio version " + jssPluginVersion + jrVersionTxt + " -->\n" + timestamp + "<jasperReport "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			String jrVersionTxt = Messages.JRXmlWriterHelper_9 + version + " "; // $NON-NLS-2$
+			xml = xml.replaceFirst("<jasperReport ", "<!-- Created with Jaspersoft Studio version " + jssPluginVersion //$NON-NLS-1$ //$NON-NLS-2$
+					+ jrVersionTxt + " -->\n" + timestamp + "<jasperReport "); //$NON-NLS-1$ //$NON-NLS-2$
 		} finally {
 			if (disposeContext)
 				((JasperReportsConfiguration) jrContext).dispose();
@@ -136,7 +159,7 @@ public class JRXmlWriterHelper {
 	}
 
 	public static String fixencoding(String encoding) {
-		return FileUtils.UTF8_ENCODING; 
+		return FileUtils.UTF8_ENCODING;
 		// String tmp = EncodingMap.getJava2IANAMapping(encoding);
 		// if (tmp != null)
 		// return tmp;
@@ -156,14 +179,18 @@ public class JRXmlWriterHelper {
 			if (dialog.open() == Dialog.OK) {
 				version = dialog.getVersion();
 				try {
-					ScopedPreferenceStore pstore = JaspersoftStudioPlugin.getInstance().getPreferenceStore(resource,JaspersoftStudioPlugin.getUniqueIdentifier());
+					ScopedPreferenceStore pstore = JaspersoftStudioPlugin.getInstance().getPreferenceStore(resource,
+							JaspersoftStudioPlugin.getUniqueIdentifier());
 					pstore.setValue(JRVersionPreferencesPages.JSS_COMPATIBILITY_VERSION, version);
-					
-					if (dialog.isHideNext()){
-						//need to use put value, with setValue since false it is the default will remove the value from
-						//the project store and this will cause the get to look on upper level. Instead the put aways set
-						//the value inside the store
-						pstore.putValue(JRVersionPreferencesPages.JSS_COMPATIBILITY_SHOW_DIALOG, Boolean.FALSE.toString());
+
+					if (dialog.isHideNext()) {
+						// need to use put value, with setValue since false it
+						// is the default will remove the value from
+						// the project store and this will cause the get to look
+						// on upper level. Instead the put aways set
+						// the value inside the store
+						pstore.putValue(JRVersionPreferencesPages.JSS_COMPATIBILITY_SHOW_DIALOG,
+								Boolean.FALSE.toString());
 					}
 					pstore.save();
 				} catch (IOException e) {
@@ -186,16 +213,15 @@ public class JRXmlWriterHelper {
 	}
 
 	/**
-	 * Checks if the compatible version specified in the Jaspersoft Studio preference page is greater, or even equal, than
-	 * the one passed as parameter.
+	 * Checks if the compatible version specified in the Jaspersoft Studio
+	 * preference page is greater, or even equal, than the one passed as
+	 * parameter.
 	 * 
-	 * @param jconfig
-	 *          the JasperReports context
-	 * @param compareVersion
-	 *          the version to compare with
-	 * @param equalToo
-	 *          flag that specifies if also equal version is accepted
-	 * @return <code>true</code> if compatible version is greater (or equal), <code>false</code> otherwise
+	 * @param jconfig the JasperReports context
+	 * @param compareVersion the version to compare with
+	 * @param equalToo flag that specifies if also equal version is accepted
+	 * @return <code>true</code> if compatible version is greater (or equal),
+	 * <code>false</code> otherwise
 	 */
 	public static boolean isCompatibleVersionGreater(JasperReportsConfiguration jconfig, String compareVersion,
 			boolean equalToo) {
@@ -211,16 +237,15 @@ public class JRXmlWriterHelper {
 	}
 
 	/**
-	 * Checks if the compatible version specified in the Jaspersoft Studio preference page is minor, or even equal, than
-	 * the one passed as parameter.
+	 * Checks if the compatible version specified in the Jaspersoft Studio
+	 * preference page is minor, or even equal, than the one passed as
+	 * parameter.
 	 * 
-	 * @param jconfig
-	 *          the JasperReports context
-	 * @param compareVersion
-	 *          the version to compare with
-	 * @param equalToo
-	 *          flag that specifies if also equal version is accepted
-	 * @return <code>true</code> if compatible version is minor (or equal), <code>false</code> otherwise
+	 * @param jconfig the JasperReports context
+	 * @param compareVersion the version to compare with
+	 * @param equalToo flag that specifies if also equal version is accepted
+	 * @return <code>true</code> if compatible version is minor (or equal),
+	 * <code>false</code> otherwise
 	 */
 	public static boolean isCompatibleVersionMinor(JasperReportsConfiguration jconfig, String compareVersion,
 			boolean equalToo) {
@@ -236,16 +261,14 @@ public class JRXmlWriterHelper {
 	}
 
 	/**
-	 * Checks if the compatible version specified in the Jaspersoft Studio preference page is equal to the one passed as
-	 * parameter.
+	 * Checks if the compatible version specified in the Jaspersoft Studio
+	 * preference page is equal to the one passed as parameter.
 	 * 
-	 * @param jconfig
-	 *          the JasperReports context
-	 * @param compareVersion
-	 *          the version to compare with
-	 * @param equalToo
-	 *          flag that specifies if also equal version is accepted
-	 * @return <code>true</code> if compatible version is equal, <code>false</code> otherwise
+	 * @param jconfig the JasperReports context
+	 * @param compareVersion the version to compare with
+	 * @param equalToo flag that specifies if also equal version is accepted
+	 * @return <code>true</code> if compatible version is equal,
+	 * <code>false</code> otherwise
 	 */
 	public static boolean isCompatibleVersionEqual(JasperReportsConfiguration jconfig, String compareVersion) {
 		Assert.isNotNull(jconfig);
@@ -254,10 +277,10 @@ public class JRXmlWriterHelper {
 	}
 
 	/**
-	 * Reads the information about the compatible version of JasperReports to be used.
+	 * Reads the information about the compatible version of JasperReports to be
+	 * used.
 	 * 
-	 * @param jconfig
-	 *          the JasperReports context
+	 * @param jconfig the JasperReports context
 	 * @return the compatible version
 	 */
 	private static String getCompatibleVersion(JasperReportsConfiguration jconfig) {
