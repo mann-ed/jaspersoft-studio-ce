@@ -9,6 +9,7 @@ import java.util.List;
 import org.eclipse.jface.wizard.IWizardPage;
 
 import com.jaspersoft.studio.templates.JrxmlTemplateBundle;
+import com.jaspersoft.studio.wizards.JSSWizardRunnablePage;
 import com.jaspersoft.studio.wizards.ReportNewWizard;
 
 /**
@@ -44,6 +45,11 @@ public class ReportWizardDataSourceDynamicPage extends StaticWizardDataSourcePag
 	public IWizardPage getNextPage() {
 		// need to call this to run the thread to discover the fields
 		super.getNextPage();
+		if(getSettings().containsKey(JSSWizardRunnablePage.EXECUTION_EXCEPTION_RAISED)) {
+			// clean-up, because we might want to re-try a possible operation
+			getSettings().remove(JSSWizardRunnablePage.EXECUTION_EXCEPTION_RAISED);
+			return null;
+		}
 		ReportNewWizard containerWizard = (ReportNewWizard) getWizard();
 		if (!getSettings().containsKey(ReportWizardDataSourceDynamicPage.DISCOVERED_FIELDS)
 				|| ((List<?>) getSettings().get(ReportWizardDataSourceDynamicPage.DISCOVERED_FIELDS)).isEmpty()) {

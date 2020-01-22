@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Composite;
  */
 public abstract class JSSWizardRunnablePage extends JSSWizardPage {
 
-	
-	
+	/** id for the settings information related to a possible exception raised during the custom code run */
+	public static final String EXECUTION_EXCEPTION_RAISED = "exception_raised_during_execution"; //$NON-NLS-1$
 	
 	/**
 	 * Special exception that a process can rise to avoid to see a message box with the error
@@ -58,38 +58,32 @@ public abstract class JSSWizardRunnablePage extends JSSWizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
-		
-		if (requireElaboration())
-	  {
-	  	processResult = true;
-		  if (getWizard() != null && getWizard() instanceof JSSWizard)
-		  {
-				
-				((JSSWizard)getWizard()).run(true, true, new IRunnableWithProgress() {
+		if (requireElaboration()) {
+			processResult = true;
+			if (getWizard() != null && getWizard() instanceof JSSWizard) {
+				((JSSWizard) getWizard()).run(true, true, new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						
-						monitor.beginTask("Processing, please wait", IProgressMonitor.UNKNOWN); //to be translated!
+						monitor.beginTask("Processing, please wait", IProgressMonitor.UNKNOWN); // to be translated!
 						try {
 							JSSWizardRunnablePage.this.run(monitor);
 						} catch (Exception e) {
-							
-							if (e != USER_CANCEL_EXCEPTION)
-							{
+							getSettings().put(EXECUTION_EXCEPTION_RAISED, true);
+							if (e != USER_CANCEL_EXCEPTION) {
 								UIUtils.showError(e);
 							}
-							
 							processResult = false;
 						} finally {
 							monitor.done();
 						}
 					}
 				});
-	
-			}		
-			
-		  if (!processResult) return null;
-	  }
-		return super.getNextPage();
+			}
+
+			if (!processResult) {
+				return null;
+			}
+		}
+		return super.getNextPage();			
 	}
 
 	
