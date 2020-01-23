@@ -55,9 +55,8 @@ public class ItemPropertyLayoutData {
 	/**
 	 * Used to know the height hint of the expression control, used only if expressionFillVertical is false. If this space is available
 	 * the control will be set to this height
-	 * Default value is 22
 	 */
-	public int expressionHeightHint = 22;	
+	public int expressionHeightHint = SWT.DEFAULT;	
 	
 	/**
 	 * Default size of the dialog button
