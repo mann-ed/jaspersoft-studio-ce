@@ -148,7 +148,7 @@ public class TabbedPropertyComposite extends Composite {
 		}
 		// Create the search bar for the properties
 		searchBar = new TabbedPropertySearch(parent, page);
-		searchBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		searchBar.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		listComposite = new TabbedPropertyList(mainComposite);
 		listComposite.getControl().setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

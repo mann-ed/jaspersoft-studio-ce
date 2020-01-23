@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
@@ -39,15 +40,17 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.progress.WorkbenchJob;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.wb.swt.ResourceCache;
@@ -104,12 +107,7 @@ public class StylesListSection extends AbstractSection {
 	/**
 	 * Width of a line where the value of an attribute is shown
 	 */
-	private static final int ITEM_WIDTH = 200;
-	
-	/**
-	 * Height of a line where the value of an attribute is shown
-	 */
-	private static final int ITEM_HEIGHT = 20;
+	private static final int ITEM_WIDTH = 220;
 	
 	/**
 	 * Image show to remove an attribute
@@ -182,6 +180,54 @@ public class StylesListSection extends AbstractSection {
 			}
 		}
 	}
+	
+	private Layout colorLayout = new Layout() {
+		
+		@Override
+		protected void layout(Composite parent, boolean flushCache) {
+			
+			
+			Control[] children = parent.getChildren();
+			Rectangle carea = parent.getClientArea();
+			
+			Control colorLabel = children[0];
+			int color_y = carea.height > 13 ? (carea.height - 13)/2 : 0;
+			colorLabel.setBounds(0, color_y, 13, 13);
+			Control text = children[1];
+			text.setBounds(15, 0, carea.width - 15, carea.height);
+		}
+		
+		@Override
+		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			Control[] children = composite.getChildren();
+			Point size = children[1].computeSize(wHint, hHint);
+			return new Point(size.x + 15, Math.max(size.y, 13));
+		}
+	};
+	
+	private Layout removeLayout = new Layout() {
+		
+		@Override
+		protected void layout(Composite parent, boolean flushCache) {
+			
+			
+			Control[] children = parent.getChildren();
+			Rectangle carea = parent.getClientArea();
+			
+			Control imageLabel = children[0];
+			int image_y = carea.height > 16 ? (carea.height - 16)/2 : 0;
+			imageLabel.setBounds(0, image_y, 16, 16);
+			Control text = children[1];
+			text.setBounds(18, 0, carea.width - 18, carea.height);
+		}
+		
+		@Override
+		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			Control[] children = composite.getChildren();
+			Point size = children[1].computeSize(wHint, hHint);
+			return new Point(size.x + 18, Math.max(size.y, 16));
+		}
+	};
 	
 	/**
 	 * The delay of the update job
@@ -329,8 +375,6 @@ public class StylesListSection extends AbstractSection {
 	private Control paintColor(Composite parent, final RGB colorValue, String colorName, boolean addLine, String toolTip) {
 		String stringValue = getHexFromRGB(colorValue);
 		Composite nameComp = new Composite(parent, SWT.NONE);
-		RowLayout layout = new RowLayout();
-		nameComp.setLayout(layout);
 		nameComp.setLayoutData(generateElementGridData());
 
 		Label imageLabel = new Label(nameComp, SWT.NONE);
@@ -343,33 +387,36 @@ public class StylesListSection extends AbstractSection {
 		label.setEditable(false);
 		label.setEnabled(false);
 		nameComp.setToolTipText(toolTip);
+		
+		nameComp.setLayout(removeLayout);
 
 		Composite valueComp = new Composite(parent, SWT.NONE);
 		RowLayout inLineLayout = new RowLayout();
 		valueComp.setLayout(inLineLayout);
 		valueComp.setLayoutData(generateElementGridData());
-
-		StyledText valueText = new StyledText(valueComp, SWT.NONE);
-		valueText.addPaintListener(new PaintListener() {
+		
+		Label valueColor = new Label(valueComp, SWT.NONE);
+		valueColor.setBackground(colorCache.getColor(colorValue));
+		valueColor.addPaintListener(new PaintListener() {
+			
+			@Override
 			public void paintControl(PaintEvent e) {
-				e.gc.setBackground(colorCache.getColor(colorValue));
-				e.gc.drawRectangle(0, 0, 13, 13);
-				e.gc.fillRectangle(1, 1, 12, 12);
-
+				e.gc.setBackground(ColorConstants.black);
+				e.gc.drawRectangle(0, 0, 12, 12);
 			}
 		});
-		valueText.setLeftMargin(18);
+				
+		StyledText valueText = new StyledText(valueComp, SWT.NONE);
 		valueText.setText(stringValue);
-		valueText.setAlignment(SWT.LEFT);
 		valueText.setEditable(false);
 		valueText.setEnabled(true);
-		RowData valueText_RD = new RowData();
-		valueText_RD.height = 15;
-		valueText.setLayoutData(valueText_RD);
 		if (addLine) {
 			strikeStyledText(valueText);
 			strikeStyledText(label);
 		}
+		
+		valueComp.setLayout(colorLayout);
+		
 		return imageLabel;
 	}
 
@@ -390,7 +437,6 @@ public class StylesListSection extends AbstractSection {
 	 */
 	protected Control printLabels(Composite parent, String name, String value, boolean addLine,	String toolTip) {
 		Composite valueComp = new Composite(parent, SWT.NONE);
-		valueComp.setLayout(new RowLayout());
 		valueComp.setLayoutData(generateElementGridData());
 
 		Label imageLabel = new Label(valueComp, SWT.NONE);
@@ -403,6 +449,8 @@ public class StylesListSection extends AbstractSection {
 		label.setEditable(false);
 		label.setEnabled(false);
 		valueComp.setToolTipText(toolTip);
+		
+		valueComp.setLayout(removeLayout);
 
 		StyledText valueText = new StyledText(parent, SWT.NONE);
 		valueText.setText(value);
@@ -574,12 +622,10 @@ public class StylesListSection extends AbstractSection {
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalSpan = 2;
 		gridData.widthHint = SWT.FILL;
-		gridData.heightHint = ITEM_HEIGHT;
 		container.setLayoutData(gridData);
 		
 		Label label = new Label(container, SWT.NONE);
 		gridData = new GridData();
-		gridData.heightHint = ITEM_HEIGHT;
 		gridData.verticalAlignment = SWT.CENTER;
 		gridData.horizontalAlignment = SWT.LEFT;
 		label.setBackground(labelBackgroundColor);
@@ -602,7 +648,6 @@ public class StylesListSection extends AbstractSection {
 		Button btn = new Button(buttonContainer, SWT.ARROW | SWT.DOWN);
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.LEFT;
-		gridData.heightHint = ITEM_HEIGHT-2;
 		btn.setLayoutData(gridData);
 		btn.addSelectionListener(contextualOpener);
 		//Add dispose listener on the button to dispose when necessary the contextual menu
@@ -674,8 +719,6 @@ public class StylesListSection extends AbstractSection {
 	private GridData generateElementGridData(){
 		GridData sameSizeGridData = new GridData();
 		sameSizeGridData.verticalAlignment = SWT.CENTER;
-		sameSizeGridData.heightHint = ITEM_HEIGHT;
-		sameSizeGridData.widthHint = ITEM_WIDTH;
 		return sameSizeGridData;
 	}
 	

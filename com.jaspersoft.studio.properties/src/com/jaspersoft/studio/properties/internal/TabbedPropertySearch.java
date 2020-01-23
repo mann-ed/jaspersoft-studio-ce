@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
@@ -22,15 +23,13 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -92,14 +91,34 @@ public class TabbedPropertySearch extends Composite {
 	 */
 	private ManualyOpenedAutocomplete autocomplete;
 
-	/**
-	 * The height of the text element and of the canvas with the arrow painted
-	 */
-	private int widgetHeight = 18;
-
 	protected static final int ARROW_WIDTH = 7;
 	
 	protected static final int ARROW_HEIGHT = 4;
+	
+	private Layout searchLayout = new Layout() {
+		
+		@Override
+		protected void layout(Composite parent, boolean flushCache) {
+			
+			
+			Control[] children = parent.getChildren();
+			Rectangle carea = parent.getClientArea();
+			
+			Control textControl = children[0];
+			Point textSize = textControl.computeSize(carea.width, SWT.DEFAULT);
+			int textControl_y = (carea.height - textSize.y)/2; 
+			textControl.setBounds(0, textControl_y, carea.width - 15, textSize.y);
+			Control text = children[1];
+			text.setBounds(carea.width - 15, textControl_y, 15, textSize.y);
+		}
+		
+		@Override
+		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
+			Control[] children = composite.getChildren();
+			Point textSize = children[0].computeSize(wHint, SWT.DEFAULT);
+			return new Point(Math.max(textSize.x + 15, 50), textSize.y);
+		}
+	};
 	
 	/**
 	 * Action executed when an element from the autocomplete is selected
@@ -127,7 +146,7 @@ public class TabbedPropertySearch extends Composite {
 		super(parent, SWT.NO_FOCUS);
 		this.page = page;
 		this.factory = page.getWidgetFactory();
-
+		factory.getColors().initializeSectionToolBarColors();
 		this.addPaintListener(new PaintListener() {
 
 			public void paintControl(PaintEvent e) {
@@ -135,35 +154,16 @@ public class TabbedPropertySearch extends Composite {
 			}
 		});
 
-		factory.getColors().initializeSectionToolBarColors();
-		setBackground(factory.getColors().getBackground());
-		setForeground(factory.getColors().getForeground());
-
-		FormLayout layout = new FormLayout();
-		layout.marginWidth = 1;
-		layout.marginHeight = 0;
-		setLayout(layout);
-
-		Composite containerComp = new Composite(this, SWT.BORDER);
-		GridLayout containerLayout = new GridLayout(2, false);
-		containerLayout.marginWidth = 0;
-		containerLayout.marginHeight = 0;
-		containerLayout.horizontalSpacing = 0;
-		containerLayout.verticalSpacing = 0;
-		containerComp.setLayout(containerLayout);
-
+		setLayoutData(new GridData(GridData.FILL_BOTH));
+		
 		// Create the text area
-		createTextArea(containerComp);
+		createTextArea(this);
 
 		// Create the arrow button
-		createFakeButton(containerComp);
+		createFakeButton(this);
+		
+		setLayout(searchLayout);
 
-		FormData data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.top = new FormAttachment(0, 0);
-		data.right = new FormAttachment(100, 0);
-		data.bottom = new FormAttachment(100, 0);
-		containerComp.setLayoutData(data);
 	}
 
 	/**
@@ -176,6 +176,17 @@ public class TabbedPropertySearch extends Composite {
 		textArea = new Text(containerComp, SWT.NONE);
 		textArea.setForeground(factory.getColors().getColor(IFormColors.TITLE));
 		textArea.setText(Messages.TabbedPropertySearch_searchPropertyLabel);
+		textArea.addPaintListener(new PaintListener() {
+			
+			@Override
+			public void paintControl(PaintEvent e) {
+				e.gc.setForeground(ColorConstants.black);
+				Point textSize = textArea.getSize();
+				e.gc.drawLine(0, 0, textSize.x, 0);
+				e.gc.drawLine(0, 0, 0, textSize.y);
+				e.gc.drawLine(0, textSize.y-1, textSize.x, textSize.y-1);
+			}
+		});
 
 		// Focus listener, to populate the combo when it is selected
 		textArea.addFocusListener(new FocusAdapter() {
@@ -220,10 +231,6 @@ public class TabbedPropertySearch extends Composite {
 				}
 			}
 		});
-
-		GridData textData = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		textData.heightHint = widgetHeight;
-		textArea.setLayoutData(textData);
 	}
 
 	/**
@@ -255,6 +262,12 @@ public class TabbedPropertySearch extends Composite {
 				int x2 = x + ARROW_WIDTH / 2;
 				e.gc.fillPolygon(new int[] { x1, y1, x2, y1, x3, y2 });
 				e.gc.setAntialias(SWT.DEFAULT);
+				
+				e.gc.setBackground(ColorConstants.black);
+				e.gc.drawLine(0, 0, bounds.width, 0);
+				e.gc.drawLine(0, bounds.height-1, bounds.width, bounds.height-1);
+				e.gc.drawLine(bounds.width-1, 0, bounds.width-1, bounds.height);
+				
 				e.gc.setBackground(oldBackground);
 			}
 		});
@@ -271,11 +284,6 @@ public class TabbedPropertySearch extends Composite {
 				}
 			}
 		});
-		GridData iconData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-		iconData.widthHint = 15;
-		iconData.heightHint = widgetHeight;
-		openIcon.setLayoutData(iconData);
-
 	}
 
 	/**
