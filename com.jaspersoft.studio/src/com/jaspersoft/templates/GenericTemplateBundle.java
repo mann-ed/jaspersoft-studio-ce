@@ -54,7 +54,11 @@ public abstract class GenericTemplateBundle implements IconedTemplateBundle, Val
 	public static final String MAIN_REPORT = "MAIN_REPORT"; //$NON-NLS-1$
 
 	public static final String DEFAULT_ICON = "blank_a4.png"; //$NON-NLS-1$
-
+	
+	public static final String DEVELOPMENT_VERSION_MASTER = "master"; //$NON-NLS-1$
+			
+	public static final String DEVELOPMENT_VERSION_SNAPSHOT = "SNAPSHOT"; //$NON-NLS-1$
+	
 	private String label;
 
 	/**
@@ -429,11 +433,18 @@ public abstract class GenericTemplateBundle implements IconedTemplateBundle, Val
 		Object requestedVersion = getProperty(BuiltInCategories.REQUIRED_JR_VERSION);
 		if (requestedVersion != null){
 			String currentVersion = getCurrentVersion();
-			boolean validVersion = versionCompare(currentVersion, (String)requestedVersion)>=0;
-			if (!validVersion){
-				List<String> errors = new ArrayList<String>();
-				errors.add(MessageFormat.format(Messages.GenericTemplateBundle_invalidVersionMessage, new Object[]{requestedVersion, currentVersion}));
-				return errors;
+			if(currentVersion.contains(DEVELOPMENT_VERSION_SNAPSHOT) || currentVersion.contains(DEVELOPMENT_VERSION_MASTER)) {
+				// JIRA #JSS-2711: Let's handle also possible usage in development with custom builds
+				// The current version return by the JR jar might be something like: master-SNAPSHOT-xyz
+				return null;
+			}
+			else {
+				boolean validVersion = versionCompare(currentVersion, (String)requestedVersion)>=0;
+				if (!validVersion){
+					List<String> errors = new ArrayList<String>();
+					errors.add(MessageFormat.format(Messages.GenericTemplateBundle_invalidVersionMessage, new Object[]{requestedVersion, currentVersion}));
+					return errors;
+				}
 			}
 		}
 		return null;
