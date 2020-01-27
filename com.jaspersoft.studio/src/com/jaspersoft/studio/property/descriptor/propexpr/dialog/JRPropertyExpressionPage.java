@@ -167,11 +167,11 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 			}
 		});
 
-		badd.setEnabled(tableView);
-		bSystem.setEnabled(tableView);
-		txt.setEnabled(tableView);
-		
 		createButtonsTable(composite);
+
+		badd.setEnabled(!tableView);
+		bSystem.setEnabled(!tableView);
+		txt.setEnabled(!tableView);
 
 		propCmp = new Composite(composite, SWT.NONE);
 		propCmpLayout = new StackLayout();
