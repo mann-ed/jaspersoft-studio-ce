@@ -261,7 +261,7 @@ public class TableWizardLayoutPage extends JSSHelpWizardPage {
 
 		// Create the checkbox to alternate the color
 		alternateColor = new Button(selectionWidget.getManualComposite(),
-				SWT.CHECK);
+				SWT.CHECK | SWT.WRAP);
 		alternateColor
 				.setText(Messages.TableWizardLayoutPage_alternated_rows_label);
 		GridData checkBoxData = new GridData(GridData.FILL_HORIZONTAL);

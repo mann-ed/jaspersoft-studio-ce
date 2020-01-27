@@ -72,9 +72,12 @@ public class NullableSpinner extends Composite {
 		
 		@Override
 		protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-			int width = wHint == SWT.DEFAULT ? 45 : wHint;
+			Control[] children = composite.getChildren();
+			Point textSize = children[0].computeSize(wHint != SWT.DEFAULT ? wHint - 15 : SWT.DEFAULT, hHint);
+			int width = wHint == SWT.DEFAULT ? Math.max(textSize.x + 15, 45) : wHint;
 			if (width < 16) width = 16;
-			int height = hHint == SWT.DEFAULT ? 18 : hHint;
+			int height = hHint == SWT.DEFAULT ? textSize.y : hHint;
+			if (height < 18) height = 18;
 			return new Point(width, height);
 		}
 	};
