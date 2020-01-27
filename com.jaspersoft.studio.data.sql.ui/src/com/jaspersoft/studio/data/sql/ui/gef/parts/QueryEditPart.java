@@ -7,6 +7,7 @@ package com.jaspersoft.studio.data.sql.ui.gef.parts;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
@@ -24,6 +25,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.swt.SWT;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.studio.data.sql.model.MSQLRoot;
@@ -40,7 +42,7 @@ public class QueryEditPart extends AbstractGraphicalEditPart {
 		Figure fig = new FreeformLayer();
 		fig.setLayoutManager(new XYLayout());
 		fig.setOpaque(true);
-		fig.setBackgroundColor(SWTResourceManager.getColor(255, 255, 255));
+		fig.setBackgroundColor(UIUtils.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 
 		return fig;
 	}

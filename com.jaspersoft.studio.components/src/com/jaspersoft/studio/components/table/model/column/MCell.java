@@ -297,7 +297,7 @@ public class MCell extends MColumn implements IGraphicElement, IPastableGraphic,
 
 	@Override
 	public Color getForeground() {
-		return ColorConstants.black;
+		return null;
 	}
 
 	@Override

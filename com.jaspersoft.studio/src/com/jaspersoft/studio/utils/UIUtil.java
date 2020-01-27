@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -31,6 +32,7 @@ import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Drawable;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
@@ -52,6 +54,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.themes.ITheme;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.osgi.framework.Bundle;
@@ -67,14 +70,16 @@ import net.sf.jasperreports.eclipse.util.Misc;
 public class UIUtil {
 	/** ID for the "Properties View" */
 	public static final String PROPERTIES_VIEW_ID = "org.eclipse.ui.views.PropertySheet"; //$NON-NLS-1$
-	
+
 	private UIUtil() {
 	}
 
 	/**
-	 * Set the value of a spinner. For convenience this method takes an object as value, but if the obj is null, or if it
-	 * is not an Integer the method does nothing. If the displayed value is the same as the one provided, nothing is done
-	 * (preventing on windows the whole selection of the number).
+	 * Set the value of a spinner. For convenience this method takes an object
+	 * as value, but if the obj is null, or if it is not an Integer the method
+	 * does nothing. If the displayed value is the same as the one provided,
+	 * nothing is done (preventing on windows the whole selection of the
+	 * number).
 	 * 
 	 * @param spinner
 	 * @param obj
@@ -91,9 +96,11 @@ public class UIUtil {
 	}
 
 	/**
-	 * Set the value of a spinner. For convenience this method takes an object as value, but if the obj is null, or if it
-	 * is not an Integer the method uses the defValue. If the displayed value is the same as the one provided, nothing is
-	 * done (preventing on windows the whole selection of the number).
+	 * Set the value of a spinner. For convenience this method takes an object
+	 * as value, but if the obj is null, or if it is not an Integer the method
+	 * uses the defValue. If the displayed value is the same as the one
+	 * provided, nothing is done (preventing on windows the whole selection of
+	 * the number).
 	 * 
 	 * @param spinner
 	 * @param obj
@@ -110,9 +117,11 @@ public class UIUtil {
 	}
 
 	/**
-	 * Set the value of a spinner. For convenience this method takes an object as value, but if the obj is null, or if it
-	 * is not an Integer the method uses the defValue. If the displayed value is the same as the one provided, nothing is
-	 * done (preventing on windows the whole selection of the number).
+	 * Set the value of a spinner. For convenience this method takes an object
+	 * as value, but if the obj is null, or if it is not an Integer the method
+	 * uses the defValue. If the displayed value is the same as the one
+	 * provided, nothing is done (preventing on windows the whole selection of
+	 * the number).
 	 * 
 	 * @param spinner
 	 * @param obj
@@ -127,7 +136,7 @@ public class UIUtil {
 			spinner.setValue(num);
 		}
 	}
-	
+
 	public static Label createLabel(Composite parent, String txt) {
 		return createLabel(parent, txt, -1);
 	}
@@ -214,10 +223,13 @@ public class UIUtil {
 	}
 
 	/**
-	 * This method adds select-on-focus functionality to a {@link Text} component.
+	 * This method adds select-on-focus functionality to a {@link Text}
+	 * component.
 	 * 
-	 * Specific behavior: - when the Text is already focused -> normal behavior - when the Text is not focused: -> focus
-	 * by keyboard -> select all text -> focus by mouse click -> select all text unless user manually selects text
+	 * Specific behavior: - when the Text is already focused -> normal behavior
+	 * - when the Text is not focused: -> focus by keyboard -> select all text
+	 * -> focus by mouse click -> select all text unless user manually selects
+	 * text
 	 * 
 	 * @param text
 	 */
@@ -237,12 +249,17 @@ public class UIUtil {
 				case SWT.FocusIn:
 					// Covers the case where the user focuses by keyboard.
 					t.selectAll();
-					// The case where the user focuses by mouse click is special because Eclipse,
-					// for some reason, fires SWT.FocusIn before SWT.MouseDown, and on mouse down
-					// it cancels the selection. So we set a variable to keep track of whether the
-					// control is focused (can't rely on isFocusControl() because sometimes it's
+					// The case where the user focuses by mouse click is special
+					// because Eclipse,
+					// for some reason, fires SWT.FocusIn before SWT.MouseDown,
+					// and on mouse down
+					// it cancels the selection. So we set a variable to keep
+					// track of whether the
+					// control is focused (can't rely on isFocusControl()
+					// because sometimes it's
 					// wrong),
-					// and we make it asynchronous so it will get set AFTER SWT.MouseDown is fired.
+					// and we make it asynchronous so it will get set AFTER
+					// SWT.MouseDown is fired.
 					t.getDisplay().asyncExec(() -> hasFocus = true);
 					break;
 				case SWT.FocusOut:
@@ -272,10 +289,10 @@ public class UIUtil {
 	}
 
 	/**
-	 * Setups the start of cell editing on a {@link TableViewer} when a {@link DoubleClickEvent} occurs.
+	 * Setups the start of cell editing on a {@link TableViewer} when a
+	 * {@link DoubleClickEvent} occurs.
 	 * 
-	 * @param tviewer
-	 *          the table viewer
+	 * @param tviewer the table viewer
 	 */
 	public static void setViewerCellEditingOnDblClick(TableViewer tviewer) {
 		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(tviewer) {
@@ -287,12 +304,12 @@ public class UIUtil {
 
 		TableViewerEditor.create(tviewer, actSupport, ColumnViewerEditor.DEFAULT);
 	}
-	
+
 	/**
-	 * Setups the start of cell editing on a {@link TreeViewer} when a {@link DoubleClickEvent} occurs.
+	 * Setups the start of cell editing on a {@link TreeViewer} when a
+	 * {@link DoubleClickEvent} occurs.
 	 * 
-	 * @param tviewer
-	 *          the tree viewer
+	 * @param tviewer the tree viewer
 	 */
 	public static void setViewerCellEditingOnDblClick(TreeViewer tviewer) {
 		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(tviewer) {
@@ -306,14 +323,12 @@ public class UIUtil {
 	}
 
 	/**
-	 * Creates an error decoration on the top left of the specified {@link Text} widget when the text is empty or null.
+	 * Creates an error decoration on the top left of the specified {@link Text}
+	 * widget when the text is empty or null.
 	 * 
-	 * @param widget
-	 *          the text widget to which attach the decorator
-	 * @param marginWidth
-	 *          margin between decoration and widget
-	 * @param description
-	 *          description message to show on hover
+	 * @param widget the text widget to which attach the decorator
+	 * @param marginWidth margin between decoration and widget
+	 * @param description description message to show on hover
 	 */
 	public static void createErrorDecorationForEmptyText(final Text widget, int marginWidth, String description) {
 		final ControlDecoration textDecoration = createErrorDecoration(widget, marginWidth, description);
@@ -327,15 +342,12 @@ public class UIUtil {
 	}
 
 	/**
-	 * Creates an error decoration on the top left of the specified {@link WTextExpression} widget when the expression
-	 * text is empty or null.
+	 * Creates an error decoration on the top left of the specified
+	 * {@link WTextExpression} widget when the expression text is empty or null.
 	 * 
-	 * @param widget
-	 *          the expression widget to which attach the decorator
-	 * @param marginWidth
-	 *          margin between decoration and widget
-	 * @param description
-	 *          description message to show on hover
+	 * @param widget the expression widget to which attach the decorator
+	 * @param marginWidth margin between decoration and widget
+	 * @param description description message to show on hover
 	 */
 	public static void createErrorDecorationForBlankExpression(final WTextExpression widget, int marginWidth,
 			String description) {
@@ -365,12 +377,13 @@ public class UIUtil {
 	/**
 	 * Checks if the PropertiesView has currently the focus.
 	 * 
-	 * @return <code>true</code> if the properties view has the focus, <code>false</code> otherwise
+	 * @return <code>true</code> if the properties view has the focus,
+	 * <code>false</code> otherwise
 	 */
 	public static boolean isPropertiesViewFocused() {
 		try {
-			String activePartViewID = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart()
-					.getSite().getId();
+			String activePartViewID = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+					.getActivePart().getSite().getId();
 			return PROPERTIES_VIEW_ID.equals(activePartViewID);
 		} catch (Exception e) {
 			return false;
@@ -378,22 +391,17 @@ public class UIUtil {
 	}
 
 	/**
-	 * Customizes a {@link GalleryItem} in order to enrich with a "standard" image plus a "selected" image with a custom
-	 * shadow.
+	 * Customizes a {@link GalleryItem} in order to enrich with a "standard"
+	 * image plus a "selected" image with a custom shadow.
 	 * <p>
 	 * 
 	 * Cache maps are used for performance purposes.
 	 * 
-	 * @param item
-	 *          the gallery item to modify
-	 * @param pluginID
-	 *          the ID of the plugin, where the image is located
-	 * @param imagePath
-	 *          the plugin-relative path of the image
-	 * @param selectedImagesCache
-	 *          a cache of selected images
-	 * @param standardImagesCache
-	 *          a cache of standard images
+	 * @param item the gallery item to modify
+	 * @param pluginID the ID of the plugin, where the image is located
+	 * @param imagePath the plugin-relative path of the image
+	 * @param selectedImagesCache a cache of selected images
+	 * @param standardImagesCache a cache of standard images
 	 */
 	public static void setGallyeryItemImageInfo(GalleryItem item, String pluginID, String imagePath,
 			Map<String, Image> selectedImagesCache, Map<String, Image> standardImagesCache) {
@@ -402,7 +410,8 @@ public class UIUtil {
 		if (selectedImg == null || standardImg == null) {
 			Image itemImage = ResourceManager.getPluginImage(pluginID, imagePath);
 			// Add viewer required effects to the images shown...
-			selectedImg = new Image(itemImage.getDevice(), SWTImageEffects.extendArea(itemImage.getImageData(), 20, null));
+			selectedImg = new Image(itemImage.getDevice(),
+					SWTImageEffects.extendArea(itemImage.getImageData(), 20, null));
 			standardImg = new Image(itemImage.getDevice(),
 					Glow.glow(itemImage.getImageData(), ResourceManager.getColor(SWT.COLOR_GRAY), 20, 0, 255));
 			// Cache images
@@ -415,7 +424,8 @@ public class UIUtil {
 	}
 
 	/**
-	 * @return <code>true</code> if it is an arrow key, <code>false</code> otherwise
+	 * @return <code>true</code> if it is an arrow key, <code>false</code>
+	 * otherwise
 	 */
 	public static boolean isArrowKey(int keyCode) {
 		return keyCode == SWT.ARROW_DOWN || keyCode == SWT.ARROW_LEFT || keyCode == SWT.ARROW_RIGHT
@@ -423,12 +433,13 @@ public class UIUtil {
 	}
 
 	/**
-	 * Utility enumeration that maintains a collection of the know extensions for files that can be open with a direct
-	 * double click from a file system navigator (i.e: in Windows).
+	 * Utility enumeration that maintains a collection of the know extensions
+	 * for files that can be open with a direct double click from a file system
+	 * navigator (i.e: in Windows).
 	 */
 	public enum EditorExtension {
-		JRXML(".jrxml"), JRCTX(".jrctx"), JRTX(".jrtx"), JASPER(".jasper"), JRPRINT(".jrprint"), JRPXML(".jrpxml"), JSSCE(
-				".jssce");
+		JRXML(".jrxml"), JRCTX(".jrctx"), JRTX(".jrtx"), JASPER(".jasper"), JRPRINT(".jrprint"), JRPXML(".jrpxml"),
+		JSSCE(".jssce");
 
 		private String extension;
 
@@ -468,9 +479,11 @@ public class UIUtil {
 	}
 
 	/**
-	 * Checks if we are currently on a Mac OS X platform and running inside an Eclipse 4.x based installation.
+	 * Checks if we are currently on a Mac OS X platform and running inside an
+	 * Eclipse 4.x based installation.
 	 * 
-	 * @return <code>true</code> if is Mac and we are in E4, <code>false</code> otherwise
+	 * @return <code>true</code> if is Mac and we are in E4, <code>false</code>
+	 * otherwise
 	 */
 	public static boolean isMacAndEclipse4() {
 		return Util.isMac() && isEclipse4();
@@ -486,7 +499,8 @@ public class UIUtil {
 	}
 
 	/**
-	 * Returns the Eclipse version (i.e. 4.5.1) in the format <code>major.minor.micro</code>.
+	 * Returns the Eclipse version (i.e. 4.5.1) in the format
+	 * <code>major.minor.micro</code>.
 	 * 
 	 * @see Version
 	 * @return the Eclipse version number
@@ -510,8 +524,9 @@ public class UIUtil {
 	}
 
 	/**
-	 * There is the bug in the custom JSS toolbar rendering with Eclipse Mars version. This was mostly observed in
-	 * Windows. The method checks if it is the case of applying the trick to handle the toolbar rendering correctly.
+	 * There is the bug in the custom JSS toolbar rendering with Eclipse Mars
+	 * version. This was mostly observed in Windows. The method checks if it is
+	 * the case of applying the trick to handle the toolbar rendering correctly.
 	 * 
 	 * @see Bugzilla #44189
 	 * @return <code>true</code> if the toolbar
@@ -519,26 +534,26 @@ public class UIUtil {
 	public static boolean shouldTrickToolbar() {
 		return isEclipse4();
 	}
-	
+
 	/**
-	 * Force a control to loose the focus and another one to gain it (if it can).
-	 * If the control is already focused it does nothing.
+	 * Force a control to loose the focus and another one to gain it (if it
+	 * can). If the control is already focused it does nothing.
 	 * 
 	 * @param toFocus the control to focus, must be not null
 	 */
 	public static void updateFocus(Control toFocus) {
 		Control focusedControl = toFocus.getDisplay().getFocusControl();
-		if (focusedControl != toFocus){
+		if (focusedControl != toFocus) {
 			boolean isFocusedEnabled = focusedControl != null && focusedControl.isEnabled();
-			if (isFocusedEnabled){
-				//force the lost of focus by disabling and enabling the control
+			if (isFocusedEnabled) {
+				// force the lost of focus by disabling and enabling the control
 				focusedControl.setEnabled(false);
 				focusedControl.setEnabled(true);
 			}
 			toFocus.setFocus();
 		}
 	}
-	
+
 	/**
 	 * Add a context menu to the specified styled text widget.
 	 * <p>
@@ -559,8 +574,7 @@ public class UIUtil {
 				widget.invokeAction(ST.CUT);
 			}
 		});
-		cutItem.setImage(
-			ResourceManager.getImage(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT)));
+		cutItem.setImage(ResourceManager.getImage(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT)));
 
 		final MenuItem copyItem = new MenuItem(menu, SWT.PUSH);
 		copyItem.setText(Messages.UIUtil_CopyMenuItemText);
@@ -571,9 +585,8 @@ public class UIUtil {
 				widget.invokeAction(ST.COPY);
 			}
 		});
-		copyItem.setImage(
-			ResourceManager.getImage(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY)));
-		
+		copyItem.setImage(ResourceManager.getImage(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY)));
+
 		final MenuItem pasteItem = new MenuItem(menu, SWT.PUSH);
 		pasteItem.setText(Messages.UIUtil_PasteMenuItemText);
 		safeApplyMenuItemTooltip(pasteItem, Messages.UIUtil_PasteMenuItemTooltip);
@@ -583,8 +596,7 @@ public class UIUtil {
 				widget.invokeAction(ST.PASTE);
 			}
 		});
-		pasteItem.setImage(
-			ResourceManager.getImage(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE)));
+		pasteItem.setImage(ResourceManager.getImage(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE)));
 
 		menu.addMenuListener(new MenuListener() {
 			@Override
@@ -593,14 +605,13 @@ public class UIUtil {
 				copyItem.setEnabled(!widget.getSelectionText().isEmpty());
 				Clipboard cb = new Clipboard(widget.getDisplay());
 				Object contents = cb.getContents(TextTransfer.getInstance());
-				if(contents instanceof String && !((String) contents).isEmpty()){
+				if (contents instanceof String && !((String) contents).isEmpty()) {
 					pasteItem.setEnabled(true);
-				}
-				else {
+				} else {
 					pasteItem.setEnabled(false);
 				}
 			}
-			
+
 			@Override
 			public void menuHidden(MenuEvent e) {
 				// do nothing
@@ -608,13 +619,14 @@ public class UIUtil {
 		});
 		widget.setMenu(menu);
 	}
-	
+
 	/**
-	 * Checks if it is possible to apply the tooltip to the menu item using
-	 * the proper API introduced since SWT version 3.104.
+	 * Checks if it is possible to apply the tooltip to the menu item using the
+	 * proper API introduced since SWT version 3.104.
 	 * <p>
 	 * 
-	 * Please check bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=62575 for more details
+	 * Please check bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=62575 for
+	 * more details
 	 * 
 	 * @param menuItem the menu item
 	 * @param tooltipTxt the tooltip text to set
@@ -622,18 +634,35 @@ public class UIUtil {
 	public static void safeApplyMenuItemTooltip(MenuItem menuItem, String tooltipTxt) {
 		String minSWTVersion = "3.104"; //$NON-NLS-1$
 		String currentSWTVersion = BundleCommonUtils.getBundleVersion("org.eclipse.swt"); //$NON-NLS-1$
-		if(currentSWTVersion!=null && currentSWTVersion.compareTo(minSWTVersion)>=0){
+		if (currentSWTVersion != null && currentSWTVersion.compareTo(minSWTVersion) >= 0) {
 			menuItem.setToolTipText(tooltipTxt);
 		}
 	}
-	
+
 	public static void safeRequestLayout(Composite control) {
 		String minSWTVersion = "3.105"; //$NON-NLS-1$
 		String currentSWTVersion = BundleCommonUtils.getBundleVersion("org.eclipse.swt"); //$NON-NLS-1$
-		if(currentSWTVersion!=null && currentSWTVersion.compareTo(minSWTVersion)>=0){
+		if (currentSWTVersion != null && currentSWTVersion.compareTo(minSWTVersion) >= 0) {
 			control.requestLayout();
 		} else {
 			control.layout(true, true);
 		}
+	}
+
+	public static final String COLOR_OUTLINE_DISABLED = "org.eclipse.ui.workbench.ACTIVE_TAB_UNSELECTED_TEXT_COLOR";
+	public static final String COLOR_TEXT = "org.eclipse.ui.editors.foregroundColor";
+
+	public static Color getColor(String key) {
+		ITheme currentTheme = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme(); 
+
+		return currentTheme.getColorRegistry().get(key);
+	}
+
+	public static void printThemeColors() {
+		ITheme currentTheme = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme();
+		List<String> keys = new ArrayList<>(currentTheme.getColorRegistry().getKeySet());
+		System.out.println("-------------------------------");
+		keys.stream().sorted().forEach(c -> System.out.println(c));
+		System.out.println("-------------------------------");
 	}
 }

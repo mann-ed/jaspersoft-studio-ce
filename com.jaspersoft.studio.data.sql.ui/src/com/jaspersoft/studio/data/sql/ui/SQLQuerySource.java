@@ -29,7 +29,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.PluginTransfer;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -47,13 +46,13 @@ import com.jaspersoft.studio.data.sql.model.AMSQLObject;
 import com.jaspersoft.studio.data.sql.model.metadata.MSqlTable;
 import com.jaspersoft.studio.dnd.NodeTransfer;
 import com.jaspersoft.studio.preferences.fonts.utils.FontUtils;
+import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.engine.JRParameter;
 
 public class SQLQuerySource {
-	private static final Color SRC_MARGINS_COLOR = SWTResourceManager.getColor(
-			220, 220, 220);
+
 	private SQLQueryDesigner designer;
 
 	public SQLQuerySource(SQLQueryDesigner designer) {
@@ -61,8 +60,11 @@ public class SQLQuerySource {
 	}
 
 	private Injector getInjector() {
-		return Activator.getInstance().getInjector(
-				Activator.COM_JASPERSOFT_STUDIO_DATA_SQL);
+		return Activator.getInstance().getInjector(Activator.COM_JASPERSOFT_STUDIO_DATA_SQL);
+	}
+
+	private Color getMarginColor() {
+		return UIUtil.getColor("org.eclipse.ui.editors.lineNumberRulerColor");
 	}
 
 	private XtextSourceViewer viewer;
@@ -78,16 +80,12 @@ public class SQLQuerySource {
 			public XtextResource createResource() {
 				Injector injector = getInjector();
 
-				XtextResourceSet rs = injector
-						.getInstance(XtextResourceSet.class);
+				XtextResourceSet rs = injector.getInstance(XtextResourceSet.class);
 				rs.setClasspathURIContext(getClass());
 
-				IResourceFactory resourceFactory = injector
-						.getInstance(IResourceFactory.class);
-				org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI
-						.createURI("website/My2.website");
-				XtextResource resource = (XtextResource) resourceFactory
-						.createResource(uri);
+				IResourceFactory resourceFactory = injector.getInstance(IResourceFactory.class);
+				org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createURI("website/My2.website");
+				XtextResource resource = (XtextResource) resourceFactory.createResource(uri);
 				rs.getResources().add(resource);
 
 				EcoreUtil.resolveAll(resource);
@@ -100,12 +98,9 @@ public class SQLQuerySource {
 		};
 
 		Injector injector = getInjector();
-		EmbeddedEditorFactory factory = injector
-				.getInstance(EmbeddedEditorFactory.class);
-		embeddedEditor = factory.newEditor(resourceProvider)
-				.showErrorAndWarningAnnotations().withParent(cmp);// .showErrorAndWarningAnnotations()
-		EmbeddedEditorModelAccess partialEditorModelAccess = embeddedEditor
-				.createPartialEditor();
+		EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
+		embeddedEditor = factory.newEditor(resourceProvider).showErrorAndWarningAnnotations().withParent(cmp);// .showErrorAndWarningAnnotations()
+		EmbeddedEditorModelAccess partialEditorModelAccess = embeddedEditor.createPartialEditor();
 
 		viewer = embeddedEditor.getViewer();
 
@@ -115,11 +110,10 @@ public class SQLQuerySource {
 		try {
 			Method m = SourceViewer.class.getDeclaredMethod("getVerticalRuler");
 			m.setAccessible(true);
-			IVerticalRuler ivr = (IVerticalRuler) m.invoke(embeddedEditor
-					.getViewer());
+			IVerticalRuler ivr = (IVerticalRuler) m.invoke(embeddedEditor.getViewer());
 			if (ivr instanceof CompositeRuler) {
 				CompositeRuler cr = (CompositeRuler) ivr;
-				cr.getControl().setBackground(SRC_MARGINS_COLOR);
+//				cr.getControl().setBackground(getMarginColor());
 			}
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
@@ -135,7 +129,7 @@ public class SQLQuerySource {
 
 		MarginPainter fMarginPainter = new MarginPainter(viewer);
 		fMarginPainter.setMarginRulerColumn(0);
-		fMarginPainter.setMarginRulerColor(SRC_MARGINS_COLOR);
+		fMarginPainter.setMarginRulerColor(getMarginColor());
 
 		viewer.addPainter(fMarginPainter);
 		viewer.getDocument().addDocumentListener(new IDocumentListener() {
@@ -153,12 +147,10 @@ public class SQLQuerySource {
 			}
 		});
 
-		DropTarget target = new DropTarget(viewer.getTextWidget(),
-				DND.DROP_MOVE | DND.DROP_COPY);
-		target.setTransfer(new Transfer[] { NodeTransfer.getInstance(),
-				TemplateTransfer.getInstance(), PluginTransfer.getInstance() });
-		target.addDropListener(new StyledTextDropTargetEffect(viewer
-				.getTextWidget()) {
+		DropTarget target = new DropTarget(viewer.getTextWidget(), DND.DROP_MOVE | DND.DROP_COPY);
+		target.setTransfer(new Transfer[] { NodeTransfer.getInstance(), TemplateTransfer.getInstance(),
+				PluginTransfer.getInstance() });
+		target.addDropListener(new StyledTextDropTargetEffect(viewer.getTextWidget()) {
 			@Override
 			public void drop(DropTargetEvent event) {
 				Object obj = event.data;
@@ -187,8 +179,8 @@ public class SQLQuerySource {
 			}
 
 			/*
-			 * Should perform some custom drop operations here depending on the
-			 * specific type of AMSQLObject.
+			 * Should perform some custom drop operations here depending on the specific
+			 * type of AMSQLObject.
 			 */
 			private void performCustomDropOperations(AMSQLObject obj) {
 				// TODO for Slavic - Bugzilla #34318: TEMPORARY FIX THAT YOU
@@ -203,8 +195,7 @@ public class SQLQuerySource {
 				}
 			}
 		});
-		viewer.getTextWidget().setData(SQLQueryDesigner.SQLQUERYDESIGNER,
-				designer);
+		viewer.getTextWidget().setData(SQLQueryDesigner.SQLQUERYDESIGNER, designer);
 		return cmp;
 	}
 
@@ -215,19 +206,22 @@ public class SQLQuerySource {
 	// if
 	// (embeddedEditor.getConfiguration().getContentFormatter(embeddedEditor.getViewer())
 	// != null) {
-	//			Action action = new TextOperationAction(XtextUIMessages.getResourceBundle(), "Format.", embeddedEditor, ISourceViewer.FORMAT); //$NON-NLS-1$
+	// Action action = new TextOperationAction(XtextUIMessages.getResourceBundle(),
+	// "Format.", embeddedEditor, ISourceViewer.FORMAT); //$NON-NLS-1$
 	// action.setActionDefinitionId(JasperReportsPlugin.PLUGIN_ID +
 	// ".FormatAction");
-	//			//		setAction("Format", action); //$NON-NLS-1$
-	//			//		markAsStateDependentAction("Format", true); //$NON-NLS-1$
-	//			//		markAsSelectionDependentAction("Format", true); //$NON-NLS-1$
+	// // setAction("Format", action); //$NON-NLS-1$
+	// // markAsStateDependentAction("Format", true); //$NON-NLS-1$
+	// // markAsSelectionDependentAction("Format", true); //$NON-NLS-1$
 	// //
 	// }
-	//		ToggleSLCommentAction action = toggleSLCommentActionFactory.create(XtextUIMessages.getResourceBundle(), "ToggleComment.", this); //$NON-NLS-1$
+	// ToggleSLCommentAction action =
+	// toggleSLCommentActionFactory.create(XtextUIMessages.getResourceBundle(),
+	// "ToggleComment.", this); //$NON-NLS-1$
 	// action.setActionDefinitionId(JasperReportsPlugin.PLUGIN_ID +
 	// ".ToggleCommentAction");
-	//		//		setAction("ToggleComment", action); //$NON-NLS-1$
-	//		//		markAsStateDependentAction("ToggleComment", true); //$NON-NLS-1$
+	// // setAction("ToggleComment", action); //$NON-NLS-1$
+	// // markAsStateDependentAction("ToggleComment", true); //$NON-NLS-1$
 	// // markAsSelectionDependentAction("ToggleComment", true);
 	// configureToggleCommentAction(action);
 	// //
@@ -271,6 +265,6 @@ public class SQLQuerySource {
 	}
 
 	public void setupFont(JasperReportsConfiguration jConfig) {
-		 viewer.getTextWidget().setFont(FontUtils.getEditorsFont(jConfig));
+		viewer.getTextWidget().setFont(FontUtils.getEditorsFont(jConfig));
 	}
 }

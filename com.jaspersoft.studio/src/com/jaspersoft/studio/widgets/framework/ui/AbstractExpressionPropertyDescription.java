@@ -4,12 +4,11 @@
  ******************************************************************************/
 package com.jaspersoft.studio.widgets.framework.ui;
 
-import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -189,22 +188,20 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 			}
 
 		});
-		textExpression.addModifyListener(new ModifyListener() {
+		textExpression.addModifyListener(e -> {
+			if (wiProp.isRefresh())
+				return;
+			Point p = ((Text) e.getSource()).getSelection();
 
-			@Override
-			public void modifyText(ModifyEvent e) {
-				if (wiProp.isRefresh())
-					return;
-				Point p = ((Text) e.getSource()).getSelection();
-
-				handleEdit(((Text) e.getSource()), wiProp);
-				((Text) e.getSource()).setSelection(p);
-			}
+			handleEdit(((Text) e.getSource()), wiProp);
+			((Text) e.getSource()).setSelection(p);
 		});
 
 		if (isReadOnly()) {
 			textExpression.setEnabled(false);
 		}
+		textExpression.setBackground(UIUtils.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
+		textExpression.setBackground(UIUtils.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
 		return textExpression;
 	}
@@ -245,10 +242,13 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 	}
 
 	protected void changeFallbackForeground(boolean isUsingFallback, Control control) {
-		if (isUsingFallback && !ModelUtils.safeEquals(control.getForeground(), ColorConstants.gray)) {
-			control.setForeground(ColorConstants.gray);
-		} else if (!isUsingFallback && !ModelUtils.safeEquals(control.getForeground(), ColorConstants.black)) {
-			control.setForeground(ColorConstants.black);
+		Color dcolor = UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		Color ecolor = UIUtils.getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+		Color fg = control.getForeground();
+		if (isUsingFallback && !ModelUtils.safeEquals(fg, dcolor)) {
+			control.setForeground(dcolor);
+		} else if (!isUsingFallback && !ModelUtils.safeEquals(fg.getRGB(), ecolor.getRGB())) {
+			control.setForeground(null);
 		}
 	}
 

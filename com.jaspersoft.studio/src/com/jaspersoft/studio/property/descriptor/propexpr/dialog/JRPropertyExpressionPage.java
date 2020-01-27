@@ -95,7 +95,8 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 			if (v == null)
 				return;
 			JRPropertyExpressionDialog dialog = new JRPropertyExpressionDialog(UIUtils.getShell());
-			// the edited value must be a clone, otherwise changes done in the dialog
+			// the edited value must be a clone, otherwise changes done in the
+			// dialog
 			// will be propagated even if the cancel button is pressed
 			PropertyDTO editedValue = v.clone();
 			dialog.setShowExpression(showExpression);
@@ -166,6 +167,10 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 			}
 		});
 
+		badd.setEnabled(tableView);
+		bSystem.setEnabled(tableView);
+		txt.setEnabled(tableView);
+		
 		createButtonsTable(composite);
 
 		propCmp = new Composite(composite, SWT.NONE);
@@ -210,7 +215,7 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 
 		badd = new ToolItem(buttons, SWT.PUSH);
 		badd.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/plus.png")); //$NON-NLS-1$
-		badd.addListener(SWT.Selection, (event) -> {
+		badd.addListener(SWT.Selection, event -> {
 			PropertyExpressionDTO v = value instanceof DatasetPropertyExpressionsDTO
 					? new DatasetPropertyExpressionDTO(false, "property.name", "value", null) //$NON-NLS-1$ //$NON-NLS-2$
 					: new PropertyExpressionDTO(false, "property.name", "value"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -342,6 +347,8 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		for (final PropertyMetadata pm : sortedEDS) {
 			if (canceled)
 				return;
+			if (cmp == null)
+				return;
 			if (cmp.isDisposed())
 				return;
 			if (showExisting && !value.hasProperty(pm.getName()))
@@ -370,7 +377,7 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 					value.geteContext().getJasperReportsConfiguration()));
 		}
 		UIUtils.getDisplay().syncExec(() -> {
-			if (cmp.getChildren().length == 0) {
+			if (cmp != null && cmp.getChildren().length == 0) {
 				Label lbl = new Label(cmp, SWT.CENTER);
 				lbl.setText(Messages.JRPropertyExpressionPage_14);
 				GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER | GridData.FILL_HORIZONTAL);
@@ -575,13 +582,12 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 	}
 
 	/**
-	 * Check if at least one of the copied properties can be pasted on the current
-	 * element
+	 * Check if at least one of the copied properties can be pasted on the
+	 * current element
 	 * 
-	 * @param copiedProperties
-	 *            the copied properties
-	 * @return true if at least one of the copied properties can be pasted, false
-	 *         otherwise
+	 * @param copiedProperties the copied properties
+	 * @return true if at least one of the copied properties can be pasted,
+	 * false otherwise
 	 */
 	private boolean canPaste(List<CopyElementExpressionProperty> copiedProperties) {
 		return copiedProperties != null && !copiedProperties.isEmpty();
@@ -615,17 +621,20 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 				try {
 					UIUtils.getDisplay().syncExec(() -> {
 						search = txt.getText();
-						for (Control c : cmp.getChildren()) {
-							if (c == txt || c == buttons)
-								continue;
-							c.dispose();
-						}
+						if (cmp != null)
+							for (Control c : cmp.getChildren()) {
+								if (c == txt || c == buttons)
+									continue;
+								c.dispose();
+							}
 					});
 
 					canceled = false;
 					createProperties(search.trim().toLowerCase());
 					if (!canceled) {
 						UIUtils.getDisplay().syncExec(() -> {
+							if (cmp == null)
+								return;
 							if (cmp.isDisposed())
 								return;
 							sc.setMinSize(cmp.computeSize(sc.getClientArea().width, SWT.DEFAULT));

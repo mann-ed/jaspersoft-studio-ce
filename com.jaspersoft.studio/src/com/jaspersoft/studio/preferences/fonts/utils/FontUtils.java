@@ -19,6 +19,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import com.jaspersoft.studio.preferences.DesignerPreferencePage;
 import com.jaspersoft.studio.preferences.util.PreferencesUtils;
+import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 public class FontUtils {
@@ -40,7 +41,7 @@ public class FontUtils {
 		JFaceResources.getColorRegistry().put("VARIABLE_BLUE_COLOR", new RGB(41, 41, 255)); //$NON-NLS-1$
 		JFaceResources.getColorRegistry().put("FIELD_GREEN_COLOR", new RGB(39, 144, 39)); //$NON-NLS-1$
 		JFaceResources.getColorRegistry().put("GRAY_CLASS_TYPE", new RGB(143, 143, 143)); //$NON-NLS-1$
-		KEYWORDS_STYLER = new BoldStyler("PARAMETER_DARKRED_COLOR", null); //$NON-NLS-1$ 
+		KEYWORDS_STYLER = new BoldStyler("PARAMETER_DARKRED_COLOR", null); //$NON-NLS-1$
 		PARAMETER_STYLER = new BoldStyler("PARAMETER_RED_COLOR", null); //$NON-NLS-1$
 		VARIABLE_STYLER = StyledString.createColorRegistryStyler("VARIABLE_BLUE_COLOR", null); //$NON-NLS-1$
 		FIELD_STYLER = StyledString.createColorRegistryStyler("FIELD_GREEN_COLOR", null); //$NON-NLS-1$
@@ -50,17 +51,28 @@ public class FontUtils {
 	public static String separator = "__________________";
 
 	/**
-	 * Convert a list of array of string into a single array of string, ready to be inserted into a combo
+	 * Styler for the QUERY EDITORS
 	 * 
-	 * @param fontsList
-	 *          List of array of fonts (every list is a category)
-	 * @param useSeparator
-	 *          specify if a separator must be used between each category
+	 * @return
+	 */
+	public static Styler getKeywordStyler() {
+		JFaceResources.getColorRegistry().put("PARAMETER_KEYWORD_COLOR", //$NON-NLS-1$
+				UIUtil.getColor("org.eclipse.pde.genericeditor.extension.editor.color.attribute").getRGB());//$NON-NLS-1$
+		return new BoldStyler("PARAMETER_KEYWORD_COLOR", null);
+	}
+
+	/**
+	 * Convert a list of array of string into a single array of string, ready to
+	 * be inserted into a combo
+	 * 
+	 * @param fontsList List of array of fonts (every list is a category)
+	 * @param useSeparator specify if a separator must be used between each
+	 * category
 	 * 
 	 * @return List of combo item
 	 */
 	public static String[] stringToItems(List<String[]> fontsList, boolean useSeparator) {
-		List<String> itemsList = new ArrayList<String>();
+		List<String> itemsList = new ArrayList<>();
 		for (int index = 0; index < fontsList.size(); index++) {
 			String[] fonts = fontsList.get(index);
 			for (String element : fonts)
@@ -73,10 +85,11 @@ public class FontUtils {
 	}
 
 	/**
-	 * Convert a list of array of string into a single array of string, ready to be inserted into a combo
+	 * Convert a list of array of string into a single array of string, ready to
+	 * be inserted into a combo
 	 * 
-	 * @param fontsList
-	 *          List of array of fonts, between every array will be inserted a separator
+	 * @param fontsList List of array of fonts, between every array will be
+	 * inserted a separator
 	 * @return List of combo item
 	 */
 	public static String[] stringToItems(List<String[]> fontsList) {
@@ -84,20 +97,21 @@ public class FontUtils {
 	}
 
 	/**
-	 * Gets the shared font across JSS editors (i.e: expression editor, query editors).
+	 * Gets the shared font across JSS editors (i.e: expression editor, query
+	 * editors).
 	 * 
 	 * @return the shared font for JSS editors
 	 */
 	public static Font getEditorsFont(JasperReportsConfiguration jconfig) {
 		String fontDataStr = null;
 		if (jconfig != null) {
-			fontDataStr = jconfig
-					.getProperty(DesignerPreferencePage.P_INTERNAL_EDITORS_FONT, getTextEditorFontDataAsString());
+			fontDataStr = jconfig.getProperty(DesignerPreferencePage.P_INTERNAL_EDITORS_FONT,
+					getTextEditorFontDataAsString());
 		}
 		if (fontDataStr == null) {
 			// Gets default from JaspersoftStudio plugin
-			fontDataStr = PreferencesUtils.getJaspersoftStudioPrefStore().getString(
-					DesignerPreferencePage.P_INTERNAL_EDITORS_FONT);
+			fontDataStr = PreferencesUtils.getJaspersoftStudioPrefStore()
+					.getString(DesignerPreferencePage.P_INTERNAL_EDITORS_FONT);
 		}
 		FontData[] fontDataArray = PreferenceConverter.basicGetFontData(fontDataStr);
 		return ResourceManager.getFont(fontDataArray[0].getName(), fontDataArray[0].getHeight(),

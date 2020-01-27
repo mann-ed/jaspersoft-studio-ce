@@ -64,7 +64,7 @@ public class MOrderByColumn extends AMOrderByMember<MSQLColumn> {
 			else
 				ss.append(ConvertUtil.cleanDbNameFull(mfTable.getValue().toSQLString()));
 			ss.append("." + getValue().getDisplayText());
-			ss.append(addDirection(), FontUtils.KEYWORDS_STYLER);
+			ss.append(addDirection(), FontUtils.getKeywordStyler());
 		} else
 			ss.append(msColumn.getAlias());
 		return ss;

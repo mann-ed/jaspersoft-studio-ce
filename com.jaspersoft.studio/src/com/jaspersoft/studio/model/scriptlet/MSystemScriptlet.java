@@ -7,8 +7,10 @@ package com.jaspersoft.studio.model.scriptlet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -84,7 +86,7 @@ public class MSystemScriptlet extends APropertyNode {
 
 	@Override
 	public Color getForeground() {
-		return ColorConstants.lightGray;
+		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
 	}
 
 	/*

@@ -52,30 +52,30 @@ import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 /**
- * Main component of the widgets framework. It will contains the widget for the editing of the value, both
- * expression and static value, and the button to open the edit dialog. It can have also a label set before
- * the widget and  it will show the button/label to open the expression editor when the widget is in 
- * expression mode.
- * It will use internally a custom layout to align the element to provide better performances. Be carefull
- * into changing it
+ * Main component of the widgets framework. It will contains the widget for the
+ * editing of the value, both expression and static value, and the button to
+ * open the edit dialog. It can have also a label set before the widget and it
+ * will show the button/label to open the expression editor when the widget is
+ * in expression mode. It will use internally a custom layout to align the
+ * element to provide better performances. Be carefull into changing it
  * 
  * @author Orlandin Marco
  *
  */
 public class WItemProperty extends Composite implements IExpressionContextSetter, IWItemProperty {
-	
+
 	/**
 	 * Style bit: for only the expression mode on the advance dialog
 	 */
 	public static final int FORCE_EXPRESSION_DIALOG = 1 << 1;
-	
+
 	/**
 	 * Style bit: for only the simple mode on the advance dialog
 	 */
 	public static final int FORCE_SIMPLE_MODE = 1 << 2;
-	
-	/** 
-	 * Suffix for properties requiring a custom simple mode handling 
+
+	/**
+	 * Suffix for properties requiring a custom simple mode handling
 	 */
 	public static final String CUSTOM_SIMPLE_MODE_SUFFIX = "_customSimpleMode";
 
@@ -83,7 +83,7 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	 * Icon used in the button to open the edit dialog
 	 */
 	public static final String BUTTON_ICON_PATH = "icons/resources/expressionedit-16.png"; //$NON-NLS-1$
-	
+
 	/**
 	 * The context for the expression
 	 */
@@ -93,31 +93,32 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	 * The control used to edit the value
 	 */
 	private Control editorControl;
-	
+
 	/**
-	 * The button to open the dialog to switch between the static value or expression
+	 * The button to open the dialog to switch between the static value or
+	 * expression
 	 */
 	private Button btnEditExpression;
 
 	/**
-	 * Label provider, not used internally but can be used from outside to resolve
-	 * the string
+	 * Label provider, not used internally but can be used from outside to
+	 * resolve the string
 	 */
 	private BaseLabelProvider lprovider = null;
-	
+
 	/**
 	 * The label that can be clicked to open the expression editor
 	 */
 	private LazyExpressionLabel expressionEditLabel;
-	
+
 	/**
-	 * Flag typically set when the widget are writing the value
-	 * into the model element
+	 * Flag typically set when the widget are writing the value into the model
+	 * element
 	 */
 	private boolean isRefresh = false;
-	
+
 	/**
-	 * Flag set when the widget are updating their value, by reading if from the 
+	 * Flag set when the widget are updating their value, by reading if from the
 	 * model element
 	 */
 	private boolean isUpdating = false;
@@ -126,61 +127,66 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	 * {@link ItemPropertyDescription} from where the editor control is build
 	 */
 	private ItemPropertyDescription<?> ipDesc;
-	
+
 	/**
 	 * {@link IPropertyEditor} used to store the value into the element
 	 */
 	private IPropertyEditor editor;
-	
+
 	/**
 	 * Optional label that can be show before the control
 	 */
 	private Label titleLabel = null;
-	
+
 	/**
 	 * The layout data used to dispose the content
 	 */
 	private ItemPropertyLayoutData contentLayoutData = new ItemPropertyLayoutData();
-	
+
 	/**
 	 * Expression modify listeners
 	 */
-	private List<ItemPropertyModifiedListener> listeners = new ArrayList<ItemPropertyModifiedListener>();
-	
+	private List<ItemPropertyModifiedListener> listeners = new ArrayList<>();
+
 	/**
 	 * Create the widget without a label
 	 * 
 	 * @param parent the parent of the widget
 	 * @param style the style of the main composite for this element
 	 * @param widgetDescriptor the descriptor of the value control
-	 * @param editor the editor used to write and read the values from the target object, must be not null
+	 * @param editor the editor used to write and read the values from the
+	 * target object, must be not null
 	 */
-	public WItemProperty(Composite parent, int style, ItemPropertyDescription<?> widgetDescriptor, IPropertyEditor editor) {
+	public WItemProperty(Composite parent, int style, ItemPropertyDescription<?> widgetDescriptor,
+			IPropertyEditor editor) {
 		this(parent, style, null, widgetDescriptor, editor);
 	}
-	
+
 	/**
 	 * Create the widget with a label
 	 * 
 	 * @param parent the parent of the widget
 	 * @param style the style of the main composite for this element
-	 * @param descriptor the descriptor used to create the label. If null no label is created
+	 * @param descriptor the descriptor used to create the label. If null no
+	 * label is created
 	 * @param widgetDescriptor the descriptor of the value control
-	 * @param editor the editor used to write and read the values from the target object, must be not null
+	 * @param editor the editor used to write and read the values from the
+	 * target object, must be not null
 	 */
-	public WItemProperty(Composite parent, int style,  WidgetPropertyDescriptor descriptor, ItemPropertyDescription<?> widgetDescriptor, IPropertyEditor editor) {
+	public WItemProperty(Composite parent, int style, WidgetPropertyDescriptor descriptor,
+			ItemPropertyDescription<?> widgetDescriptor, IPropertyEditor editor) {
 		super(parent, style);
 		Assert.isNotNull(editor);
 		this.ipDesc = widgetDescriptor;
 		this.editor = editor;
-		
-		if(descriptor != null){
+
+		if (descriptor != null) {
 			titleLabel = new Label(this, SWT.NONE);
 			titleLabel.setText(descriptor.getLabel());
 			titleLabel.setToolTipText(descriptor.getDescription());
 		}
 
-		//Create the expression label
+		// Create the expression label
 		expressionEditLabel = new LazyExpressionLabel(this);
 		expressionEditLabel.addMouseListener(new MouseAdapter() {
 
@@ -188,9 +194,11 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 			public void mouseDown(MouseEvent e) {
 				if (!ExpressionEditorSupportUtil.isExpressionEditorDialogOpen()) {
 					JRExpressionEditor wizard = new JRExpressionEditor();
-					wizard.setValue((JRDesignExpression)getPropertyEditor().getPropertyValueExpression(ipDesc.getName()));
+					wizard.setValue(
+							(JRDesignExpression) getPropertyEditor().getPropertyValueExpression(ipDesc.getName()));
 					wizard.setExpressionContext(expContext);
-					WizardDialog dialog = ExpressionEditorSupportUtil.getExpressionEditorWizardDialog(Display.getDefault().getActiveShell(), wizard);
+					WizardDialog dialog = ExpressionEditorSupportUtil
+							.getExpressionEditorWizardDialog(Display.getDefault().getActiveShell(), wizard);
 					if (dialog.open() == Dialog.OK) {
 						JRDesignExpression exprTmp = wizard.getValue();
 						setValue(null, exprTmp);
@@ -200,13 +208,13 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 
 		});
 
-		//Create the simple control
+		// Create the simple control
 		editorControl = ipDesc.createControl(this, this);
 
-		//Create the edit expression button
+		// Create the edit expression button
 		btnEditExpression = new Button(this, SWT.FLAT);
 		Image loadedImage = JaspersoftStudioPlugin.getInstance().getImage(BUTTON_ICON_PATH);
-		if (contentLayoutData != null){
+		if (contentLayoutData != null) {
 			Point buttonSize = contentLayoutData.getButtonSize();
 			Image resizedImage = ImageUtils.resize(loadedImage, buttonSize.x / 2, buttonSize.y / 2);
 			btnEditExpression.setImage(resizedImage);
@@ -214,20 +222,20 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 			btnEditExpression.setImage(new Image(loadedImage.getDevice(), loadedImage.getImageData()));
 		}
 		btnEditExpression.addSelectionListener(new SelectionAdapter() {
-
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleEditButton();
 			}
 
 		});
-		
+
 		if (widgetDescriptor != null) {
 			String tt = widgetDescriptor.getToolTip();
 			expressionEditLabel.setToolTipText(tt);
 			editorControl.setToolTipText(tt);
 			btnEditExpression.setToolTipText(tt);
 		}
-		
+
 		setLayout(new ItemPropertyLayout(this, titleLabel, expressionEditLabel, editorControl, btnEditExpression));
 	}
 
@@ -268,7 +276,7 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 		try {
 			getPropertyEditor().createUpdateProperty(ipDesc.getName(), staticValue, expressionValue);
 			updateWidget();
-			
+
 			// Notifies the listeners of the new expression
 			fireModifyEvent(staticValue, expressionValue);
 		} finally {
@@ -290,18 +298,18 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	 * {@link ItemPropertyBaseLabelProvider}
 	 */
 	public BaseLabelProvider getLabelProvider() {
-		if (lprovider == null){
+		if (lprovider == null) {
 			return BaseLabelProvider.INSTANCE;
 		}
 		return lprovider;
 	}
-	
+
 	/**
 	 * Set the label provider for the element
 	 * 
 	 * @param lprovider the new label provider, it can be null
 	 */
-	public void setLabelProvider(BaseLabelProvider lprovider){
+	public void setLabelProvider(BaseLabelProvider lprovider) {
 		this.lprovider = lprovider;
 	}
 
@@ -322,10 +330,10 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	}
 
 	/**
-	 * Adds a new listener that will be notified of any expression change/notification.
+	 * Adds a new listener that will be notified of any expression
+	 * change/notification.
 	 * 
-	 * @param ml
-	 *          the new {@link ExpressionModifiedListener} to add
+	 * @param ml the new {@link ExpressionModifiedListener} to add
 	 */
 	public void addModifyListener(ItemPropertyModifiedListener ml) {
 		listeners.add(ml);
@@ -334,15 +342,14 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	/**
 	 * Removes an {@link ExpressionModifiedListener} instance.
 	 * 
-	 * @param ml
-	 *          the {@link ExpressionModifiedListener} instance to be removed
+	 * @param ml the {@link ExpressionModifiedListener} instance to be removed
 	 */
 	public void removeModifyListener(ItemPropertyModifiedListener ml) {
 		listeners.remove(ml);
 	}
 
 	/**
-	 * 	Return the control widget
+	 * Return the control widget
 	 */
 	public Control getControl() {
 		return editorControl;
@@ -376,10 +383,11 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	 * Open the dialog to switch between expression and static value
 	 */
 	protected void handleEditButton() {
-		ItemPropertyElementDialog dialog = null; 
-		//if the property description is a dialog provider use the dialog provided by it
-		if (ipDesc instanceof IDialogProvider){
-			dialog = ((IDialogProvider)ipDesc).getDialog(this);
+		ItemPropertyElementDialog dialog = null;
+		// if the property description is a dialog provider use the dialog
+		// provided by it
+		if (ipDesc instanceof IDialogProvider) {
+			dialog = ((IDialogProvider) ipDesc).getDialog(this);
 		} else {
 			dialog = new ItemPropertyElementDialog(UIUtils.getShell(), ipDesc, this);
 			dialog.setHelpAvailable(false);
@@ -389,7 +397,6 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 			setValue(dialog.getStaticValue(), dialog.getExpressionValue());
 		}
 	}
-
 
 	@Override
 	public String getStaticValue() {
@@ -410,9 +417,9 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	}
 
 	/**
-	 * Return if the current property is in expression mode, by default a property 
-	 * is in expression mode if there is an expression defined for it. It can be
-	 * overridden to provide a different behavior
+	 * Return if the current property is in expression mode, by default a
+	 * property is in expression mode if there is an expression defined for it.
+	 * It can be overridden to provide a different behavior
 	 */
 	@Override
 	public boolean isExpressionMode() {
@@ -420,8 +427,8 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	}
 
 	/**
-	 * Return an instance of the standard menu provider, that handle the action "set to default"
-	 * and reset to null"
+	 * Return an instance of the standard menu provider, that handle the action
+	 * "set to default" and reset to null"
 	 */
 	@Override
 	public IMenuProvider getContextualMenuProvider() {
@@ -429,112 +436,115 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	}
 
 	@Override
-	public void updateWidget(boolean refreshLayout){
+	public void updateWidget(boolean refreshLayout) {
 		isUpdating = true;
-		try{
+		try {
 			ipDesc.update(editorControl, this);
-			//show or hide the expression label
-			if (isExpressionMode()){
+			// show or hide the expression label
+			if (isExpressionMode()) {
 				expressionEditLabel.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/functions_icon.png"));
 				layout(true, true);
 			} else {
 				expressionEditLabel.setImage(null);
-				if (refreshLayout) layout(true, true);
+				if (refreshLayout)
+					layout(true, true);
 			}
 		} finally {
 			isUpdating = false;
 		}
 	}
-	
+
 	/**
-	 * Update the widget, avoid to re-trigger the set value trough the isUpdating flag
-	 * This will also re-layout the widget
+	 * Update the widget, avoid to re-trigger the set value trough the
+	 * isUpdating flag This will also re-layout the widget
 	 */
 	@Override
 	public void updateWidget() {
 		updateWidget(true);
 	}
-	
+
 	@Override
-	public IPropertyEditor getPropertyEditor(){
+	public IPropertyEditor getPropertyEditor() {
 		return editor;
 	}
-	
+
 	@Override
 	public void setPropertyEditor(IPropertyEditor editor) {
 		Assert.isNotNull(editor);
 		this.editor = editor;
 	}
-	
+
 	@Override
 	public Object getFallbackValue() {
 		return ipDesc.getFallbackValue();
 	}
-	
+
 	/**
 	 * Return the label of the current property
 	 */
-	public String getPropertyLabel(){
+	public String getPropertyLabel() {
 		return ipDesc.getLabel();
 	}
-	
+
 	/**
 	 * Validate the current value looking is it is mandatory but still empty.
 	 * Can be overridden to provide a complex behavior
 	 * 
-	 * @return a list of string, empty if there are no validation errors or 
-	 * with the list of error messages if there are validation errors
+	 * @return a list of string, empty if there are no validation errors or with
+	 * the list of error messages if there are validation errors
 	 */
-	public List<String> isValueValid(){
-		List<String> result = new ArrayList<String>();
-		if (ipDesc != null && editor != null && ipDesc.isMandatory()){
+	public List<String> isValueValid() {
+		List<String> result = new ArrayList<>();
+		if (ipDesc != null && editor != null && ipDesc.isMandatory()) {
 			String staticValue = getStaticValue();
 			boolean hasStaticValue = true;
-			if (staticValue == null  || staticValue.isEmpty()){
+			if (staticValue == null || staticValue.isEmpty()) {
 				hasStaticValue = false;
 			}
 			JRExpression expValue = getExpressionValue();
 			boolean hasExpValue = true;
-			if (expValue == null){
+			if (expValue == null) {
 				hasExpValue = false;
 			}
-			if (!(hasStaticValue || hasExpValue)){
+			if (!(hasStaticValue || hasExpValue)) {
 				String message = "Property {0} is mandatory";
-				result.add(MessageFormat.format(message, new Object[]{getPropertyLabel()}));
+				result.add(MessageFormat.format(message, new Object[] { getPropertyLabel() }));
 			}
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Set the visibility of the control and re-layout it
 	 */
 	@Override
-	public void setVisible(boolean value){
+	public void setVisible(boolean value) {
 		super.setVisible(value);
 		layout(true, true);
 	}
-	
+
 	/**
-	 * The visibility of this controls depends only from it and not from the parent
+	 * The visibility of this controls depends only from it and not from the
+	 * parent
 	 */
 	@Override
 	public boolean isVisible() {
-		if (!isDisposed()) return getVisible();
+		if (!isDisposed())
+			return getVisible();
 		return false;
 	}
-	
+
 	/**
-	 * Set the layout for the content of this {@link WItemProperty}, after
-	 * the set operation a layot of this container is triggered
+	 * Set the layout for the content of this {@link WItemProperty}, after the
+	 * set operation a layot of this container is triggered
 	 * 
 	 * @param data a not null {@link ItemPropertyLayoutData}
 	 */
-	public void setContentLayoutData(ItemPropertyLayoutData data){
+	public void setContentLayoutData(ItemPropertyLayoutData data) {
 		Assert.isNotNull(data);
 		this.contentLayoutData = data;
 		Image oldImage = btnEditExpression.getImage();
-		if (oldImage != null && !oldImage.isDisposed()){
+		if (oldImage != null && !oldImage.isDisposed()) {
 			oldImage.dispose();
 		}
 		Point buttonSize = contentLayoutData.getButtonSize();
@@ -543,31 +553,32 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 		btnEditExpression.setImage(resizedImage);
 		layout();
 	}
-	
+
 	/**
 	 * Return the current layout data for this container
 	 * 
 	 * @return a not null {@link ItemPropertyLayoutData}
 	 */
-	public ItemPropertyLayoutData getContentLayoutData(){
+	public ItemPropertyLayoutData getContentLayoutData() {
 		return contentLayoutData;
 	}
-	
+
 	/**
-	 * Check if the elements has the flag to force only the expression editing in the dialog
+	 * Check if the elements has the flag to force only the expression editing
+	 * in the dialog
 	 * 
-	 * @return true if the {@link WItemProperty} was created with the force expression dialog stylebit
-	 * false otherwise
+	 * @return true if the {@link WItemProperty} was created with the force
+	 * expression dialog stylebit false otherwise
 	 */
 	public boolean hasForcedExpression() {
 		return (getStyle() & FORCE_EXPRESSION_DIALOG) == FORCE_EXPRESSION_DIALOG;
 	}
-	
+
 	/**
 	 * Check if the elements has the flag to force only the simple mode editing
 	 * 
-	 * @return true if the {@link WItemProperty} was created with the force simple mode dialog stylebit
-	 * false otherwise
+	 * @return true if the {@link WItemProperty} was created with the force
+	 * simple mode dialog stylebit false otherwise
 	 */
 	public boolean hasForcedSimpleMode() {
 		return (getStyle() & FORCE_SIMPLE_MODE) == FORCE_SIMPLE_MODE;

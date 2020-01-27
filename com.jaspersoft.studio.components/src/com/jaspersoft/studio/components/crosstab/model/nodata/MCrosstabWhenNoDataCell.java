@@ -7,9 +7,11 @@ package com.jaspersoft.studio.components.crosstab.model.nodata;
 import net.sf.jasperreports.crosstabs.JRCellContents;
 import net.sf.jasperreports.engine.JRConstants;
 
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 
 import com.jaspersoft.studio.components.crosstab.messages.Messages;
@@ -34,8 +36,8 @@ public class MCrosstabWhenNoDataCell extends MCell {
 	@Override
 	public Color getForeground() {
 		if (getValue() == null)
-			return ColorConstants.lightGray;
-		return ColorConstants.black;
+			return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		return null;
 	}
 
 	@Override

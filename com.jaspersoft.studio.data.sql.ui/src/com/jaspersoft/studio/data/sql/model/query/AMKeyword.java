@@ -6,11 +6,16 @@ package com.jaspersoft.studio.data.sql.model.query;
 
 import net.sf.jasperreports.engine.JRConstants;
 
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.swt.graphics.RGB;
 
 import com.jaspersoft.studio.data.sql.model.MDBObjects;
 import com.jaspersoft.studio.model.ANode;
+import com.jaspersoft.studio.preferences.fonts.utils.BoldStyler;
 import com.jaspersoft.studio.preferences.fonts.utils.FontUtils;
+import com.jaspersoft.studio.utils.UIUtil;
 
 public class AMKeyword extends MDBObjects implements IQueryString {
 
@@ -39,7 +44,8 @@ public class AMKeyword extends MDBObjects implements IQueryString {
 	public static final String CROSS_JOIN = "CROSS JOIN";
 	public static final String FULL_OUTER_JOIN = "FULL OUTER JOIN";
 	public static final String RIGHT_OUTER_JOIN = "RIGHT OUTER JOIN";
-	public static final String[] JOIN_KEYWORDS = new String[] { INNER_JOIN, LEFT_OUTER_JOIN, RIGHT_OUTER_JOIN, FULL_OUTER_JOIN, CROSS_JOIN };
+	public static final String[] JOIN_KEYWORDS = new String[] { INNER_JOIN, LEFT_OUTER_JOIN, RIGHT_OUTER_JOIN,
+			FULL_OUTER_JOIN, CROSS_JOIN };
 
 	public AMKeyword(ANode parent, String value, String image) {
 		super(parent, value, image);
@@ -51,7 +57,7 @@ public class AMKeyword extends MDBObjects implements IQueryString {
 
 	@Override
 	public StyledString getStyledDisplayText() {
-		return new StyledString(getDisplayText(), FontUtils.KEYWORDS_STYLER);
+		return new StyledString(getDisplayText(), FontUtils.getKeywordStyler());
 	}
 
 	protected boolean noSqlIfEmpty = false;

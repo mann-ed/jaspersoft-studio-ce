@@ -18,6 +18,7 @@ import com.jaspersoft.studio.properties.view.TabbedPropertySheetPage;
 import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.utils.UIUtil;
 
+import net.sf.jasperreports.engine.base.JRBaseElement;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 
 /*
@@ -30,7 +31,7 @@ public class GraphicSection extends AbstractSection {
 	private ExpandableComposite section1;
 
 	private ExpandableComposite section2;
-	
+
 	private static int defCharWidth = -1;
 
 	public static int getCharWidth(Control c) {
@@ -41,7 +42,7 @@ public class GraphicSection extends AbstractSection {
 
 	/**
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite,
-	 *      org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
+	 * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
 	 */
 	@Override
 	public void createControls(Composite parent, TabbedPropertySheetPage tabbedPropertySheetPage) {
@@ -59,26 +60,27 @@ public class GraphicSection extends AbstractSection {
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		Composite styleContainer = new Composite(parent, SWT.NONE);
-		//custom layout that make the style control start (small) and allow it to grow until it reach the width of the 
-		//panel, but not above it
+		// custom layout that make the style control start (small) and allow it
+		// to grow until it reach the width of the
+		// panel, but not above it
 		Layout styleLayout = new ResizableControlLayout(100);
 		styleContainer.setLayoutData(gd);
 		createWidget4Property(styleContainer, JRDesignElement.PROPERTY_PARENT_STYLE).getControl().setLayoutData(gd);
 		styleContainer.setLayout(styleLayout);
-		
+
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
-		createWidget4Property(parent, JRDesignElement.PROPERTY_PRINT_REPEATED_VALUES, false).getControl()
+		createWidget4Property(parent, JRBaseElement.PROPERTY_PRINT_REPEATED_VALUES, false).getControl()
 				.setLayoutData(gd);
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
-		createWidget4Property(parent, JRDesignElement.PROPERTY_REMOVE_LINE_WHEN_BLANK, false).getControl()
+		createWidget4Property(parent, JRBaseElement.PROPERTY_REMOVE_LINE_WHEN_BLANK, false).getControl()
 				.setLayoutData(gd);
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
-		createWidget4Property(parent, JRDesignElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND, false).getControl()
+		createWidget4Property(parent, JRBaseElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND, false).getControl()
 				.setLayoutData(gd);
 
 		parent = getWidgetFactory().createSection(parent, Messages.MGraphicElement_print_when, true, 3, 2);
@@ -86,7 +88,7 @@ public class GraphicSection extends AbstractSection {
 
 		gd = new GridData();
 		gd.horizontalSpan = 3;
-		createWidget4Property(parent, JRDesignElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS, false).getControl()
+		createWidget4Property(parent, JRBaseElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS, false).getControl()
 				.setLayoutData(gd);
 
 		gd = new GridData();
@@ -109,7 +111,7 @@ public class GraphicSection extends AbstractSection {
 	@Override
 	public void expandForProperty(Object propertyId) {
 		expandSection(section1);
-		if (propertyId.equals(JRDesignElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS)
+		if (propertyId.equals(JRBaseElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS)
 				|| propertyId.equals(JRDesignElement.PROPERTY_PRINT_WHEN_GROUP_CHANGES)
 				|| propertyId.equals(JRDesignElement.PROPERTY_PRINT_WHEN_EXPRESSION))
 			expandSection(section2);
@@ -120,13 +122,13 @@ public class GraphicSection extends AbstractSection {
 		super.initializeProvidedProperties();
 		addProvidedProperties(JRDesignElement.PROPERTY_KEY, Messages.common_key);
 		addProvidedProperties(JRDesignElement.PROPERTY_PARENT_STYLE, Messages.common_parent_style);
-		addProvidedProperties(JRDesignElement.PROPERTY_PRINT_REPEATED_VALUES,
+		addProvidedProperties(JRBaseElement.PROPERTY_PRINT_REPEATED_VALUES,
 				Messages.MGraphicElement_print_repeated_values);
-		addProvidedProperties(JRDesignElement.PROPERTY_REMOVE_LINE_WHEN_BLANK,
+		addProvidedProperties(JRBaseElement.PROPERTY_REMOVE_LINE_WHEN_BLANK,
 				Messages.MGraphicElement_remove_line_when_blank);
-		addProvidedProperties(JRDesignElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND,
+		addProvidedProperties(JRBaseElement.PROPERTY_PRINT_IN_FIRST_WHOLE_BAND,
 				Messages.MGraphicElement_print_in_first_whole_band);
-		addProvidedProperties(JRDesignElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS,
+		addProvidedProperties(JRBaseElement.PROPERTY_PRINT_WHEN_DETAIL_OVERFLOWS,
 				Messages.MGraphicElement_print_when_detail_overflows);
 		addProvidedProperties(JRDesignElement.PROPERTY_PRINT_WHEN_GROUP_CHANGES,
 				Messages.MGraphicElement_print_when_group_changes);

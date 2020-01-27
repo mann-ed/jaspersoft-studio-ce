@@ -58,7 +58,7 @@ public class MOrderByExpression extends AMOrderByMember<String> {
 			}
 		} else
 			ss.append(super.getStyledDisplayText());
-		return ss.append(addDirection(), FontUtils.KEYWORDS_STYLER);
+		return ss.append(addDirection(), FontUtils.getKeywordStyler());
 	}
 
 	@Override

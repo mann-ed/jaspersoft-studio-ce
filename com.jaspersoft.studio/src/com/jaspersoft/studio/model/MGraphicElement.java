@@ -70,7 +70,6 @@ import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JRDesignGenericElement;
 import net.sf.jasperreports.engine.design.JRDesignGraphicElement;
 import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
-import net.sf.jasperreports.engine.design.JRDesignStyle;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.design.events.JRChangeEventsSupport;
 import net.sf.jasperreports.engine.type.ModeEnum;
@@ -91,7 +90,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 
 	private static NamedEnumPropertyDescriptor<StretchTypeEnum> stretchTypeD;
 
-	private IPropertyDescriptor[] descriptors;
+	private transient IPropertyDescriptor[] descriptors;
 
 	private ReportRulerGuide verticalGuide, horizontalGuide;
 
@@ -100,7 +99,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	 * negative value for the size of an element and a position too far from the
 	 * editor
 	 */
-	private List<AbstractJSSCellEditorValidator> positionValidators = new ArrayList<>();
+	private transient List<AbstractJSSCellEditorValidator> positionValidators = new ArrayList<>();
 
 	/**
 	 * Special propery id to force the refresh of the graphic element
@@ -222,10 +221,10 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	 */
 	@Override
 	public void setValue(Object value) {
-		if (getValue() != null && getValue() instanceof JRDesignGraphicElement)
+		if (getValue() instanceof JRDesignGraphicElement)
 			((JRBasePen) ((JRDesignGraphicElement) getValue()).getLinePen()).getEventSupport()
 					.removePropertyChangeListener(this);
-		else if (value != null && value instanceof JRDesignGraphicElement)
+		else if (value instanceof JRDesignGraphicElement)
 			((JRBasePen) ((JRDesignGraphicElement) value).getLinePen()).getEventSupport()
 					.addPropertyChangeListener(this);
 		super.setValue(value);

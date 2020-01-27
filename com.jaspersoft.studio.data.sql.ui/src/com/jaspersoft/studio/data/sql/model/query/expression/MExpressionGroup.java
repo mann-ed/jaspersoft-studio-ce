@@ -7,6 +7,7 @@ package com.jaspersoft.studio.data.sql.model.query.expression;
 import net.sf.jasperreports.engine.JRConstants;
 
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 
 import com.jaspersoft.studio.data.sql.model.query.AMKeyword;
 import com.jaspersoft.studio.data.sql.model.query.from.MFromTableJoin;
@@ -35,8 +36,7 @@ public class MExpressionGroup extends AMKeyword {
 	public String getDisplayText() {
 		String str = "";
 		if (!isFirst()) {
-			if (getParent() instanceof MFromTableJoin
-					&& getParent().getValue() instanceof MQueryTable) {
+			if (getParent() instanceof MFromTableJoin && getParent().getValue() instanceof MQueryTable) {
 				MFromTableJoin mftj = (MFromTableJoin) getParent();
 				str += ") " + mftj.addAlias() + " ON ";
 			} else
@@ -54,11 +54,12 @@ public class MExpressionGroup extends AMKeyword {
 	public StyledString getStyledDisplayText() {
 		StyledString ss = new StyledString();
 
+		Styler ks = FontUtils.getKeywordStyler();
 		if (!isFirst())
-			ss.append(super.getDisplayText() + " ", FontUtils.KEYWORDS_STYLER);
+			ss.append(super.getDisplayText() + " ", ks);
 
 		if (isNot)
-			ss.append("NOT ", FontUtils.KEYWORDS_STYLER);
+			ss.append("NOT ", ks);
 		ss.append("(");
 		if (getChildren().isEmpty())
 			ss.append(")");

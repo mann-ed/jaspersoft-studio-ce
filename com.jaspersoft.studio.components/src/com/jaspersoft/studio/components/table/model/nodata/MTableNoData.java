@@ -11,11 +11,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -362,7 +364,9 @@ public class MTableNoData extends APropertyNode implements IGraphicElement, IPas
 
 	@Override
 	public Color getForeground() {
-		return getValue() == null ? ColorConstants.gray : ColorConstants.black;
+		if (getValue() == null)
+			return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		return null;
 	}
 
 	@Override

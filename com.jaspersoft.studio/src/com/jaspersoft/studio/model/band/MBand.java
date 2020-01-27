@@ -8,10 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import com.jaspersoft.studio.editor.layout.FreeLayout;
@@ -80,7 +82,8 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	private static IIconDescriptor iconDescriptor;
 
 	/**
-	 * Number of the band that will be shown for the detail band after their name
+	 * Number of the band that will be shown for the detail band after their
+	 * name
 	 */
 	protected int bandIndex = -1;
 
@@ -112,14 +115,10 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	/**
 	 * Instantiates a new m band.
 	 * 
-	 * @param parent
-	 *            the parent
-	 * @param jrband
-	 *            the jrband
-	 * @param bandtype
-	 *            the bandtype
-	 * @param newIndex
-	 *            the new index
+	 * @param parent the parent
+	 * @param jrband the jrband
+	 * @param bandtype the bandtype
+	 * @param newIndex the new index
 	 */
 	public MBand(ANode parent, JRBand jrband, BandTypeEnum bandtype, int newIndex) {
 		super(parent, newIndex);
@@ -139,8 +138,7 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	/**
 	 * Set the index of the band
 	 * 
-	 * @param detailIndex
-	 *            number to use as index for the band
+	 * @param detailIndex number to use as index for the band
 	 */
 	public void setBandIndex(int detailIndex) {
 		bandIndex = detailIndex;
@@ -163,14 +161,12 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 
 	/**
 	 * Refresh the index of the band with the current number returned by
-	 * getFreeIndex.Update also the index map on the mreport removing the old index
-	 * and inserting the new one
+	 * getFreeIndex.Update also the index map on the mreport removing the old
+	 * index and inserting the new one
 	 * 
-	 * @param oldValue
-	 *            the old value of the element
-	 * @param newValue
-	 *            value of the element, if this is not called when a set value is
-	 *            done the can be the same
+	 * @param oldValue the old value of the element
+	 * @param newValue value of the element, if this is not called when a set
+	 * value is done the can be the same
 	 */
 	protected void refreshIndex(JRDesignBand oldValue, JRDesignBand newValue) {
 		INode n = getRoot();
@@ -191,17 +187,18 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	}
 
 	/**
-	 * Return the first not used and greatest index number of all the other bands
+	 * Return the first not used and greatest index number of all the other
+	 * bands
 	 * 
-	 * @return -1 if the band is not a detail band otherwise a number >0 not used by
-	 *         any other detail band
+	 * @return -1 if the band is not a detail band otherwise a number >0 not
+	 * used by any other detail band
 	 */
 	protected int getFreeIndex() {
 		// if (!BandTypeEnum.DETAIL.equals(bandType)) return -1;
 		int actualIndex = 1;
 		if (getParent() instanceof MReport) {
 			MReport report = (MReport) getParent();
-			HashSet<Integer> reservedIndexes = new HashSet<Integer>();
+			HashSet<Integer> reservedIndexes = new HashSet<>();
 			for (INode node : report.getChildren()) {
 				if (node == this)
 					continue;
@@ -233,8 +230,8 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	}
 
 	/**
-	 * Return the index of the band in the detailSection of the jasper design +1 .
-	 * This only if the band is a detail band, otherwise it return -1
+	 * Return the index of the band in the detailSection of the jasper design +1
+	 * . This only if the band is a detail band, otherwise it return -1
 	 * 
 	 * @return a number > 0 if the band is a detail band, -1 otherwise;
 	 */
@@ -242,7 +239,8 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	// if (!BandTypeEnum.DETAIL.equals(bandType))
 	// return -1;
 	// return ((JRDesignSection)
-	// getJasperDesign().getDetailSection()).getBandsList().indexOf(getValue()) + 1;
+	// getJasperDesign().getDetailSection()).getBandsList().indexOf(getValue())
+	// + 1;
 	// }
 
 	@Override
@@ -256,7 +254,7 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	 * @see com.jaspersoft.studio.model.INode#getDisplayText()
 	 */
 	public String getDisplayText() {
-		JRDesignBand value = (JRDesignBand) getValue();
+		JRDesignBand value = getValue();
 
 		String hiddenText = new String();
 		if (!isVisible()) {
@@ -278,14 +276,14 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	}
 
 	/**
-	 * Return a human-readable text that represent the band name. Only the band name
-	 * and no specific information on the size is displayed (i.e.
+	 * Return a human-readable text that represent the band name. Only the band
+	 * name and no specific information on the size is displayed (i.e.
 	 * {@link #getDisplayText()}).
 	 * 
 	 * @return the band name
 	 */
 	public String getSimpleDisplayName() {
-		JRDesignBand value = (JRDesignBand) getValue();
+		JRDesignBand value = getValue();
 		if (bandType.equals(BandTypeEnum.DETAIL) || value == null) {
 			String index = ""; //$NON-NLS-1$
 			if (bandIndex != -1)
@@ -303,8 +301,8 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	@Override
 	public Color getForeground() {
 		if (getValue() == null)
-			return ColorConstants.lightGray;
-		return ColorConstants.black;
+			return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		return null;
 	}
 
 	/*
@@ -343,10 +341,11 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	 * For a model band it can be normal to not have a jr object inside, in this
 	 * case it should anyway return it's descriptors
 	 */
+	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		IPropertyDescriptor[] descriptors = getDescriptors();
 		if (descriptors == null) {
-			List<IPropertyDescriptor> desc = new ArrayList<IPropertyDescriptor>();
+			List<IPropertyDescriptor> desc = new ArrayList<>();
 
 			createPropertyDescriptors(desc);
 
@@ -360,8 +359,7 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	/**
 	 * Creates the property descriptors.
 	 * 
-	 * @param desc
-	 *            the desc
+	 * @param desc the desc
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
@@ -371,8 +369,8 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 		heightD.setDescription(Messages.MBand_height_description);
 		desc.add(heightD);
 
-		splitStyleD = new NamedEnumPropertyDescriptor<SplitTypeEnum>(JRBaseBand.PROPERTY_splitType,
-				Messages.common_split_type, SplitTypeEnum.IMMEDIATE, NullEnum.NULL);
+		splitStyleD = new NamedEnumPropertyDescriptor<>(JRBaseBand.PROPERTY_splitType, Messages.common_split_type,
+				SplitTypeEnum.IMMEDIATE, NullEnum.NULL);
 		splitStyleD.setDescription(Messages.MBand_split_type_dscription);
 		desc.add(splitStyleD);
 		splitStyleD.setHelpRefBuilder(
@@ -414,11 +412,11 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.
-	 * Object)
+	 * org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.
+	 * lang. Object)
 	 */
 	public Object getPropertyValue(Object id) {
-		JRDesignBand jrband = (JRDesignBand) getValue();
+		JRDesignBand jrband = getValue();
 		if (jrband != null) {
 			if (id.equals(JRDesignBand.PROPERTY_HEIGHT))
 				return new Integer(jrband.getHeight());
@@ -449,8 +447,8 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.
-	 * Object, java.lang.Object)
+	 * org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.
+	 * lang. Object, java.lang.Object)
 	 */
 	public void setPropertyValue(Object id, Object value) {
 		JRDesignBand jrband = (JRDesignBand) getValue();
@@ -473,7 +471,7 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 				this.getPropertyChangeSupport().firePropertyChange(MGraphicElement.PROPERTY_MAP, false, true);
 			} else if (id.equals(JRDesignSubreport.PROPERTY_RETURN_VALUES)) {
 				returnValuesDTO = (JRBandDTO) value;
-				List<ExpressionReturnValue> list = (List<ExpressionReturnValue>) returnValuesDTO.getValue();
+				List<ExpressionReturnValue> list = returnValuesDTO.getValue();
 				for (ExpressionReturnValue srv : jrband.getReturnValues())
 					jrband.removeReturnValue(srv);
 				for (ExpressionReturnValue j : list)
@@ -533,7 +531,7 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 		if (getValue() == null) {
 			return parentBounds;
 		} else {
-			bounds.setSize(parentBounds.width, ((JRDesignBand) getValue()).getHeight());
+			bounds.setSize(parentBounds.width, getValue().getHeight());
 			int h = 0;
 			for (INode b : parent.getChildren()) {
 				if (b == this)

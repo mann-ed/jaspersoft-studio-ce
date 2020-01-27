@@ -7,6 +7,7 @@ package com.jaspersoft.studio.data.sql.model.query.from;
 import net.sf.jasperreports.engine.JRConstants;
 
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 
 import com.jaspersoft.studio.data.sql.model.metadata.MSqlTable;
 import com.jaspersoft.studio.data.sql.model.query.AMKeyword;
@@ -78,15 +79,16 @@ public class MFromTableJoin extends MFromTable {
 
 	@Override
 	public StyledString getStyledDisplayText() {
-		StyledString dt = new StyledString(join + " ", FontUtils.KEYWORDS_STYLER);
+		Styler ks = FontUtils.getKeywordStyler();
+		StyledString dt = new StyledString(join + " ", ks);
 		String tbltext = super.getDisplayText();
 		if (getValue() instanceof MQueryTable)
 			return dt.append("(");
 		int ind = (join + " " + tbltext).indexOf(" AS ");
 		dt.append(tbltext);
 		if (ind >= 0)
-			dt.setStyle(ind, " AS ".length(), FontUtils.KEYWORDS_STYLER);
-		dt.append(" " + joinKey + " ", FontUtils.KEYWORDS_STYLER);
+			dt.setStyle(ind, " AS ".length(), ks);
+		dt.append(" " + joinKey + " ", ks);
 		return dt;
 	}
 

@@ -16,8 +16,8 @@ import com.jaspersoft.studio.property.section.widgets.ASPropertyWidget;
 import com.jaspersoft.studio.property.section.widgets.IPropertyDescriptorWidget;
 import com.jaspersoft.studio.property.section.widgets.SPExpression;
 
-public class JRExpressionPropertyDescriptor extends NTextPropertyDescriptor implements IPropertyDescriptorWidget,
-		IExpressionContextSetter {
+public class JRExpressionPropertyDescriptor extends NTextPropertyDescriptor
+		implements IPropertyDescriptorWidget, IExpressionContextSetter {
 
 	protected ExpressionContext expContext;
 
@@ -28,6 +28,7 @@ public class JRExpressionPropertyDescriptor extends NTextPropertyDescriptor impl
 		setLabelProvider(new JRExpressionLabelProvider());
 	}
 
+	@Override
 	public CellEditor createPropertyEditor(Composite parent) {
 		return new JRExpressionCellEditor(parent, expContext);
 	}

@@ -42,21 +42,26 @@ import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 /**
- * Expression widget re-usable in custom dialogs and wizards. The text of the expression is represented inside the
- * textbox. The button enables the use of the expression editor (shown in a separate dialog). An additional label can be
- * specified, and based upon the <code>showMode</code> flag of the constructor it will be drawn on top of the textbox
- * and button, or on the their left.
+ * Expression widget re-usable in custom dialogs and wizards. The text of the
+ * expression is represented inside the textbox. The button enables the use of
+ * the expression editor (shown in a separate dialog). An additional label can
+ * be specified, and based upon the <code>showMode</code> flag of the
+ * constructor it will be drawn on top of the textbox and button, or on the
+ * their left.
  * <p>
  * 
- * <b>ADDITIONAL NOTE</b>: the widget has a default internal layout of type {@link FormLayout}.
+ * <b>ADDITIONAL NOTE</b>: the widget has a default internal layout of type
+ * {@link FormLayout}.
  * <p>
  * 
- * <b>EXPRESSION MODIFICATIONS</b>: to add custom behavior when an expression is modified/set you can either create a
- * sub-class of the {@link WTextExpression} one, overriding the {@link #setExpression(JRDesignExpression)} method:
+ * <b>EXPRESSION MODIFICATIONS</b>: to add custom behavior when an expression is
+ * modified/set you can either create a sub-class of the {@link WTextExpression}
+ * one, overriding the {@link #setExpression(JRDesignExpression)} method:
  * 
  * <pre>
  * // ...
- * WTextExpression myExpression = new WTextExpression(container, SWT.NONE, &quot;My expression&quot;, WTextExpression.LABEL_ON_TOP) {
+ * WTextExpression myExpression = new WTextExpression(container, SWT.NONE, &quot;My expression&quot;,
+ * 		WTextExpression.LABEL_ON_TOP) {
  * 	&#064;Override
  * 	public void setExpression(JRDesignExpression exp) {
  * 		super.setExpression(exp);
@@ -66,7 +71,8 @@ import net.sf.jasperreports.engine.design.JRDesignExpression;
  * // ...
  * </pre>
  * 
- * or adding a new {@link ExpressionModifiedListener} via {@link #addModifyListener(ExpressionModifiedListener)} method.
+ * or adding a new {@link ExpressionModifiedListener} via
+ * {@link #addModifyListener(ExpressionModifiedListener)} method.
  * 
  * @author mrabbi
  * 
@@ -93,23 +99,21 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	protected Text textExpression;
 	protected Button btnEditExpression;
 	protected Label label;
-	
+
 	/**
-	 * Flag used to know if the tab should be added as text (with value false) or should
-	 * produce a traverse
+	 * Flag used to know if the tab should be added as text (with value false)
+	 * or should produce a traverse
 	 */
 	private boolean traverseOnTab = false;
 
 	// Expression modify listeners
-	private List<ExpressionModifiedListener> listeners = new ArrayList<ExpressionModifiedListener>();
+	private List<ExpressionModifiedListener> listeners = new ArrayList<>();
 
 	/**
 	 * Creates the new widget made only by a textbox and a button.
 	 * 
-	 * @param parent
-	 *          parent composite
-	 * @param style
-	 *          widget style
+	 * @param parent parent composite
+	 * @param style widget style
 	 */
 	public WTextExpression(Composite parent, int style) {
 		this(parent, style, null, LABEL_NONE, -1);
@@ -118,32 +122,27 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	/**
 	 * Creates the new widget made only by a textbox and a button.
 	 * 
-	 * @param parent
-	 *          parent composite
-	 * @param style
-	 *          widget style
-	 * @param number
-	 *          of text lines to show
+	 * @param parent parent composite
+	 * @param style widget style
+	 * @param number of text lines to show
 	 */
 	public WTextExpression(Composite parent, int style, int linesNum) {
 		this(parent, style, null, LABEL_NONE, linesNum);
 	}
 
 	/**
-	 * Creates the new widget depending on the specified flag <code>showMode</code> and using the <code>textLabel</code>
-	 * as additional input.
+	 * Creates the new widget depending on the specified flag
+	 * <code>showMode</code> and using the <code>textLabel</code> as additional
+	 * input.
 	 * <p>
-	 * Please note that if <code>textLabel</code> is <code>null</code> or <code>showMode</code> uses the default value of
-	 * <code>LABEL_NONE</code>, the label is not created.
+	 * Please note that if <code>textLabel</code> is <code>null</code> or
+	 * <code>showMode</code> uses the default value of <code>LABEL_NONE</code>,
+	 * the label is not created.
 	 * 
-	 * @param parent
-	 *          parent composite
-	 * @param style
-	 *          widget style
-	 * @param textLabel
-	 *          the information label associated to the widget
-	 * @param showMode
-	 *          flag to specify the label position
+	 * @param parent parent composite
+	 * @param style widget style
+	 * @param textLabel the information label associated to the widget
+	 * @param showMode flag to specify the label position
 	 * 
 	 */
 	public WTextExpression(Composite parent, int style, String textLabel, int showMode) {
@@ -151,24 +150,22 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	}
 
 	/**
-	 * Creates the new widget depending on the specified flag <code>showMode</code> and using the <code>textLabel</code>
-	 * as additional input. The number of lines is used for the height hint computation of the text widget that will
-	 * contain the expression. A valid value must be greater than zero, otherwise the default value (
+	 * Creates the new widget depending on the specified flag
+	 * <code>showMode</code> and using the <code>textLabel</code> as additional
+	 * input. The number of lines is used for the height hint computation of the
+	 * text widget that will contain the expression. A valid value must be
+	 * greater than zero, otherwise the default value (
 	 * {@link #TEXT_LINE_NUMBERS}) is used.
 	 * <p>
-	 * Please note that if <code>textLabel</code> is <code>null</code> or <code>showMode</code> uses the default value of
-	 * <code>LABEL_NONE</code>, the label is not created.
+	 * Please note that if <code>textLabel</code> is <code>null</code> or
+	 * <code>showMode</code> uses the default value of <code>LABEL_NONE</code>,
+	 * the label is not created.
 	 * 
-	 * @param parent
-	 *          parent composite
-	 * @param style
-	 *          widget style
-	 * @param textLabel
-	 *          the information label associated to the widget
-	 * @param showMode
-	 *          flag to specify the label position
-	 * @param number
-	 *          of text lines to show
+	 * @param parent parent composite
+	 * @param style widget style
+	 * @param textLabel the information label associated to the widget
+	 * @param showMode flag to specify the label position
+	 * @param number of text lines to show
 	 * 
 	 */
 	public WTextExpression(Composite parent, int style, String textLabel, int showMode, int linesNum) {
@@ -179,21 +176,21 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 		createLabelControl(textLabel, showMode);
 		createTextControl();
 		createButtonControl();
-		
+
 		configureWidgetsLayoutData(showMode);
 
 	}
-	
+
 	/**
 	 * Create the control to provide the expression
 	 */
-	protected void createTextControl(){
+	protected void createTextControl() {
 		textExpression = new Text(this, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		textExpression.addVerifyListener(new VerifyListener() {
 			@Override
 			public void verifyText(VerifyEvent e) {
 				boolean isShift = (e.stateMask & SWT.SHIFT) > 0;
-				if(e.keyCode == SWT.CR && !isShift) {
+				if (e.keyCode == SWT.CR && !isShift) {
 					e.doit = false;
 				}
 			}
@@ -211,41 +208,44 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 				}
 			}
 		});
-		
-		//add the traverse to allow to change widget on tab
+
+		// add the traverse to allow to change widget on tab
 		textExpression.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent e) {
-					if (traverseOnTab && e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS){
-						//the traverse on tab is enabled and the tab key is pressed
-						boolean isCtrl = e.stateMask == SWT.CTRL;
-						if (!isCtrl) {
-							//control in not pressed, set the event to true to switch control
-							e.doit = true;
-						} else {
-							//control is pressed, add a tabulation char where the cursor is
-							e.doit = false;
-							String currentValue = textExpression.getText();
-							Point selection = textExpression.getSelection();
-							String firstPart = currentValue.substring(0, selection.x);
-							String secondPart = currentValue.substring(selection.y);
-							currentValue = firstPart + '\t' + secondPart;
-							textExpression.setText(currentValue);
-							//restore the cursor position
-							oldpos = selection.x;
-							textExpression.setSelection(selection.x +1);
-						}	
+				if (traverseOnTab && e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
+					// the traverse on tab is enabled and the tab key is pressed
+					boolean isCtrl = e.stateMask == SWT.CTRL;
+					if (!isCtrl) {
+						// control in not pressed, set the event to true to
+						// switch control
+						e.doit = true;
 					} else {
-						//the listener is not enabled or the key is not a tab, don't do the traverse
+						// control is pressed, add a tabulation char where the
+						// cursor is
 						e.doit = false;
+						String currentValue = textExpression.getText();
+						Point selection = textExpression.getSelection();
+						String firstPart = currentValue.substring(0, selection.x);
+						String secondPart = currentValue.substring(selection.y);
+						currentValue = firstPart + '\t' + secondPart;
+						textExpression.setText(currentValue);
+						// restore the cursor position
+						oldpos = selection.x;
+						textExpression.setSelection(selection.x + 1);
 					}
+				} else {
+					// the listener is not enabled or the key is not a tab,
+					// don't do the traverse
+					e.doit = false;
+				}
 			}
 		});
 	}
-	
+
 	/**
 	 * Create the optional label
 	 */
-	protected void createLabelControl(String textLabel, int showMode){
+	protected void createLabelControl(String textLabel, int showMode) {
 		if (textLabel != null && (showMode == LABEL_ON_LEFT || showMode == LABEL_ON_TOP)) {
 			// Create the needed label
 			label = new Label(this, SWT.NONE);
@@ -254,21 +254,22 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 			showMode = LABEL_NONE;
 		}
 	}
-	
+
 	/**
 	 * Create the button to open the expression dialog
 	 */
-	protected void createButtonControl(){
+	protected void createButtonControl() {
 		btnEditExpression = new Button(this, SWT.FLAT);
 		btnEditExpression.setImage(JaspersoftStudioPlugin.getInstance().getImage(BUTTON_ICON_PATH));
 		btnEditExpression.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent e) {
-				if(!ExpressionEditorSupportUtil.isExpressionEditorDialogOpen()) {
+				if (!ExpressionEditorSupportUtil.isExpressionEditorDialogOpen()) {
 					JRExpressionEditor wizard = new JRExpressionEditor();
 					wizard.setValue(expression);
 					wizard.setExpressionContext(expContext);
-					WizardDialog dialog = ExpressionEditorSupportUtil.getExpressionEditorWizardDialog(getShell(), wizard);
+					WizardDialog dialog = ExpressionEditorSupportUtil.getExpressionEditorWizardDialog(getShell(),
+							wizard);
 					if (dialog.open() == Dialog.OK) {
 						JRDesignExpression value = wizard.getValue();
 						setExpression(value);
@@ -340,11 +341,11 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 			fd_btnEditExpression.right = new FormAttachment(100);
 			fd_btnEditExpression.top = new FormAttachment(0);
 			btnEditExpression.setLayoutData(fd_btnEditExpression);
-			fd_textExpression.width = textExpression.getBounds().width /2;
+			fd_textExpression.width = textExpression.getBounds().width / 2;
 			addControlListener(new ControlAdapter() {
 				@Override
 				public void controlResized(ControlEvent e) {
-					fd_textExpression.width = textExpression.getBounds().width /2;
+					fd_textExpression.width = textExpression.getBounds().width / 2;
 					layout();
 				}
 			});
@@ -354,8 +355,7 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	/**
 	 * Sets the expression for the widget.
 	 * 
-	 * @param exp
-	 *          the expression to set
+	 * @param exp the expression to set
 	 */
 	public void setExpression(JRDesignExpression exp) {
 		isRefreshing = true;
@@ -400,8 +400,9 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	}
 
 	/**
-	 * Gets the currently set number of lines for the widget. This value is used for the calculation of the text
-	 * expression height hint. Default value is {@value #TEXT_LINE_NUMBERS}.
+	 * Gets the currently set number of lines for the widget. This value is used
+	 * for the calculation of the text expression height hint. Default value is
+	 * {@value #TEXT_LINE_NUMBERS}.
 	 * 
 	 * @return the number of lines
 	 */
@@ -412,10 +413,11 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	}
 
 	/**
-	 * Returns the text contained inside the widget text-box that represents the actual {@link JRDesignExpression}
-	 * instance.
+	 * Returns the text contained inside the widget text-box that represents the
+	 * actual {@link JRDesignExpression} instance.
 	 * 
-	 * @return the text representation of the expression, an empty string if the expression is <code>null</code>
+	 * @return the text representation of the expression, an empty string if the
+	 * expression is <code>null</code>
 	 */
 	public String getText() {
 		return this.expression == null ? "" : Misc.nvl(this.getExpression().getText());
@@ -424,14 +426,14 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.jaspersoft.studio.editor.expression.IExpressionContextSetter#setExpressionContext(com.jaspersoft.studio.editor
+	 * @see com.jaspersoft.studio.editor.expression.IExpressionContextSetter#
+	 * setExpressionContext(com.jaspersoft.studio.editor
 	 * .expression.ExpressionContext)
 	 */
 	public void setExpressionContext(ExpressionContext expContext) {
 		this.expContext = expContext;
 	}
-	
+
 	/**
 	 * @return the expression context currently set, <code>null</code> if none
 	 */
@@ -440,10 +442,10 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	}
 
 	/**
-	 * Adds a new listener that will be notified of any expression change/notification.
+	 * Adds a new listener that will be notified of any expression
+	 * change/notification.
 	 * 
-	 * @param ml
-	 *          the new {@link ExpressionModifiedListener} to add
+	 * @param ml the new {@link ExpressionModifiedListener} to add
 	 */
 	public void addModifyListener(ExpressionModifiedListener ml) {
 		listeners.add(ml);
@@ -452,8 +454,7 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	/**
 	 * Removes an {@link ExpressionModifiedListener} instance.
 	 * 
-	 * @param ml
-	 *          the {@link ExpressionModifiedListener} instance to be removed
+	 * @param ml the {@link ExpressionModifiedListener} instance to be removed
 	 */
 	public void removeModifyListener(ExpressionModifiedListener ml) {
 		listeners.remove(ml);
@@ -488,20 +489,20 @@ public class WTextExpression extends Composite implements IExpressionContextSett
 	/**
 	 * Set if the widget should traverse on tab or not
 	 * 
-	 * @param value true if on tab the widget should change, false to 
-	 * add a tab as text as content of the expression
+	 * @param value true if on tab the widget should change, false to add a tab
+	 * as text as content of the expression
 	 */
-	public void setTraverseOnTab(boolean value){
+	public void setTraverseOnTab(boolean value) {
 		traverseOnTab = value;
 	}
-	
+
 	/**
 	 * Get if the widget should traverse on tab or not
 	 * 
-	 * @return true if on tab the widget should change, false to 
-	 * add a tab as text as content of the expression
+	 * @return true if on tab the widget should change, false to add a tab as
+	 * text as content of the expression
 	 */
-	public boolean isTraverseOnTab(){
+	public boolean isTraverseOnTab() {
 		return traverseOnTab;
 	}
 }

@@ -65,7 +65,7 @@ public abstract class AMQueryAliased<T> extends AMQueryObject<T> {
 
 	public void addAlias(StyledString dt) {
 		if (alias != null && !alias.trim().isEmpty()) {
-			dt.append(getAliasKeyString(), FontUtils.KEYWORDS_STYLER);
+			dt.append(getAliasKeyString(), FontUtils.getKeywordStyler());
 			dt.append(prepareAlias());
 		}
 	}

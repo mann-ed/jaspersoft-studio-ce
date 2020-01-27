@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import net.sf.jasperreports.engine.JRConstants;
 
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 
 import com.jaspersoft.studio.data.sql.model.enums.Operator;
 import com.jaspersoft.studio.data.sql.model.query.from.MFromTableJoin;
@@ -59,32 +60,34 @@ public class MExpression extends AMExpression<Object> {
 			for (int i = 0; i < ops.length; i++)
 				ops[i] = operands.get(i).toSQLString();
 		}
-		return dt + MessageFormat.format(operator.getFormat(operator), (Object[]) ops) + isLastInGroup(getParent(), this);
+		return dt + MessageFormat.format(operator.getFormat(operator), (Object[]) ops)
+				+ isLastInGroup(getParent(), this);
 	}
 
 	@Override
 	public StyledString getStyledDisplayText() {
 		String dt = getDisplayText();
 		StyledString ss = new StyledString(dt);
+		Styler ks = FontUtils.getKeywordStyler();
 		if (!isFirst()) {
 			if (getParent() instanceof MFromTableJoin && getParent().getValue() instanceof MQueryTable) {
 				int ind = dt.indexOf(" AS ");
 				if (ind >= 0)
-					ss.setStyle(ind, " AS ".length(), FontUtils.KEYWORDS_STYLER);
+					ss.setStyle(ind, " AS ".length(), ks);
 				ind = (dt).indexOf(" ON ");
 				if (ind >= 0)
-					ss.setStyle(ind, " ON ".length(), FontUtils.KEYWORDS_STYLER);
+					ss.setStyle(ind, " ON ".length(), ks);
 			} else
-				ss.setStyle(0, (prevCond + " ").length(), FontUtils.KEYWORDS_STYLER);
+				ss.setStyle(0, (prevCond + " ").length(), ks);
 		}
 		if (operator.getNrOperands() != 2 || (operator.getNrOperands() == 2 && operator == Operator.LIKE)) {
 			String sqlname = " " + operator.getSqlname() + " ";
 			int ind = dt.indexOf(sqlname);
 			if (ind >= 0)
-				ss.setStyle(ind, sqlname.length(), FontUtils.KEYWORDS_STYLER);
+				ss.setStyle(ind, sqlname.length(), ks);
 		}
 		if (operator.getNrOperands() == 3 && (operator == Operator.BETWEEN || operator == Operator.NOTBETWEEN))
-			ss.setStyle(dt.indexOf(" AND "), " AND ".length(), FontUtils.KEYWORDS_STYLER);
+			ss.setStyle(dt.indexOf(" AND "), " AND ".length(), ks);
 		return ss;
 	}
 

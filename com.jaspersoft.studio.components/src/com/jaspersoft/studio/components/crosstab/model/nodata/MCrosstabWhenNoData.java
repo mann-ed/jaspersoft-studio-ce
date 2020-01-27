@@ -9,9 +9,11 @@ import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JasperDesign;
 
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 
 import com.jaspersoft.studio.components.crosstab.CrosstabCell;
@@ -42,8 +44,7 @@ public class MCrosstabWhenNoData extends ANode implements IContainerEditPart {
 
 	public MCrosstab getCrosstab() {
 		INode node = this;
-		while (node != null && node.getParent() != null
-				&& !(node instanceof MCrosstab) && !(node instanceof MRoot)) {
+		while (node != null && node.getParent() != null && !(node instanceof MCrosstab) && !(node instanceof MRoot)) {
 			node = node.getParent();
 		}
 		if (node instanceof MCrosstab)
@@ -61,12 +62,9 @@ public class MCrosstabWhenNoData extends ANode implements IContainerEditPart {
 	/**
 	 * Instantiates a new m field.
 	 * 
-	 * @param parent
-	 *            the parent
-	 * @param jfRield
-	 *            the jf rield
-	 * @param newIndex
-	 *            the new index
+	 * @param parent   the parent
+	 * @param jfRield  the jf rield
+	 * @param newIndex the new index
 	 */
 	public MCrosstabWhenNoData(ANode parent, int index) {
 		super(parent, index);
@@ -74,7 +72,7 @@ public class MCrosstabWhenNoData extends ANode implements IContainerEditPart {
 
 	@Override
 	public Color getForeground() {
-		return ColorConstants.lightGray;
+		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
 	}
 
 	/*
@@ -105,8 +103,7 @@ public class MCrosstabWhenNoData extends ANode implements IContainerEditPart {
 		return getIconDescriptor().getToolTip();
 	}
 
-	private static final CrosstabCell cell = new CrosstabCell(
-			JRCrosstabOrigin.TYPE_WHEN_NO_DATA_CELL);
+	private static final CrosstabCell cell = new CrosstabCell(JRCrosstabOrigin.TYPE_WHEN_NO_DATA_CELL);
 
 	public Rectangle getBounds() {
 		return getCrosstab().getCrosstabManager().getBounds(cell);

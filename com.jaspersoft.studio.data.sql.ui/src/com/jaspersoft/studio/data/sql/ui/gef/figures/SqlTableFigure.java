@@ -4,6 +4,7 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.sql.ui.gef.figures;
 
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
@@ -12,6 +13,7 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -24,6 +26,7 @@ public class SqlTableFigure extends Figure {
 		private NameLabel(String s) {
 			super(s);
 			setIconAlignment(PositionConstants.RIGHT);
+			setForegroundColor(UIUtils.getSystemColor(SWT.COLOR_BLACK));
 		}
 
 		@Override

@@ -49,7 +49,7 @@ import net.sf.jasperreports.engine.type.PrintOrderEnum;
 
 public final class PageFormatDialog extends FormDialog {
 
-	private List<ValueUnitsWidget> uvWidgets = new ArrayList<ValueUnitsWidget>();
+	private List<ValueUnitsWidget> uvWidgets = new ArrayList<>();
 
 	private ValueUnitsWidget pheigh;
 
@@ -388,7 +388,8 @@ public final class PageFormatDialog extends FormDialog {
 
 			public void widgetSelected(SelectionEvent e) {
 				Point p = PageSize.getFormatSize(PageSize.getFormats()[pformat.getSelectionIndex()]);
-				// Standard measures are for portrait: should switch if landascape
+				// Standard measures are for portrait: should switch if
+				// landascape
 				if (portrait.getSelection()) {
 					pwidth.setValue(p.x);
 					pheigh.setValue(p.y);
@@ -462,8 +463,8 @@ public final class PageFormatDialog extends FormDialog {
 	}
 
 	/**
-	 * Set the maximum number that can be set on the column width control. Used when
-	 * the page width or its margin are changed
+	 * Set the maximum number that can be set on the column width control. Used
+	 * when the page width or its margin are changed
 	 */
 	protected void setWdithMaximum() {
 		cwidth.setMaxPixels(Math.max(0, pwidth.getValue() - lmargin.getValue() - rmargin.getValue()));
@@ -482,11 +483,10 @@ public final class PageFormatDialog extends FormDialog {
 	/**
 	 * Return the maximum number of columns that can be set.
 	 * 
-	 * @param realColWidth
-	 *            true if this is called when setting the column widht. Having this
-	 *            to true make the columns number depending on the current column
-	 *            widht. Otherwise will be the column width depending on the columns
-	 *            number (forcing the width to its minimum, 1)
+	 * @param realColWidth true if this is called when setting the column widht.
+	 * Having this to true make the columns number depending on the current
+	 * column widht. Otherwise will be the column width depending on the columns
+	 * number (forcing the width to its minimum, 1)
 	 * @return the maximum number of columns
 	 */
 	protected int getMaxColumnsNumber(boolean realColWidth) {
@@ -500,7 +500,7 @@ public final class PageFormatDialog extends FormDialog {
 	 * Return the maximum column width that can be set with the current values
 	 * 
 	 * @return the maximum columns witdh for the current space, page width and
-	 *         margins
+	 * margins
 	 */
 	protected int getMaxColumnsWidth() {
 		int colNumber = Math.max(cols.getValueAsInteger(), 1);

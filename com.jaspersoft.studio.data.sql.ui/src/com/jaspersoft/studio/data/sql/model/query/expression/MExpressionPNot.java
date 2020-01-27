@@ -8,6 +8,7 @@ import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignParameter;
 
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 
 import com.jaspersoft.studio.data.sql.model.query.from.MFromTableJoin;
 import com.jaspersoft.studio.data.sql.model.query.subquery.MQueryTable;
@@ -48,15 +49,16 @@ public class MExpressionPNot extends AMExpression<Object> {
 		String dt = getDisplayText();
 		StyledString ss = new StyledString(dt);
 		if (!isFirst()) {
+			Styler ks = FontUtils.getKeywordStyler();
 			if (getParent() instanceof MFromTableJoin && getParent().getValue() instanceof MQueryTable) {
 				int ind = dt.indexOf(" AS ");
 				if (ind >= 0)
-					ss.setStyle(ind, " AS ".length(), FontUtils.KEYWORDS_STYLER);
+					ss.setStyle(ind, " AS ".length(), ks);
 				ind = (dt).indexOf(" ON ");
 				if (ind >= 0)
-					ss.setStyle(ind, " ON ".length(), FontUtils.KEYWORDS_STYLER);
+					ss.setStyle(ind, " ON ".length(), ks);
 			} else
-				ss.setStyle(0, (prevCond + " ").length(), FontUtils.KEYWORDS_STYLER);
+				ss.setStyle(0, (prevCond + " ").length(), ks);
 		}
 		ss.setStyle(dt.lastIndexOf("$P!{"), 4, FontUtils.CLASSTYPE_STYLER);
 		ss.setStyle(dt.lastIndexOf("}"), 1, FontUtils.CLASSTYPE_STYLER);

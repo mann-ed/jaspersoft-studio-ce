@@ -8,6 +8,7 @@ import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.query.JRJdbcQueryExecuter;
 
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 
 import com.jaspersoft.studio.data.sql.model.query.from.MFromTableJoin;
 import com.jaspersoft.studio.data.sql.model.query.operand.AOperand;
@@ -16,9 +17,12 @@ import com.jaspersoft.studio.model.ANode;
 import com.jaspersoft.studio.preferences.fonts.utils.FontUtils;
 
 public class MExpressionX extends AMExpression<Object> {
-	public static final String[] FUNCTIONS = new String[] { JRJdbcQueryExecuter.CLAUSE_ID_EQUAL, JRJdbcQueryExecuter.CLAUSE_ID_NOTEQUAL, JRJdbcQueryExecuter.CLAUSE_ID_GREATER,
-			JRJdbcQueryExecuter.CLAUSE_ID_GREATER_OR_EQUAL, JRJdbcQueryExecuter.CLAUSE_ID_LESS, JRJdbcQueryExecuter.CLAUSE_ID_LESS_OR_EQUAL, JRJdbcQueryExecuter.CLAUSE_ID_BETWEEN,
-			JRJdbcQueryExecuter.CLAUSE_ID_BETWEEN_CLOSED, JRJdbcQueryExecuter.CLAUSE_ID_BETWEEN_LEFT_CLOSED, JRJdbcQueryExecuter.CLAUSE_ID_BETWEEN_RIGHT_CLOSED, JRJdbcQueryExecuter.CLAUSE_ID_IN,
+	public static final String[] FUNCTIONS = new String[] { JRJdbcQueryExecuter.CLAUSE_ID_EQUAL,
+			JRJdbcQueryExecuter.CLAUSE_ID_NOTEQUAL, JRJdbcQueryExecuter.CLAUSE_ID_GREATER,
+			JRJdbcQueryExecuter.CLAUSE_ID_GREATER_OR_EQUAL, JRJdbcQueryExecuter.CLAUSE_ID_LESS,
+			JRJdbcQueryExecuter.CLAUSE_ID_LESS_OR_EQUAL, JRJdbcQueryExecuter.CLAUSE_ID_BETWEEN,
+			JRJdbcQueryExecuter.CLAUSE_ID_BETWEEN_CLOSED, JRJdbcQueryExecuter.CLAUSE_ID_BETWEEN_LEFT_CLOSED,
+			JRJdbcQueryExecuter.CLAUSE_ID_BETWEEN_RIGHT_CLOSED, JRJdbcQueryExecuter.CLAUSE_ID_IN,
 			JRJdbcQueryExecuter.CLAUSE_ID_NOTIN };
 
 	public static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
@@ -56,15 +60,16 @@ public class MExpressionX extends AMExpression<Object> {
 		String dt = getDisplayText();
 		StyledString ss = new StyledString(dt);
 		if (!isFirst()) {
+			Styler ks = FontUtils.getKeywordStyler();
 			if (getParent() instanceof MFromTableJoin && getParent().getValue() instanceof MQueryTable) {
 				int ind = dt.indexOf(" AS ");
 				if (ind >= 0)
-					ss.setStyle(ind, " AS ".length(), FontUtils.KEYWORDS_STYLER);
+					ss.setStyle(ind, " AS ".length(), ks);
 				ind = (dt).indexOf(" ON ");
 				if (ind >= 0)
-					ss.setStyle(ind, " ON ".length(), FontUtils.KEYWORDS_STYLER);
+					ss.setStyle(ind, " ON ".length(), ks);
 			} else
-				ss.setStyle(0, (prevCond + " ").length(), FontUtils.KEYWORDS_STYLER);
+				ss.setStyle(0, (prevCond + " ").length(), ks);
 		}
 		ss.setStyle(dt.lastIndexOf("$X{"), 3, FontUtils.CLASSTYPE_STYLER);
 		ss.setStyle(dt.lastIndexOf("}"), 1, FontUtils.CLASSTYPE_STYLER);

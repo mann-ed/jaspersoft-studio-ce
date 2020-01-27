@@ -4,8 +4,10 @@
  ******************************************************************************/
 package com.jaspersoft.studio.components.table.model;
 
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -91,10 +93,10 @@ public class MTableGroupFooter extends AMFooterHeaderCollection {
 				StandardBaseColumn currentCol = (StandardBaseColumn) child.getValue();
 				Cell footerCell = currentCol.getGroupFooter(jrDesignGroup.getName());
 				if (footerCell != null)
-					return ColorConstants.black;
+					return null;
 			}
 		}
-		return ColorConstants.gray;
+		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
 	}
 
 	@Override

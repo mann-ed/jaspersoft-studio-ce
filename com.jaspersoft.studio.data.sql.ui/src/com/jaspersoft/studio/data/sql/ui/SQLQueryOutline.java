@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.gef.dnd.TemplateTransfer;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -113,12 +111,9 @@ public class SQLQueryOutline {
 		MenuManager menuMgr = new MenuManager();
 		menuMgr.setRemoveAllWhenShown(true);
 		afactory = new ActionFactory(designer, treeViewer);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager mgr) {
-				TreeSelection s = (TreeSelection) treeViewer.getSelection();
-				afactory.fillMenu(s != null ? s.toArray() : null, mgr);
-			}
-
+		menuMgr.addMenuListener(mgr -> {
+			TreeSelection s = (TreeSelection) treeViewer.getSelection();
+			afactory.fillMenu(s != null ? s.toArray() : null, mgr);
 		});
 		Menu menu = menuMgr.createContextMenu(treeViewer.getControl());
 		treeViewer.getControl().setMenu(menu);
@@ -154,8 +149,8 @@ public class SQLQueryOutline {
 			public boolean performDrop(Object data) {
 				if (data == null)
 					return false;
-				List<ANode> nodes = new ArrayList<ANode>();
-				List<Object> objects = new ArrayList<Object>();
+				List<ANode> nodes = new ArrayList<>();
+				List<Object> objects = new ArrayList<>();
 				if (data.getClass().isArray()) {
 					Object[] ar = (Object[]) data;
 					for (Object obj : ar)
@@ -177,7 +172,7 @@ public class SQLQueryOutline {
 			}
 
 			private void doDropObjects(ANode target, List<Object> objects) {
-				List<JRDesignParameter> prms = new ArrayList<JRDesignParameter>();
+				List<JRDesignParameter> prms = new ArrayList<>();
 				for (Object obj : objects)
 					if (obj instanceof JRDesignParameter)
 						prms.add((JRDesignParameter) obj);
@@ -189,9 +184,9 @@ public class SQLQueryOutline {
 			}
 
 			private boolean doDrop(ANode target, List<ANode> node) {
-				Set<MSqlTable> tablesset = new LinkedHashSet<MSqlTable>();
-				Set<MSQLColumn> colsset = new LinkedHashSet<MSQLColumn>();
-				Set<ANode> others = new LinkedHashSet<ANode>();
+				Set<MSqlTable> tablesset = new LinkedHashSet<>();
+				Set<MSQLColumn> colsset = new LinkedHashSet<>();
+				Set<ANode> others = new LinkedHashSet<>();
 				Util.filterTables(node, tablesset, colsset, others);
 
 				doDropTable(target, tablesset);
@@ -224,7 +219,7 @@ public class SQLQueryOutline {
 
 							}
 							if (target instanceof MGroupByColumn || target instanceof MGroupByExpression) {
-								ANode p = ((ANode) target).getParent();
+								ANode p = target.getParent();
 								ind = p.getChildren().indexOf(target);
 								target = p;
 							}
@@ -265,9 +260,8 @@ public class SQLQueryOutline {
 					parent = (ANode) target;
 				else if (target.getClass().isAssignableFrom(n.getClass()))
 					parent = ((ANode) target).getParent();
-				else if (target instanceof ANode && n instanceof ANode && n != null
-						&& ((ANode) target).getParent() != null
-						&& ((ANode) target).getParent().equals(((ANode) n).getParent()))
+				else if (target instanceof ANode && n instanceof ANode && ((ANode) target).getParent() != null
+						&& ((ANode) target).getParent().equals(n.getParent()))
 					parent = ((ANode) target).getParent();
 
 				if (n.getParent().equals(parent)) {
@@ -286,7 +280,7 @@ public class SQLQueryOutline {
 
 			protected void doDropTable(Object target, Set<MSqlTable> tablesset) {
 				if (!tablesset.isEmpty()) {
-					Set<MSqlTable> tmp = new LinkedHashSet<MSqlTable>();
+					Set<MSqlTable> tmp = new LinkedHashSet<>();
 					for (MSqlTable t : tablesset) {
 						MSqlTable mt = Util.getTable(designer.getDbMetadata().getRoot(), t);
 						designer.getDbMetadata().loadTable(mt);
@@ -299,7 +293,7 @@ public class SQLQueryOutline {
 						designer.getDbMetadata().loadTable(t);
 					if (target instanceof MSelect || target instanceof MSelectColumn
 							|| target instanceof MSelectExpression) {
-						Set<MSQLColumn> cols = new HashSet<MSQLColumn>();
+						Set<MSQLColumn> cols = new HashSet<>();
 						for (MSqlTable t : tablesset) {
 							for (INode n : t.getChildren())
 								cols.add((MSQLColumn) n);
@@ -354,7 +348,7 @@ public class SQLQueryOutline {
 		treeViewer.getControl().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent event) {
-				if ((event.character == SWT.DEL && event.stateMask == 0)  || event.keyCode == SWT.BS) {
+				if ((event.character == SWT.DEL && event.stateMask == 0) || event.keyCode == SWT.BS) {
 					TreeSelection s = (TreeSelection) treeViewer.getSelection();
 
 					List<DeleteAction<?>> dactions = afactory.getDeleteActions(s != null ? s.toArray() : null);
@@ -370,15 +364,11 @@ public class SQLQueryOutline {
 	}
 
 	protected void refreshViewer() {
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				if (treeViewer.getTree().isDisposed())
-					return;
-				treeViewer.setInput(designer.getRoot());
-				treeViewer.expandToLevel(1);
-			}
+		UIUtils.getDisplay().asyncExec(() -> {
+			if (treeViewer.getTree().isDisposed())
+				return;
+			treeViewer.setInput(designer.getRoot());
+			treeViewer.expandToLevel(1);
 		});
 	}
 

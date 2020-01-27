@@ -6,6 +6,7 @@ package com.jaspersoft.studio.data.sql.ui.gef.parts;
 
 import java.util.List;
 
+import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.BendpointConnectionRouter;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Ellipse;
@@ -21,6 +22,7 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
+import org.eclipse.swt.SWT;
 
 import com.jaspersoft.studio.data.sql.QueryWriter;
 import com.jaspersoft.studio.data.sql.SQLQueryDesigner;
@@ -70,6 +72,8 @@ public class RelationshipDetailPart extends AbstractConnectionEditPart {
 	protected IFigure createFigure() {
 		PolylineConnection conn = (PolylineConnection) super.createFigure();
 		conn.setConnectionRouter(new BendpointConnectionRouter());
+		conn.setForegroundColor(UIUtils.getSystemColor(SWT.COLOR_BLACK));
+		conn.setBackgroundColor(UIUtils.getSystemColor(SWT.COLOR_BLACK));
 		return conn;
 	}
 
