@@ -42,6 +42,7 @@ import com.jaspersoft.studio.swt.widgets.NumericText;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.wizards.ContextHelpIDs;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.OrientationEnum;
@@ -91,6 +92,8 @@ public final class PageFormatDialog extends FormDialog {
 
 	private Combo cPrintOrder;
 
+	private Composite tleft;
+
 	public PageFormatDialog(Shell shell, ANode node) {
 		super(shell);
 		jConfig = node.getJasperConfiguration();
@@ -114,6 +117,12 @@ public final class PageFormatDialog extends FormDialog {
 		Composite composite = mform.getForm().getBody();
 		composite.setLayout(new GridLayout(2, false));
 		composite.setBackgroundMode(SWT.INHERIT_FORCE);
+
+		UIUtils.getDisplay().asyncExec(() -> {
+			composite.setBackground(tleft.getBackground());
+			composite.getParent().update();
+			composite.getParent().layout(true);
+		});
 
 		createPageSize(composite);
 
@@ -301,6 +310,12 @@ public final class PageFormatDialog extends FormDialog {
 				widgetSelected(e);
 			}
 		};
+		UIUtils.getDisplay().asyncExec(() -> {
+			portrait.setBackground(mleft.getBackground());
+			landscape.setBackground(mleft.getBackground());
+			composite.getParent().update();
+			composite.getParent().layout(true);
+		});
 		portrait.addSelectionListener(orientationlistner);
 	}
 
@@ -329,7 +344,7 @@ public final class PageFormatDialog extends FormDialog {
 	}
 
 	private void createPageSize(Composite composite) {
-		Composite tleft = toolkit.createComposite(composite);
+		tleft = toolkit.createComposite(composite);
 		tleft.setLayout(new GridLayout(3, false));
 		tleft.setLayoutData(new GridData(GridData.FILL_BOTH));
 
