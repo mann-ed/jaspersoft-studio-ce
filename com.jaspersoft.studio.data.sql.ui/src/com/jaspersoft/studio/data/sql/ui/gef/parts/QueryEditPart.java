@@ -7,7 +7,6 @@ package com.jaspersoft.studio.data.sql.ui.gef.parts;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
@@ -25,8 +24,6 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.swt.SWT;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.studio.data.sql.model.MSQLRoot;
 import com.jaspersoft.studio.data.sql.model.query.MUnion;
@@ -34,6 +31,7 @@ import com.jaspersoft.studio.data.sql.model.query.from.MFrom;
 import com.jaspersoft.studio.data.sql.ui.gef.policy.FromContainerEditPolicy;
 import com.jaspersoft.studio.editor.gef.parts.editPolicy.NoSelectionEditPolicy;
 import com.jaspersoft.studio.model.INode;
+import com.jaspersoft.studio.utils.UIUtil;
 
 public class QueryEditPart extends AbstractGraphicalEditPart {
 
@@ -42,7 +40,7 @@ public class QueryEditPart extends AbstractGraphicalEditPart {
 		Figure fig = new FreeformLayer();
 		fig.setLayoutManager(new XYLayout());
 		fig.setOpaque(true);
-		fig.setBackgroundColor(UIUtils.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		fig.setBackgroundColor(UIUtil.getColor("org.eclipse.ui.workbench.INFORMATION_BACKGROUND"));
 
 		return fig;
 	}

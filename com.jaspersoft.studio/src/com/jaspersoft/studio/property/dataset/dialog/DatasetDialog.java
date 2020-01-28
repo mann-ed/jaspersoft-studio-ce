@@ -24,8 +24,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
@@ -87,7 +85,6 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 
 public class DatasetDialog extends PersistentLocationFormDialog implements IFieldSetter, IDataPreviewInfoProvider {
 	private MDataset mdataset;
-	// private MReport mreport;
 	private JasperReportsConfiguration jConfig;
 	private Map<JRField, JRField> mapfields;
 	private Map<JRParameter, JRParameter> mapparam;
@@ -108,15 +105,15 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 		this.cmdStack = cmdStack;
 		this.mdataset = mdataset;
 		this.jConfig = jConfig;
-		newdataset = (JRDesignDataset) ((JRDesignDataset) mdataset.getValue()).clone();
+		newdataset = (JRDesignDataset) mdataset.getValue().clone();
 
-		mapfields = new HashMap<JRField, JRField>();
+		mapfields = new HashMap<>();
 		List<JRField> newFieldsList = newdataset.getFieldsList();
 		List<JRField> oldFieldsList = mdataset.getValue().getFieldsList();
 		for (int i = 0; i < oldFieldsList.size(); i++)
 			mapfields.put(oldFieldsList.get(i), newFieldsList.get(i));
 
-		mapparam = new HashMap<JRParameter, JRParameter>();
+		mapparam = new HashMap<>();
 		List<JRParameter> newParamList = newdataset.getParametersList();
 		List<JRParameter> oldParamList = mdataset.getValue().getParametersList();
 		for (int i = 0; i < oldParamList.size(); i++)
@@ -162,21 +159,16 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 	}
 
 	/**
-	 * Set the root control of the wizard, and also add a listener to do the perform
-	 * help action and set the context of the top control.
+	 * Set the root control of the wizard, and also add a listener to do the
+	 * perform help action and set the context of the top control.
 	 */
 	protected void setHelpControl(Control newControl) {
-		newControl.addListener(SWT.Help, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				performHelp();
-			}
-		});
+		newControl.addListener(SWT.Help, event -> performHelp());
 	};
 
 	/**
-	 * Set and show the help data if a context, that bind this wizard with the data,
-	 * is provided
+	 * Set and show the help data if a context, that bind this wizard with the
+	 * data, is provided
 	 */
 	public void performHelp() {
 		String child = dataquery.getContextHelpId();
@@ -195,9 +187,13 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 		setHelpControl(body);
 		body.setLayout(new GridLayout(1, true));
 		background = body.getBackground();
-		body.setBackground(body.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		UIUtils.getDisplay().asyncExec(() -> {
+			body.setBackground(sf.getBackground());
+			body.getParent().update();
+			body.getParent().layout(true);
+		});
 
-		dataquery = new DataQueryAdapters(mform.getForm().getBody(), jConfig, newdataset, background) {
+		dataquery = new DataQueryAdapters(body, jConfig, newdataset, background) {
 			@Override
 			protected void createStatusBar(Composite comp) {
 				qStatus = new QueryStatus(comp);
@@ -360,8 +356,7 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 			mroot.setJasperConfiguration(jConfig);
 			MReport mrep = new MReport(mroot, jConfig);
 			MDataset mdts = new MDataset(mrep, newdataset, -1);
-			MParameters<?> mprms = new MParameters<JRDesignDataset>(mdts, newdataset,
-					JRDesignDataset.PROPERTY_PARAMETERS);
+			MParameters<?> mprms = new MParameters<>(mdts, newdataset, JRDesignDataset.PROPERTY_PARAMETERS);
 			MParameter mprm = new MParameter(mprms, (JRDesignParameter) arg0.getSource(), -1);
 			List<Command> cmds = JaspersoftStudioPlugin.getPostSetValueManager().postSetValue(mprm,
 					JRDesignParameter.PROPERTY_NAME, arg0.getNewValue(), arg0.getOldValue());
@@ -424,7 +419,7 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 	}
 
 	public void createCommand() {
-		JRDesignDataset ds = (JRDesignDataset) (mdataset.getParent() == null
+		JRDesignDataset ds = (mdataset.getParent() == null
 				? mdataset.getJasperConfiguration().getJasperDesign().getMainDesignDataset()
 				: mdataset.getValue());
 		command = new JSSCompoundCommand(mdataset.getMreport());
@@ -441,7 +436,7 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 		} else {
 			IPropertySource mquery = (IPropertySource) mdataset.getPropertyValue(JRDesignDataset.PROPERTY_QUERY);
 			String language = ds.getQuery().getLanguage();
-			if (language == null || !language.toLowerCase().equals(lang.toLowerCase()))
+			if (language == null || !language.equalsIgnoreCase(lang))
 				command.add(setValueCommand(JRDesignQuery.PROPERTY_LANGUAGE, lang, mquery));
 			if (!ds.getQuery().getText().equals(qtext))
 				command.add(setValueCommand(JRDesignQuery.PROPERTY_TEXT, qtext, mquery));
@@ -615,17 +610,14 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 	}
 
 	/**
-	 * Create a new setvalue command, but only if the old value and the new value
-	 * are different. If created the command is added to the compound command
+	 * Create a new setvalue command, but only if the old value and the new
+	 * value are different. If created the command is added to the compound
+	 * command
 	 * 
-	 * @param cc
-	 *            the compound command
-	 * @param property
-	 *            the property the set value command will set
-	 * @param value
-	 *            the new value of the property
-	 * @param target
-	 *            the target of the set
+	 * @param cc the compound command
+	 * @param property the property the set value command will set
+	 * @param value the new value of the property
+	 * @param target the target of the set
 	 */
 	private void addSetValueCommand(JSSCompoundCommand cc, String property, Object value, IPropertySource target) {
 		if (!extendedEquals(value, target.getPropertyValue(property))) {
@@ -638,13 +630,12 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 	}
 
 	/**
-	 * Used to compare two values. Since some JR Objects used inside here dosen't
-	 * support the equals method, this one apply some special cases for that objects
+	 * Used to compare two values. Since some JR Objects used inside here
+	 * dosen't support the equals method, this one apply some special cases for
+	 * that objects
 	 * 
-	 * @param value1
-	 *            the first value to compare, can be null
-	 * @param value2
-	 *            the second value to compare, can be null
+	 * @param value1 the first value to compare, can be null
+	 * @param value2 the second value to compare, can be null
 	 * @return true if the two objects are equals, false otherwise
 	 */
 	private boolean extendedEquals(Object value1, Object value2) {
@@ -691,7 +682,8 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.jaspersoft.studio.data.IDataPreviewInfoProvider#getDesignDataset()
+	 * @see
+	 * com.jaspersoft.studio.data.IDataPreviewInfoProvider#getDesignDataset()
 	 */
 	public JRDesignDataset getDesignDataset() {
 		return this.newdataset;
