@@ -57,8 +57,10 @@ public class FileSelector implements IFileSelection {
 		btnExpression.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				dialog.changeFileSelectionMode(cmpExpr);
-				d.setAllowValidation(false);
+				if(btnExpression.getSelection()) {
+					dialog.changeFileSelectionMode(cmpExpr);
+					d.setAllowValidation(false);
+				}
 			}
 		});
 		btnExpression.setText(Messages.FileSelector_0);

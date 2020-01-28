@@ -15,16 +15,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -83,34 +82,26 @@ public class PermissionPage extends WizardPage {
 		gd = new GridData(GridData.END | GridData.HORIZONTAL_ALIGN_END);
 		gd.widthHint = 150;
 		tSearch.setLayoutData(gd);
-		tSearch.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusLost(FocusEvent e) {
-			}
+		tSearch.addFocusListener(new FocusAdapter() {
 
 			@Override
 			public void focusGained(FocusEvent e) {
 				tSearch.selectAll();
 			}
 		});
-		tSearch.addModifyListener(new ModifyListener() {
+		tSearch.addModifyListener(e -> {
+			List<RepositoryPermission> perms = tabFolder.getSelectionIndex() == 0 ? permsUser : permsRoles;
+			if (perms != null) {
+				String txt = tSearch.getText().toLowerCase();
+				if (Misc.isNullOrEmpty(txt))
+					showPermissions(perms);
+				else {
+					List<RepositoryPermission> newPerms = new ArrayList<>();
+					for (RepositoryPermission rp : perms)
+						if (getUserName(rp).toLowerCase().contains(txt))
+							newPerms.add(rp);
 
-			@Override
-			public void modifyText(ModifyEvent e) {
-				List<RepositoryPermission> perms = tabFolder.getSelectionIndex() == 0 ? permsUser : permsRoles;
-				if (perms != null) {
-					String txt = tSearch.getText().toLowerCase();
-					if (Misc.isNullOrEmpty(txt))
-						showPermissions(perms);
-					else {
-						List<RepositoryPermission> newPerms = new ArrayList<RepositoryPermission>();
-						for (RepositoryPermission rp : perms) {
-							if (getUserName(rp).toLowerCase().contains(txt))
-								newPerms.add(rp);
-						}
-						showPermissions(newPerms);
-					}
+					showPermissions(newPerms);
 				}
 			}
 		});
@@ -132,6 +123,35 @@ public class PermissionPage extends WizardPage {
 		});
 
 		tabFolder.setSelection(1);
+
+		Button bResolve = new Button(cmp, SWT.CHECK);
+		bResolve.setText("Show Resolved permission");
+		bResolve.setSelection(true);
+		bResolve.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				optUser.setResolveAll(bResolve.getSelection());
+				optRole.setResolveAll(bResolve.getSelection());
+				permsUser = null;
+				permsRoles = null;
+				getPermissions();
+			}
+		});
+
+		Button bEffective = new Button(cmp, SWT.CHECK);
+		bEffective.setText("Show Effective permission");
+		bEffective.setSelection(true);
+		bEffective.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				optUser.setEffectivePermissions(bEffective.getSelection());
+				optRole.setEffectivePermissions(bEffective.getSelection());
+				permsUser = null;
+				permsRoles = null;
+				getPermissions();
+			}
+		});
+
 		getPermissions();
 	}
 
@@ -231,6 +251,7 @@ public class PermissionPage extends WizardPage {
 		Label lbl = new Label(cmp, SWT.NONE);
 		lbl.setText(getUserName(perm));
 		lbl.setToolTipText(perm.getRecipient());
+		System.out.println(perm);
 
 		final Combo cperm = new Combo(cmp, SWT.READ_ONLY);
 		String[] items = new String[] { Messages.PermissionPage_3, Messages.PermissionPage_8, Messages.PermissionPage_9,
@@ -246,28 +267,14 @@ public class PermissionPage extends WizardPage {
 			items[sel] += " *"; //$NON-NLS-1$
 		cperm.setItems(items);
 		cperm.select(Math.max(sel, 0));
-		cperm.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseUp(MouseEvent e) {
-			}
+		cperm.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseDown(MouseEvent e) {
 				updatePermission(perm, cperm);
 			}
-
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-			}
 		});
-		cperm.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				updatePermission(perm, cperm);
-			}
-		});
+		cperm.addModifyListener(e -> updatePermission(perm, cperm));
 	}
 
 	protected String getUserName(RepositoryPermission perm) {
