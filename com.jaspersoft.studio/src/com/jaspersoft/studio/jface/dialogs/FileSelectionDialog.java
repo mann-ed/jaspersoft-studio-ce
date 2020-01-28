@@ -26,7 +26,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -41,6 +40,7 @@ import com.jaspersoft.studio.swt.widgets.WTextExpression;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.PersistentLocationDialog;
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.eclipse.util.StringUtils;
@@ -150,8 +150,10 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 		btnWorkspaceResource.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				changeFileSelectionMode(cmpWorkspaceResourceSelection);
-				allowValidation = true;
+				if(btnWorkspaceResource.getSelection()) {
+					changeFileSelectionMode(cmpWorkspaceResourceSelection);
+					allowValidation = true;
+				}
 			}
 		});
 		btnWorkspaceResource.setText(fileModesAndHeaderTitles[1]);
@@ -160,8 +162,10 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 		btnAbsolutePath.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				changeFileSelectionMode(cmpFilesystemResourceSelection);
-				allowValidation = true;
+				if(btnAbsolutePath.getSelection()) {
+					changeFileSelectionMode(cmpFilesystemResourceSelection);
+					allowValidation = true;
+				}
 			}
 		});
 		btnAbsolutePath.setText(fileModesAndHeaderTitles[2]);
@@ -170,8 +174,10 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 		btnUrlRemote.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				changeFileSelectionMode(cmpURL);
-				allowValidation = true;
+				if(btnUrlRemote.getSelection()) {
+					changeFileSelectionMode(cmpURL);
+					allowValidation = true;
+				}
 			}
 		});
 		btnUrlRemote.setText(fileModesAndHeaderTitles[3]);
@@ -185,8 +191,10 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 		btnCustomExpression.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				changeFileSelectionMode(cmpCustomExpression);
-				allowValidation = false;
+				if(btnCustomExpression.getSelection()) {
+					changeFileSelectionMode(cmpCustomExpression);
+					allowValidation = false;
+				}
 			}
 		});
 		btnCustomExpression.setText(fileModesAndHeaderTitles[5]);
@@ -196,8 +204,10 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 			btnNoFile.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					changeFileSelectionMode(cmpNoFile);
-					allowValidation = false;
+					if(btnNoFile.getSelection()) {
+						changeFileSelectionMode(cmpNoFile);
+						allowValidation = false;
+					}
 				}
 			});
 			btnNoFile.setText(fileModesAndHeaderTitles[4]);
@@ -418,7 +428,7 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 	protected IFile selectFileFromWorkspace() {
 		IFile file = null;
 		FilteredResourcesSelectionDialog fd = new FilteredResourcesSelectionDialog(
-				Display.getCurrent().getActiveShell(), false, ResourcesPlugin.getWorkspace().getRoot(), IResource.FILE);
+				UIUtils.getShell(), false, ResourcesPlugin.getWorkspace().getRoot(), IResource.FILE);
 		fd.setInitialPattern(getFileExtension());// $NON-NLS-1$
 		boolean isok = fd.open() == Dialog.OK;
 		if (isok) {
@@ -472,7 +482,9 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 	 * Popup the dialog to select the image from the filesystem.
 	 */
 	private void selectFileFromFilesystem() {
-		FileDialog fd = new FileDialog(Display.getDefault().getActiveShell());
+		// Creating temporary shell to address JIRA #JSS-2712 and Eclipse Bug#558015
+		Shell tmpShell = new Shell(UIUtils.getDisplay());
+		FileDialog fd = new FileDialog(tmpShell);
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		fd.setFilterPath(root.getLocation().toOSString());
 		String[] extensions = getFileExtensions();
@@ -487,6 +499,7 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 			txtFilesystemPath.setText(selection);
 			handleTxtFilesystemPathChange();
 		}
+		tmpShell.dispose();
 	}
 
 	/**
