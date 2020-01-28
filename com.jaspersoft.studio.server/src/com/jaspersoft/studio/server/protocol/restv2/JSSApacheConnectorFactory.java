@@ -48,6 +48,7 @@ public class JSSApacheConnectorFactory extends ApacheConnectorProvider {
 	public synchronized Response get(Builder builder, IProgressMonitor monitor) throws Exception {
 		builder.header("Accept-Timezone", TimeZone.getDefault().getID());
 		builder.header("User-Agent", HttpUtils.USER_AGENT_JASPERSOFT_STUDIO);
+		builder.header("Cache-Control", "no-cache");
 		return doWait(builder.async().get(), monitor);
 	}
 
