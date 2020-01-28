@@ -343,6 +343,7 @@ public class TabbedPropertySheetWidgetFactory extends FormToolkit {
 		// section.marginWidth = 2;
 		section.setTitleBarBorderColor(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		section.setTitleBarBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+		section.setTitleBarForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND));
 
 		// section.setFont(SWTResourceManager.getBoldFont(section.getFont()));
 		if (parent.getLayout() instanceof GridLayout) {
@@ -374,6 +375,7 @@ public class TabbedPropertySheetWidgetFactory extends FormToolkit {
 		section.titleBarTextMarginWidth = 0;
 
 		section.setFont(SWTResourceManager.getBoldFont(section.getFont()));
+		section.setTitleBarForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND));
 
 		if (parent.getLayout() instanceof GridLayout) {
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -412,6 +414,7 @@ public class TabbedPropertySheetWidgetFactory extends FormToolkit {
 		section.titleBarTextMarginWidth = 0;
 
 		section.setFont(SWTResourceManager.getBoldFont(section.getFont()));
+		section.setTitleBarForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND));
 
 		if (parent.getLayout() instanceof GridLayout) {
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
