@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -20,6 +21,7 @@ import com.jaspersoft.studio.property.combomenu.ComboItemAction;
 import com.jaspersoft.studio.property.combomenu.WritableComboTableViewer;
 import com.jaspersoft.studio.property.descriptors.IEnumDescriptors;
 import com.jaspersoft.studio.property.section.AbstractSection;
+import com.jaspersoft.studio.utils.UIUtil;
 
 public class SPReadComboEnum<T extends IPropertyDescriptor & IEnumDescriptors> extends ASPropertyWidget<T> {
 	
@@ -80,7 +82,7 @@ public class SPReadComboEnum<T extends IPropertyDescriptor & IEnumDescriptors> e
 			combo.setToolTipText(pDescriptor.getDescription());
 			if (getLabel() != null) {
 				getLabel().setToolTipText(pDescriptor.getDescription());
-				getLabel().setForeground(ColorConstants.black);
+				getLabel().setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));
 			}
 		}
 		setData(pnode, resolvedValue);

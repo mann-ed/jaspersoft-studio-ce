@@ -14,6 +14,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.fieldassist.AutoCompleteField;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -919,7 +920,7 @@ public class SPPixel extends ASPropertyWidget<PixelPropertyDescriptor> {
 			@Override
 			public void setBackground(Color color) {
 				//fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=346361
-				if (!ModelUtils.safeEquals(color, ownBackgroundColor)) {
+				if (!ModelUtils.safeEquals(color, ownBackgroundColor) || color == null) {
 					if (isFocusControl() && UIUtil.isMacAndEclipse4()) {
 						setEnabled(false);
 						super.setBackground(color);
@@ -1005,11 +1006,11 @@ public class SPPixel extends ASPropertyWidget<PixelPropertyDescriptor> {
 		setData(pnode, resolvedValue);
 		if (insertField != null && !insertField.isDisposed()) {
 			if (elementValue != null) {
-				insertField.setForeground(ColorConstants.black);
+				insertField.setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));
 				insertField.setToolTipText(getTooltip());
 				if (getLabel() != null) {
 					getLabel().setToolTipText(pDescriptor.getDescription());
-					getLabel().setForeground(ColorConstants.black);
+					getLabel().setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));
 				}
 			} else {
 				insertField.setForeground(ColorConstants.gray);

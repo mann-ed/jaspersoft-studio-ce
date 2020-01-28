@@ -7,6 +7,7 @@ package com.jaspersoft.studio.property.color.chooser;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -27,6 +28,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+
+import com.jaspersoft.studio.utils.UIUtil;
 
 /**
  * This widget show a square area with  aside a rectangle area. The user 
@@ -119,8 +122,8 @@ public class ColorsSelectorWidget extends Composite {
 	public ColorsSelectorWidget(Composite parent, int style, IWidgetGovernor governor) {
 		super(parent, style);
 		this.governor = governor;
+		setBackground(UIUtil.getColor(JFacePreferences.INFORMATION_BACKGROUND_COLOR));
 		setLayout(new GridLayout(2,false));
-		
 		colorComposite = new Composite(this, SWT.BORDER);
 		colorComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		slider = new Composite(this, SWT.NONE);
@@ -137,13 +140,13 @@ public class ColorsSelectorWidget extends Composite {
 		//When the square area is resized its content is refreshed
 		colorComposite.addControlListener(new ControlAdapter() {
 			@Override
-      public void controlResized(ControlEvent event) {
-      	cachedPad = null;
-      	paintPad();
-      	//Need to set the selection mark into the right position
-      	setSelectedColor(getSelectedColorRGB(),false);
-      }
-    });
+		      public void controlResized(ControlEvent event) {
+		      	cachedPad = null;
+		      	paintPad();
+		      	//Need to set the selection mark into the right position
+		      	setSelectedColor(getSelectedColorRGB(),false);
+		      }
+		    });
 		
 		GridData rangeData = new GridData(SWT.LEFT, SWT.FILL, false, true);
 		rangeData.widthHint = 30;
