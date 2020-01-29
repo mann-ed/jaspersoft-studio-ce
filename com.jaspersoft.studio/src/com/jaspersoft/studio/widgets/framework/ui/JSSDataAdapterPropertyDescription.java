@@ -37,27 +37,29 @@ import net.sf.jasperreports.engine.design.JRDesignDataset;
  *
  */
 public class JSSDataAdapterPropertyDescription extends AbstractExpressionPropertyDescription<String> {
-	
+
 	private ADataAdapterStorage[] daStorage = new ADataAdapterStorage[0];
 
 	public JSSDataAdapterPropertyDescription() {
 		super();
 	}
 
-	public JSSDataAdapterPropertyDescription(String name, String label, String description, boolean mandatory, String defaultValue, JasperReportsConfiguration jConfig) {
+	public JSSDataAdapterPropertyDescription(String name, String label, String description, boolean mandatory,
+			String defaultValue, JasperReportsConfiguration jConfig) {
 		super(name, label, description, mandatory, defaultValue);
 		this.jConfig = jConfig;
 		IFile file = (IFile) jConfig.get(FileUtils.KEY_FILE);
 		daStorage = DataAdapterManager.getDataAdapter(file, jConfig);
 	}
 
-	public JSSDataAdapterPropertyDescription(String name, String label, String description, boolean mandatory, JasperReportsConfiguration jConfig) {
+	public JSSDataAdapterPropertyDescription(String name, String label, String description, boolean mandatory,
+			JasperReportsConfiguration jConfig) {
 		super(name, label, description, mandatory);
 		this.jConfig = jConfig;
 		IFile file = (IFile) jConfig.get(FileUtils.KEY_FILE);
 		daStorage = DataAdapterManager.getDataAdapter(file, jConfig);
 	}
-	
+
 	public Control createControl(final IWItemProperty wiProp, Composite parent) {
 		DoubleControlComposite cmp = new DoubleControlComposite(parent, SWT.NONE);
 		cmp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -68,14 +70,14 @@ public class JSSDataAdapterPropertyDescription extends AbstractExpressionPropert
 		Control simpleControl = viewer.getControl();
 		cmp.getSecondContainer().setData(viewer);
 		cmp.setSimpleControlToHighlight(simpleControl);
-		
+
 		GridData comboData = new GridData(GridData.FILL_HORIZONTAL);
 		comboData.verticalAlignment = SWT.CENTER;
 		comboData.grabExcessVerticalSpace = true;
 		simpleControl.setLayoutData(comboData);
-		
+
 		JRDesignDataset currentDataset = jConfig.getJasperDesign().getMainDesignDataset();
-		List<ComboItem> items = new ArrayList<ComboItem>();
+		List<ComboItem> items = new ArrayList<>();
 		if (currentDataset != null) {
 			for (int i = 0; i < daStorage.length; i++) {
 				final ADataAdapterStorage s = daStorage[i];
@@ -84,14 +86,14 @@ public class JSSDataAdapterPropertyDescription extends AbstractExpressionPropert
 					items.add(m1);
 				}
 				if (!s.getDataAdapterDescriptors(currentDataset).isEmpty() && i < daStorage.length - 1
-						&& !daStorage[i + 1].getDataAdapterDescriptors(currentDataset).isEmpty()){
+						&& !daStorage[i + 1].getDataAdapterDescriptors(currentDataset).isEmpty()) {
 					items.add(new ComboItemSeparator(i));
 				}
-					
+
 			}
 		}
-		
-		viewer.addSelectionListener(new ComboItemAction() {			
+
+		viewer.addSelectionListener(new ComboItemAction() {
 			@Override
 			public void exec() {
 				if (wiProp.isRefresh())
@@ -101,13 +103,13 @@ public class JSSDataAdapterPropertyDescription extends AbstractExpressionPropert
 			}
 		});
 		viewer.setItems(items);
-		
-		if (isReadOnly()){
+
+		if (isReadOnly()) {
 			simpleControl.setEnabled(false);
 		} else {
 			setupContextMenu(simpleControl, wiProp);
 		}
-		
+
 		cmp.switchToSecondContainer();
 		return cmp;
 	}
@@ -121,22 +123,23 @@ public class JSSDataAdapterPropertyDescription extends AbstractExpressionPropert
 			Text txt = (Text) cmp.getFirstContainer().getData();
 			super.update(txt, wip);
 			cmp.switchToFirstContainer();
+			txt.setToolTipText(getToolTip(wip, txt.getText()));
 		} else {
 			WritableComboMenuViewer combo = (WritableComboMenuViewer) cmp.getSecondContainer().getData();
 			String v = wip.getStaticValue();
-			if (v == null && wip.getFallbackValue() != null){
+			if (v == null && wip.getFallbackValue() != null) {
 				v = wip.getFallbackValue().toString();
 				isFallback = true;
 			}
 			combo.select(combo.getElementIndex(v));
-			combo.setToolTipText(getToolTip());
+			combo.setToolTipText(getToolTip(wip, v));
 			changeFallbackForeground(isFallback, combo.getControl());
 			cmp.switchToSecondContainer();
 		}
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<String> clone(){
+	public ItemPropertyDescription<String> clone() {
 		JSSDataAdapterPropertyDescription result = new JSSDataAdapterPropertyDescription();
 		result.defaultValue = defaultValue;
 		result.description = description;
@@ -147,10 +150,13 @@ public class JSSDataAdapterPropertyDescription extends AbstractExpressionPropert
 		result.fallbackValue = fallbackValue;
 		return result;
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd, JasperReportsConfiguration jConfig) {
-		JSSDataAdapterPropertyDescription result = new JSSDataAdapterPropertyDescription(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), cpd.getDefaultValue(), jConfig);
+	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd,
+			JasperReportsConfiguration jConfig) {
+		JSSDataAdapterPropertyDescription result = new JSSDataAdapterPropertyDescription(cpd.getName(),
+				cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(),
+				cpd.getDefaultValue(), jConfig);
 		result.setReadOnly(cpd.isReadOnly());
 		result.setFallbackValue(cpd.getFallbackValue());
 		return result;

@@ -14,6 +14,7 @@ import java.util.Map;
 import org.eclipse.swt.widgets.Composite;
 
 import com.jaspersoft.studio.property.dataset.fields.table.TColumn;
+import com.jaspersoft.studio.property.descriptor.propexpr.dialog.HintsPropertiesList;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.util.Misc;
@@ -121,17 +122,7 @@ public abstract class AWidget {
 		String tt = control.getText();
 		if (!Misc.isNullOrEmpty(tt))
 			tt += "\n\n";
-		if (c.getType().equals("jrProperty"))
-			tt += c.getPropertyName() + "\n";
-		if (c.getPropertyMetadata() != null && c.getPropertyMetadata().isDeprecated())
-			tt += "\nDeprecated\n";
-		tt += "Type: " + c.getPropertyType();
-		if (!Misc.isNullOrEmpty(c.getDescription())) {
-			if (!Misc.isNullOrEmpty(tt))
-				tt += "\n\n";
-			tt += c.getDescription();
-		}
-		return tt;
+		return tt + HintsPropertiesList.getToolTip(c.getPropertyMetadata());
 	}
 
 	protected abstract Object getValue();

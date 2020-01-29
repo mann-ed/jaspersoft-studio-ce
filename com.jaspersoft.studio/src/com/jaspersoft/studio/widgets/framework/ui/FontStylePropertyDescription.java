@@ -30,20 +30,22 @@ import net.sf.jasperreports.eclipse.util.Pair;
 import net.sf.jasperreports.engine.base.JRBaseStyle;
 
 /**
- * Font style property descriptor to show a toolbar with the buttons to set the font bold, italic,
- * underline or striketrough. The property as value and the property as expression uses different names.
- * For the property as value a static name is used that are {@link JRBaseStyle.PROPERTY_BOLD} for the bold
+ * Font style property descriptor to show a toolbar with the buttons to set the
+ * font bold, italic, underline or striketrough. The property as value and the
+ * property as expression uses different names. For the property as value a
+ * static name is used that are {@link JRBaseStyle.PROPERTY_BOLD} for the bold
  * and so on for the other properties.
  * 
  * @author Orlandin Marco
  */
 public class FontStylePropertyDescription extends AbstractExpressionPropertyDescription<String> {
-	
+
 	public FontStylePropertyDescription() {
 		super();
 	}
-	
-	public FontStylePropertyDescription(String name, String label, String description, boolean mandatory, String defaultValue) {
+
+	public FontStylePropertyDescription(String name, String label, String description, boolean mandatory,
+			String defaultValue) {
 		super(name, label, description, mandatory, defaultValue);
 	}
 
@@ -60,27 +62,31 @@ public class FontStylePropertyDescription extends AbstractExpressionPropertyDesc
 		containerLayout.marginWidth = 0;
 		containerLayout.marginHeight = 0;
 		toolbarsContainer.setLayout(containerLayout);
-		
+
 		List<Pair<ToolItem, String>> toolItems = new ArrayList<Pair<ToolItem, String>>();
 		ToolBar boldToolbar = new ToolBar(toolbarsContainer, SWT.FLAT | SWT.WRAP | SWT.LEFT);
-		ToolItem boldButton = createItem(boldToolbar, wiProp, JRBaseStyle.PROPERTY_BOLD, "icons/resources/edit-bold.png");
+		ToolItem boldButton = createItem(boldToolbar, wiProp, JRBaseStyle.PROPERTY_BOLD,
+				"icons/resources/edit-bold.png");
 		toolItems.add(new Pair<ToolItem, String>(boldButton, JRBaseStyle.PROPERTY_BOLD));
-		
+
 		ToolBar italicToolbar = new ToolBar(toolbarsContainer, SWT.FLAT | SWT.WRAP | SWT.LEFT);
-		ToolItem italicButton = createItem(italicToolbar, wiProp, JRBaseStyle.PROPERTY_ITALIC, "icons/resources/edit-italic.png");
+		ToolItem italicButton = createItem(italicToolbar, wiProp, JRBaseStyle.PROPERTY_ITALIC,
+				"icons/resources/edit-italic.png");
 		toolItems.add(new Pair<ToolItem, String>(italicButton, JRBaseStyle.PROPERTY_ITALIC));
-		
+
 		ToolBar underlineToolbar = new ToolBar(toolbarsContainer, SWT.FLAT | SWT.WRAP | SWT.LEFT);
-		ToolItem underlineButton = createItem(underlineToolbar, wiProp, JRBaseStyle.PROPERTY_UNDERLINE, "icons/resources/edit-underline.png");
+		ToolItem underlineButton = createItem(underlineToolbar, wiProp, JRBaseStyle.PROPERTY_UNDERLINE,
+				"icons/resources/edit-underline.png");
 		toolItems.add(new Pair<ToolItem, String>(underlineButton, JRBaseStyle.PROPERTY_UNDERLINE));
-		
+
 		ToolBar strikeTroughtToolbar = new ToolBar(toolbarsContainer, SWT.FLAT | SWT.WRAP | SWT.LEFT);
-		ToolItem strikeTroughtButton = createItem(strikeTroughtToolbar, wiProp, JRBaseStyle.PROPERTY_STRIKE_THROUGH, "icons/resources/edit-strike.png");
+		ToolItem strikeTroughtButton = createItem(strikeTroughtToolbar, wiProp, JRBaseStyle.PROPERTY_STRIKE_THROUGH,
+				"icons/resources/edit-strike.png");
 		toolItems.add(new Pair<ToolItem, String>(strikeTroughtButton, JRBaseStyle.PROPERTY_STRIKE_THROUGH));
-		
+
 		cmp.getSecondContainer().setData(toolItems);
 		cmp.setSimpleControlToHighlight(toolbarsContainer);
-		
+
 		cmp.switchToSecondContainer();
 		return cmp;
 	}
@@ -88,12 +94,9 @@ public class FontStylePropertyDescription extends AbstractExpressionPropertyDesc
 	/**
 	 * Create a tool bar button
 	 * 
-	 * @param toolBar
-	 *          the parent tool bar
-	 * @param id
-	 *          the id of the property changed by the button press
-	 * @param image
-	 *          the image of the tool button
+	 * @param toolBar the parent tool bar
+	 * @param id the id of the property changed by the button press
+	 * @param image the image of the tool button
 	 * @return the created tool button
 	 */
 	private ToolItem createItem(ToolBar toolBar, final IWItemProperty wiProp, final String propertyName, String image) {
@@ -101,8 +104,9 @@ public class FontStylePropertyDescription extends AbstractExpressionPropertyDesc
 		final ToolItem item = new ToolItem(toolBar, SWT.CHECK);
 		item.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				ToolItem item = (ToolItem)e.widget;
-				wiProp.getPropertyEditor().createUpdateProperty(propertyName, String.valueOf(item.getSelection()), null);
+				ToolItem item = (ToolItem) e.widget;
+				wiProp.getPropertyEditor().createUpdateProperty(propertyName, String.valueOf(item.getSelection()),
+						null);
 			}
 		});
 		item.setImage(JaspersoftStudioPlugin.getInstance().getImage(image)); // $NON-NLS-1$
@@ -119,21 +123,22 @@ public class FontStylePropertyDescription extends AbstractExpressionPropertyDesc
 			Text txt = (Text) cmp.getFirstContainer().getData();
 			super.update(txt, wip);
 			cmp.switchToFirstContainer();
+			txt.setToolTipText(getToolTip(wip, txt.getText()));
 		} else {
-			List<Pair<ToolItem, String>> toolItems = (List<Pair<ToolItem, String>>)cmp.getSecondContainer().getData();
+			List<Pair<ToolItem, String>> toolItems = (List<Pair<ToolItem, String>>) cmp.getSecondContainer().getData();
 			IPropertyEditor editor = wip.getPropertyEditor();
-			for(Pair<ToolItem, String> toolItem : toolItems){
+			for (Pair<ToolItem, String> toolItem : toolItems) {
 				String value = editor.getPropertyValue(toolItem.getValue());
-				if (value != null){
+				if (value != null) {
 					boolean selected = Boolean.parseBoolean(value);
 					toolItem.getKey().setSelection(selected);
 				}
 			}
 		}
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<String> clone(){
+	public ItemPropertyDescription<String> clone() {
 		FontStylePropertyDescription result = new FontStylePropertyDescription();
 		result.defaultValue = defaultValue;
 		result.description = description;
@@ -145,10 +150,13 @@ public class FontStylePropertyDescription extends AbstractExpressionPropertyDesc
 		result.fallbackValue = fallbackValue;
 		return result;
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd, JasperReportsConfiguration jConfig) {
-		FontStylePropertyDescription fileDesc = new FontStylePropertyDescription(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), cpd.getDefaultValue());
+	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd,
+			JasperReportsConfiguration jConfig) {
+		FontStylePropertyDescription fileDesc = new FontStylePropertyDescription(cpd.getName(),
+				cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(),
+				cpd.getDefaultValue());
 		fileDesc.setReadOnly(cpd.isReadOnly());
 		fileDesc.setFallbackValue(cpd.getFallbackValue());
 		return fileDesc;

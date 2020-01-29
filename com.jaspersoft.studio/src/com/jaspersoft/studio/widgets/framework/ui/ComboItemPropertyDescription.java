@@ -29,29 +29,29 @@ import com.jaspersoft.studio.widgets.framework.model.WidgetsDescriptor;
 import net.sf.jasperreports.eclipse.util.Misc;
 
 public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyDescription<T> {
-	
+
 	/**
-	 * On MacOS seems the contextual menu is not opened on combo, this
-	 * lister will force it to open when a right click is found
+	 * On MacOS seems the contextual menu is not opened on combo, this lister
+	 * will force it to open when a right click is found
 	 */
 	protected static MouseAdapter macComboMenuOpener = new MouseAdapter() {
-		
+
 		@Override
-		public void mouseUp(MouseEvent e) {	
-			if (e.button == 3 && ((Control)e.widget).getMenu() != null){
-				Menu menu = ((Control)e.widget).getMenu();
-				if (menu != null && !menu.isDisposed() && !menu.isVisible()){
-	        		Point location = e.widget.getDisplay().getCursorLocation();
+		public void mouseUp(MouseEvent e) {
+			if (e.button == 3 && ((Control) e.widget).getMenu() != null) {
+				Menu menu = ((Control) e.widget).getMenu();
+				if (menu != null && !menu.isDisposed() && !menu.isVisible()) {
+					Point location = e.widget.getDisplay().getCursorLocation();
 					menu.setLocation(location.x, location.y);
 					menu.setVisible(true);
 				}
 			}
 		}
 	};
-	
+
 	/**
-	 * Matrix of n*2 for n elements, the first column of the matrix is the key of the element, the second
-	 * the label
+	 * Matrix of n*2 for n elements, the first column of the matrix is the key
+	 * of the element, the second the label
 	 */
 	protected String[][] keyValues;
 
@@ -59,21 +59,24 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		super();
 	}
 
-	public ComboItemPropertyDescription(String name, String label, String description, boolean mandatory, T defaultValue, String[] values) {
+	public ComboItemPropertyDescription(String name, String label, String description, boolean mandatory,
+			T defaultValue, String[] values) {
 		super(name, label, description, mandatory, defaultValue);
 		keyValues = convert2KeyValue(values);
 	}
 
-	public ComboItemPropertyDescription(String name, String label, String description, boolean mandatory, String[] values) {
+	public ComboItemPropertyDescription(String name, String label, String description, boolean mandatory,
+			String[] values) {
 		super(name, label, description, mandatory);
 		keyValues = convert2KeyValue(values);
 	}
 
-	public ComboItemPropertyDescription(String name, String label, String description, boolean mandatory, T defaultValue,	String[][] keyValues) {
+	public ComboItemPropertyDescription(String name, String label, String description, boolean mandatory,
+			T defaultValue, String[][] keyValues) {
 		super(name, label, description, mandatory, defaultValue);
 		this.keyValues = keyValues;
 	}
-	
+
 	public static String[][] convert2KeyValue(String[] values) {
 		String[][] kv = new String[values.length][2];
 		for (int i = 0; i < values.length; i++) {
@@ -82,23 +85,23 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		}
 		return kv;
 	}
-	
+
 	protected String[] convert2Value(String[][] keyValues) {
 		String[] v = new String[keyValues.length];
 		for (int i = 0; i < keyValues.length; i++)
 			v[i] = keyValues[i][1];
 		return v;
 	}
-	
+
 	@Override
 	public void handleEdit(Control txt, IWItemProperty wProp) {
 		super.handleEdit(txt, wProp);
 		if (txt instanceof Combo) {
-			Combo combo = (Combo)txt;
+			Combo combo = (Combo) txt;
 			int indx = combo.getSelectionIndex();
 			String text = combo.getText();
 			if (indx == -1 && text != null && !text.trim().isEmpty()) {
-				//case where the value is typed directly
+				// case where the value is typed directly
 				wProp.setValue(text, null);
 			} else {
 				String tvalue = indx >= 0 && indx < keyValues.length ? keyValues[indx][0] : null;
@@ -108,12 +111,13 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 			}
 		}
 	}
-	
-	protected Combo createComboControl(Composite parent){
+
+	protected Combo createComboControl(Composite parent) {
 		CustomReadOnlyCombo result = new CustomReadOnlyCombo(parent);
-		//MacOS fix, the combo on MacOS doesn't have a contextual menu, so we need to handle this listener manually
+		// MacOS fix, the combo on MacOS doesn't have a contextual menu, so we
+		// need to handle this listener manually
 		boolean handleComboListener = Util.isMac();
-		if (handleComboListener){
+		if (handleComboListener) {
 			result.addMouseListener(macComboMenuOpener);
 		}
 		return result;
@@ -129,27 +133,27 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		final Combo simpleControl = createComboControl(cmp.getSecondContainer());
 		cmp.getSecondContainer().setData(simpleControl);
 		cmp.setSimpleControlToHighlight(simpleControl);
-		
+
 		GridData comboData = new GridData(GridData.FILL_HORIZONTAL);
 		comboData.verticalAlignment = SWT.CENTER;
 		comboData.grabExcessVerticalSpace = true;
 		simpleControl.setLayoutData(comboData);
-		
+
 		simpleControl.setItems(convert2Value(keyValues));
 		simpleControl.addModifyListener(e -> {
-				if (wiProp.isRefresh())
-					return;
-				Point p = simpleControl.getSelection();
-				handleEdit(simpleControl, wiProp);
-				simpleControl.setSelection(p);
+			if (wiProp.isRefresh())
+				return;
+			Point p = simpleControl.getSelection();
+			handleEdit(simpleControl, wiProp);
+			simpleControl.setSelection(p);
 		});
-		
-		if (isReadOnly()){
+
+		if (isReadOnly()) {
 			simpleControl.setEnabled(false);
 		} else {
 			setupContextMenu(simpleControl, wiProp);
 		}
-		
+
 		cmp.switchToSecondContainer();
 		return cmp;
 	}
@@ -163,31 +167,32 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 			Text txt = (Text) cmp.getFirstContainer().getData();
 			super.update(txt, wip);
 			cmp.switchToFirstContainer();
+			txt.setToolTipText(getToolTip(wip, txt.getText()));
 		} else {
 			Combo combo = (Combo) cmp.getSecondContainer().getData();
 			String v = wip.getStaticValue();
-			if (v == null && wip.getFallbackValue() != null){
+			if (v == null && wip.getFallbackValue() != null) {
 				v = wip.getFallbackValue().toString();
 				isFallback = true;
 			}
 			String textualValue = Misc.nvl(v);
-			for(String[] keyValuePairs : keyValues){
+			for (String[] keyValuePairs : keyValues) {
 				String key = keyValuePairs[0];
 				String value = keyValuePairs[1];
-				if (ModelUtils.safeEquals(key, v)){
+				if (ModelUtils.safeEquals(key, v)) {
 					textualValue = value;
 					break;
 				}
 			}
 			combo.setText(textualValue);
-			combo.setToolTipText(getToolTip());
+			combo.setToolTipText(getToolTip(wip, combo.getText()));
 			changeFallbackForeground(isFallback, combo);
 			cmp.switchToSecondContainer();
 		}
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<T> clone(){
+	public ItemPropertyDescription<T> clone() {
 		ComboItemPropertyDescription<T> result = new ComboItemPropertyDescription<>();
 		result.defaultValue = defaultValue;
 		result.description = description;
@@ -199,9 +204,10 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		result.fallbackValue = fallbackValue;
 		return result;
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd, JasperReportsConfiguration jConfig) {
+	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd,
+			JasperReportsConfiguration jConfig) {
 		if (cpd.getComboOptions() != null) {
 			String[][] opts = cpd.getComboOptions();
 			String[][] i18nOpts = new String[opts.length][2];
@@ -209,7 +215,9 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 				i18nOpts[i][0] = opts[i][0];
 				i18nOpts[i][1] = cd.getLocalizedString(opts[i][1]);
 			}
-			ComboItemPropertyDescription<String> result = new ComboItemPropertyDescription<>(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), cpd.getDefaultValue(), i18nOpts);
+			ComboItemPropertyDescription<String> result = new ComboItemPropertyDescription<>(cpd.getName(),
+					cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()),
+					cpd.isMandatory(), cpd.getDefaultValue(), i18nOpts);
 			result.setReadOnly(cpd.isReadOnly());
 			result.setFallbackValue(cpd.getFallbackValue());
 			return result;

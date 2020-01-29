@@ -235,7 +235,7 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 				String tooltip = "";
 				if (!Misc.isNullOrEmpty(txt))
 					tooltip += "\n\n" + txt;
-				tooltip += "\n" + getToolTip();
+				tooltip += getToolTip(wip, txt);
 				txtExpr.setToolTipText(tooltip.trim());
 			}
 		}
@@ -250,6 +250,15 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 		} else if (!isUsingFallback && !ModelUtils.safeEquals(fg.getRGB(), ecolor.getRGB())) {
 			control.setForeground(null);
 		}
+	}
+
+	public String getToolTip(IWItemProperty wip, String value) {
+		String tooltip = "";
+		if (!Misc.isNullOrEmpty(value))
+			tooltip += "\n\n" + value;
+		String wipTt = wip.getToolTip();
+		tooltip += wipTt != null ? wipTt : "\n" + getToolTip();
+		return tooltip.trim();
 	}
 
 	public String getToolTip() {

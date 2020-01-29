@@ -28,7 +28,7 @@ import com.jaspersoft.studio.widgets.framework.model.WidgetsDescriptor;
  * @author Orlandin Marco
  */
 public class ColorPropertyDescription<T> extends AbstractExpressionPropertyDescription<T> {
-	
+
 	/** Flag to specify if the support for the HTML color names is activated */
 	private boolean htmlColorNamesSupported = false;
 
@@ -67,7 +67,7 @@ public class ColorPropertyDescription<T> extends AbstractExpressionPropertyDescr
 		final WColorPicker simpleEditor = new WColorPicker(new AlfaRGB(new RGB(0, 0, 0), 0), cmp.getSecondContainer());
 		cmp.getSecondContainer().setData(simpleEditor);
 		cmp.setSimpleControlToHighlight(simpleEditor);
-		
+
 		simpleEditor.setHaveTransparency(isTransaprent());
 		simpleEditor.addColorSelectionListener(new ColorSelectionListener() {
 
@@ -78,7 +78,7 @@ public class ColorPropertyDescription<T> extends AbstractExpressionPropertyDescr
 				handleEdit(simpleEditor, wiProp);
 			}
 		});
-		for (Control c : simpleEditor.getChildren()){
+		for (Control c : simpleEditor.getChildren()) {
 			setupContextMenu(c, wiProp);
 		}
 		cmp.switchToSecondContainer();
@@ -93,50 +93,54 @@ public class ColorPropertyDescription<T> extends AbstractExpressionPropertyDescr
 			Text txt = (Text) cmp.getFirstContainer().getData();
 			super.update(txt, wip);
 			cmp.switchToFirstContainer();
+			txt.setToolTipText(getToolTip(wip, txt.getText()));
 		} else {
 			WColorPicker colorPicker = (WColorPicker) cmp.getSecondContainer().getData();
 			colorPicker.setHtmlColorNamesSupport(htmlColorNamesSupported);
 			String v = wip.getStaticValue();
-			if (v == null && defaultValue != null){
+			if (v == null && defaultValue != null) {
 				v = defaultValue.toString();
 			}
 			colorPicker.setHtmlColorNamesSupport(htmlColorNamesSupported);
 			colorPicker.setColor(WColorPicker.decodeColor(v, htmlColorNamesSupported));
-			colorPicker.setToolTipText(getToolTip());
+			colorPicker.setToolTipText(getToolTip(wip, v));
 			cmp.switchToSecondContainer();
 		}
 	}
-	
+
 	/**
-	 * Enables/disables the ability for the color picker to detect 
-	 * HTML color names when entered in the text box.
+	 * Enables/disables the ability for the color picker to detect HTML color
+	 * names when entered in the text box.
 	 * 
 	 * @param enabled the enablement flag
 	 */
 	public void setHtmlColorNamesSupport(boolean enabled) {
 		this.htmlColorNamesSupported = enabled;
 	}
-	
+
 	/**
 	 * Verifies if the html color names support is enabled.
 	 * 
-	 * @return <code>true</code> if the support is enabled, <code>false</code> otherwise
+	 * @return <code>true</code> if the support is enabled, <code>false</code>
+	 * otherwise
 	 */
 	public boolean isHtmlColorNamesSupportEnabled() {
 		return this.htmlColorNamesSupported;
 	}
-	
+
 	/**
-	 * Used to know if the transparent values are accepted, can be overridden by subclass
+	 * Used to know if the transparent values are accepted, can be overridden by
+	 * subclass
 	 * 
-	 * @return by default this accept only opaque values, so it always return false
+	 * @return by default this accept only opaque values, so it always return
+	 * false
 	 */
-	protected boolean isTransaprent(){
+	protected boolean isTransaprent() {
 		return false;
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<T> clone(){
+	public ItemPropertyDescription<T> clone() {
 		ColorPropertyDescription<T> result = new ColorPropertyDescription<T>();
 		result.defaultValue = defaultValue;
 		result.description = description;
@@ -148,10 +152,13 @@ public class ColorPropertyDescription<T> extends AbstractExpressionPropertyDescr
 		result.fallbackValue = fallbackValue;
 		return result;
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd, JasperReportsConfiguration jConfig) {
-		ColorPropertyDescription<String> result = new ColorPropertyDescription<String>(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), cpd.getDefaultValue());
+	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd,
+			JasperReportsConfiguration jConfig) {
+		ColorPropertyDescription<String> result = new ColorPropertyDescription<String>(cpd.getName(),
+				cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(),
+				cpd.getDefaultValue());
 		result.setReadOnly(cpd.isReadOnly());
 		result.setFallbackValue(cpd.getFallbackValue());
 		return result;

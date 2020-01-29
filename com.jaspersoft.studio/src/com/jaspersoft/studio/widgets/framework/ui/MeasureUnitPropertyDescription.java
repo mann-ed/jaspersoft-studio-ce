@@ -91,7 +91,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 			}
 		};
 		simpleControl.addFocusListener(focusListener);
-		// Store inside the control the focus listener, so it can be removed and added
+		// Store inside the control the focus listener, so it can be removed and
+		// added
 		// another time in some case
 		simpleControl.setData(FOCUS_KEY, focusListener);
 
@@ -121,8 +122,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 	}
 
 	/**
-	 * Set the value inside the correct control, if the editor is in expression mode
-	 * or not
+	 * Set the value inside the correct control, if the editor is in expression
+	 * mode or not
 	 */
 	@Override
 	public void update(Control c, IWItemProperty wip) {
@@ -132,6 +133,7 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 			Text expressionControl = (Text) cmp.getFirstContainer().getData();
 			super.update(expressionControl, wip);
 			cmp.switchToFirstContainer();
+			expressionControl.setToolTipText(getToolTip(wip, expressionControl.getText()));
 		} else {
 			boolean isFallback = false;
 			Text simpleControl = (Text) cmp.getSecondContainer().getData();
@@ -147,19 +149,17 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 
 			changeFallbackForeground(isFallback, simpleControl);
 			cmp.switchToSecondContainer();
+			simpleControl.setToolTipText(getToolTip(wip, simpleControl.getText()));
 		}
 	}
 
 	/**
 	 * Receive a number and set it in the text widget
 	 * 
-	 * @param f
-	 *            the number
-	 * @param insertField
-	 *            the text widget, must be not null
-	 * @param wItemProp
-	 *            the {@link IWItemProperty} used to read the current measure unit
-	 *            from the model
+	 * @param f the number
+	 * @param insertField the text widget, must be not null
+	 * @param wItemProp the {@link IWItemProperty} used to read the current
+	 * measure unit from the model
 	 */
 	public void setDataNumber(Number f, Text insertField, IWItemProperty wItemProp) {
 		if (f != null) {
@@ -169,6 +169,11 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 				insertField.setSelection(oldpos, oldpos);
 		} else
 			insertField.setText(""); //$NON-NLS-1$
+	}
+
+	@Override
+	public String getToolTip(IWItemProperty wip, String value) {
+		return super.getToolTip(wip, value) + "\n" + getToolTip();
 	}
 
 	@Override
@@ -184,11 +189,10 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 	/**
 	 * Create the popup menu
 	 * 
-	 * @param insertField
-	 *            the Text widget where the menu is set, must be not null
-	 * @param wItemProp
-	 *            the {@link IWItemProperty} used to apply the action when an entry
-	 *            of the menu is selected, must be not null
+	 * @param insertField the Text widget where the menu is set, must be not
+	 * null
+	 * @param wItemProp the {@link IWItemProperty} used to apply the action when
+	 * an entry of the menu is selected, must be not null
 	 */
 	@Override
 	protected Menu createPopupMenu(Text insertField, IWItemProperty wItemProp) {
@@ -214,8 +218,7 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 	/**
 	 * Return the value in the text widget, it's returned as pixel
 	 * 
-	 * @param insertField
-	 *            the text widget, must be not null
+	 * @param insertField the text widget, must be not null
 	 * @return the value in the textfield as pixel
 	 */
 	protected String getPixels(Text insertField) {
@@ -234,16 +237,13 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 	}
 
 	/**
-	 * Set the value into the text widget, it's converted from pixel to the default
-	 * measure unit
+	 * Set the value into the text widget, it's converted from pixel to the
+	 * default measure unit
 	 * 
-	 * @param value
-	 *            the value to set, must be in pixel
-	 * @param insertField
-	 *            the text widget, must be not null
-	 * @param wItemProp
-	 *            the {@link IWItemProperty} used to read the current preferred
-	 *            measure unit from the widget
+	 * @param value the value to set, must be in pixel
+	 * @param insertField the text widget, must be not null
+	 * @param wItemProp the {@link IWItemProperty} used to read the current
+	 * preferred measure unit from the widget
 	 */
 	protected void setPixels(String value, Text insertField, IWItemProperty wItemProp) {
 		MeasureUnit defaultMeasure = getDefaultMeasure(insertField, wItemProp);
@@ -259,8 +259,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 	}
 
 	/**
-	 * Return the default measure unit, that can be a local value if it's present or
-	 * the global default value
+	 * Return the default measure unit, that can be a local value if it's
+	 * present or the global default value
 	 * 
 	 * @return
 	 */
@@ -288,7 +288,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 				String value;
 				MeasureUnit unit;
 				if (unitName == null) {
-					// A unit is not specified, so use the element or default one
+					// A unit is not specified, so use the element or default
+					// one
 					unit = getDefaultMeasure(insertField, wiProp);
 					value = text;
 				} else {
@@ -298,7 +299,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 				if (unit != null) {
 					try {
 						setMeasureUnit(unit.getKeyName(), unitName, wiProp);
-						// Convert the value into pixel, internally JR work always with pixels
+						// Convert the value into pixel, internally JR work
+						// always with pixels
 						String convertedValue = unit.doConversionFromThis(SPPixel.unitsMap.get(Unit.PX), value);
 						if (convertedValue != null) {
 							long pixelCount = Double.valueOf(convertedValue).longValue();
@@ -311,7 +313,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 						// The value can not be converted into a number
 						setErrorStatus(Messages.common_this_is_not_an_integer_number, insertField);
 					} catch (PixelConversionException ex) {
-						// The value can be converted into a number but not into an integer
+						// The value can be converted into a number but not into
+						// an integer
 						setErrorStatus(ex.getMessage(), insertField);
 					}
 				} else {
@@ -328,8 +331,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 	}
 
 	/**
-	 * This property description provide a custom dialog to allow to use also the
-	 * property to handle the measure unit
+	 * This property description provide a custom dialog to allow to use also
+	 * the property to handle the measure unit
 	 */
 	@Override
 	public ItemPropertyElementDialog getDialog(final WItemProperty wItemProp) {
@@ -338,7 +341,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 			@Override
 			public boolean close() {
 				if (getReturnCode() == Dialog.OK) {
-					// when the dialog is closed force to lose focus to trigger the focus listener
+					// when the dialog is closed force to lose focus to trigger
+					// the focus listener
 					// otherwise the text is destroyed before the focus lost
 					Control focusedControl = getShell().getDisplay().getFocusControl();
 					if (focusedControl != null) {
@@ -358,7 +362,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 
 			@Override
 			protected Control createDialogArea(Composite parent) {
-				// On create write the measure unit property in the additional properties map
+				// On create write the measure unit property in the additional
+				// properties map
 				MeasureDefinition currentMeasureDef = getMeasureUnit(wItemProp);
 				String propertyName = wItemProp.getPropertyName();
 				customPropertiesMap.put(propertyName + CURRENT_MEASURE_KEY, encode(currentMeasureDef));
@@ -416,8 +421,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 	// ADDITIONAL CLASSES
 
 	/**
-	 * Listener that handle the double click on the Text, made the contextual menu
-	 * appears
+	 * Listener that handle the double click on the Text, made the contextual
+	 * menu appears
 	 * 
 	 * @author Orlandin Marco
 	 * 
@@ -486,8 +491,8 @@ public class MeasureUnitPropertyDescription extends AbstractMeasurePropertyDescr
 		}
 
 		/**
-		 * When a new measure unit is selected a new local is set and the conversion is
-		 * done
+		 * When a new measure unit is selected a new local is set and the
+		 * conversion is done
 		 */
 		@Override
 		public void widgetSelected(SelectionEvent e) {

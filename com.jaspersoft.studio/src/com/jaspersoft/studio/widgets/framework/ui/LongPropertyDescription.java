@@ -21,27 +21,29 @@ import com.jaspersoft.studio.widgets.framework.ui.widget.FallbackNumericText;
 import net.sf.jasperreports.eclipse.util.Misc;
 
 public class LongPropertyDescription extends NumberPropertyDescription<Long> {
-	
+
 	public LongPropertyDescription() {
 	}
 
-	public LongPropertyDescription(String name, String label, String description, boolean mandatory,  Long defaultValue, Long min, Long max) {
+	public LongPropertyDescription(String name, String label, String description, boolean mandatory, Long defaultValue,
+			Long min, Long max) {
 		super(name, label, description, mandatory, defaultValue, min, max);
 	}
-	
-	public LongPropertyDescription(String name, String label, String description, boolean mandatory, Long min, Long max) {
+
+	public LongPropertyDescription(String name, String label, String description, boolean mandatory, Long min,
+			Long max) {
 		super(name, label, description, mandatory, min, max);
 	}
-	
+
 	@Override
 	public Class<? extends Number> getType() {
 		if (defaultValue != null)
 			return defaultValue.getClass();
 		return Long.class;
 	}
-	
+
 	@Override
-	public LongPropertyDescription clone(){
+	public LongPropertyDescription clone() {
 		LongPropertyDescription result = new LongPropertyDescription();
 		result.defaultValue = defaultValue;
 		result.description = description;
@@ -55,43 +57,46 @@ public class LongPropertyDescription extends NumberPropertyDescription<Long> {
 		result.fallbackValue = fallbackValue;
 		return result;
 	}
-	
+
 	@Override
-	public LongPropertyDescription getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd, JasperReportsConfiguration jConfig) {
+	public LongPropertyDescription getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd,
+			JasperReportsConfiguration jConfig) {
 		Long min = null;
 		Long max = null;
 		Long def = null;
 		Long fallBack = null;
-		
-		//Setup the minimum
-		if (cpd.getMin() != null){
+
+		// Setup the minimum
+		if (cpd.getMin() != null) {
 			min = new Long(cpd.getMin());
 		} else {
 			min = Long.MIN_VALUE;
 		}
-	 	
-		//Setup the maximum
-		if (cpd.getMax() != null){
+
+		// Setup the maximum
+		if (cpd.getMax() != null) {
 			max = new Long(cpd.getMax());
 		} else {
 			max = Long.MAX_VALUE;
 		}
-		
-		//Setup the default value
-		if (cpd.getDefaultValue() != null && !cpd.getDefaultValue().isEmpty()){
+
+		// Setup the default value
+		if (cpd.getDefaultValue() != null && !cpd.getDefaultValue().isEmpty()) {
 			def = new Long(cpd.getDefaultValue());
 		}
-		
-		//Setup the fallback value
-		if (cpd.getFallbackValue() != null && !cpd.getFallbackValue().isEmpty()){
+
+		// Setup the fallback value
+		if (cpd.getFallbackValue() != null && !cpd.getFallbackValue().isEmpty()) {
 			fallBack = new Long(cpd.getFallbackValue());
 		}
-		LongPropertyDescription intDesc = new LongPropertyDescription(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), def, min, max);
+		LongPropertyDescription intDesc = new LongPropertyDescription(cpd.getName(),
+				cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(),
+				def, min, max);
 		intDesc.setReadOnly(cpd.isReadOnly());
 		intDesc.setFallbackValue(fallBack);
 		return intDesc;
 	}
-	
+
 	@Override
 	protected FallbackNumericText createSimpleEditor(Composite parent) {
 		FallbackNumericText text = new FallbackNumericText(parent, SWT.BORDER, 0, 0);
@@ -102,38 +107,41 @@ public class LongPropertyDescription extends NumberPropertyDescription<Long> {
 		text.setMinimum(min.doubleValue());
 		return text;
 	}
-	
+
 	@Override
 	public void handleEdit(Control txt, IWItemProperty wiProp) {
 		if (wiProp == null)
 			return;
-		if (txt instanceof NumericText){
-			NumericText widget = (NumericText)txt;
-			Long longValue =  widget.getValueAsLong();
+		if (txt instanceof NumericText) {
+			NumericText widget = (NumericText) txt;
+			Long longValue = widget.getValueAsLong();
 			String tvalue = longValue != null ? longValue.toString() : null;
 			if (tvalue != null && tvalue.isEmpty())
 				tvalue = null;
 			wiProp.setValue(tvalue, null);
-		} else super.handleEdit(txt, wiProp);
+			widget.setToolTipText(getToolTip(wiProp, widget.getText()));
+		} else
+			super.handleEdit(txt, wiProp);
 	}
 
 	@Override
 	protected Long convertValue(String v) throws NumberFormatException {
-		if (v == null || v.isEmpty()) return null;
-		Long parsedLong =  LongValidator.getInstance().validate(v, Locale.getDefault());
+		if (v == null || v.isEmpty())
+			return null;
+		Long parsedLong = LongValidator.getInstance().validate(v, Locale.getDefault());
 		if (parsedLong == null) {
 			throw new NumberFormatException();
 		} else {
 			return parsedLong;
 		}
 	}
-	
+
 	@Override
 	public String getToolTip() {
 		String tt = Misc.nvl(getDescription());
 		if (!Misc.isNullOrEmpty(getDefaultValueString()))
 			tt += "\nDefault: " + getDefaultValue();
-		if (getMin() != null || getMax() != null){
+		if (getMin() != null || getMax() != null) {
 			if (getMin() != null && getMin() != Long.MIN_VALUE)
 				tt += "\nmin: " + getMin();
 

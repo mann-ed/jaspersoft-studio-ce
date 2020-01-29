@@ -20,15 +20,16 @@ import com.jaspersoft.studio.widgets.framework.ui.widget.FallbackNumericText;
 import net.sf.jasperreports.eclipse.util.Misc;
 
 public abstract class NumberPropertyDescription<T extends Number> extends AbstractExpressionPropertyDescription<T> {
-	
+
 	protected T min;
-	
+
 	protected T max;
 
 	public NumberPropertyDescription() {
 	}
-	
-	public NumberPropertyDescription(String name, String label, String description, boolean mandatory, T defaultValue, T min, T max) {
+
+	public NumberPropertyDescription(String name, String label, String description, boolean mandatory, T defaultValue,
+			T min, T max) {
 		super(name, label, description, mandatory, defaultValue);
 		this.min = min;
 		this.max = max;
@@ -63,20 +64,20 @@ public abstract class NumberPropertyDescription<T extends Number> extends Abstra
 		textData.grabExcessVerticalSpace = true;
 		simpleControl.setLayoutData(textData);
 		simpleControl.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (wiProp.isRefresh())
 					return;
 				handleEdit(simpleControl, wiProp);
 			}
-			
+
 		});
 		setupContextMenu(simpleControl, wiProp);
 		cmp.switchToFirstContainer();
 		return cmp;
 	}
-	
+
 	/**
 	 * Create the editor control to edit the number directly
 	 * 
@@ -84,22 +85,22 @@ public abstract class NumberPropertyDescription<T extends Number> extends Abstra
 	 * @return a not null NumericText to handle the numeric field
 	 */
 	protected abstract FallbackNumericText createSimpleEditor(Composite parent);
-	
+
 	/**
 	 * Convert the string into a number for the simple control when necessary
 	 */
 	protected abstract Number convertValue(String v) throws NumberFormatException;
-	
+
 	/**
 	 * Return the type of the number handled by this class (ie integer, long...)
 	 * 
 	 * @return a not null class
 	 */
 	public abstract Class<? extends Number> getType();
-	
+
 	/**
-	 * Set the value inside the correct control, if the editor is in 
-	 * expression mode or not
+	 * Set the value inside the correct control, if the editor is in expression
+	 * mode or not
 	 */
 	@Override
 	public void update(Control c, IWItemProperty wip) {
@@ -109,28 +110,34 @@ public abstract class NumberPropertyDescription<T extends Number> extends Abstra
 			Text expressionControl = (Text) cmp.getFirstContainer().getData();
 			super.update(expressionControl, wip);
 			cmp.switchToFirstContainer();
+			expressionControl.setToolTipText(getToolTip(wip, expressionControl.getText()));
 		} else {
 			boolean isFallback = false;
-			FallbackNumericText simpleControl = (FallbackNumericText)cmp.getSecondContainer().getData();
+			FallbackNumericText simpleControl = (FallbackNumericText) cmp.getSecondContainer().getData();
 			String v = wip.getStaticValue();
-			if (v == null && wip.getFallbackValue() != null){
+			if (v == null && wip.getFallbackValue() != null) {
 				v = wip.getFallbackValue().toString();
 				isFallback = true;
 			}
 			simpleControl.setFallback(isFallback);
-			try{
+			try {
 				String safeValue = Misc.nvl(v);
 				Number numericValue = convertValue(safeValue);
 				simpleControl.setValue(numericValue, safeValue);
-				simpleControl.setToolTipText(getToolTip());
-			} catch (NumberFormatException ex){
+				simpleControl.setToolTipText(getToolTip(wip, simpleControl.getText()));
+			} catch (NumberFormatException ex) {
 				simpleControl.setUnparsedValue(Misc.nvl(v));
 				simpleControl.setToolTipText("The current value can not be recognized \n" + getToolTip());
 			}
-			
+
 			changeFallbackForeground(isFallback, simpleControl);
 			cmp.switchToSecondContainer();
 		}
+	}
+
+	@Override
+	public String getToolTip(IWItemProperty wip, String value) {
+		return super.getToolTip(wip, value) + "\n" + getToolTip();
 	}
 
 	@Override

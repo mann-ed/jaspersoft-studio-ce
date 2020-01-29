@@ -175,7 +175,7 @@ public class TextPropertyDescription<T> extends AbstractExpressionPropertyDescri
 			oldSelection.y = Math.min(txt.length(), oldSelection.y);
 			txtValue.setSelection(oldSelection);
 
-			txtValue.setToolTipText(getToolTip());
+			txtValue.setToolTipText(getToolTip(wip, txt));
 
 			cmp.switchToSecondContainer();
 		}

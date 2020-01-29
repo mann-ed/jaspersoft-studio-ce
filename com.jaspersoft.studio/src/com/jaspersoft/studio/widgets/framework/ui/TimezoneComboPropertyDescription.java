@@ -19,19 +19,20 @@ import com.jaspersoft.studio.widgets.framework.ui.ItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.SelectableComboItemPropertyDescription;
 
 /**
- * Widget that allows to edit the value for a timezone property.
- * It uses a combo to manage the value changes.
+ * Widget that allows to edit the value for a timezone property. It uses a combo
+ * to manage the value changes.
  *
  */
-public class TimezoneComboPropertyDescription extends SelectableComboItemPropertyDescription<String>{
-	
+public class TimezoneComboPropertyDescription extends SelectableComboItemPropertyDescription<String> {
+
 	private static String[][] tzs = null;
 
 	public TimezoneComboPropertyDescription() {
 		super();
 	}
-	
-	public TimezoneComboPropertyDescription(String name, String label, String description, boolean mandatory, String defaultValue) {
+
+	public TimezoneComboPropertyDescription(String name, String label, String description, boolean mandatory,
+			String defaultValue) {
 		super(name, label, description, mandatory, defaultValue, getTimeZones());
 	}
 
@@ -44,7 +45,7 @@ public class TimezoneComboPropertyDescription extends SelectableComboItemPropert
 			boolean isFallback = false;
 			Combo localeCombo = (Combo) cmp.getSecondContainer().getData();
 			String v = wip.getStaticValue();
-			if (v != null){
+			if (v != null) {
 				localeCombo.setText(v);
 			} else if (wip.getFallbackValue() != null) {
 				localeCombo.setText(String.valueOf(wip.getFallbackValue()));
@@ -52,11 +53,12 @@ public class TimezoneComboPropertyDescription extends SelectableComboItemPropert
 			}
 			changeFallbackForeground(isFallback, localeCombo);
 			cmp.switchToSecondContainer();
+			localeCombo.setToolTipText(getToolTip(wip, localeCombo.getText()));
 		}
 	}
-	
+
 	@Override
-	public TimezoneComboPropertyDescription clone(){
+	public TimezoneComboPropertyDescription clone() {
 		TimezoneComboPropertyDescription result = new TimezoneComboPropertyDescription();
 		result.defaultValue = defaultValue;
 		result.description = description;
@@ -73,10 +75,11 @@ public class TimezoneComboPropertyDescription extends SelectableComboItemPropert
 	/**
 	 * Create the timezone values. Since the value for the combo are handled
 	 * like a matrix with n*2 elements (or an array of pair) where the elements
-	 * on the first column are the values and the one on the second are the labels
+	 * on the first column are the values and the one on the second are the
+	 * labels
 	 * 
 	 * @return a not null n*2 matrix where the first column is the value and the
-	 * second one the label associated to each value. In this case they are the 
+	 * second one the label associated to each value. In this case they are the
 	 * same
 	 */
 	protected static String[][] getTimeZones() {
@@ -91,10 +94,13 @@ public class TimezoneComboPropertyDescription extends SelectableComboItemPropert
 		}
 		return tzs;
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd, JasperReportsConfiguration jConfig) {
-		TimezoneComboPropertyDescription result = new TimezoneComboPropertyDescription(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), defaultValue);
+	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd,
+			JasperReportsConfiguration jConfig) {
+		TimezoneComboPropertyDescription result = new TimezoneComboPropertyDescription(cpd.getName(),
+				cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(),
+				defaultValue);
 		result.setReadOnly(cpd.isReadOnly());
 		result.setFallbackValue(fallbackValue);
 		return result;

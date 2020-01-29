@@ -32,6 +32,7 @@ import com.jaspersoft.studio.model.dataset.DatasetPropertyExpressionsDTO;
 import com.jaspersoft.studio.property.dataset.fields.table.TColumn;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionDTO;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
+import com.jaspersoft.studio.property.descriptor.propexpr.dialog.HintsPropertiesList;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.widgets.framework.IPropertyEditor;
 import com.jaspersoft.studio.widgets.framework.WItemProperty;
@@ -71,6 +72,7 @@ import net.sf.jasperreports.engine.type.JREnum;
 import net.sf.jasperreports.engine.type.NamedEnum;
 import net.sf.jasperreports.engine.type.NamedValueEnum;
 import net.sf.jasperreports.engine.type.PropertyEvaluationTimeEnum;
+import net.sf.jasperreports.properties.PropertyMetadata;
 
 public class WJRProperty extends AWidget {
 
@@ -265,7 +267,13 @@ public class WJRProperty extends AWidget {
 					removePropertyExpression(element, propertyName);
 
 				}
-			});
+
+			}) {
+				@Override
+				public String getToolTip() {
+					return WJRProperty.this.getToolTipText();
+				}
+			};
 			wip.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			// Avoid to do the layout of the widget
@@ -298,17 +306,7 @@ public class WJRProperty extends AWidget {
 				tt = "null";
 			if (!Misc.isNullOrEmpty(tt))
 				tt += "\n\n";
-			if (c.getType().equals("jrProperty"))
-				tt += c.getPropertyName() + "\n";
-			if (c.getPropertyMetadata().isDeprecated())
-				tt += "\nDeprecated\n";
-			tt += "Type: " + c.getPropertyType();
-			if (!Misc.isNullOrEmpty(c.getDescription())) {
-				if (!Misc.isNullOrEmpty(tt))
-					tt += "\n\n";
-				tt += c.getDescription();
-			}
-			return tt;
+			return tt + HintsPropertiesList.getToolTip(c.getPropertyMetadata());
 		}
 		return super.getToolTipText();
 	}

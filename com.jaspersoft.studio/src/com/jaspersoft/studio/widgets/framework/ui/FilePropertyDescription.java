@@ -40,8 +40,9 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 	public FilePropertyDescription() {
 		super();
 	}
-	
-	public FilePropertyDescription(String name, String label, String description, boolean mandatory, String defaultValue) {
+
+	public FilePropertyDescription(String name, String label, String description, boolean mandatory,
+			String defaultValue) {
 		super(name, label, description, mandatory, defaultValue);
 	}
 
@@ -51,9 +52,9 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 		cmp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		lazyCreateExpressionControl(wiProp, cmp);
-		
+
 		cmp.getSecondContainer().setLayout(WidgetFactory.getNoPadLayout(2));
-		final Text simpleControl =  new Text(cmp.getSecondContainer(), SWT.BORDER);
+		final Text simpleControl = new Text(cmp.getSecondContainer(), SWT.BORDER);
 		cmp.getSecondContainer().setData(simpleControl);
 		cmp.setSimpleControlToHighlight(simpleControl);
 		GridData textData = new GridData(GridData.FILL_HORIZONTAL);
@@ -61,7 +62,7 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 		textData.grabExcessVerticalSpace = true;
 		simpleControl.setLayoutData(textData);
 		simpleControl.addModifyListener(new ModifyListener() {
-			
+
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (wiProp.isRefresh())
@@ -87,21 +88,22 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 		});
 		createToolbarButton(cmp.getSecondContainer(), wiProp);
 
-		if (isReadOnly()){
+		if (isReadOnly()) {
 			simpleControl.setEnabled(false);
 		}
-		
+
 		setupContextMenu(simpleControl, wiProp);
 		cmp.switchToFirstContainer();
 		return cmp;
 	}
-	
+
 	/**
-	 * Override the method to add the contextual menu also on the expression control
+	 * Override the method to add the contextual menu also on the expression
+	 * control
 	 */
 	@Override
 	protected void lazyCreateExpressionControl(IWItemProperty wiProp, DoubleControlComposite cmp) {
-		if (wiProp.isExpressionMode() && cmp.getFirstContainer().getChildren().length == 0){
+		if (wiProp.isExpressionMode() && cmp.getFirstContainer().getChildren().length == 0) {
 			cmp.getFirstContainer().setLayout(WidgetFactory.getNoPadLayout(2));
 			Control expressionControl = createExpressionControl(wiProp, cmp.getFirstContainer());
 			cmp.getFirstContainer().setData(expressionControl);
@@ -110,26 +112,26 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 			setupContextMenu(expressionControl, wiProp);
 		}
 	}
-	
+
 	/**
 	 * Create the toolbutton where to open the file selection dialog
 	 * 
 	 * @param parent the parent of the button
-	 * @param wiProp the {@link IWItemProperty} to handle the setValue operation if the dialog is closed 
-	 * correctly
+	 * @param wiProp the {@link IWItemProperty} to handle the setValue operation
+	 * if the dialog is closed correctly
 	 */
-	protected void createToolbarButton(Composite parent, final IWItemProperty wiProp){
+	protected void createToolbarButton(Composite parent, final IWItemProperty wiProp) {
 		ToolBar toolBar = new ToolBar(parent, SWT.NONE);
 		ToolItem b = new ToolItem(toolBar, SWT.FLAT);
 		b.setImage(getButtonImage());
 		b.addSelectionListener(new SelectionAdapter() {
-
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (wiProp.isRefresh())
 					return;
 				wiProp.setRefresh(true);
 				JRDesignExpression exp = null;
-				try{
+				try {
 					exp = openSelectionDialog();
 				} finally {
 					if (exp != null) {
@@ -143,8 +145,8 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 		GridData data = new GridData();
 		data.verticalAlignment = SWT.TOP;
 		toolBar.setLayoutData(data);
-		if (isReadOnly()){
-			toolBar.setEnabled(false);	
+		if (isReadOnly()) {
+			toolBar.setEnabled(false);
 		}
 	}
 
@@ -153,16 +155,17 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 	 * 
 	 * @return an {@link Image}, should be not null
 	 */
-	protected Image getButtonImage(){
+	protected Image getButtonImage() {
 		return JaspersoftStudioPlugin.getInstance().getImage("icons/resources/eclipse/obj16/fldr_obj.gif");
 	}
-	
+
 	/**
 	 * Open the file selection dialog
 	 * 
-	 * @return the expression of the selected file if the dialog was closed with ok, null otherwise
+	 * @return the expression of the selected file if the dialog was closed with
+	 * ok, null otherwise
 	 */
-	protected JRDesignExpression openSelectionDialog(){
+	protected JRDesignExpression openSelectionDialog() {
 		FileSelectionDialog fsd = new FileSelectionDialog(UIUtils.getShell());
 		fsd.configureDialog(jConfig);
 		if (fsd.open() == Dialog.OK) {
@@ -171,19 +174,20 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void handleEdit(Control txt, IWItemProperty wiProp) {
 		if (wiProp == null)
 			return;
-		if (!wiProp.isExpressionMode() && txt instanceof Text){
+		if (!wiProp.isExpressionMode() && txt instanceof Text) {
 			String tvalue = ((Text) txt).getText();
 			if (tvalue != null && tvalue.isEmpty())
 				tvalue = null;
 			wiProp.setValue(tvalue, null);
-		} else super.handleEdit(txt, wiProp);
+		} else
+			super.handleEdit(txt, wiProp);
 	}
-	
+
 	@Override
 	public void update(Control c, IWItemProperty wip) {
 		DoubleControlComposite cmp = (DoubleControlComposite) wip.getControl();
@@ -192,33 +196,34 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 			Text expressionControl = (Text) cmp.getFirstContainer().getData();
 			super.update(expressionControl, wip);
 			cmp.switchToFirstContainer();
+			expressionControl.setToolTipText(getToolTip(wip, expressionControl.getText()));
 		} else {
-			Text txtValue = (Text)cmp.getSecondContainer().getData();
+			Text txtValue = (Text) cmp.getSecondContainer().getData();
 			String txt;
 			boolean isFallback = false;
-			if (wip.getStaticValue() != null){
+			if (wip.getStaticValue() != null) {
 				txt = wip.getStaticValue();
-			} else if (wip.getFallbackValue() != null){
+			} else if (wip.getFallbackValue() != null) {
 				txt = Misc.nvl(wip.getFallbackValue().toString());
 				isFallback = true;
 			} else {
 				txt = "";
 			}
-		
+
 			Point oldSelection = txtValue.getSelection();
 			txtValue.setText(txt);
 			changeFallbackForeground(isFallback, txtValue);
 			oldSelection.x = Math.min(txt.length(), oldSelection.x);
 			oldSelection.y = Math.min(txt.length(), oldSelection.y);
 			txtValue.setSelection(oldSelection);
-			
-			txtValue.setToolTipText(getToolTip());
+
+			txtValue.setToolTipText(getToolTip(wip, txtValue.getText()));
 			cmp.switchToSecondContainer();
 		}
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<String> clone(){
+	public ItemPropertyDescription<String> clone() {
 		FilePropertyDescription result = new FilePropertyDescription();
 		result.defaultValue = defaultValue;
 		result.description = description;
@@ -230,10 +235,13 @@ public class FilePropertyDescription extends AbstractExpressionPropertyDescripti
 		result.fallbackValue = fallbackValue;
 		return result;
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd, JasperReportsConfiguration jConfig) {
-		FilePropertyDescription fileDesc = new FilePropertyDescription(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), cpd.getDefaultValue());
+	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd,
+			JasperReportsConfiguration jConfig) {
+		FilePropertyDescription fileDesc = new FilePropertyDescription(cpd.getName(),
+				cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(),
+				cpd.getDefaultValue());
 		fileDesc.setjConfig(jConfig);
 		fileDesc.setReadOnly(cpd.isReadOnly());
 		fileDesc.setFallbackValue(cpd.getFallbackValue());

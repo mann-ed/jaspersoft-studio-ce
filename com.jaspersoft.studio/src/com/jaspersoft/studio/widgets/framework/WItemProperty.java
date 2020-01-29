@@ -228,13 +228,16 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 			}
 
 		});
-
-		if (widgetDescriptor != null) {
-			String tt = widgetDescriptor.getToolTip();
-			expressionEditLabel.setToolTipText(tt);
-			editorControl.setToolTipText(tt);
-			btnEditExpression.setToolTipText(tt);
-		}
+		if (widgetDescriptor != null)
+			UIUtils.getDisplay().asyncExec(() -> {
+				if (!editorControl.isDisposed()) {
+					String tmp = getToolTip();
+					String tt = tmp != null ? tmp : widgetDescriptor.getToolTip();
+					expressionEditLabel.setToolTipText(tt);
+					editorControl.setToolTipText(tt);
+					btnEditExpression.setToolTipText(tt);
+				}
+			});
 
 		setLayout(new ItemPropertyLayout(this, titleLabel, expressionEditLabel, editorControl, btnEditExpression));
 	}
@@ -414,6 +417,10 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	@Override
 	public String getPropertyName() {
 		return ipDesc.getName();
+	}
+
+	public String getToolTip() {
+		return null;
 	}
 
 	/**

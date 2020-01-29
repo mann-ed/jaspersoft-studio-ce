@@ -128,6 +128,7 @@ public class ArrayPropertyDescription extends AbstractExpressionPropertyDescript
 			Text expressionControl = (Text) cmp.getFirstContainer().getData();
 			super.update(expressionControl, wip);
 			cmp.switchToFirstContainer();
+			expressionControl.setToolTipText(getToolTip(wip, expressionControl.getText()));
 		} else {
 			Text txtValue = (Text)cmp.getSecondContainer().getData();
 			String txt;
@@ -150,7 +151,7 @@ public class ArrayPropertyDescription extends AbstractExpressionPropertyDescript
 				}
 			}
 			
-			txtValue.setToolTipText(getToolTip());
+			txtValue.setToolTipText(getToolTip(wip, txtValue.getText()));
 			cmp.switchToSecondContainer();
 		}
 	}

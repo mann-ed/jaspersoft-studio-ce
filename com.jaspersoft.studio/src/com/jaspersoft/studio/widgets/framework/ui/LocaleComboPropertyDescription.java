@@ -18,19 +18,20 @@ import com.jaspersoft.studio.widgets.framework.model.WidgetPropertyDescriptor;
 import com.jaspersoft.studio.widgets.framework.model.WidgetsDescriptor;
 
 /**
- * Widget that allows to edit the value for a Locale property
- * It uses a combo to manage the value changes.
+ * Widget that allows to edit the value for a Locale property It uses a combo to
+ * manage the value changes.
  *
  */
-public class LocaleComboPropertyDescription extends SelectableComboItemPropertyDescription<String>{
-	
+public class LocaleComboPropertyDescription extends SelectableComboItemPropertyDescription<String> {
+
 	private static String[][] locs = null;
 
 	public LocaleComboPropertyDescription() {
 		super();
 	}
-	
-	public LocaleComboPropertyDescription(String name, String label, String description, boolean mandatory, String defaultValue) {
+
+	public LocaleComboPropertyDescription(String name, String label, String description, boolean mandatory,
+			String defaultValue) {
 		super(name, label, description, mandatory, defaultValue, getLocales());
 	}
 
@@ -43,7 +44,7 @@ public class LocaleComboPropertyDescription extends SelectableComboItemPropertyD
 			boolean isFallback = false;
 			Combo localeCombo = (Combo) cmp.getSecondContainer().getData();
 			String v = wip.getStaticValue();
-			if (v != null){
+			if (v != null) {
 				localeCombo.setText(v);
 			} else if (wip.getFallbackValue() != null) {
 				localeCombo.setText(String.valueOf(wip.getFallbackValue()));
@@ -51,11 +52,12 @@ public class LocaleComboPropertyDescription extends SelectableComboItemPropertyD
 			}
 			changeFallbackForeground(isFallback, localeCombo);
 			cmp.switchToSecondContainer();
+			localeCombo.setToolTipText(getToolTip(wip, localeCombo.getText()));
 		}
 	}
-	
+
 	@Override
-	public LocaleComboPropertyDescription clone(){
+	public LocaleComboPropertyDescription clone() {
 		LocaleComboPropertyDescription result = new LocaleComboPropertyDescription();
 		result.defaultValue = defaultValue;
 		result.description = description;
@@ -70,9 +72,9 @@ public class LocaleComboPropertyDescription extends SelectableComboItemPropertyD
 	}
 
 	/**
-	 * Create the locale values. Since the value for the combo are handled
-	 * like a matrix with n*2 elements (or an array of pair) where the elements
-	 * on the first column are the values and the one on the second are the labels
+	 * Create the locale values. Since the value for the combo are handled like
+	 * a matrix with n*2 elements (or an array of pair) where the elements on
+	 * the first column are the values and the one on the second are the labels
 	 * 
 	 * @return a not null n*2 matrix where the first column is the value and the
 	 * second one the label associated to each value
@@ -98,10 +100,13 @@ public class LocaleComboPropertyDescription extends SelectableComboItemPropertyD
 		};
 		Arrays.sort(locales, localeComparator);
 	}
-	
+
 	@Override
-	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd, JasperReportsConfiguration jConfig) {
-		LocaleComboPropertyDescription result = new LocaleComboPropertyDescription(cpd.getName(), cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(), defaultValue);
+	public ItemPropertyDescription<?> getInstance(WidgetsDescriptor cd, WidgetPropertyDescriptor cpd,
+			JasperReportsConfiguration jConfig) {
+		LocaleComboPropertyDescription result = new LocaleComboPropertyDescription(cpd.getName(),
+				cd.getLocalizedString(cpd.getLabel()), cd.getLocalizedString(cpd.getDescription()), cpd.isMandatory(),
+				defaultValue);
 		result.setReadOnly(cpd.isReadOnly());
 		result.setFallbackValue(fallbackValue);
 		return result;

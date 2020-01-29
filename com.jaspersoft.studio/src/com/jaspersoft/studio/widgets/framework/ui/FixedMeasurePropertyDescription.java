@@ -49,10 +49,12 @@ import com.jaspersoft.studio.widgets.framework.ui.dialog.ItemPropertyElementDial
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 /**
- * Widget used to insert values in different measure units. The measure units list are built using the combo entry of
- * the widget definitions. If they are not provided it will use a default set. This widget doesn't do any conversion on
- * the inserted value, simply append the numeric inserted value to the measure unit. The measure unit is stored into the
- * model with a separate properties.
+ * Widget used to insert values in different measure units. The measure units
+ * list are built using the combo entry of the widget definitions. If they are
+ * not provided it will use a default set. This widget doesn't do any conversion
+ * on the inserted value, simply append the numeric inserted value to the
+ * measure unit. The measure unit is stored into the model with a separate
+ * properties.
  * 
  * @author Orlandin Marco
  *
@@ -60,14 +62,15 @@ import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDescription<String> {
 
 	/**
-	 * Hash map the bind a measure unit, the key is a name of the measure unit, the value is the measure unit
-	 * Representation. An example could be a measure with key pixels and value px
+	 * Hash map the bind a measure unit, the key is a name of the measure unit,
+	 * the value is the measure unit Representation. An example could be a
+	 * measure with key pixels and value px
 	 */
 	protected Map<String, String> nameKeyUnitsMap = null;
 
 	/**
-	 * Used for performance improvements, it the opposite map of nameKeyUnitsMap and store the units by their key insited
-	 * of their names
+	 * Used for performance improvements, it the opposite map of nameKeyUnitsMap
+	 * and store the units by their key insited of their names
 	 */
 	protected Map<String, List<String>> keyNameUnitsMap = null;
 
@@ -82,7 +85,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	protected static final DecimalFormat format = new DecimalFormat("0.################");
 
 	/**
-	 * Flag used to avoid to commit a value on the focus lost when the currently shown value is a fallback
+	 * Flag used to avoid to commit a value on the focus lost when the currently
+	 * shown value is a fallback
 	 */
 	private boolean fallbackModified = true;
 
@@ -135,7 +139,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 			}
 		};
 		simpleControl.addFocusListener(focusListener);
-		// Store inside the control the focus listener, so it can be removed and added another time in some case
+		// Store inside the control the focus listener, so it can be removed and
+		// added another time in some case
 		simpleControl.setData(FOCUS_KEY, focusListener);
 
 		simpleControl.addModifyListener(new ModifyListener() {
@@ -189,7 +194,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * Set the value inside the correct control, if the editor is in expression mode or not
+	 * Set the value inside the correct control, if the editor is in expression
+	 * mode or not
 	 */
 	@Override
 	public void update(Control c, IWItemProperty wip) {
@@ -199,11 +205,13 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 			Text expressionControl = (Text) cmp.getFirstContainer().getData();
 			super.update(expressionControl, wip);
 			cmp.switchToFirstContainer();
+			expressionControl.setToolTipText(getToolTip(wip, expressionControl.getText()));
 		} else {
 			boolean isFallback = false;
 			Text simpleControl = (Text) cmp.getSecondContainer().getData();
 			if (!hasError(simpleControl)) {
-				// avoid to update the content if it is in error status to allow the user
+				// avoid to update the content if it is in error status to allow
+				// the user
 				// to fix it
 				String v = wip.getStaticValue();
 				if (v == null && wip.getFallbackValue() != null) {
@@ -211,20 +219,26 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 					isFallback = true;
 				}
 				setDataNumber(v, simpleControl, wip);
-				// close the guard of the fallback if we have set a fallback value, this
-				// will avoid to not commit the value actually in the simple control until it will
-				// be modified, because the currently displayed value is a fallback and should not
-				// be committed for a focus lost. Also this flag must be closed after the setDataNumber call
+				// close the guard of the fallback if we have set a fallback
+				// value, this
+				// will avoid to not commit the value actually in the simple
+				// control until it will
+				// be modified, because the currently displayed value is a
+				// fallback and should not
+				// be committed for a focus lost. Also this flag must be closed
+				// after the setDataNumber call
 				// otherwise the modifyLister is triggered and the flag reopened
 				fallbackModified = !isFallback;
 				changeFallbackForeground(isFallback, simpleControl);
 				cmp.switchToSecondContainer();
 			}
+			simpleControl.setToolTipText(getToolTip(wip, simpleControl.getText()));
 		}
 	}
 
 	/**
-	 * Build the array of string representing the autocomplete entries. They are based on the unique measure values
+	 * Build the array of string representing the autocomplete entries. They are
+	 * based on the unique measure values
 	 * 
 	 * @return a not null array of string
 	 */
@@ -239,12 +253,12 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * Search a measure name in the units map by its key (since in the map the name is used as key this is like searching
-	 * in the map by value)
+	 * Search a measure name in the units map by its key (since in the map the
+	 * name is used as key this is like searching in the map by value)
 	 * 
-	 * @param key
-	 *          the key of a measure
-	 * @return a measure name whose key is the passed parameter, or null if it can't be found
+	 * @param key the key of a measure
+	 * @return a measure name whose key is the passed parameter, or null if it
+	 * can't be found
 	 */
 	protected String searchMeasureNameByKey(String key) {
 		List<String> namesForKey = keyNameUnitsMap.get(key);
@@ -255,13 +269,13 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * Resolve the measure unit from the input text, if it can be resolved from the text use the last measure in the model
+	 * Resolve the measure unit from the input text, if it can be resolved from
+	 * the text use the last measure in the model
 	 * 
-	 * @param text
-	 *          the text in the combo
-	 * @param wiProp
-	 *          the {@link IWItemProperty} to access to the model
-	 * @return a valid measure name for the measure, or null if it can't be resolved
+	 * @param text the text in the combo
+	 * @param wiProp the {@link IWItemProperty} to access to the model
+	 * @return a valid measure name for the measure, or null if it can't be
+	 * resolved
 	 */
 	protected String resolveMeasureUnitText(String text, IWItemProperty wiProp) {
 		String measureUnitName = getMeasureUnitFromText(text);
@@ -277,7 +291,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 				}
 			}
 			if (lastModelMeasure != null && lastModelMeasure.getKey() != null) {
-				// the measure name can't be resolved, try to resolve the measure key
+				// the measure name can't be resolved, try to resolve the
+				// measure key
 				if (nameKeyUnitsMap.containsKey(lastModelMeasure.getKey())) {
 					// if the key is also a valid name use that as value
 					return lastModelMeasure.getKey();
@@ -287,15 +302,17 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 				}
 			}
 		}
-		// At this point if it was not possible to get a measure unit check if there is only
+		// At this point if it was not possible to get a measure unit check if
+		// there is only
 		// one defined and in this case use that, otherwise return null
-		if(keyNameUnitsMap == null)
+		if (keyNameUnitsMap == null)
 			keyNameUnitsMap = getInversedUnitsMap();
 		if (keyNameUnitsMap.size() == 1) {
 			Entry<String, List<String>> entry = keyNameUnitsMap.entrySet().iterator().next();
 			return entry.getValue().get(0);
 		} else {
-			// Unable to find a measure on the textual value, try to find it on the fallback value
+			// Unable to find a measure on the textual value, try to find it on
+			// the fallback value
 			if (wiProp.getFallbackValue() != null) {
 				measureUnitName = getMeasureUnitFromText(wiProp.getFallbackValue().toString());
 				if (measureUnitName != null && nameKeyUnitsMap.containsKey(measureUnitName)) {
@@ -307,26 +324,30 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * Resolve a measure definition comparing it with the current measure map, this is used to check that a loaded
-	 * definition is correct with the current available values. First this check if the value is available on the model,
-	 * if it is not is try to parse the text and find a measure from it. In the end if the measure can be determinate in
-	 * an implicit way then it uses that as unit.
+	 * Resolve a measure definition comparing it with the current measure map,
+	 * this is used to check that a loaded definition is correct with the
+	 * current available values. First this check if the value is available on
+	 * the model, if it is not is try to parse the text and find a measure from
+	 * it. In the end if the measure can be determinate in an implicit way then
+	 * it uses that as unit.
 	 * 
-	 * @param text
-	 *          the text containing both the number and the measure unit
-	 * @param wItemProp
-	 *          the {@link IWItemProperty} of the current property, to read the measure unit from the model
-	 * @return a definition that can match the current allowed value or null if the passed definition is not valid
+	 * @param text the text containing both the number and the measure unit
+	 * @param wItemProp the {@link IWItemProperty} of the current property, to
+	 * read the measure unit from the model
+	 * @return a definition that can match the current allowed value or null if
+	 * the passed definition is not valid
 	 */
 	protected MeasureDefinition resolveMeasureUnit(String text, IWItemProperty wItemProp) {
 		MeasureDefinition loadedDefinition = getMeasureUnit(wItemProp);
 		if (loadedDefinition != null && !nameKeyUnitsMap.containsKey(loadedDefinition.getName())) {
 			// try to resolve the measure by its key
 			if (nameKeyUnitsMap.containsKey(loadedDefinition.getKey())) {
-				// the key is present but not the name (maybe because of localization), use the key as name
+				// the key is present but not the name (maybe because of
+				// localization), use the key as name
 				loadedDefinition.setName(loadedDefinition.getKey());
 			} else {
-				// the passed definition doesn't match anything in the map, try to resolve it by name
+				// the passed definition doesn't match anything in the map, try
+				// to resolve it by name
 				String resolvedByKey = searchMeasureNameByKey(loadedDefinition.getKey());
 				if (resolvedByKey != null) {
 					loadedDefinition.setName(resolvedByKey);
@@ -336,22 +357,26 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 				}
 			}
 		} else {
-			// At this point if it was not possible to get a measure unit check if there is only
+			// At this point if it was not possible to get a measure unit check
+			// if there is only
 			// one defined and in this case use that, otherwise return null
-			if(keyNameUnitsMap == null)
+			if (keyNameUnitsMap == null)
 				keyNameUnitsMap = getInversedUnitsMap();
 			if (keyNameUnitsMap.size() == 1) {
 				Entry<String, List<String>> entry = keyNameUnitsMap.entrySet().iterator().next();
 				MeasureDefinition newDefinition = new MeasureDefinition(entry.getKey(), entry.getValue().get(0));
 				return newDefinition;
 			}
-			// Unable to find a measure on the model, search it on the text of the property
+			// Unable to find a measure on the model, search it on the text of
+			// the property
 			String measureUnitName = getMeasureUnitFromText(text);
 			if (measureUnitName != null && nameKeyUnitsMap.containsKey(measureUnitName)) {
-				MeasureDefinition newDefinition = new MeasureDefinition(nameKeyUnitsMap.get(measureUnitName), measureUnitName);
+				MeasureDefinition newDefinition = new MeasureDefinition(nameKeyUnitsMap.get(measureUnitName),
+						measureUnitName);
 				return newDefinition;
 			}
-			// Unable to find a measure on the textual value, try to find it on the fallback value
+			// Unable to find a measure on the textual value, try to find it on
+			// the fallback value
 			if (wItemProp.getFallbackValue() != null) {
 				measureUnitName = getMeasureUnitFromText(wItemProp.getFallbackValue().toString());
 				if (measureUnitName != null && nameKeyUnitsMap.containsKey(measureUnitName)) {
@@ -367,12 +392,10 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	/**
 	 * Receive a number and set it in the text widget
 	 * 
-	 * @param f
-	 *          the number
-	 * @param insertField
-	 *          the text widget, must be not null
-	 * @param wiProp
-	 *          the WItemProperty used to read the measure unit from the model
+	 * @param f the number
+	 * @param insertField the text widget, must be not null
+	 * @param wiProp the WItemProperty used to read the measure unit from the
+	 * model
 	 */
 	public void setDataNumber(String value, Text insertField, IWItemProperty wiProp) {
 		if (value != null) {
@@ -422,8 +445,7 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	/**
 	 * Return the value in the text widget, it's returned as pixel
 	 * 
-	 * @param insertField
-	 *          the text widget, must be not null
+	 * @param insertField the text widget, must be not null
 	 * @return the value in the textfield as pixel
 	 */
 	protected String getNumericValue(String textualValue) {
@@ -438,13 +460,12 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * Round the value inserted by the user using the static formatter. This will remove decimal digits when using pixels
-	 * or remove unnecessary zeores from the decimal digits in the other cases
+	 * Round the value inserted by the user using the static formatter. This
+	 * will remove decimal digits when using pixels or remove unnecessary zeores
+	 * from the decimal digits in the other cases
 	 * 
-	 * @param measureUnitKey
-	 *          the key of the measure unit
-	 * @param value
-	 *          the value to format
+	 * @param measureUnitKey the key of the measure unit
+	 * @param value the value to format
 	 * @return the formatted value
 	 */
 	protected String getRoundedValue(String measureUnitKey, Double value) {
@@ -458,16 +479,15 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * This is the values that will be written in the model and it is generated by rounding the numeric value removing
-	 * unnecessary zeroes or decimal digit when using an integer unit (px). then at the number is appended the measure
-	 * unit key.
+	 * This is the values that will be written in the model and it is generated
+	 * by rounding the numeric value removing unnecessary zeroes or decimal
+	 * digit when using an integer unit (px). then at the number is appended the
+	 * measure unit key.
 	 * 
-	 * @param measureUnitKey
-	 *          the key of the measure unit that should be written in the model
-	 * @param measureUnitName
-	 *          the label of the measure, typed by the user
-	 * @param value
-	 *          the numeric value
+	 * @param measureUnitKey the key of the measure unit that should be written
+	 * in the model
+	 * @param measureUnitName the label of the measure, typed by the user
+	 * @param value the numeric value
 	 * @return the value that will be written on the model
 	 */
 	protected String getWrittenValue(String measureUnitKey, String measureUnitName, Double value) {
@@ -480,11 +500,10 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	/**
 	 * Create the popup menu
 	 * 
-	 * @param insertField
-	 *          the Text widget where the menu is set, must be not null
-	 * @param wItemProp
-	 *          the {@link IWItemProperty} used to apply the action when an entry of the menu is selected, must be not
-	 *          null
+	 * @param insertField the Text widget where the menu is set, must be not
+	 * null
+	 * @param wItemProp the {@link IWItemProperty} used to apply the action when
+	 * an entry of the menu is selected, must be not null
 	 */
 	@Override
 	protected Menu createPopupMenu(Text insertField, IWItemProperty wItemProp) {
@@ -528,7 +547,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 						// The value can not be converted into a number
 						setErrorStatus("The number is not valid", insertField);
 					} catch (PixelConversionException ex) {
-						// The value can be converted into a number but not into an integer
+						// The value can be converted into a number but not into
+						// an integer
 						setErrorStatus(ex.getMessage(), insertField);
 					}
 				} else {
@@ -545,10 +565,10 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * Check if the control is in an error status. The background is used to do this check
+	 * Check if the control is in an error status. The background is used to do
+	 * this check
 	 * 
-	 * @param insertField
-	 *          the text control
+	 * @param insertField the text control
 	 * @return true if it is in error status, false otherwise
 	 */
 	protected boolean hasError(Text insertField) {
@@ -556,7 +576,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * This property description provide a custom dialog to allow to use also the property to handle the measure unit
+	 * This property description provide a custom dialog to allow to use also
+	 * the property to handle the measure unit
 	 */
 	@Override
 	public ItemPropertyElementDialog getDialog(final WItemProperty wItemProp) {
@@ -565,7 +586,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 			@Override
 			public boolean close() {
 				if (getReturnCode() == Dialog.OK) {
-					// when the dialog is closed force to lose focus to trigger the focus listener
+					// when the dialog is closed force to lose focus to trigger
+					// the focus listener
 					// otherwise the text is destroyed before the focus lost
 					Control focusedControl = getShell().getDisplay().getFocusControl();
 					if (focusedControl != null) {
@@ -587,7 +609,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 
 			@Override
 			protected Control createDialogArea(Composite parent) {
-				// On create write the measure unit property in the additional properties map
+				// On create write the measure unit property in the additional
+				// properties map
 				MeasureDefinition currentMeasureDef = getMeasureUnit(wItemProp);
 				String propertyName = wItemProp.getPropertyName();
 				customPropertiesMap.put(propertyName + CURRENT_MEASURE_KEY, encode(currentMeasureDef));
@@ -600,8 +623,9 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * Starting from the units map it create the reversed map where the key is the unit value and the value is a list of
-	 * all the available names for that unit
+	 * Starting from the units map it create the reversed map where the key is
+	 * the unit value and the value is a list of all the available names for
+	 * that unit
 	 * 
 	 * @return a not null {@link Map}
 	 */
@@ -651,8 +675,9 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * Add to the entry of the contexutal menu a listener to remove the error status, this will force the widget to be
-	 * updated when calling the updateWidget
+	 * Add to the entry of the contexutal menu a listener to remove the error
+	 * status, this will force the widget to be updated when calling the
+	 * updateWidget
 	 */
 	@Override
 	protected void setupContextMenu(final Control c, final IWItemProperty wiProp) {
@@ -672,13 +697,14 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	}
 
 	/**
-	 * Set the insert field into an error status, so with a red background and a tooltip that describe the error. The
-	 * differences between this and the superclass one is that this append an informative message to the tooltip when
-	 * there aren't errors.
+	 * Set the insert field into an error status, so with a red background and a
+	 * tooltip that describe the error. The differences between this and the
+	 * superclass one is that this append an informative message to the tooltip
+	 * when there aren't errors.
 	 * 
-	 * @param message
-	 *          the error message, it will be used as tooltip, can be null for no error message (with null erase the old
-	 *          errors from the tooltip and restore the default ones)
+	 * @param message the error message, it will be used as tooltip, can be null
+	 * for no error message (with null erase the old errors from the tooltip and
+	 * restore the default ones)
 	 */
 	protected void setErrorStatus(String message, Text insertField) {
 		if (message != null) {
@@ -729,7 +755,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 	// ADDITIONAL CLASSES
 
 	/**
-	 * Listener that handle the double click on the Text, made the contextual menu appears
+	 * Listener that handle the double click on the Text, made the contextual
+	 * menu appears
 	 * 
 	 * @author Orlandin Marco
 	 * 
@@ -795,7 +822,8 @@ public class FixedMeasurePropertyDescription extends AbstractMeasurePropertyDesc
 		}
 
 		/**
-		 * When a new measure unit is selected a new local is set and the conversion is done
+		 * When a new measure unit is selected a new local is set and the
+		 * conversion is done
 		 */
 		@Override
 		public void widgetSelected(SelectionEvent e) {
