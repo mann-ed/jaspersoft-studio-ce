@@ -1256,8 +1256,19 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 		Builder req = HttpUtils.getRequest(tgt);
 		Response r = connector.get(req, monitor);
 		RepositoryPermissionListWrapper state = toObj(r, RepositoryPermissionListWrapper.class, monitor);
-		if (state != null)
+		if (state != null) {
+			if (!options.isResolveAll()) {
+				List<RepositoryPermission> perms = new ArrayList<>();
+				for (RepositoryPermission rp : state.getPermissions()) {
+					if (options.isRecipientTypeUser() && rp.getRecipient().startsWith("user:"))
+						perms.add(rp);
+					if (!options.isRecipientTypeUser() && rp.getRecipient().startsWith("role:"))
+						perms.add(rp);
+				}
+				return perms;
+			}
 			return state.getPermissions();
+		}
 		return new ArrayList<>();
 	}
 
