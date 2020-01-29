@@ -1246,9 +1246,11 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			PermissionOptions options) throws Exception {
 		WebTarget tgt = target.path("permissions" + rd.getUriString()); //$NON-NLS-1$
 		tgt = tgt.queryParam("effectivePermissions", options.isEffectivePermissions()); //$NON-NLS-1$
-		tgt = tgt.queryParam("recipientType", options.isRecipientTypeUser() ? "user" : "role"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		if (options.getRecipientId() != null)
-			tgt = tgt.queryParam("recipientId", options.getRecipientId()); //$NON-NLS-1$
+		if (options.isResolveAll()) {
+			tgt = tgt.queryParam("recipientType", options.isRecipientTypeUser() ? "user" : "role"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			if (options.getRecipientId() != null)
+				tgt = tgt.queryParam("recipientId", options.getRecipientId()); //$NON-NLS-1$
+		}
 		tgt = tgt.queryParam("resolveAll", options.isResolveAll()); //$NON-NLS-1$
 
 		Builder req = HttpUtils.getRequest(tgt);

@@ -124,19 +124,19 @@ public class PermissionPage extends WizardPage {
 
 		tabFolder.setSelection(1);
 
-//		Button bResolve = new Button(cmp, SWT.CHECK);
-//		bResolve.setText("Show Resolved permission");
-//		bResolve.setSelection(true);
-//		bResolve.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				optUser.setResolveAll(bResolve.getSelection());
-//				optRole.setResolveAll(bResolve.getSelection());
-//				permsUser = null;
-//				permsRoles = null;
-//				getPermissions();
-//			}
-//		});
+		Button bResolve = new Button(cmp, SWT.CHECK);
+		bResolve.setText("Show Resolved permission");
+		bResolve.setSelection(true);
+		bResolve.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				optUser.setResolveAll(bResolve.getSelection());
+				optRole.setResolveAll(bResolve.getSelection());
+				permsUser = null;
+				permsRoles = null;
+				getPermissions();
+			}
+		});
 
 		Button bEffective = new Button(cmp, SWT.CHECK);
 		bEffective.setText("Show Effective permission");
