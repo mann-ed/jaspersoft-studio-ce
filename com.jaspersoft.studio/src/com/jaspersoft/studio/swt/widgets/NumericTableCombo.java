@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -33,6 +34,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.jaspersoft.studio.utils.ModelUtils;
+import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.ValidatedDecimalFormat;
 
 import net.sf.jasperreports.eclipse.ui.JSSTableCombo;
@@ -239,7 +241,7 @@ public class NumericTableCombo extends Composite {
 				return computeLongestName();
 			}
 		};
-		defaultBackgroundColor = ColorConstants.white;
+		defaultBackgroundColor = UIUtil.getColor(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
 		// tell the TableCombo that I want 2 blank columns auto sized.
 		controlCombo.defineColumns(1);
 		// set which column will be used for the selected item.
