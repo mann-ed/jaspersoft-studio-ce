@@ -6,8 +6,6 @@ package com.jaspersoft.studio.server.wizard.resource.page;
 
 import java.text.MessageFormat;
 
-import net.sf.jasperreports.engine.JRConstants;
-
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -22,6 +20,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 
 import com.jaspersoft.jasperserver.dto.serverinfo.ServerInfo;
 import com.jaspersoft.studio.model.ANode;
@@ -32,6 +31,8 @@ import com.jaspersoft.studio.outline.ReportTreeContetProvider;
 import com.jaspersoft.studio.outline.ReportTreeLabelProvider;
 import com.jaspersoft.studio.server.Activator;
 import com.jaspersoft.studio.server.messages.Messages;
+import com.jaspersoft.studio.server.model.AMResource;
+import com.jaspersoft.studio.server.model.MContentResource;
 import com.jaspersoft.studio.server.model.MDataType;
 import com.jaspersoft.studio.server.model.MFolder;
 import com.jaspersoft.studio.server.model.MInputControl;
@@ -46,8 +47,6 @@ import com.jaspersoft.studio.server.model.MRQuery;
 import com.jaspersoft.studio.server.model.MRStyleTemplate;
 import com.jaspersoft.studio.server.model.MReference;
 import com.jaspersoft.studio.server.model.MReportUnit;
-import com.jaspersoft.studio.server.model.AMResource;
-import com.jaspersoft.studio.server.model.MContentResource;
 import com.jaspersoft.studio.server.model.MResourceBundle;
 import com.jaspersoft.studio.server.model.MXmlFile;
 import com.jaspersoft.studio.server.model.datasource.MRDatasourceAWS;
@@ -68,6 +67,9 @@ import com.jaspersoft.studio.server.protocol.IConnection;
 import com.jaspersoft.studio.server.protocol.Version;
 import com.jaspersoft.studio.server.wizard.resource.page.selector.SelectorDatasource;
 import com.jaspersoft.studio.utils.Callback;
+import com.jaspersoft.studio.wizards.ContextHelpIDs;
+
+import net.sf.jasperreports.engine.JRConstants;
 
 public class AddResourcePage extends WizardPage {
 	private AMResource resource;
@@ -131,6 +133,8 @@ public class AddResourcePage extends WizardPage {
 		});
 		setControl(treeViewer.getControl());
 		treeViewer.setSelection(new TreeSelection(new TreePath(new Object[] { resource })), true);
+		
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),ContextHelpIDs.WIZARD_SERVER_ADDNEWRESOURCE_PAGE);
 	}
 
 	private boolean dsonly = false;
