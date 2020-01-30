@@ -7,32 +7,33 @@ package com.jaspersoft.studio.preferences.editor.properties;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -40,20 +41,25 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.studio.help.TableHelpListener;
 import com.jaspersoft.studio.messages.Messages;
+import com.jaspersoft.studio.property.dataset.fields.table.TColumn;
+import com.jaspersoft.studio.property.dataset.fields.table.TColumnFactory;
+import com.jaspersoft.studio.property.dataset.fields.table.widget.AWidget;
+import com.jaspersoft.studio.property.descriptor.propexpr.dialog.HintsPropertiesList;
+import com.jaspersoft.studio.property.section.widgets.CustomAutoCompleteField;
 import com.jaspersoft.studio.swt.widgets.table.ListContentProvider;
+import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.wizards.ContextHelpIDs;
 
 import net.sf.jasperreports.eclipse.ui.util.PersistentLocationDialog;
@@ -62,10 +68,13 @@ import net.sf.jasperreports.eclipse.util.FilePrefUtil;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
+import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.JRPropertiesUtil;
+import net.sf.jasperreports.properties.PropertyMetadata;
 
 /**
- * List field editor to edit the JSS properties. The properties are shown as key and value inside an editable table
+ * List field editor to edit the JSS properties. The properties are shown as key
+ * and value inside an editable table
  * 
  * @author Orlandin Marco
  * 
@@ -128,12 +137,13 @@ public class PropertyListFieldEditor extends FieldEditor {
 	private final String[] columnNames;
 
 	/**
-	 * Simple container to store a key and a value String. Used to provide content to the table
+	 * Simple container to store a key and a value String. Used to provide
+	 * content to the table
 	 * 
 	 * @author Orlandin Marco
 	 * 
 	 */
-	static public class Pair {
+	public static class Pair {
 
 		/**
 		 * A string representing a key, shown on the left column of the table.
@@ -172,35 +182,22 @@ public class PropertyListFieldEditor extends FieldEditor {
 
 		@Override
 		public boolean equals(Object obj) {
-			Pair compared = (Pair) obj;
-			return key.equals(compared.getKey()) && value.equals(compared.getValue());
-		}
-	}
-
-	/**
-	 * Label provider for the Pair class. Simply return the key of the pair for the left column and the value for the
-	 * right one
-	 * 
-	 * @author Orlandin Marco
-	 * 
-	 */
-	private class PairLableProvider extends LabelProvider implements ITableLabelProvider {
-
-		@Override
-		public Image getColumnImage(Object element, int columnIndex) {
-			return null;
+			if (obj == null)
+				return false;
+			if (this.getClass() != obj.getClass())
+				return false;
+			Pair p = (Pair) obj;
+			return key.equals(p.getKey())
+					&& ((value == null && p.getValue() == null) || (value != null && value.equals(p.getValue())));
 		}
 
 		@Override
-		public String getColumnText(Object element, int columnIndex) {
-			if (columnIndex == 0) {
-				return ((Pair) element).getKey();
-			} else if (columnIndex == 1) {
-				return ((Pair) element).getValue();
-			}
-			return null;
+		public int hashCode() {
+			int hash = 1;
+			hash = hash * 17 + key.hashCode();
+			hash = hash * 31 + (value != null ? value.hashCode() : 0);
+			return hash;
 		}
-
 	}
 
 	/**
@@ -221,25 +218,25 @@ public class PropertyListFieldEditor extends FieldEditor {
 		 */
 		private String pvalue;
 
+		private JRPropertiesMap pmap;
+
 		/**
-		 * Build the dialog with empty value, constructor used to create a new property
+		 * Build the dialog with empty value, constructor used to create a new
+		 * property
 		 * 
-		 * @param parentShell
-		 *          the shell to open the dialog
+		 * @param parentShell the shell to open the dialog
 		 */
 		protected PEditDialog(Shell parentShell) {
 			this(parentShell, null, null);
 		}
 
 		/**
-		 * Open the dialog with prefilled name\value fileds, used to edit an existing parameter
+		 * Open the dialog with prefilled name\value fileds, used to edit an
+		 * existing parameter
 		 * 
-		 * @param parentShell
-		 *          the shell to create the dialog
-		 * @param pname
-		 *          the name of the edited parameter
-		 * @param pvalue
-		 *          the value of the edit parameter
+		 * @param parentShell the shell to create the dialog
+		 * @param pname the name of the edited parameter
+		 * @param pvalue the value of the edit parameter
 		 */
 		protected PEditDialog(Shell parentShell, String pname, String pvalue) {
 			super(parentShell);
@@ -257,29 +254,51 @@ public class PropertyListFieldEditor extends FieldEditor {
 			final Text text = new Text(composite, SWT.BORDER);
 			text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 			text.setText(Misc.nvl(pname, "net.sf.jasperreports.")); //$NON-NLS-1$
-			text.addModifyListener(new ModifyListener() {
+			new CustomAutoCompleteField(text, new TextContentAdapter(), pkeys.toArray(new String[pkeys.size()]));
 
-				@Override
-				public void modifyText(ModifyEvent e) {
-					pname = text.getText();
+			text.addModifyListener(e -> {
+				pname = text.getText();
+				pvalue = getPValue();
+				// rebuild bottom
+				boolean dispose = false;
+				for (Control c : composite.getChildren()) {
+					if (dispose)
+						c.dispose();
+					if (c == text)
+						dispose = true;
 				}
+				refreshBottom(composite);
+
+				composite.layout(true);
+				composite.update();
 			});
 
-			label = new Label(composite, SWT.NONE);
-			label.setText(Messages.PropertyListFieldEditor_newPropertyValue);
-
-			final Text tname = new Text(composite, SWT.BORDER);
-			tname.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
-			tname.setText(Misc.nvl(pvalue, Messages.PropertyListFieldEditor_exampleValue));
-			tname.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(ModifyEvent e) {
-					pvalue = tname.getText();
-				}
-			});
-			applyDialogFont(composite);
+			refreshBottom(composite);
 			return composite;
+		}
+
+		private void refreshBottom(Composite composite) {
+			PropertyMetadata pm = pmMap.get(pname);
+			if (pm != null) {
+				TColumn tc = TColumnFactory.getTColumn(pm);
+				tc.setLabel(Messages.PropertyListFieldEditor_newPropertyValue);
+				pmap = new JRPropertiesMap();
+				pmap.setProperty(pname, pvalue);
+
+				AWidget w = TColumnFactory.addWidget(tc, composite, pmap,
+						JasperReportsConfiguration.getDefaultInstance());
+				w.getElement();
+			} else {
+				Label label = new Label(composite, SWT.NONE);
+				label.setText(Messages.PropertyListFieldEditor_newPropertyValue);
+
+				final Text tname = new Text(composite, SWT.BORDER);
+				tname.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+				tname.setText(Misc.nvl(pvalue, Messages.PropertyListFieldEditor_exampleValue));
+				tname.addModifyListener(e -> pvalue = tname.getText());
+			}
+
+//			applyDialogFont(composite);
 		}
 
 		@Override
@@ -309,21 +328,21 @@ public class PropertyListFieldEditor extends FieldEditor {
 		 * @return a not null string
 		 */
 		public String getPValue() {
+			if (pmap != null)
+				return pmap.getProperty(pname);
 			return this.pvalue;
 		}
 
 	}
 
 	/**
-	 * Build the field editor with a table with two column, one with the key and the other one with the value. The column
-	 * name, number and width are fixed inside the constructor
+	 * Build the field editor with a table with two column, one with the key and
+	 * the other one with the value. The column name, number and width are fixed
+	 * inside the constructor
 	 * 
-	 * @param name
-	 *          the name of the preference this field editor works on
-	 * @param text
-	 *          the label text of the field editor
-	 * @param parent
-	 *          the parent composite
+	 * @param name the name of the preference this field editor works on
+	 * @param text the label text of the field editor
+	 * @param parent the parent composite
 	 */
 	public PropertyListFieldEditor(String name, String text, Composite parent) {
 		init(name, text);
@@ -334,13 +353,23 @@ public class PropertyListFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Open the dialog to input a new parameter and return the result when it's closed
+	 * Open the dialog to input a new parameter and return the result when it's
+	 * closed
 	 * 
-	 * @return the value of the parameter if it is closed with ok, null if it is closed with cancel
+	 * @return the value of the parameter if it is closed with ok, null if it is
+	 * closed with cancel
 	 */
 	protected Pair getNewInputObject() {
 		PEditDialog dialog = new PEditDialog(UIUtils.getShell());
 		if (dialog.open() == Window.OK) {
+			String name = dialog.getPName();
+			for (Pair p : input) {
+				if (p.getKey().equals(name)) {
+					p.setValue(dialog.getPValue());
+					viewer.refresh();
+					return null;
+				}
+			}
 			return new Pair(dialog.getPName(), dialog.getPValue());
 		}
 		return null;
@@ -356,15 +385,27 @@ public class PropertyListFieldEditor extends FieldEditor {
 	public static void storeProperties(List<Pair> in, IPreferenceStore store) {
 		Properties props = new Properties();
 		for (Pair item : in) {
-			String key = item.key;
-			String value = item.value;
-			props.setProperty(key, value);
-			if (key.equals("net.sf.jasperreports.default.font.name")) //$NON-NLS-1$
-				JRPropertiesUtil.getInstance(DefaultJasperReportsContext.getInstance()).setProperty(key, value);
-			else if (key.equals("net.sf.jasperreports.default.font.size")) //$NON-NLS-1$
-				JRPropertiesUtil.getInstance(DefaultJasperReportsContext.getInstance()).setProperty(key, value);
+			String k = item.getKey();
+			String v = item.getValue();
+
+			PropertyMetadata pm = pmMap.get(k);
+			if (pm != null && pm.getDefaultValue() != null && pm.getDefaultValue().equals(v))
+				v = null;
+			if (v != null)
+				props.setProperty(k, v);
+
+			if (k.equals("net.sf.jasperreports.default.font.name") //$NON-NLS-1$
+					|| k.equals("net.sf.jasperreports.default.font.size")) //$NON-NLS-1$
+				setContextProperty(k, v);
 		}
 		store.setValue(FilePrefUtil.NET_SF_JASPERREPORTS_JRPROPERTIES, FileUtils.getPropertyAsString(props));
+	}
+
+	private static void setContextProperty(String k, String v) {
+		if (v != null)
+			JRPropertiesUtil.getInstance(DefaultJasperReportsContext.getInstance()).setProperty(k, v);
+		else
+			JRPropertiesUtil.getInstance(DefaultJasperReportsContext.getInstance()).removeProperty(k);
 	}
 
 	/**
@@ -372,7 +413,6 @@ public class PropertyListFieldEditor extends FieldEditor {
 	 */
 	protected void doLoad() {
 		if (getTable() != null) {
-			Properties props = null;
 			try {
 				input = loadProperties(getPreferenceStore());
 				viewer.setInput(input);
@@ -384,18 +424,28 @@ public class PropertyListFieldEditor extends FieldEditor {
 		}
 	}
 
+	private static List<PropertyMetadata> pmds = HintsPropertiesList.getPropertiesMetadata(null,
+			JasperReportsConfiguration.getDefaultInstance());
+	private static Map<String, PropertyMetadata> pmMap = new HashMap<>();
+	private static List<String> pkeys;
+
+	private static List<String> getPropertyKeys() {
+		if (pkeys == null) {
+			pkeys = new ArrayList<>();
+			for (PropertyMetadata pm : pmds) {
+				pkeys.add(pm.getName());
+				pmMap.put(pm.getName(), pm);
+			}
+			Collections.sort(pkeys);
+		}
+		return pkeys;
+	}
+
 	public static List<Pair> loadProperties(IPreferenceStore store) throws IOException {
 		Properties props = FileUtils.load(store.getString(FilePrefUtil.NET_SF_JASPERREPORTS_JRPROPERTIES));
-		List<String> keys = new ArrayList<String>();
-		for (Object key : props.keySet())
-			keys.add((String) key);
-		Collections.sort(keys);
-
-		List<Pair> input = new ArrayList<Pair>();
-		for (String key : keys) {
-			String value = props.getProperty(key);
-			input.add(new Pair((String) key, value));
-		}
+		List<Pair> input = new ArrayList<>();
+		for (String key : getPropertyKeys())
+			input.add(new Pair((String) key, props.getProperty(key)));
 		return input;
 	}
 
@@ -408,17 +458,13 @@ public class PropertyListFieldEditor extends FieldEditor {
 			try {
 				Properties props = FileUtils
 						.load(getPreferenceStore().getDefaultString(FilePrefUtil.NET_SF_JASPERREPORTS_JRPROPERTIES));
-				List<String> keys = new ArrayList<String>();
-				for (Object key : props.keySet())
-					keys.add((String) key);
-				Collections.sort(keys);
 
-				input = new ArrayList<Pair>();
-				for (String key : keys) {
+				input = new ArrayList<>();
+				for (String key : getPropertyKeys()) {
 					String value = props.getProperty(key);
 					input.add(new Pair((String) key, value));
-					viewer.setInput(input);
 				}
+				viewer.setInput(input);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -436,6 +482,7 @@ public class PropertyListFieldEditor extends FieldEditor {
 	 */
 	public void createSelectionListener() {
 		selectionListener = new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				Widget widget = event.widget;
 				if (widget == addButton) {
@@ -454,7 +501,8 @@ public class PropertyListFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Action executed when the edit button is pressed, open the dialog to edit the parameter and then
+	 * Action executed when the edit button is pressed, open the dialog to edit
+	 * the parameter and then
 	 */
 	protected void editPressed() {
 		StructuredSelection selection = (StructuredSelection) viewer.getSelection();
@@ -468,16 +516,15 @@ public class PropertyListFieldEditor extends FieldEditor {
 			if (dialog.open() == Window.OK) {
 				String newPName = dialog.getPName();
 				String newPValue = dialog.getPValue();
-				if (!pname.equals(newPName)) {
+				if (!pname.equals(newPName))
 					// ensure no duplicates
-					for (int i = 0; i < table.getItemCount(); i++) {
+					for (int i = 0; i < table.getItemCount(); i++)
 						if (i != selIdx && newPName.equals(table.getItem(i).getText(0))) {
 							MessageDialog.openError(UIUtils.getShell(), Messages.PropertyListFieldEditor_ErrTitle,
 									Messages.PropertyListFieldEditor_ErrMsg);
 							return;
 						}
-					}
-				}
+
 				element.setKey(newPName);
 				element.setValue(newPValue);
 				viewer.refresh();
@@ -555,10 +602,8 @@ public class PropertyListFieldEditor extends FieldEditor {
 	/**
 	 * Helper method to create a push button.
 	 * 
-	 * @param parent
-	 *          the parent control
-	 * @param key
-	 *          the resource name used to supply the button's label text
+	 * @param parent the parent control
+	 * @param key the resource name used to supply the button's label text
 	 * @return Button
 	 */
 	protected Button createPushButton(Composite parent, String key) {
@@ -603,9 +648,8 @@ public class PropertyListFieldEditor extends FieldEditor {
 		gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = numColumns - 1;
 		gd.grabExcessHorizontalSpace = true;
-		for (int width : columnWidths) {
+		for (int width : columnWidths)
 			gd.widthHint += width;
-		}
 		table.setLayoutData(gd);
 
 		buttonBox = getButtonBoxControl(composite);
@@ -615,10 +659,10 @@ public class PropertyListFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Returns this field editor's button box containing the Add, Remove, Up, and Down button.
+	 * Returns this field editor's button box containing the Add, Remove, Up,
+	 * and Down button.
 	 * 
-	 * @param parent
-	 *          the parent control
+	 * @param parent the parent control
 	 * @return the button box
 	 */
 	public Composite getButtonBoxControl(Composite parent) {
@@ -628,13 +672,11 @@ public class PropertyListFieldEditor extends FieldEditor {
 			layout.marginWidth = 0;
 			buttonBox.setLayout(layout);
 			createButtons(buttonBox);
-			buttonBox.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent event) {
-					addButton = null;
-					duplicateButton = null;
-					removeButton = null;
-					buttonBox = null;
-				}
+			buttonBox.addDisposeListener(event -> {
+				addButton = null;
+				duplicateButton = null;
+				removeButton = null;
+				buttonBox = null;
 			});
 
 		} else {
@@ -648,117 +690,154 @@ public class PropertyListFieldEditor extends FieldEditor {
 	/**
 	 * Returns this field editor's table control.
 	 * 
-	 * @param parent
-	 *          the parent control
+	 * @param parent the parent control
 	 * @return the table control
 	 */
 	public Table getTableControl(Composite parent) {
 		if (table == null) {
-			table = new Table(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
+			viewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
+			table = viewer.getTable();
 			table.setFont(parent.getFont());
 			table.setLinesVisible(true);
 			table.setHeaderVisible(true);
+			viewer.setContentProvider(new ListContentProvider());
+
+			ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.NO_RECREATE);
+
 			table.addSelectionListener(getSelectionListener());
 			int index = 0;
 			for (String columnName : columnNames) {
-				TableColumn tableColumn = new TableColumn(table, SWT.LEAD);
-				tableColumn.setText(columnName);
-				tableColumn.setWidth(columnWidths[index]);
+				TableViewerColumn tcol = new TableViewerColumn(viewer, SWT.NONE);
+				tcol.getColumn().setText(columnName);
+				tcol.setLabelProvider(new PairColumnLabelProvider(index));
 				index++;
 			}
 			if (columnNames.length > 0) {
 				TableLayout layout = new TableLayout();
-				if (columnNames.length > 1) {
-					for (int i = 0; i < (columnNames.length - 1); i++) {
+				if (columnNames.length > 1)
+					for (int i = 0; i < (columnNames.length - 1); i++)
 						layout.addColumnData(new ColumnWeightData(0, columnWidths[i], false));
-
-					}
-				}
 				layout.addColumnData(new ColumnWeightData(100, columnWidths[columnNames.length - 1], true));
 				table.setLayout(layout);
 			}
 			attachCellEditors();
-			viewer = new TableViewer(table);
-			viewer.setLabelProvider(new PairLableProvider());
-			viewer.setContentProvider(new ListContentProvider());
 
-			viewer.addDoubleClickListener(new IDoubleClickListener() {
-
-				@Override
-				public void doubleClick(DoubleClickEvent event) {
-					editPressed();
-				}
-			});
+			viewer.addDoubleClickListener(event -> editPressed());
 		}
 		return table;
 	}
 
+	class PairColumnLabelProvider extends ColumnLabelProvider {
+		private int index;
+
+		public PairColumnLabelProvider(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public String getText(Object element) {
+			Pair p = (Pair) element;
+			if (index == 0) {
+				return p.getKey();
+			} else if (index == 1) {
+				if (p.getValue() != null)
+					return p.getValue();
+				PropertyMetadata pm = pmMap.get(p.getKey());
+				if (pm != null) {
+					String def = pm.getDefaultValue();
+					if (def != null)
+						return def;
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public String getToolTipText(Object element) {
+			Pair p = (Pair) element;
+			String tt = p.key;
+			PropertyMetadata pm = pmMap.get(p.getKey());
+			if (pm != null)
+				tt += HintsPropertiesList.getToolTip(pm);
+			return tt;
+		}
+
+		@Override
+		public Color getForeground(Object element) {
+			if (index == 1) {
+				Pair p = (Pair) element;
+				if (p.getValue() == null) {
+					PropertyMetadata pm = pmMap.get(p.getKey());
+					if (pm != null) {
+						String def = pm.getDefaultValue();
+						if (def != null)
+							return SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+					}
+				}
+			}
+			return null;
+		}
+
+	}
+
 	/**
-	 * Attach the cell editor on doubleclick to the table. The table must be created before to call this method.
+	 * Attach the cell editor on doubleclick to the table. The table must be
+	 * created before to call this method.
 	 */
 	protected void attachCellEditors() {
 		final TableEditor editor = new TableEditor(table);
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
-		table.addListener(SWT.MouseDoubleClick, new Listener() {
-			public void handleEvent(Event event) {
-				Rectangle clientArea = table.getClientArea();
-				Point pt = new Point(event.x, event.y);
-				int index = table.getTopIndex();
-				final Pair selectedItem = (Pair) ((StructuredSelection) viewer.getSelection()).getFirstElement();
-				while (index < table.getItemCount()) {
-					boolean visible = false;
-					final TableItem selectedCell = table.getItem(index);
-					for (int i = 0; i < table.getColumnCount(); i++) {
-						Rectangle rect = selectedCell.getBounds(i);
-						if (rect.contains(pt)) {
-							final int column = i;
-							final Text text = new Text(table, SWT.NONE);
-							Listener textListener = new Listener() {
-								public void handleEvent(final Event e) {
-									switch (e.type) {
-									case SWT.FocusOut:
-										if (column == 0)
-											selectedItem.setKey(text.getText());
-										else
-											selectedItem.setValue(text.getText());
-										text.dispose();
-										viewer.refresh();
-										break;
-									case SWT.Traverse:
-										switch (e.detail) {
-										case SWT.TRAVERSE_RETURN:
-											if (column == 0)
-												selectedItem.setKey(text.getText());
-											else
-												selectedItem.setValue(text.getText());
-											text.dispose();
-											viewer.refresh();
-											// FALL THROUGH
-										case SWT.TRAVERSE_ESCAPE:
-											text.dispose();
-											e.doit = false;
-										}
-										break;
-									}
+		table.addListener(SWT.MouseDoubleClick, event -> {
+			Rectangle clientArea = table.getClientArea();
+			Point pt = new Point(event.x, event.y);
+			int index = table.getTopIndex();
+			final Pair selectedItem = (Pair) ((StructuredSelection) viewer.getSelection()).getFirstElement();
+			while (index < table.getItemCount()) {
+				boolean visible = false;
+				final TableItem selectedCell = table.getItem(index);
+				for (int i = 0; i < table.getColumnCount(); i++) {
+					Rectangle rect = selectedCell.getBounds(i);
+					if (rect.contains(pt)) {
+						final int column = i;
+						final Text text = new Text(table, SWT.NONE);
+						Listener textListener = e -> {
+							if (e.type == SWT.FocusOut) {
+								if (column == 0)
+									selectedItem.setKey(text.getText());
+								else
+									selectedItem.setValue(text.getText());
+								text.dispose();
+								viewer.refresh();
+							} else if (e.type == SWT.Traverse) {
+								if (e.detail == SWT.TRAVERSE_RETURN) {
+									if (column == 0)
+										selectedItem.setKey(text.getText());
+									else
+										selectedItem.setValue(text.getText());
+									text.dispose();
+									viewer.refresh();
+									// FALL THROUGH
+								} else if (e.detail == SWT.TRAVERSE_ESCAPE) {
+									text.dispose();
+									e.doit = false;
 								}
-							};
-							text.addListener(SWT.FocusOut, textListener);
-							text.addListener(SWT.Traverse, textListener);
-							editor.setEditor(text, selectedCell, i);
-							text.setText(selectedCell.getText(i));
-							text.selectAll();
-							text.setFocus();
-							return;
-						}
-						if (!visible && rect.intersects(clientArea)) {
-							visible = true;
-						}
-					}
-					if (!visible)
+							}
+						};
+						text.addListener(SWT.FocusOut, textListener);
+						text.addListener(SWT.Traverse, textListener);
+						editor.setEditor(text, selectedCell, i);
+						text.setText(selectedCell.getText(i));
+						text.selectAll();
+						text.setFocus();
 						return;
-					index++;
+					}
+					if (!visible && rect.intersects(clientArea))
+						visible = true;
 				}
+				if (!visible)
+					return;
+				index++;
 			}
 		});
 	}
@@ -771,29 +850,29 @@ public class PropertyListFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Returns this field editor's selection listener. The listener is created if necessary.
+	 * Returns this field editor's selection listener. The listener is created
+	 * if necessary.
 	 * 
 	 * @return the selection listener
 	 */
 	protected SelectionListener getSelectionListener() {
-		if (selectionListener == null) {
+		if (selectionListener == null)
 			createSelectionListener();
-		}
 		return selectionListener;
 	}
 
 	/**
 	 * Returns this field editor's shell.
 	 * <p>
-	 * This method is internal to the framework; subclassers should not call this method.
+	 * This method is internal to the framework; subclassers should not call
+	 * this method.
 	 * </p>
 	 * 
 	 * @return the shell
 	 */
 	protected Shell getShell() {
-		if (addButton == null) {
+		if (addButton == null)
 			return null;
-		}
 		return addButton.getShell();
 	}
 
@@ -820,15 +899,13 @@ public class PropertyListFieldEditor extends FieldEditor {
 			int index = input.indexOf(obj);
 			if (index >= 0) {
 				Pair newElement = new Pair(selectedElement.getKey() + "_copy", selectedElement.getValue());
-				if (index < (input.size() - 1)) {
+				if (index < (input.size() - 1))
 					input.add(index + 1, newElement);
-				} else {
+				else
 					input.add(newElement);
-				}
 				viewer.refresh();
 			}
 		}
-
 		selectionChanged();
 	}
 
@@ -838,9 +915,8 @@ public class PropertyListFieldEditor extends FieldEditor {
 	protected void removePressed() {
 		setPresentsDefaultValue(false);
 		StructuredSelection sel = (StructuredSelection) viewer.getSelection();
-		for (Object obj : sel.toList()) {
+		for (Object obj : sel.toList())
 			input.remove(obj);
-		}
 		viewer.refresh();
 		selectionChanged();
 	}
@@ -848,22 +924,22 @@ public class PropertyListFieldEditor extends FieldEditor {
 	/**
 	 * If not null set the focus on the table control
 	 */
+	@Override
 	public void setFocus() {
-		if (table != null) {
+		if (table != null)
 			table.setFocus();
-		}
 	}
 
 	/**
-	 * enable or disable all the controls where the user can interact. If the table wasn't created yet then it is also
-	 * created as child of the passed composite parameter
+	 * enable or disable all the controls where the user can interact. If the
+	 * table wasn't created yet then it is also created as child of the passed
+	 * composite parameter
 	 * 
-	 * @param enabled
-	 *          true if the controls must be enabled, false otherwise
+	 * @param enabled true if the controls must be enabled, false otherwise
 	 * 
-	 * @param parent
-	 *          the parent of the table if it need to be created
+	 * @param parent the parent of the table if it need to be created
 	 */
+	@Override
 	public void setEnabled(boolean enabled, Composite parent) {
 		super.setEnabled(enabled, parent);
 		getTableControl(parent).setEnabled(enabled);
