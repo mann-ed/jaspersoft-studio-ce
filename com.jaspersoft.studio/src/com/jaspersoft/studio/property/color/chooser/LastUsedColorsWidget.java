@@ -13,6 +13,7 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -25,6 +26,7 @@ import org.eclipse.wb.swt.ResourceCache;
 
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.AlfaRGB;
+import com.jaspersoft.studio.utils.ModelUtils;
 
 /**
  * A composite that offers the controls to  choose a color from a grid
@@ -262,14 +264,29 @@ public class LastUsedColorsWidget extends Composite implements IColorProvider{
 		Iterator<AlfaRGB> colorIt = usedColors.iterator();
 		for(int i=0; i<samplesColumn && colorIt.hasNext(); i++){
 			for(int j=0; j<samplesRow && colorIt.hasNext(); j++){
-				Canvas canv = new Canvas(colorComposite, SWT.NONE);
+				Canvas canv = new Canvas(colorComposite, SWT.NONE) {
+					@Override
+					public void setBackground(Color color) {
+						//the override was done to fix https://jira.tibco.com/browse/JSS-2720
+						//for some reason even if the background was set explicitly the CSSEngine
+						//was changing the background color when using any theme. With this override
+						//the background color is never changed from the desired one
+						if (ModelUtils.safeEquals(color.getRGB(), ((AlfaRGB)getData()).getRgb())) {
+							super.setBackground(color);
+						}
+					}
+					
+					@Override
+					protected void checkSubclass() {
+					}
+				};
 				GridData canvData = new GridData();
 				canvData.widthHint = sampleSize;
 				canvData.heightHint = sampleSize;
 				canv.setLayoutData(canvData);
 				AlfaRGB actualColor = colorIt.next();
-				canv.setBackground(imagesCache.getColor(actualColor.getRgb()));
 				canv.setData(actualColor);
+				canv.setBackground(imagesCache.getColor(actualColor.getRgb()));
 				canv.addMouseListener(colorSelectedAdapter);
 			}
 		}
