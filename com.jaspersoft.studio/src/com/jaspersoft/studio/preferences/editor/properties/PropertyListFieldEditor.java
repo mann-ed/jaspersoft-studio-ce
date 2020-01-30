@@ -28,8 +28,6 @@ import org.eclipse.jface.window.ToolTip;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -298,7 +296,6 @@ public class PropertyListFieldEditor extends FieldEditor {
 				tname.addModifyListener(e -> pvalue = tname.getText());
 			}
 
-//			applyDialogFont(composite);
 		}
 
 		@Override
@@ -915,8 +912,16 @@ public class PropertyListFieldEditor extends FieldEditor {
 	protected void removePressed() {
 		setPresentsDefaultValue(false);
 		StructuredSelection sel = (StructuredSelection) viewer.getSelection();
-		for (Object obj : sel.toList())
-			input.remove(obj);
+		for (Object obj : sel.toList()) {
+			int indx = input.indexOf(obj);
+			if (indx > -1) {
+				Pair p = input.get(indx);
+				if (pmMap.containsKey(p.getKey()))
+					p.setValue(null);
+				else
+					input.remove(indx);
+			}
+		}
 		viewer.refresh();
 		selectionChanged();
 	}

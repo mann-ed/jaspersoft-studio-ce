@@ -46,9 +46,9 @@ public abstract class AWidget {
 		wmap.put(Float.class.getName(), WNumber.class);
 		wmap.put(BigDecimal.class.getName(), WNumber.class);
 
-		wmap.put(Color.class.getName(), WText.class);
-		wmap.put(Locale.class.getName(), WText.class);
-		wmap.put(TimeZone.class.getName(), WText.class);
+		wmap.put(Color.class.getName(), WColorProperty.class);
+		wmap.put(Locale.class.getName(), WLocaleProperty.class);
+		wmap.put(TimeZone.class.getName(), WTimeZoneProperty.class);
 		wmap.put(File.class.getName(), WText.class);
 		wmap.put(Path.class.getName(), WText.class);
 	}
