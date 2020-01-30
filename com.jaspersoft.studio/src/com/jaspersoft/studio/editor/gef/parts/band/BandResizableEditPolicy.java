@@ -26,12 +26,14 @@ import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.handles.MoveHandle;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.util.Util;
 
 import com.jaspersoft.studio.editor.java2d.J2DGraphics;
 import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.model.IGraphicElement;
 import com.jaspersoft.studio.property.SetValueCommand;
+import com.jaspersoft.studio.utils.UIUtil;
 
 import net.sf.jasperreports.engine.design.JRDesignBand;
 import net.sf.jasperreports.engine.design.JRDesignElement;
@@ -100,7 +102,8 @@ public class BandResizableEditPolicy extends ResizableEditPolicy {
 			Rectangle bounds = figure.getBounds();
 			Graphics2D g = ((J2DGraphics) graphics).getGraphics2D();
 			if (marginColor == null) {
-				marginColor = new Color(128, 0, 0);
+				org.eclipse.swt.graphics.Color editorBackgroundColor = UIUtil.getColor(JFacePreferences.INFORMATION_BACKGROUND_COLOR);
+				marginColor = new Color(Math.abs(editorBackgroundColor.getRed() - 128), Math.abs(editorBackgroundColor.getGreen() - 255), Math.abs(editorBackgroundColor.getBlue() - 255));
 			}
 			g.setColor(marginColor);
 			g.fillRect(bounds.x - 3, bounds.y + 5, 5, bounds.height - 10);
