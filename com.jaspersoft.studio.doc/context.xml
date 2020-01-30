@@ -10,6 +10,18 @@
 		<description>Hello here is our help for JasperReports Server</description>
 		<topic href="html/jasperserver/wizard.html" label="Create a JasperReports Server connection" />
 	</context>
+	<context id="jasperserver_addnewresource_wizardpage">
+		<description>The wizard allows you to add a new Resource among the available ones. Select the new item you want to add (i.e. Resource Bundle, Folder, etc.) and populate the dedicated fields in the specific resource editor page.</description>
+		<topic href="html/wizard/jasperserver/connection.html" label="How to connect to JasperReports Server"/>
+		<topic href="html/wizard/jasperserver/publishreport.html" label="How to publish a report to JasperReports Server"/>
+		<topic href="html/view/repository/repository.html" label="JasperReport Server details in Repository Explorer" />
+	</context>
+	<context id="jasperserver_resourceeditor_wizardpage">
+		<description>This page allows you to edit the information related to a specific type of resource that belongs to a JasperReports Server instance.</description>
+		<topic href="html/wizard/jasperserver/connection.html" label="How to connect to JasperReports Server"/>
+		<topic href="html/wizard/jasperserver/publishreport.html" label="How to publish a report to JasperReports Server"/>
+		<topic href="html/view/repository/repository.html" label="JasperReport Server details in Repository Explorer" />
+	</context>
 	<context id="select_template">
 		<description>Here you can select a template for the new report, to define its base layout. Select the template by clicking on it, then hit the button "Next" to proceed.</description>
 		<topic
