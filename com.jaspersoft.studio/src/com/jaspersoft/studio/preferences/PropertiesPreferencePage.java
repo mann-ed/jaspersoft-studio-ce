@@ -4,24 +4,18 @@
  ******************************************************************************/
 package com.jaspersoft.studio.preferences;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
-
-import net.sf.jasperreports.eclipse.util.FilePrefUtil;
-import net.sf.jasperreports.eclipse.util.FileUtils;
-import net.sf.jasperreports.engine.DefaultJasperReportsContext;
-import net.sf.jasperreports.engine.JRPropertiesUtil;
-import net.sf.jasperreports.engine.JRPropertiesUtil.PropertySuffix;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.messages.Messages;
-import com.jaspersoft.studio.preferences.editor.properties.PropertyComparator;
 import com.jaspersoft.studio.preferences.editor.properties.SearchPropertyListFieldEditor;
 import com.jaspersoft.studio.preferences.util.FieldEditorOverlayPage;
+
+import net.sf.jasperreports.eclipse.util.FilePrefUtil;
+import net.sf.jasperreports.eclipse.util.FileUtils;
 
 /*
  * This class represents a preference page that is contributed to the Preferences dialog. By subclassing
@@ -39,32 +33,28 @@ public class PropertiesPreferencePage extends FieldEditorOverlayPage {
 	}
 
 	/**
-	 * Creates the field editors. Field editors are abstractions of the common GUI blocks needed to manipulate various
-	 * types of preferences. Each field editor knows how to save and restore itself.
+	 * Creates the field editors. Field editors are abstractions of the common
+	 * GUI blocks needed to manipulate various types of preferences. Each field
+	 * editor knows how to save and restore itself.
 	 */
 	public void createFieldEditors() {
-		addField(new SearchPropertyListFieldEditor(
-				"properties_list", Messages.PropertiesPreferencePage_jrPropertiesTitle, getFieldEditorParent())); //$NON-NLS-1$
-		
-		//Eventually create the extensions for the page
+		addField(new SearchPropertyListFieldEditor("properties_list", //$NON-NLS-1$
+				Messages.PropertiesPreferencePage_jrPropertiesTitle, getFieldEditorParent()));
+
+		// Eventually create the extensions for the page
 		super.createFieldEditors();
 	}
 
 	public static void getDefaults(IPreferenceStore store) {
-		List<PropertySuffix> lst = JRPropertiesUtil.getInstance(DefaultJasperReportsContext.getInstance())
-				.getProperties("");//$NON-NLS-1$
-		Collections.sort(lst, new PropertyComparator());
-
-		Properties props = new Properties();
-		for (PropertySuffix ps : lst)
-			props.setProperty(ps.getKey(), ps.getValue());
-		store.setDefault(FilePrefUtil.NET_SF_JASPERREPORTS_JRPROPERTIES, FileUtils.getPropertyAsString(props));
+		store.setDefault(FilePrefUtil.NET_SF_JASPERREPORTS_JRPROPERTIES,
+				FileUtils.getPropertyAsString(new Properties()));
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}

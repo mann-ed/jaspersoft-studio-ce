@@ -13,6 +13,7 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -24,6 +25,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.ResourceCache;
 
 import com.jaspersoft.studio.utils.AlfaRGB;
+import com.jaspersoft.studio.utils.ModelUtils;
 
 /**
  * A composite that offers the controls to  choose a color from a grid
@@ -212,14 +214,29 @@ public class WebColorsWidget extends Composite implements IColorProvider{
 		Iterator<RGB> colorIt = webColors.iterator();
 		for(int i=0; i<samplesColumn; i++){
 			for(int j=0; j<samplesRow; j++){
-				Canvas canv = new Canvas(colorComposite, SWT.NONE);
+				Canvas canv = new Canvas(colorComposite, SWT.NONE) {
+					//the override was done to fix https://jira.tibco.com/browse/JSS-2720
+					//for some reason even if the background was set explicitly the CSSEngine
+					//was changing the background color when using any theme. With this override
+					//the background color is never changed from the desired one
+					@Override
+					public void setBackground(Color color) {
+						if (ModelUtils.safeEquals(color.getRGB(), getData())) {
+							super.setBackground(color);
+						}
+					}
+					
+					@Override
+					protected void checkSubclass() {
+					}
+				};
 				GridData canvData = new GridData();
 				canvData.widthHint = sampleSize;
 				canvData.heightHint = sampleSize;
 				canv.setLayoutData(canvData);
 				RGB actualColor = colorIt.next();
-				canv.setBackground(imagesCache.getColor(actualColor));
 				canv.setData(actualColor);
+				canv.setBackground(imagesCache.getColor(actualColor));
 				canv.addMouseListener(colorSelectedAdapter);
 			}
 		}

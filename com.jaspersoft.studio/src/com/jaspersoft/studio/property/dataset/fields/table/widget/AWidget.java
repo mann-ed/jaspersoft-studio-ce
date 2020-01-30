@@ -3,13 +3,18 @@
  ******************************************************************************/
 package com.jaspersoft.studio.property.dataset.fields.table.widget;
 
+import java.awt.Color;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -40,6 +45,12 @@ public abstract class AWidget {
 		wmap.put(Double.class.getName(), WNumber.class);
 		wmap.put(Float.class.getName(), WNumber.class);
 		wmap.put(BigDecimal.class.getName(), WNumber.class);
+
+		wmap.put(Color.class.getName(), WColorProperty.class);
+		wmap.put(Locale.class.getName(), WLocaleProperty.class);
+		wmap.put(TimeZone.class.getName(), WTimeZoneProperty.class);
+		wmap.put(File.class.getName(), WText.class);
+		wmap.put(Path.class.getName(), WText.class);
 	}
 
 	public static void addControlValueType(String key, Class<? extends AWControl> wcnt) {
