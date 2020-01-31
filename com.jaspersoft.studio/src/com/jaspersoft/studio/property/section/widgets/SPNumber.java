@@ -6,6 +6,7 @@ package com.jaspersoft.studio.property.section.widgets;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -22,6 +23,7 @@ import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.swt.widgets.NullableSpinner;
+import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.ValidatedDecimalFormat;
 import com.jaspersoft.studio.utils.inputhistory.InputHistoryCache;
 
@@ -154,7 +156,7 @@ public class SPNumber extends AHistorySPropertyWidget<IPropertyDescriptor> {
 			ftext.setToolTipText(pDescriptor.getDescription());
 			if (getLabel() != null) {
 				getLabel().setToolTipText(pDescriptor.getDescription());
-				getLabel().setForeground(ColorConstants.black);
+				getLabel().setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));
 			}
 		}
 	}

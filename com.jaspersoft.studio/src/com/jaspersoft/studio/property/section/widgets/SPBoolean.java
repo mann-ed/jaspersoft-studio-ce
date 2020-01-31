@@ -5,6 +5,7 @@
 package com.jaspersoft.studio.property.section.widgets;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -16,6 +17,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.property.section.AbstractSection;
+import com.jaspersoft.studio.utils.UIUtil;
 
 public class SPBoolean<T extends IPropertyDescriptor> extends ASPropertyWidget<T> {
 	
@@ -48,7 +50,7 @@ public class SPBoolean<T extends IPropertyDescriptor> extends ASPropertyWidget<T
 			cmb3Bool.setForeground(ColorConstants.gray);
 			cmb3Bool.setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
 		} else {
-			cmb3Bool.setForeground(ColorConstants.black);
+			cmb3Bool.setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));
 			cmb3Bool.setToolTipText(pDescriptor.getDescription());
 		}
 		setData(pnode, resolvedValue);
