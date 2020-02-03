@@ -43,7 +43,7 @@ public class ImportDAWizard extends Wizard implements IImportWizard {
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-
+		// do nothing
 	}
 
 	@Override
