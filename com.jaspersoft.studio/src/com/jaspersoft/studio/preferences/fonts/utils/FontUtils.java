@@ -56,8 +56,7 @@ public class FontUtils {
 	 * @return
 	 */
 	public static Styler getKeywordStyler() {
-		JFaceResources.getColorRegistry().put("PARAMETER_KEYWORD_COLOR", //$NON-NLS-1$
-				UIUtil.getColor("org.eclipse.pde.genericeditor.extension.editor.color.attribute").getRGB());//$NON-NLS-1$
+		JFaceResources.getColorRegistry().put("PARAMETER_KEYWORD_COLOR", new RGB(206, 92, 0)); //$NON-NLS-1$
 		return new BoldStyler("PARAMETER_KEYWORD_COLOR", null);
 	}
 

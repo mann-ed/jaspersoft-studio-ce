@@ -5,12 +5,14 @@
 package com.jaspersoft.studio.property.section.widgets;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,6 +25,7 @@ import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.property.descriptor.combo.RWComboBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.utils.ModelUtils;
+import com.jaspersoft.studio.utils.UIUtil;
 
 import net.sf.jasperreports.eclipse.util.Misc;
 
@@ -109,11 +112,11 @@ public class SPRWCombo<T extends IPropertyDescriptor> extends ASPropertyWidget<T
 				getLabel().setForeground(ColorConstants.gray);
 			}
 		} else {
-			combo.setForeground(ColorConstants.black);
+			combo.setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));
 			combo.setToolTipText(pDescriptor.getDescription());
 			if (getLabel() != null) {
 				getLabel().setToolTipText(pDescriptor.getDescription());
-				getLabel().setForeground(ColorConstants.black);
+				getLabel().setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));
 			}
 		}
 		setData(pnode, resolvedValue);

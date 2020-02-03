@@ -7,6 +7,7 @@ package com.jaspersoft.studio.property.section.widgets;
 import java.util.UUID;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -25,6 +26,7 @@ import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptors.IEnumDescriptors;
 import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.utils.ImageUtils;
+import com.jaspersoft.studio.utils.UIUtil;
 
 public class SPToolBarEnum<T extends IPropertyDescriptor & IEnumDescriptors> extends ASPropertyWidget<T> {
 	
@@ -140,7 +142,7 @@ public class SPToolBarEnum<T extends IPropertyDescriptor & IEnumDescriptors> ext
 				currentItem.setToolTipText(pDescriptor.getDescription());
 				if (getLabel() != null) {
 					getLabel().setToolTipText(pDescriptor.getDescription());
-					getLabel().setForeground(ColorConstants.black);
+					getLabel().setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));
 				}
 			}
 		}

@@ -261,13 +261,14 @@ public class RUnitLocationPage extends JSSHelpWizardPage {
 						}
 					}
 			}
+			if (canSuggestID)
+				ruID.setText(rtext);
 			setErrorMessage(validationError);
 			if (validationError == null) {
 				ResourceDescriptor ru = mru.getValue();
 				ru.setLabel(rtext);
 				// suggest the ID
 				if (canSuggestID) {
-					ruID.setText(rtext);
 					ru.setName(IDStringValidator.safeChar(rtext));
 					ru.setUriString(ru.getParentFolder() + "/" + ru.getName());
 				}
