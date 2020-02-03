@@ -6,10 +6,9 @@ package com.jaspersoft.studio.server.wizard.resource;
 
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
 
+import com.jaspersoft.studio.server.ContextHelpIDs;
 import com.jaspersoft.studio.wizards.AWizardPage;
-import com.jaspersoft.studio.wizards.ContextHelpIDs;
 
 public class NewResourcePage extends AWizardPage {
 	private APageContent rcontent;
@@ -25,7 +24,6 @@ public class NewResourcePage extends AWizardPage {
 	public void createControl(Composite parent) {
 		setControl(rcontent.createContent(parent));
 		WizardPageSupport.create(this, rcontent.getBindingContext());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),ContextHelpIDs.WIZARD_SERVER_EDITRESOURCE_PAGE);
 	}
 
 	@Override
@@ -44,6 +42,6 @@ public class NewResourcePage extends AWizardPage {
 
 	@Override
 	protected String getContextName() {
-		return null;
+		return ContextHelpIDs.WIZARD_SERVER_EDITRESOURCE_PAGE;
 	}
 }

@@ -13,7 +13,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
 import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,11 +26,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.jaspersoft.studio.messages.Messages;
+import com.jaspersoft.studio.server.ContextHelpIDs;
+import com.jaspersoft.studio.wizards.JSSHelpWizardPage;
 
 import net.sf.jasperreports.eclipse.ui.validator.NotEmptyFileValidator;
 import net.sf.jasperreports.eclipse.util.Misc;
 
-public class ImportMetadataPage extends WizardPage {
+public class ImportMetadataPage extends JSSHelpWizardPage {
 
 	private Button bupdate;
 	private Button bSkipUpd;
@@ -149,5 +150,10 @@ public class ImportMetadataPage extends WizardPage {
 
 	public ImportOptions getValue() {
 		return value;
+	}
+
+	@Override
+	protected String getContextName() {
+		return ContextHelpIDs.WIZARD_SERVER_IMPORTMETADATA_PAGE;
 	}
 }

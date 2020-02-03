@@ -22,6 +22,18 @@
 		<topic href="html/wizard/jasperserver/publishreport.html" label="How to publish a report to JasperReports Server"/>
 		<topic href="html/view/repository/repository.html" label="JasperReport Server details in Repository Explorer" />
 	</context>
+	<context id="jasperserver_importmetadata_wizardpage">
+		<description>This page allows you to import resources and settings into a JasperReports Server instance. This import operates on a running instance of the server, and all imported resources are visible immediately. In addition, any configuration or security settings in the imported catalog take effect immediately, with no need to restart the server.</description>
+		<topic href="html/wizard/jasperserver/connection.html" label="How to connect to JasperReports Server"/>
+		<topic href="html/wizard/jasperserver/publishreport.html" label="How to publish a report to JasperReports Server"/>
+		<topic href="html/view/repository/repository.html" label="JasperReport Server details in Repository Explorer" />
+	</context>
+	<context id="jasperserver_exportmetadata_wizardpage">
+		<description>This page allows you to export individual resources or an entire folder of the JasperReports Server repository. Depending on the size of your repository and the options you’ve selected, it may take several minutes to generate the catalog zip file.</description>
+		<topic href="html/wizard/jasperserver/connection.html" label="How to connect to JasperReports Server"/>
+		<topic href="html/wizard/jasperserver/publishreport.html" label="How to publish a report to JasperReports Server"/>
+		<topic href="html/view/repository/repository.html" label="JasperReport Server details in Repository Explorer" />
+	</context>
 	<context id="select_template">
 		<description>Here you can select a template for the new report, to define its base layout. Select the template by clicking on it, then hit the button "Next" to proceed.</description>
 		<topic

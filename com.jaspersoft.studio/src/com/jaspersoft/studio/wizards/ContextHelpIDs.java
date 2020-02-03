@@ -52,16 +52,6 @@ public class ContextHelpIDs {
 	
 	public static final String WIZARD_SELECT_BARCODE = PREFIX.concat("select_barcode");
 	
-	public static final String WIZARD_SELECT_SERVER = PREFIX.concat("select_server");
-	
-	public static final String WIZARD_SELECT_RESOURCES = PREFIX.concat("select_server_resources");
-	
-	public static final String WIZARD_SELECT_DATASOURCES = PREFIX.concat("select_server_datasources");
-	
-	public static final String WIZARD_SERVER_ADDNEWRESOURCE_PAGE = PREFIX.concat("jasperserver_addnewresource_wizardpage");
-	
-	public static final String WIZARD_SERVER_EDITRESOURCE_PAGE = PREFIX.concat("jasperserver_resourceeditor_wizardpage");
-	
 	public static final String WIZARD_CONFIGURATION_PAGE = PREFIX.concat("congratualions_page");
 	
 	public static final String WIZARD_RETURN_VALUE = PREFIX.concat("select_return_values");
