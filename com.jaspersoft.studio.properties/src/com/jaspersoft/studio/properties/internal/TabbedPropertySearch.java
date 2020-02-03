@@ -12,6 +12,7 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -31,7 +32,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormColors;
+import org.eclipse.ui.themes.ITheme;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.studio.properties.messages.Messages;
@@ -454,6 +457,11 @@ public class TabbedPropertySearch extends Composite {
 			}
 		}
 	}
+	
+	public static Color getColor(String key) {
+		ITheme currentTheme = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme(); 
+		return currentTheme.getColorRegistry().get(key);
+	}
 
 	/**
 	 * @param e
@@ -464,6 +472,13 @@ public class TabbedPropertySearch extends Composite {
 		Rectangle bounds = getClientArea();
 		Color bg = factory.getColors().getColor(IFormColors.H_GRADIENT_END);
 		Color gbg = factory.getColors().getColor(IFormColors.H_GRADIENT_START);
+		
+		Color themedColor = getColor(JFacePreferences.INFORMATION_BACKGROUND_COLOR);
+		if (themedColor != null && themedColor.getRed() < 100 && themedColor.getGreen() < 100 && themedColor.getBlue() < 100) {
+			bg = themedColor;
+			gbg =  getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR);
+		}
+		
 		GC gc = e.gc;
 		gc.setForeground(bg);
 		gc.setBackground(gbg);

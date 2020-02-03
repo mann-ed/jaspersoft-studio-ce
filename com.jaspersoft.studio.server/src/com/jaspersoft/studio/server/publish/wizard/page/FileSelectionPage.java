@@ -4,8 +4,6 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.publish.wizard.page;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -22,9 +20,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog;
 
 import com.jaspersoft.studio.messages.Messages;
+import com.jaspersoft.studio.server.ContextHelpIDs;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
-import com.jaspersoft.studio.wizards.ContextHelpIDs;
 import com.jaspersoft.studio.wizards.JSSHelpWizardPage;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 /**
  * Wizard page for the selection of a datasource for a resource being

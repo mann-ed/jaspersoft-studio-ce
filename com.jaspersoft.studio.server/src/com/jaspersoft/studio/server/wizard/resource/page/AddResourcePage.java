@@ -16,11 +16,9 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
 
 import com.jaspersoft.jasperserver.dto.serverinfo.ServerInfo;
 import com.jaspersoft.studio.model.ANode;
@@ -30,6 +28,7 @@ import com.jaspersoft.studio.model.util.ModelVisitor;
 import com.jaspersoft.studio.outline.ReportTreeContetProvider;
 import com.jaspersoft.studio.outline.ReportTreeLabelProvider;
 import com.jaspersoft.studio.server.Activator;
+import com.jaspersoft.studio.server.ContextHelpIDs;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MContentResource;
@@ -67,11 +66,11 @@ import com.jaspersoft.studio.server.protocol.IConnection;
 import com.jaspersoft.studio.server.protocol.Version;
 import com.jaspersoft.studio.server.wizard.resource.page.selector.SelectorDatasource;
 import com.jaspersoft.studio.utils.Callback;
-import com.jaspersoft.studio.wizards.ContextHelpIDs;
+import com.jaspersoft.studio.wizards.JSSHelpWizardPage;
 
 import net.sf.jasperreports.engine.JRConstants;
 
-public class AddResourcePage extends WizardPage {
+public class AddResourcePage extends JSSHelpWizardPage {
 	private AMResource resource;
 	private ANode parent;
 
@@ -133,8 +132,6 @@ public class AddResourcePage extends WizardPage {
 		});
 		setControl(treeViewer.getControl());
 		treeViewer.setSelection(new TreeSelection(new TreePath(new Object[] { resource })), true);
-		
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),ContextHelpIDs.WIZARD_SERVER_ADDNEWRESOURCE_PAGE);
 	}
 
 	private boolean dsonly = false;
@@ -350,5 +347,10 @@ public class AddResourcePage extends WizardPage {
 	@Override
 	public boolean canFlipToNextPage() {
 		return resource != null;
+	}
+
+	@Override
+	protected String getContextName() {
+		return ContextHelpIDs.WIZARD_SERVER_ADDNEWRESOURCE_PAGE;
 	}
 }
