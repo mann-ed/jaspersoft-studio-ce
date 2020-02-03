@@ -136,8 +136,10 @@ public class JrxmlPublishContributor implements IPublishContributor {
 			if (part.getComponent() instanceof StandardSubreportPartComponent) {
 				StandardSubreportPartComponent component = (StandardSubreportPartComponent) part.getComponent();
 				MJrxml fres = (MJrxml) impJRXML.publish(jasper, component, mrunit, monitor, fileset, file);
-				publishSubreport(fres, monitor, fileset);
-				setupDescription(mrunit != null ? mrunit.getValue() : null, fres.getValue(), jasper);
+				if (fres != null) {
+					publishSubreport(fres, monitor, fileset);
+					setupDescription(mrunit != null ? mrunit.getValue() : null, fres.getValue(), jasper);
+				}
 			}
 		}
 	}
