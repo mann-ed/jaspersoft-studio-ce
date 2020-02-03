@@ -135,7 +135,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 
 											return Status.OK_STATUS;
 										}
-									}.schedule(10000);
+									}.schedule(1000);
 								}
 
 								protected void processEvent(IResourceDelta delta) {

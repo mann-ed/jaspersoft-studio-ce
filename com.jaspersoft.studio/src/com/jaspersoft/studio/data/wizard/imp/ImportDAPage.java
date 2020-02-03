@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -29,7 +27,6 @@ import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.DataAdapterManager;
 import com.jaspersoft.studio.data.storage.ADataAdapterStorage;
-import com.jaspersoft.studio.data.storage.FileDataAdapterStorage;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.wizards.JSSHelpWizardPage;
 
@@ -66,20 +63,15 @@ public class ImportDAPage extends JSSHelpWizardPage {
 		viewer.setLabelProvider(new ViewLabelProvider());
 
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
-		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection s = (IStructuredSelection) viewer.getSelection();
-				setPageComplete(!s.isEmpty());
-				selection = new ArrayList<DataAdapterDescriptor>();
-				for (Object obj : s.toList()) {
-					if (obj instanceof DataAdapterDescriptor)
-						selection.add((DataAdapterDescriptor) obj);
-					else if (obj instanceof ADataAdapterStorage)
-						selection.addAll(((ADataAdapterStorage) obj).getDataAdapterDescriptors());
-				}
+		viewer.addSelectionChangedListener(event -> {
+			IStructuredSelection s = (IStructuredSelection) viewer.getSelection();
+			setPageComplete(!s.isEmpty());
+			selection = new ArrayList<>();
+			for (Object obj : s.toList()) {
+				if (obj instanceof DataAdapterDescriptor)
+					selection.add((DataAdapterDescriptor) obj);
+				else if (obj instanceof ADataAdapterStorage)
+					selection.addAll(((ADataAdapterStorage) obj).getDataAdapterDescriptors());
 			}
 		});
 
@@ -109,10 +101,12 @@ public class ImportDAPage extends JSSHelpWizardPage {
 
 	class ViewContentProvider implements ITreeContentProvider {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+			// do nothing
 		}
 
 		@Override
 		public void dispose() {
+			// do nothing
 		}
 
 		@Override
