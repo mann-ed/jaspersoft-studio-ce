@@ -161,10 +161,7 @@ public class FragmentCreationUtil {
 		}
 		
 		// Create the fragment.xml file
-		VelocityEngine ve = new VelocityEngine();
-		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
-		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-		ve.init();
+		VelocityEngine ve = VelocityUtils.getConfiguredVelocityEngine();
 		
 		VelocityContext fragmentContext = new VelocityContext();
 		fragmentContext.put("commands", commands);
