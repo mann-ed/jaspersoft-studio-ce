@@ -34,7 +34,7 @@ public class ServerProfile implements Resource, Cloneable, Serializable, JRChang
 	private boolean chunked;
 	private boolean mime = true;
 	private String projectPath;
-	private boolean useOnlySOAP = false;
+	private UseProtocol useProtocol = UseProtocol.REST_SOAP;
 	private boolean syncDA = false;
 	private String locale;
 	private String timeZone;
@@ -45,6 +45,35 @@ public class ServerProfile implements Resource, Cloneable, Serializable, JRChang
 	private boolean logging = false;
 
 	private JRPropertyChangeSupport propertyChange = new JRPropertyChangeSupport(this);
+
+	public void setUseOnlySOAP(boolean v) {
+		if (v)
+			this.useProtocol = UseProtocol.SOAP_ONLY;
+	}
+
+	public boolean isUseOnlySOAP() {
+		return false;
+	}
+
+	public String getUseProtocol() {
+		return this.useProtocol.toString();
+	}
+
+	public void setUseProtocol(String useProtocol) {
+		this.useProtocol = UseProtocol.valueOf(useProtocol);
+	}
+
+	public UseProtocol getUseProtocolEnum() {
+		if (useSSO)
+			return UseProtocol.REST_ONLY;
+		if (useProtocol == null)
+			useProtocol = UseProtocol.REST_SOAP;
+		return useProtocol;
+	}
+
+	public void setUseProtocolEnum(UseProtocol useProtocol) {
+		this.useProtocol = useProtocol;
+	}
 
 	public boolean isLogging() {
 		return logging;
@@ -110,16 +139,6 @@ public class ServerProfile implements Resource, Cloneable, Serializable, JRChang
 		this.syncDA = syncDA;
 	}
 
-	public boolean isUseOnlySOAP() {
-		if (useSSO)
-			return false;
-		return useOnlySOAP;
-	}
-
-	public void setUseOnlySOAP(boolean useOnlySOAP) {
-		this.useOnlySOAP = useOnlySOAP;
-	}
-
 	public boolean isMime() {
 		return mime;
 	}
@@ -173,6 +192,7 @@ public class ServerProfile implements Resource, Cloneable, Serializable, JRChang
 		url = HttpUtils.toSafeUri(new URL(url)).toASCIIString();
 		return url;
 	}
+
 	public String getUrlString() {
 		return url;
 	}

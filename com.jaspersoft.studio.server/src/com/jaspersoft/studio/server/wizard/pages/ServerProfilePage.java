@@ -85,6 +85,7 @@ import com.jaspersoft.studio.server.ServerManager;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.model.server.ServerProfile;
+import com.jaspersoft.studio.server.model.server.UseProtocol;
 import com.jaspersoft.studio.server.preferences.CASListFieldEditor;
 import com.jaspersoft.studio.server.preferences.CASPreferencePage;
 import com.jaspersoft.studio.server.preferences.SSOServer;
@@ -122,7 +123,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 	private Button bchunked;
 	private Combo bmime;
 	private Button bdaterange;
-	private Button bUseSoap;
+	private Combo cUseProtocol;
 	private Button bSyncDA;
 	private Button blpath;
 	private VersionCombo cversion;
@@ -271,8 +272,8 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 			dbc.bindValue(SWTObservables.observeSingleSelectionIndex(bSSO), PojoObservables.observeValue(proxy, "sso")); //$NON-NLS-1$
 			dbc.bindValue(SWTObservables.observeSelection(bdaterange),
 					PojoObservables.observeValue(value, "supportsDateRanges")); //$NON-NLS-1$
-			dbc.bindValue(SWTObservables.observeSelection(bUseSoap),
-					PojoObservables.observeValue(value, "useOnlySOAP")); //$NON-NLS-1$
+			dbc.bindValue(SWTObservables.observeSingleSelectionIndex(cUseProtocol),
+					PojoObservables.observeValue(proxy, "useProtocol")); //$NON-NLS-1$
 			dbc.bindValue(SWTObservables.observeSelection(bSyncDA), PojoObservables.observeValue(value, "syncDA")); //$NON-NLS-1$
 			dbc.bindValue(SWTObservables.observeSelection(bLogging), PojoObservables.observeValue(value, "logging")); //$NON-NLS-1$
 
@@ -392,7 +393,8 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		lbl.setText(Messages.ServerProfilePage_36);
 
 		bSSO = new Combo(cmp, SWT.READ_ONLY);
-		bSSO.setItems(new String[]{Messages.ServerProfilePage_38, Messages.ServerProfilePage_45, Messages.ServerProfilePage_46});
+		bSSO.setItems(new String[] { Messages.ServerProfilePage_38, Messages.ServerProfilePage_45,
+				Messages.ServerProfilePage_46 });
 		bSSO.setText(Messages.ServerProfilePage_18);
 		bSSO.setToolTipText(Messages.ServerProfilePage_20);
 		bSSO.addSelectionListener(new SelectionAdapter() {
@@ -402,19 +404,19 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 				case 0:
 					userValidator.setAllowNull(false);
 					stackLayout.topControl = cmpUP;
-					bUseSoap.setEnabled(true);
+					cUseProtocol.setEnabled(true);
 					break;
 				case 1:
 					userValidator.setAllowNull(true);
 					stackLayout.topControl = cmpAsk;
-					bUseSoap.setEnabled(true);
+					cUseProtocol.setEnabled(true);
 
 					break;
 				case 2:
 					userValidator.setAllowNull(true);
 					stackLayout.topControl = cmpCAS;
-					bUseSoap.setSelection(false);
-					bUseSoap.setEnabled(false);
+					cUseProtocol.select(0);
+					cUseProtocol.setEnabled(false);
 					break;
 				}
 				cmpCredential.layout();
@@ -482,20 +484,20 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		lbl.setToolTipText(ttip);
 
 		bmime = new Combo(cmp, SWT.READ_ONLY);
-		bmime.setItems(new String[]{"MIME", "DIME"}); //$NON-NLS-1$ //$NON-NLS-2$
+		bmime.setItems(new String[] { "MIME", "DIME" }); //$NON-NLS-1$ //$NON-NLS-2$
 		bmime.setToolTipText(ttip);
-
-		bUseSoap = new Button(cmp, SWT.CHECK);
-		bUseSoap.setText(Messages.ServerProfilePage_6);
-		tt = Messages.ServerProfilePage_29;
-		bUseSoap.setToolTipText(tt);
 
 		bLogging = new Button(cmp, SWT.CHECK);
 		bLogging.setText(Messages.ServerProfilePage_34);
 		bLogging.setToolTipText(Messages.ServerProfilePage_35);
-		gd = new GridData();
-		gd.horizontalSpan = 2;
-		bLogging.setLayoutData(gd);
+
+		lbl = new Label(cmp, SWT.NONE);
+		lbl.setText("Use Protocol");
+
+		cUseProtocol = new Combo(cmp, SWT.READ_ONLY);
+		cUseProtocol.setItems("REST Only", "SOAP Only", "REST, if fails SOAP");
+		tt = Messages.ServerProfilePage_29;
+		cUseProtocol.setToolTipText(tt);
 
 		lbl = new Label(cmp, SWT.SEPARATOR | SWT.HORIZONTAL);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -646,7 +648,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 				cstatus.setText(Messages.ServerProfilePage_32);
 			} else
 				cstatus.setText(Messages.ServerProfilePage_33);
-			bUseSoap.setEnabled(bSSO.getSelectionIndex() != 2);
+			cUseProtocol.setEnabled(bSSO.getSelectionIndex() != 2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -815,6 +817,30 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 
 		public String getMime() {
 			return sp.isMime() ? "MIME" : "DIME"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		public int getUseProtocol() {
+			if (sp.getUseProtocolEnum().equals(UseProtocol.REST_ONLY))
+				return 0;
+			if (sp.getUseProtocolEnum().equals(UseProtocol.SOAP_ONLY))
+				return 1;
+			if (sp.getUseProtocolEnum().equals(UseProtocol.REST_SOAP))
+				return 2;
+			return 0;
+		}
+
+		public void setUseProtocol(int indx) {
+			switch (indx) {
+			case 0:
+				sp.setUseProtocolEnum(UseProtocol.REST_ONLY);
+				break;
+			case 1:
+				sp.setUseProtocolEnum(UseProtocol.SOAP_ONLY);
+				break;
+			case 2:
+				sp.setUseProtocolEnum(UseProtocol.REST_SOAP);
+				break;
+			}
 		}
 
 		public int getSso() {

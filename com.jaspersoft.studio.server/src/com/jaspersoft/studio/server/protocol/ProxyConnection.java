@@ -26,6 +26,7 @@ import com.jaspersoft.studio.server.AFinderUI;
 import com.jaspersoft.studio.server.Activator;
 import com.jaspersoft.studio.server.model.datasource.filter.IDatasourceFilter;
 import com.jaspersoft.studio.server.model.server.ServerProfile;
+import com.jaspersoft.studio.server.model.server.UseProtocol;
 import com.jaspersoft.studio.server.protocol.restv2.RestV2ConnectionJersey;
 import com.jaspersoft.studio.server.publish.PasswordDialog;
 import com.jaspersoft.studio.server.utils.Pass;
@@ -56,8 +57,7 @@ public class ProxyConnection implements IConnection {
 	private IConnection[] cons = getConnections();
 
 	private IConnection[] getConnections() {
-		List<IConnection> c = new ArrayList<IConnection>();
-		// c.add(new RestV2Connection());
+		List<IConnection> c = new ArrayList<>();
 		c.add(new RestV2ConnectionJersey());
 
 		c.addAll(Activator.getExtManager().getProtocols());
@@ -80,6 +80,21 @@ public class ProxyConnection implements IConnection {
 		return rest;
 	}
 
+	private boolean canUseProtocol(IConnection c) {
+		String connName = c.getClass().getName().toUpperCase();
+		UseProtocol useProtocol = sp.getUseProtocolEnum();
+		if (c instanceof RestV2ConnectionJersey)
+			return useProtocol.equals(UseProtocol.REST_ONLY) || useProtocol.equals(UseProtocol.REST_SOAP)
+					|| sp.isUseSSO();
+		if (connName.contains("SOAP")) {
+			ServerInfo si = getServerInfo();
+			return !sp.isUseSSO()
+					&& (useProtocol.equals(UseProtocol.SOAP_ONLY) || useProtocol.equals(UseProtocol.REST_SOAP))
+					&& (si == null || si.getVersion().compareTo("7.1") < 0);
+		}
+		return true;
+	}
+
 	private IConnection c;
 	private IConnection soap;
 	private String pass;
@@ -94,9 +109,7 @@ public class ProxyConnection implements IConnection {
 		this.sp = sp;
 		for (IConnection co : cons) {
 			String connName = co.getClass().getName().toUpperCase();
-			if (sp.isUseOnlySOAP() && !connName.contains("SOAP"))
-				continue;
-			if (connName.contains("SOAP") && sp.isUseSSO())
+			if (!canUseProtocol(co))
 				continue;
 			try {
 				if (c == null && co.connect(monitor, sp))

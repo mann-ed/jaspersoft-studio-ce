@@ -27,6 +27,9 @@
 		<field name="useOnlySOAP" type="boolean">
 			<bind-xml name="useOnlySOAP" node="element" />
 		</field>
+		<field name="useProtocol" type="string">
+			<bind-xml name="useProtocol" node="element" />
+		</field>
 		<field name="useSSO" type="boolean">
 			<bind-xml name="useSSO" node="element" />
 		</field>

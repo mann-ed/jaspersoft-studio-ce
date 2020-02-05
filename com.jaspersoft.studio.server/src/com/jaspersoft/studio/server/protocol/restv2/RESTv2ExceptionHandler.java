@@ -63,7 +63,7 @@ public class RESTv2ExceptionHandler {
 					handleErrorDescriptor(res, monitor, status);
 			}
 		case 401:
-			throw new HttpResponseException(status, res.getStatusInfo().getReasonPhrase());
+			throw new HttpResponseException(status, buildErrorMessage(res, status));
 		case 404:
 		case 403:
 		case 409:
@@ -75,24 +75,27 @@ public class RESTv2ExceptionHandler {
 				else if (ct.contains("xml"))
 					handleErrorDescriptor(res, monitor, status);
 				else if (ct.contains("text/html")) {
-					System.out.println(res.readEntity(String.class));
-					msg = res.getStatusInfo().getReasonPhrase() + "\n";
-					throw new HttpResponseException(status, msg);
+					throw new HttpResponseException(status, buildErrorMessage(res, status));
 				} else if (ct.contains("application/errorDescriptor+json")
 						|| ct.contains("application/errorDescriptor+xml"))
 					handleErrorDescriptor(res, monitor, status);
 			} else {
-				System.out.println(res.readEntity(String.class));
-				msg = status + " reason: " + res.getStatusInfo().getReasonPhrase() + "\n";
-				throw new HttpResponseException(status, msg);
+				throw new HttpResponseException(status, buildErrorMessage(res, status));
 			}
 		default:
 			String cnt = res.readEntity(String.class);
 			if (cnt.length() > 100)
 				cnt = "";
-			msg = res.getStatusInfo().getReasonPhrase() + "\n" + cnt;
-			throw new HttpResponseException(status, msg);
+			throw new HttpResponseException(status, buildErrorMessage(res, status) + cnt);
 		}
+	}
+
+	private String buildErrorMessage(Response res, int status) {
+		String msg = "" + status;
+		String rp = res.getStatusInfo().getReasonPhrase();
+		if (!Misc.isNullOrEmpty(rp))
+			msg += " Message: " + rp + "\n";
+		return msg;
 	}
 
 	protected void handleErrorDescriptorList(Response res, IProgressMonitor monitor, int status)
