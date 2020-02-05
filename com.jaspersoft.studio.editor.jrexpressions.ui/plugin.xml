@@ -274,4 +274,39 @@
             class="com.jaspersoft.studio.editor.jrexpressions.ui.messages.ResourcePublisher">
       </input>
    </extension>
+   <extension
+         point="org.eclipse.ui.themes">
+         <colorDefinition
+               id="com.jaspersoft.studio.editor.jrexpressions.ui.colors.PARAMETER_TOKEN" 
+               label="Color for JR Parameter token in the expression editor"
+               value="187,29,29">
+         </colorDefinition>
+         <colorDefinition
+               id="com.jaspersoft.studio.editor.jrexpressions.ui.colors.FIELD_TOKEN" 
+               label="Color for JR Field token in the expression editor" 
+               value="0,178,0">
+         </colorDefinition>
+         <colorDefinition
+               id="com.jaspersoft.studio.editor.jrexpressions.ui.colors.VARIABLE_TOKEN" 
+               label="Color for JR Variable token in the expression editor" 
+               value="0,0,255">
+         </colorDefinition>
+         <colorDefinition
+               id="com.jaspersoft.studio.editor.jrexpressions.ui.colors.FUNCTION_METHOD" 
+               label="Color for a function in the expression editor" 
+               value="0,0,0">
+         </colorDefinition>
+         <colorDefinition
+               id="com.jaspersoft.studio.editor.jrexpressions.ui.colors.RESOURCE_BUNDLE_KEY" 
+               label="Color for a resource bundle key token in the expression editor" 
+               value="102,46,153">
+         </colorDefinition>
+   </extension>
+   <extension
+         point="org.eclipse.e4.ui.css.swt.theme">
+         <stylesheet
+               uri="css/customization.css">
+               <themeid refid="org.eclipse.e4.ui.css.theme.e4_dark"/>
+         </stylesheet>
+   </extension>
 </plugin>
