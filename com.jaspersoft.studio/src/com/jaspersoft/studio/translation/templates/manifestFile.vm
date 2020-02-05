@@ -4,6 +4,6 @@ Bundle-Name: $bundleName
 Bundle-SymbolicName: $bundleName$singleton
 Bundle-Version: 1.0.0.$qualifier
 Bundle-Vendor: $vendor
-Fragment-Host: $hostPlugin;bundle-version="$pluginVersion"
+Fragment-Host: $hostPlugin$pluginVersion
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin

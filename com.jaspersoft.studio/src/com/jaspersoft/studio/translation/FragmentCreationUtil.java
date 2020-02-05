@@ -14,13 +14,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import net.sf.jasperreports.eclipse.util.FileUtils;
-
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
@@ -28,6 +24,8 @@ import org.eclipse.swt.graphics.ImageLoader;
 import com.jaspersoft.studio.utils.VelocityUtils;
 import com.jaspersoft.translation.resources.ITranslationResource;
 import com.jaspersoft.translation.resources.TranslationInformation;
+
+import net.sf.jasperreports.eclipse.util.FileUtils;
 
 /**
  * Class that provides the methods to convert one or more extended translation informations
@@ -85,12 +83,17 @@ public class FragmentCreationUtil {
 			functionContext.put("hostPlugin", pluginInfo.getHostPluginName());
 			functionContext.put("bundleName", pluginInfo.getBundleName()+languagesCodes);
 			functionContext.put("qualifier", pluginInfo.getBundleVersion());
-			functionContext.put("pluginVersion", pluginInfo.getHostPluginVersion());
 			functionContext.put("vendor", pluginInfo.getBundleProducer());
 			String singleton = "";
-			if (isSingleton) singleton = ";singleton:=true";
+			if (isSingleton) {
+				singleton = ";singleton:=true";
+			}
 			functionContext.put("singleton", singleton);
-			
+			String hostVersion = "";
+			if(!pluginInfo.getHostPluginVersion().trim().isEmpty()) {
+				hostVersion = ";bundle-version=\"" + pluginInfo.getHostPluginVersion().trim() + "\"";
+			}
+			functionContext.put("pluginVersion", hostVersion);
 			Template functionTemplate = ve.getTemplate(MANIFEST_TEMPLATE);
 			StringWriter fsw = new StringWriter();
 			functionTemplate.merge( functionContext, fsw );
