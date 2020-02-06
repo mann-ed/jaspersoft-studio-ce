@@ -20,7 +20,10 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -32,13 +35,18 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -724,7 +732,7 @@ public class PropertyListFieldEditor extends FieldEditor {
 		return table;
 	}
 
-	class PairColumnLabelProvider extends ColumnLabelProvider {
+	class PairColumnLabelProvider extends ColumnLabelProvider implements IColorProvider {
 		private int index;
 
 		public PairColumnLabelProvider(int index) {
@@ -761,18 +769,42 @@ public class PropertyListFieldEditor extends FieldEditor {
 
 		@Override
 		public Color getForeground(Object element) {
-			if (index == 1) {
-				Pair p = (Pair) element;
-				if (p.getValue() == null) {
-					PropertyMetadata pm = pmMap.get(p.getKey());
-					if (pm != null) {
-						String def = pm.getDefaultValue();
-						if (def != null)
-							return SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
-					}
+			Pair p = (Pair) element;
+			if (p.getValue() == null) {
+				PropertyMetadata pm = pmMap.get(p.getKey());
+				if (pm.isDeprecated() && index == 0)
+					return SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+				if (index == 1) {
+					String def = pm.getDefaultValue();
+					if (def != null)
+						return SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
 				}
 			}
 			return null;
+		}
+
+		@Override
+		public Font getFont(Object element) {
+			Pair p = (Pair) element;
+			PropertyMetadata pm = pmMap.get(p.getKey());
+			if (pm != null && pm.isDeprecated())
+				return FontStyles.getItalicFont();
+			return super.getFont(element);
+		}
+
+	}
+
+	public static final class FontStyles {
+		private static FontData[] italicValues;
+
+		public static Font getItalicFont() {
+			if (italicValues == null) {
+				final Font originalFont = Display.getCurrent().getSystemFont();
+				italicValues = originalFont.getFontData();
+				for (int i = 0; i < italicValues.length; i++)
+					italicValues[i].setStyle(italicValues[i].getStyle() | SWT.ITALIC);
+			}
+			return new Font(Display.getCurrent(), italicValues);
 		}
 
 	}
