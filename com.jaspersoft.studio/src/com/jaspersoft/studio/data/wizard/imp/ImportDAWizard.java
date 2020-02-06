@@ -59,8 +59,11 @@ public class ImportDAWizard extends Wizard implements IImportWizard {
 					ADataAdapterStorage storage = das.getValue();
 					for (DataAdapterDescriptor da : adapters) {
 						monitor.subTask(da.getName());
-						if (overwrite)
-							storage.removeDataAdapter(da);
+						if (overwrite) {
+							DataAdapterDescriptor sda = storage.findDataAdapter(da.getDataAdapter().getName());
+							if (sda != null)
+								storage.removeDataAdapter(sda);
+						}
 						DataAdapterDescriptor cloneDataAdapter = DataAdapterManager.cloneDataAdapter(da,
 								JasperReportsConfiguration.getDefaultInstance());
 						cloneDataAdapter.setName(null);
