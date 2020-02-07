@@ -45,7 +45,7 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 
-	private HashMap<DataAdapterDescriptor, String> fileAdapterMap = new HashMap<DataAdapterDescriptor, String>();
+	private HashMap<DataAdapterDescriptor, String> fileAdapterMap = new HashMap<>();
 
 	/**
 	 * Key of the data adapter storage
@@ -206,6 +206,7 @@ public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 		return false;
 	}
 
+	@Override
 	public boolean editDataAdapter(String oldName, DataAdapterDescriptor adapter) {
 		// it is an edit operation, replace its file
 		boolean result = super.editDataAdapter(oldName, adapter);

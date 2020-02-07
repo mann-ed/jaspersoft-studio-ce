@@ -10,11 +10,14 @@ import java.util.List;
 
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -28,6 +31,7 @@ import com.jaspersoft.studio.data.ADataAdapterComposite;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.messages.Messages;
 import com.jaspersoft.studio.data.secret.DataAdaptersSecretsProvider;
+import com.jaspersoft.studio.property.section.widgets.CustomAutoCompleteField;
 import com.jaspersoft.studio.swt.widgets.ClasspathComponent;
 import com.jaspersoft.studio.swt.widgets.PropertiesComponent;
 import com.jaspersoft.studio.swt.widgets.WSecretText;
@@ -172,6 +176,15 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 		for (int i = 0; i < definitions.length; ++i)
 			items[i] = definitions[i].toString();
 		comboJDBCDriver.setItems(items);
+		final CustomAutoCompleteField driverAutocomplete = new CustomAutoCompleteField(comboJDBCDriver, new ComboContentAdapter(), items);
+		comboJDBCDriver.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+				driverAutocomplete.closeProposalPopup();
+			}
+		});
+
 		comboJDBCDriver.select(0);
 		comboJDBCDriver.addModifyListener(driverModifyListener);
 	}
