@@ -35,6 +35,7 @@ import com.jaspersoft.studio.server.model.MFolder;
 import com.jaspersoft.studio.server.model.MInputControl;
 import com.jaspersoft.studio.server.model.MJrxml;
 import com.jaspersoft.studio.server.model.MReportUnit;
+import com.jaspersoft.studio.server.model.MResourceBundle;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.model.server.ServerProfile;
 import com.jaspersoft.studio.server.protocol.Feature;
@@ -118,7 +119,7 @@ public class Publish {
 			rdjrxml.setIsReference(true);
 
 		List<AMResource> rs = jrConfig.get(PublishUtil.KEY_PUBLISH2JSS_DATA, new ArrayList<AMResource>());
-		updSelectedResources(monitor, rs, version);
+		updSelectedResources(monitor, rs, version, jd);
 		FileUtils.writeFile(file, JRXmlWriterHelper.writeReport(jrConfig, jd, version));
 		jrxml.setFile(file);
 
@@ -208,7 +209,7 @@ public class Publish {
 		return Status.OK_STATUS;
 	}
 
-	protected void updSelectedResources(IProgressMonitor monitor, List<AMResource> files, String version)
+	protected void updSelectedResources(IProgressMonitor monitor, List<AMResource> files, String version, JasperDesign jd)
 			throws IOException, Exception {
 		List<MJrxml> toSave = new ArrayList<>();
 		for (AMResource res : files) {
@@ -240,7 +241,7 @@ public class Publish {
 					popt.getDataset().setProperty(DataAdapterParameterContributorFactory.PROPERTY_DATA_ADAPTER_LOCATION,
 							"repo:" + dauri); //$NON-NLS-1$
 				}
-				if (popt.getPublishMethod() != null)
+				if (popt.getPublishMethod() != null) {
 					if (popt.getPublishMethod() == ResourcePublishMethod.REFERENCE) {
 						ResourceDescriptor rd = res.getValue();
 						ResourceDescriptor ref = new ResourceDescriptor();
@@ -255,6 +256,8 @@ public class Publish {
 						ref.setWsType(rd.getWsType());
 
 						res.setValue(ref);
+						if (res instanceof MResourceBundle)
+							jd.setResourceBundle(ref.getUriString());
 					} else if (popt.getPublishMethod() == ResourcePublishMethod.RESOURCE) {
 						if (popt.getReferencedResource() == null)
 							continue;
@@ -277,10 +280,18 @@ public class Publish {
 						ref.setWsType(rd.getWsType());
 
 						res.setValue(ref);
+
+						if (res instanceof MResourceBundle)
+							jd.setResourceBundle(ref.getUriString());
+					} else if (popt.getPublishMethod() == ResourcePublishMethod.LOCAL
+							&& res instanceof MResourceBundle) {
+						jd.setResourceBundle(res.getValue().getName());
 					} else if (popt.getPublishMethod() == ResourcePublishMethod.REWRITEEXPRESSION) {
 						;
 					} else if (res instanceof MJrxml)
 						toSave.add((MJrxml) res);
+
+				}
 			}
 		}
 		for (MJrxml mjrxml : toSave) {
