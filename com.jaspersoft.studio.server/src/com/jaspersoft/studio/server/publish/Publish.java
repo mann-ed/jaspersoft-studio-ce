@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.client.HttpResponseException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -209,8 +210,8 @@ public class Publish {
 		return Status.OK_STATUS;
 	}
 
-	protected void updSelectedResources(IProgressMonitor monitor, List<AMResource> files, String version, JasperDesign jd)
-			throws IOException, Exception {
+	protected void updSelectedResources(IProgressMonitor monitor, List<AMResource> files, String version,
+			JasperDesign jd) throws IOException, Exception {
 		List<MJrxml> toSave = new ArrayList<>();
 		for (AMResource res : files) {
 			PublishOptions popt = res.getPublishOptions();
@@ -257,7 +258,7 @@ public class Publish {
 
 						res.setValue(ref);
 						if (res instanceof MResourceBundle)
-							jd.setResourceBundle(ref.getUriString());
+							setupResourceBundle(jd, res.getValue().getUriString());
 					} else if (popt.getPublishMethod() == ResourcePublishMethod.RESOURCE) {
 						if (popt.getReferencedResource() == null)
 							continue;
@@ -282,15 +283,14 @@ public class Publish {
 						res.setValue(ref);
 
 						if (res instanceof MResourceBundle)
-							jd.setResourceBundle(ref.getUriString());
+							setupResourceBundle(jd, res.getValue().getUriString());
 					} else if (popt.getPublishMethod() == ResourcePublishMethod.LOCAL
 							&& res instanceof MResourceBundle) {
-						jd.setResourceBundle(res.getValue().getName());
+						setupResourceBundle(jd, res.getValue().getName());
 					} else if (popt.getPublishMethod() == ResourcePublishMethod.REWRITEEXPRESSION) {
 						;
 					} else if (res instanceof MJrxml)
 						toSave.add((MJrxml) res);
-
 				}
 			}
 		}
@@ -306,6 +306,15 @@ public class Publish {
 				}
 			}
 		}
+	}
+
+	private void setupResourceBundle(JasperDesign jd, String ruri) {
+		if (ruri.matches(".*_(.*).properties$")) {
+			int indx = ruri.lastIndexOf("_");
+			if (indx > -1)
+				ruri = ruri.substring(0, indx) + ".properties";
+		}
+		jd.setResourceBundle(FilenameUtils.separatorsToUnix(ruri));
 	}
 
 	private void createICProperties(JasperDesign jd, List<?> files) {
