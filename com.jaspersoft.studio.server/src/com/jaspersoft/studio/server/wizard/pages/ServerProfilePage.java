@@ -495,7 +495,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		lbl.setText("Use Protocol");
 
 		cUseProtocol = new Combo(cmp, SWT.READ_ONLY);
-		cUseProtocol.setItems("REST Only", "SOAP Only", "REST, if fails SOAP");
+		cUseProtocol.setItems("REST Only", "SOAP Only", "REST, if fails then SOAP");
 		tt = Messages.ServerProfilePage_29;
 		cUseProtocol.setToolTipText(tt);
 

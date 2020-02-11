@@ -800,8 +800,10 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 							vals.add(toRestString(obj));
 					} else
 						vals.add(toRestString(item));
-					rprm.setValues(vals);
-					list.add(rprm);
+					if (!vals.isEmpty()) {
+						rprm.setValues(vals);
+						list.add(rprm);
+					}
 				}
 				rer.setParameters(new ReportParameters(list));
 			}

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.client.HttpResponseException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -35,6 +36,7 @@ import com.jaspersoft.studio.server.model.MFolder;
 import com.jaspersoft.studio.server.model.MInputControl;
 import com.jaspersoft.studio.server.model.MJrxml;
 import com.jaspersoft.studio.server.model.MReportUnit;
+import com.jaspersoft.studio.server.model.MResourceBundle;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.model.server.ServerProfile;
 import com.jaspersoft.studio.server.protocol.Feature;
@@ -118,7 +120,7 @@ public class Publish {
 			rdjrxml.setIsReference(true);
 
 		List<AMResource> rs = jrConfig.get(PublishUtil.KEY_PUBLISH2JSS_DATA, new ArrayList<AMResource>());
-		updSelectedResources(monitor, rs, version);
+		updSelectedResources(monitor, rs, version, jd);
 		FileUtils.writeFile(file, JRXmlWriterHelper.writeReport(jrConfig, jd, version));
 		jrxml.setFile(file);
 
@@ -208,8 +210,8 @@ public class Publish {
 		return Status.OK_STATUS;
 	}
 
-	protected void updSelectedResources(IProgressMonitor monitor, List<AMResource> files, String version)
-			throws IOException, Exception {
+	protected void updSelectedResources(IProgressMonitor monitor, List<AMResource> files, String version,
+			JasperDesign jd) throws IOException, Exception {
 		List<MJrxml> toSave = new ArrayList<>();
 		for (AMResource res : files) {
 			PublishOptions popt = res.getPublishOptions();
@@ -240,7 +242,7 @@ public class Publish {
 					popt.getDataset().setProperty(DataAdapterParameterContributorFactory.PROPERTY_DATA_ADAPTER_LOCATION,
 							"repo:" + dauri); //$NON-NLS-1$
 				}
-				if (popt.getPublishMethod() != null)
+				if (popt.getPublishMethod() != null) {
 					if (popt.getPublishMethod() == ResourcePublishMethod.REFERENCE) {
 						ResourceDescriptor rd = res.getValue();
 						ResourceDescriptor ref = new ResourceDescriptor();
@@ -255,6 +257,8 @@ public class Publish {
 						ref.setWsType(rd.getWsType());
 
 						res.setValue(ref);
+						if (res instanceof MResourceBundle)
+							setupResourceBundle(jd, res.getValue().getUriString());
 					} else if (popt.getPublishMethod() == ResourcePublishMethod.RESOURCE) {
 						if (popt.getReferencedResource() == null)
 							continue;
@@ -277,10 +281,17 @@ public class Publish {
 						ref.setWsType(rd.getWsType());
 
 						res.setValue(ref);
+
+						if (res instanceof MResourceBundle)
+							setupResourceBundle(jd, res.getValue().getUriString());
+					} else if (popt.getPublishMethod() == ResourcePublishMethod.LOCAL
+							&& res instanceof MResourceBundle) {
+						setupResourceBundle(jd, res.getValue().getName());
 					} else if (popt.getPublishMethod() == ResourcePublishMethod.REWRITEEXPRESSION) {
 						;
 					} else if (res instanceof MJrxml)
 						toSave.add((MJrxml) res);
+				}
 			}
 		}
 		for (MJrxml mjrxml : toSave) {
@@ -295,6 +306,16 @@ public class Publish {
 				}
 			}
 		}
+	}
+
+	private void setupResourceBundle(JasperDesign jd, String ruri) {
+		if (ruri.matches(
+				"^(?i)(?<lang>[a-z]{2,8})(?:_(?<script>[a-z]{4})_)?(?:_(?<country>(?:[a-z]{2})|(?:[0-9]{3})))?(?:_(?<variant>(?:(?:[0-9][0-9a-z]{3})|(?:[0-9a-z]{5,8}))(?:(?:_|-)(?:(?:[0-9][0-9a-z]{3})|(?:[0-9a-z]{5,8})))*))?.properties$")) {
+			int indx = ruri.lastIndexOf("_");
+			if (indx > -1)
+				ruri = ruri.substring(0, indx);
+		}
+		jd.setResourceBundle(FilenameUtils.separatorsToUnix(ruri).replaceAll(".properties$", ""));
 	}
 
 	private void createICProperties(JasperDesign jd, List<?> files) {
