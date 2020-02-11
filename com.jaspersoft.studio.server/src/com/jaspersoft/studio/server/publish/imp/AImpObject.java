@@ -146,7 +146,7 @@ public abstract class AImpObject {
 			rd.setLabel(rname);
 
 			rd.setParentFolder(runit.getUriString() + "_files");
-			rd.setUriString(rd.getParentFolder() + "/" + rd.getName());
+			rd.setUriString(rd.getParentFolder() + "/" + idname);
 		}
 
 		AMResource res = ResourceFactory.getResource(mrunit, rd, -1);

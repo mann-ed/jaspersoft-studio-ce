@@ -309,12 +309,13 @@ public class Publish {
 	}
 
 	private void setupResourceBundle(JasperDesign jd, String ruri) {
-		if (ruri.matches(".*_(.*).properties$")) {
+		if (ruri.matches(
+				"^(?i)(?<lang>[a-z]{2,8})(?:_(?<script>[a-z]{4})_)?(?:_(?<country>(?:[a-z]{2})|(?:[0-9]{3})))?(?:_(?<variant>(?:(?:[0-9][0-9a-z]{3})|(?:[0-9a-z]{5,8}))(?:(?:_|-)(?:(?:[0-9][0-9a-z]{3})|(?:[0-9a-z]{5,8})))*))?.properties$")) {
 			int indx = ruri.lastIndexOf("_");
 			if (indx > -1)
-				ruri = ruri.substring(0, indx) + ".properties";
+				ruri = ruri.substring(0, indx);
 		}
-		jd.setResourceBundle(FilenameUtils.separatorsToUnix(ruri));
+		jd.setResourceBundle(FilenameUtils.separatorsToUnix(ruri).replaceAll(".properties$", ""));
 	}
 
 	private void createICProperties(JasperDesign jd, List<?> files) {
