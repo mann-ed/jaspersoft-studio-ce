@@ -23,6 +23,7 @@ import com.jaspersoft.studio.editor.expression.ExpressionContext;
 import com.jaspersoft.studio.editor.expression.IExpressionContextSetter;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.swt.widgets.WTextExpression;
+import com.jaspersoft.studio.utils.UIUtil;
 
 /**
  * This generic dialog can be used to create or modify an element that has a name and a {@link JRDesignExpression} expression value
@@ -91,7 +92,7 @@ public class ElementWithValueExpressionDialog extends FormDialog implements IExp
 	@Override
 	protected void createFormContent(IManagedForm mform) {
 		Composite container = mform.getForm().getBody();
-		container.setBackground(container.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		container.setBackground(UIUtil.getColor(UIUtil.FORMDIALOG_CONTAINER_BACKGROUND));
 
 		GridLayout containerLayout = new GridLayout(2, false);
 		containerLayout.marginHeight=10;

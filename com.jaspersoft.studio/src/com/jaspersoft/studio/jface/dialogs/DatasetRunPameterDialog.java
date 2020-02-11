@@ -6,11 +6,6 @@ package com.jaspersoft.studio.jface.dialogs;
 
 import java.text.MessageFormat;
 
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.design.JRDesignDataset;
-import net.sf.jasperreports.engine.design.JRDesignDatasetParameter;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,6 +24,12 @@ import com.jaspersoft.studio.editor.expression.ExpressionContext;
 import com.jaspersoft.studio.editor.expression.IExpressionContextSetter;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.swt.widgets.WTextExpression;
+import com.jaspersoft.studio.utils.UIUtil;
+
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.design.JRDesignDataset;
+import net.sf.jasperreports.engine.design.JRDesignDatasetParameter;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 /**
  * This dialog allows the user to create / edit a dataset parameter. 
@@ -57,7 +58,7 @@ public class DatasetRunPameterDialog extends FormDialog implements IExpressionCo
 	@Override
 	protected void createFormContent(IManagedForm mform) {
 		Composite container = mform.getForm().getBody();
-		container.setBackground(container.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));	
+		container.setBackground(UIUtil.getColor(UIUtil.FORMDIALOG_CONTAINER_BACKGROUND));	
 		GridLayout containerLayout = new GridLayout(2, false);
 		containerLayout.marginHeight=10;
 		containerLayout.verticalSpacing=10;
