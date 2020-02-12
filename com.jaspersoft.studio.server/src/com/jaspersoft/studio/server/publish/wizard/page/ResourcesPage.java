@@ -53,6 +53,7 @@ import com.jaspersoft.studio.server.publish.action.ReferenceResourceAction;
 import com.jaspersoft.studio.server.publish.action.ResourceExpressionAction;
 import com.jaspersoft.studio.server.publish.action.ResourceToFolderAction;
 import com.jaspersoft.studio.server.publish.action.SelectLocalAction;
+import com.jaspersoft.studio.server.publish.action.SetSelectedResourcesAction;
 import com.jaspersoft.studio.swt.widgets.table.ListContentProvider;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.wizards.JSSHelpWizardPage;
@@ -95,7 +96,7 @@ public class ResourcesPage extends JSSHelpWizardPage {
 		composite.setLayout(new GridLayout());
 
 		tableViewer = new TableViewer(composite,
-				SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		tableViewer.setContentProvider(new ListContentProvider());
 		ColumnViewerToolTipSupport.enableFor(tableViewer);
 		Table table = (Table) tableViewer.getControl();
@@ -228,6 +229,9 @@ public class ResourcesPage extends JSSHelpWizardPage {
 		sresource = new ReferenceResourceAction(tableViewer);
 		sres = new ResourceToFolderAction(tableViewer);
 		slocal = new SelectLocalAction(tableViewer);
+		setOverwriteResource = new SetSelectedResourcesAction(tableViewer, OverwriteEnum.OVERWRITE);
+		setIgnoreResource = new SetSelectedResourcesAction(tableViewer, OverwriteEnum.IGNORE);
+		setExprResource = new SetSelectedResourcesAction(tableViewer, OverwriteEnum.ONLY_EXPRESSION);
 
 		attachCellEditors(tableViewer, table);
 
@@ -239,17 +243,26 @@ public class ResourcesPage extends JSSHelpWizardPage {
 			public void menuAboutToShow(IMenuManager menu) {
 				StructuredSelection s = (StructuredSelection) tableViewer.getSelection();
 				if (s != null) {
-					AMResource mres = (AMResource) s.getFirstElement();
-					if (mres != null && mres.getPublishOptions().getOverwrite(OverwriteEnum.OVERWRITE)
-							.equals(OverwriteEnum.OVERWRITE)) {
-						if (sresource.calculateEnabled(mres))
-							menu.add(sresource);
-						if (sres.calculateEnabled(mres))
-							menu.add(sres);
-						if (slocal.calculateEnabled(mres))
-							menu.add(slocal);
-						if (rexp.calculateEnabled(mres))
-							menu.add(rexp);
+					MenuManager subMenu = new MenuManager("Set Selected To");
+
+					subMenu.add(setOverwriteResource);
+					subMenu.add(setIgnoreResource);
+					subMenu.add(setExprResource);
+					menu.add(subMenu);
+
+					if (s.size() == 1) {
+						AMResource mres = (AMResource) s.getFirstElement();
+						if (mres != null && mres.getPublishOptions().getOverwrite(OverwriteEnum.OVERWRITE)
+								.equals(OverwriteEnum.OVERWRITE)) {
+							if (sresource.calculateEnabled(mres))
+								menu.add(sresource);
+							if (sres.calculateEnabled(mres))
+								menu.add(sres);
+							if (slocal.calculateEnabled(mres))
+								menu.add(slocal);
+							if (rexp.calculateEnabled(mres))
+								menu.add(rexp);
+						}
 					}
 				}
 			}
@@ -261,6 +274,9 @@ public class ResourcesPage extends JSSHelpWizardPage {
 		// fillData(false);
 	}
 
+	private SetSelectedResourcesAction setOverwriteResource;
+	private SetSelectedResourcesAction setIgnoreResource;
+	private SetSelectedResourcesAction setExprResource;
 	private ReferenceResourceAction sresource;
 	private ResourceToFolderAction sres;
 	private SelectLocalAction slocal;
@@ -417,7 +433,7 @@ public class ResourcesPage extends JSSHelpWizardPage {
 						r.getPublishOptions().setOverwrite(OverwriteEnum.IGNORE);
 					else if (!r.getValue().getIsNew())
 						r.getPublishOptions().setOverwrite(OverwriteEnum.IGNORE);
-					
+
 				}
 				// let's look and make a diff
 			}

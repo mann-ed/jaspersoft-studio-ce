@@ -41,7 +41,6 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.ui.validator.IDStringValidator;
-import net.sf.jasperreports.eclipse.util.Misc;
 
 public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 	private JasperReportsConfiguration jrConfig;
