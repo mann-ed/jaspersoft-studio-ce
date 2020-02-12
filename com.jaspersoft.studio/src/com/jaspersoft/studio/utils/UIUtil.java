@@ -70,6 +70,11 @@ import net.sf.jasperreports.eclipse.util.Misc;
 public class UIUtil {
 	/** ID for the "Properties View" */
 	public static final String PROPERTIES_VIEW_ID = "org.eclipse.ui.views.PropertySheet"; //$NON-NLS-1$
+	
+	// Color-related constants
+	public static final String COLOR_OUTLINE_DISABLED = "org.eclipse.ui.workbench.ACTIVE_TAB_UNSELECTED_TEXT_COLOR";
+	public static final String COLOR_TEXT = "org.eclipse.ui.editors.foregroundColor";
+	public static final String FORMDIALOG_CONTAINER_BACKGROUND = "org.eclipse.ui.workbench.INFORMATION_BACKGROUND";
 
 	private UIUtil() {
 	}
@@ -649,12 +654,8 @@ public class UIUtil {
 		}
 	}
 
-	public static final String COLOR_OUTLINE_DISABLED = "org.eclipse.ui.workbench.ACTIVE_TAB_UNSELECTED_TEXT_COLOR";
-	public static final String COLOR_TEXT = "org.eclipse.ui.editors.foregroundColor";
-
 	public static Color getColor(String key) {
 		ITheme currentTheme = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme(); 
-
 		return currentTheme.getColorRegistry().get(key);
 	}
 
