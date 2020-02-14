@@ -469,6 +469,7 @@ public class Messages extends NLS {
 	public static String ResourcePageContent_UpdateDate;
 	public static String ResourcesPage_0;
 	public static String ResourcesPage_1;
+	public static String ResourcesPage_10;
 	public static String ResourcesPage_2;
 	public static String ResourcesPage_3;
 	public static String ResourcesPage_4;

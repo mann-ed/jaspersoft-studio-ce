@@ -167,7 +167,7 @@ public class ResourcesPage extends JSSHelpWizardPage {
 				PublishOptions popt = fr.getPublishOptions();
 				OverwriteEnum ovw = popt.getOverwrite(OverwriteEnum.IGNORE);
 				if (ovw.equals(OverwriteEnum.IGNORE))
-					return "";
+					return ""; //$NON-NLS-1$
 				if (popt.getPublishMethod() == ResourcePublishMethod.REWRITEEXPRESSION)
 					return popt.getRepoExpression();
 				return Misc.nvl(popt.getExpression());
@@ -210,9 +210,9 @@ public class ResourcesPage extends JSSHelpWizardPage {
 					PublishOptions popt = mres.getPublishOptions();
 					OverwriteEnum ovw = popt.getOverwrite(OverwriteEnum.IGNORE);
 					if (ovw.equals(OverwriteEnum.IGNORE))
-						return "";
+						return ""; //$NON-NLS-1$
 					if (ovw.equals(OverwriteEnum.ONLY_EXPRESSION))
-						return "";
+						return ""; //$NON-NLS-1$
 
 					if (popt.getPublishMethod() == ResourcePublishMethod.RESOURCE)
 						return sres.getText();
@@ -243,7 +243,7 @@ public class ResourcesPage extends JSSHelpWizardPage {
 			public void menuAboutToShow(IMenuManager menu) {
 				StructuredSelection s = (StructuredSelection) tableViewer.getSelection();
 				if (s != null) {
-					MenuManager subMenu = new MenuManager("Set Selected To");
+					MenuManager subMenu = new MenuManager(Messages.ResourcesPage_10);
 
 					subMenu.add(setOverwriteResource);
 					subMenu.add(setIgnoreResource);
@@ -400,12 +400,12 @@ public class ResourcesPage extends JSSHelpWizardPage {
 
 	public void fillData(boolean isNew) {
 		List<AMResource> res = PublishUtil.getResources(pres, new NullProgressMonitor(), jConfig);
-		String b = jConfig.getProperty(JRSPreferencesPage.PUBLISH_REPORT_OVERRIDEBYDEFAULT, "true");
+		String b = jConfig.getProperty(JRSPreferencesPage.PUBLISH_REPORT_OVERRIDEBYDEFAULT, "true"); //$NON-NLS-1$
 		if (isNew)
 			for (AMResource r : res) {
 				if (r instanceof AFileResource)
 					continue;
-				if (b.equals("overwrite") || b.equals("true"))
+				if (b.equals("overwrite") || b.equals("true")) //$NON-NLS-1$ //$NON-NLS-2$
 					r.getPublishOptions().setOverwrite(OverwriteEnum.OVERWRITE);
 				else
 					r.getPublishOptions().setOverwrite(OverwriteEnum.IGNORE);
@@ -427,9 +427,9 @@ public class ResourcesPage extends JSSHelpWizardPage {
 					}
 				}
 				for (AMResource r : res) {
-					if (b.equals("overwrite"))
+					if (b.equals("overwrite")) //$NON-NLS-1$
 						r.getPublishOptions().setOverwrite(OverwriteEnum.OVERWRITE);
-					else if (b.equals("ignore"))
+					else if (b.equals("ignore")) //$NON-NLS-1$
 						r.getPublishOptions().setOverwrite(OverwriteEnum.IGNORE);
 					else if (!r.getValue().getIsNew())
 						r.getPublishOptions().setOverwrite(OverwriteEnum.IGNORE);

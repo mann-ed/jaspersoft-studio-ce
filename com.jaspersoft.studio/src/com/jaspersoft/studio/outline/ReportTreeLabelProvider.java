@@ -134,7 +134,7 @@ public class ReportTreeLabelProvider extends StyledCellLabelProvider implements 
 			Object element = cell.getElement();
 			StyledString st = getStyledText(element);
 			cell.setText(st.getString());
-			cell.setStyleRanges(getStyledText(element).getStyleRanges());
+			cell.setStyleRanges(st.getStyleRanges());
 			cell.setImage(getImage(element));
 			cell.setBackground(getBackground(element));
 			cell.setForeground(getForeground(element));

@@ -10,6 +10,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 
+import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.publish.OverwriteEnum;
 
@@ -19,9 +20,17 @@ public class SetSelectedResourcesAction extends Action {
 
 	public SetSelectedResourcesAction(TableViewer tableViewer, OverwriteEnum value) {
 		super();
-		setText(value.name());
+		setText(getLabel(value));
 		this.tableViewer = tableViewer;
 		this.value = value;
+	}
+
+	private String getLabel(OverwriteEnum value) {
+		if (value.equals(OverwriteEnum.OVERWRITE))
+			return Messages.ResourcesPage_3;
+		if (value.equals(OverwriteEnum.IGNORE))
+			return Messages.ResourcesPage_5;
+		return Messages.ResourcesPage_6;
 	}
 
 	@Override
