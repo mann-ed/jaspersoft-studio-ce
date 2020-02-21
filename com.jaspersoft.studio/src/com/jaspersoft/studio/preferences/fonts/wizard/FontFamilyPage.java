@@ -11,7 +11,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -119,16 +118,16 @@ public class FontFamilyPage extends JSSHelpWizardPage {
 		new Label(gr, SWT.NONE).setText(Messages.FontFamilyPage_pdfEncodingLabel);
 		pdfenc = new Combo(gr, SWT.SINGLE | SWT.BORDER);
 		pdfenc.setItems(ModelUtils.getPDFEncodings());
-		pdfenc.addSelectionListener(new SelectionListener() {
-
+		pdfenc.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String pdfencod = ModelUtils.getPDFEncoding2key(pdfenc.getItem(pdfenc.getSelectionIndex()));
-				fontFamily.setPdfEncoding(pdfencod.isEmpty() ? null : pdfencod);
+				int index = pdfenc.getSelectionIndex();
+				if (index > -1 && index < pdfenc.getItemCount()) {
+					String pdfencod = ModelUtils.getPDFEncoding2key(pdfenc.getItem(index));
+					fontFamily.setPdfEncoding(pdfencod.isEmpty() ? null : pdfencod);
+				}
 			}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
 		});
 		pdfenc.addModifyListener(new ModifyListener() {
 
@@ -145,15 +144,12 @@ public class FontFamilyPage extends JSSHelpWizardPage {
 
 		embedepdf = new Button(gr, SWT.CHECK);
 		embedepdf.setText(Messages.FontFamilyPage_pdfEmbeddedLabel);
-		embedepdf.addSelectionListener(new SelectionListener() {
-
+		embedepdf.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fontFamily.setPdfEmbedded(embedepdf.getSelection());
 			}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
 		});
 		fillWidgets();
 	}

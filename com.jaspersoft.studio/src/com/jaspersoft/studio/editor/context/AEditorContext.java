@@ -110,8 +110,8 @@ public class AEditorContext {
 		Set<String> rset = new HashSet<>();
 		if (f.isLinked())
 			add(list, rset, f.getRawLocation().toFile().getParentFile().getAbsolutePath());
-		if (!f.getParent().isVirtual())
-			add(list, rset, f.getParent().getLocation().toFile().getAbsolutePath());
+//		if (!f.getParent().isVirtual())
+//			add(list, rset, f.getParent().getLocation().toFile().getAbsolutePath());
 		add(list, rset, f.getProject().getLocation().toFile().getAbsolutePath());
 	}
 
