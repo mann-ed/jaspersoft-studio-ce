@@ -8,8 +8,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+
+import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
+
 import net.sf.jasperreports.data.DataAdapter;
 import net.sf.jasperreports.data.DataAdapterServiceUtil;
+import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRPropertiesUtil;
 import net.sf.jasperreports.engine.ParameterContributor;
@@ -21,7 +26,7 @@ import net.sf.jasperreports.repo.RepositoryUtil;
 /**
  * @author Teodor Danciu (teodord@users.sourceforge.net)
  * @version $Id: DataAdapterParameterContributorFactory.java 4734 2011-10-21
- *          12:13:21Z teodord $
+ * 12:13:21Z teodord $
  */
 public final class DataAdapterParameterContributorFactory implements ParameterContributorFactory {
 
@@ -52,6 +57,22 @@ public final class DataAdapterParameterContributorFactory implements ParameterCo
 			String dataAdapterUri = JRPropertiesUtil.getInstance(context.getJasperReportsContext())
 					.getProperty(context.getDataset(), "net.sf.jasperreports.data.adapter");
 			if (dataAdapterUri != null) {
+				if (dataAdapterUri.startsWith("../") || dataAdapterUri.startsWith("./")) {
+					Object obj = ((JasperReportsConfiguration) context.getJasperReportsContext())
+							.get(FileUtils.KEY_FILE);
+					if (obj instanceof IFile) {
+						IFile f = (IFile) obj;
+						String pref = "";
+						if (dataAdapterUri.startsWith("../") && f.getParent() != null
+								&& f.getParent().getParent() != null) {
+							pref = f.getParent().getParent().getProjectRelativePath().toString();
+							dataAdapterUri = pref + dataAdapterUri.substring(2);
+						} else if (dataAdapterUri.startsWith("./") && f.getParent() != null) {
+							pref = f.getParent().getProjectRelativePath().toString();
+							dataAdapterUri = pref + dataAdapterUri.substring(1);
+						}
+					}
+				}
 				DataAdapterResource dataAdapterResource = RepositoryUtil.getInstance(context.getJasperReportsContext())
 						.getResourceFromLocation(dataAdapterUri, DataAdapterResource.class);
 				dataAdapter = dataAdapterResource.getDataAdapter();
