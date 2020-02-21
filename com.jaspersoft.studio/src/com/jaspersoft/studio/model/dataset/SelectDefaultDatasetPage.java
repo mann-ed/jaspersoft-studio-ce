@@ -21,10 +21,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog;
 
@@ -406,7 +406,9 @@ public class SelectDefaultDatasetPage extends JSSHelpWizardPage {
 	 * Popup the dialog to select the data adapter from the filesystem.
 	 */
 	private void selectDataAdapterFromFilesystem() {
-		FileDialog fd = new FileDialog(Display.getDefault().getActiveShell());
+		// Creating temporary shell to address JIRA #JSS-2735 and Eclipse Bug#558015
+		Shell tmpShell = new Shell(UIUtils.getDisplay());
+		FileDialog fd = new FileDialog(tmpShell);
 		if (path == null || !new File(path).exists()) {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			fd.setFilterPath(root.getLocation().toOSString());
@@ -418,6 +420,7 @@ public class SelectDefaultDatasetPage extends JSSHelpWizardPage {
 		if (selection != null) {
 			pathText.setText(selection);
 		}
+		tmpShell.dispose();
 	}
 
 	public String getDataAdapterPath() {
