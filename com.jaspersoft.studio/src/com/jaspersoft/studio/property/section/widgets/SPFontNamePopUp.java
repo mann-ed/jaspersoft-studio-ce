@@ -81,47 +81,53 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
 	}
 	
 	/**
-	 * Resize the passed image keeping its aspect ratio. If the image has already the 
-	 * the correct width or height the original one is returned
+	 * Resize the passed image keeping its aspect ratio. If the image has
+	 * already the the correct width or height the original one is returned
 	 * 
 	 * @param img the source image, must be not null
-	 * @param newWidth the new width, can be different if the new height keeping the ratio is bigger than the passed newHeight
-	 * @param newHeight the new height, can be different if the new width keeping the ratio is bigger than the passed newWidth
+	 * @param newWidth the new width, can be different if the new height keeping
+	 * the ratio is bigger than the passed newHeight
+	 * @param newHeight the new height, can be different if the new width
+	 * keeping the ratio is bigger than the passed newWidth
 	 * @return
 	 */
 	private static BufferedImage resize(BufferedImage img, int newWidth, int newHeight) {
-		
+
 		int oldWidth = img.getWidth();
 		int oldHeight = img.getHeight();
-		
-		if (newWidth == oldWidth || newHeight == oldHeight) return img;
 
-    int scaledHeight = newHeight;
-    int scaledWidth = (int)((float)oldWidth*scaledHeight)/oldHeight;
-    if (scaledWidth > newWidth){
-    	scaledWidth = newWidth;
-    	scaledHeight = Math.max((int)((float)oldHeight*scaledWidth)/oldWidth, 1);
-    } 
-    
-    /*BufferedImage after = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-    AffineTransform at = new AffineTransform();
-    at.scale((float)scaledWidth / oldWidth, (float)scaledHeight / oldHeight);
-    AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
-    after = scaleOp.filter(img, after);*/
+		if (newWidth == oldWidth || newHeight == oldHeight){
+			return img;
+		}
 
-    
-    java.awt.Image tmp = img.getScaledInstance(scaledWidth, scaledHeight, BufferedImage.SCALE_AREA_AVERAGING);
-    BufferedImage dimg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
-    
-    int yOffset = (newHeight - scaledHeight)/2;
-    int xOffset = (newWidth - scaledWidth)/2;
-    Graphics2D g2d = dimg.createGraphics();
-    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-    g2d.drawImage(tmp, xOffset, yOffset, null);
-    g2d.dispose();
+		int scaledHeight = newHeight;
+		int scaledWidth =  Math.max((int) ((float) oldWidth * scaledHeight) / oldHeight, 1);
+		if (scaledWidth > newWidth) {
+			scaledWidth = newWidth;
+			scaledHeight = Math.max((int) ((float) oldHeight * scaledWidth) / oldWidth, 1);
+		}
 
-    return dimg;
-  }  
+		/*
+		 * BufferedImage after = new BufferedImage(scaledWidth, scaledHeight,
+		 * BufferedImage.TYPE_INT_ARGB); AffineTransform at = new
+		 * AffineTransform(); at.scale((float)scaledWidth / oldWidth,
+		 * (float)scaledHeight / oldHeight); AffineTransformOp scaleOp = new
+		 * AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC); after =
+		 * scaleOp.filter(img, after);
+		 */
+
+		java.awt.Image tmp = img.getScaledInstance(scaledWidth, scaledHeight, BufferedImage.SCALE_AREA_AVERAGING);
+		BufferedImage dimg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+
+		int yOffset = (newHeight - scaledHeight) / 2;
+		int xOffset = (newWidth - scaledWidth) / 2;
+		Graphics2D g2d = dimg.createGraphics();
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		g2d.drawImage(tmp, xOffset, yOffset, null);
+		g2d.dispose();
+
+		return dimg;
+	}
 
 	/**
 	 * Create the font image preview
