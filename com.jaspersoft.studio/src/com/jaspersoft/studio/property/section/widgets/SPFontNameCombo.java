@@ -28,6 +28,7 @@ import com.jaspersoft.studio.preferences.fonts.utils.FontUtils;
 import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.base.JRBaseFont;
 
 /**
@@ -127,7 +128,7 @@ public class SPFontNameCombo<T extends IPropertyDescriptor> extends ASPropertyWi
 			if (elementValue != null){
 				combo.setForeground(ColorConstants.black);
 			} else {
-				combo.setForeground(ColorConstants.gray);
+				combo.setForeground(UIUtils.INHERITED_COLOR);
 			}
 		}
 	}

@@ -28,6 +28,8 @@ import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.utils.ImageUtils;
 import com.jaspersoft.studio.utils.UIUtil;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+
 public class SPToolBarEnum<T extends IPropertyDescriptor & IEnumDescriptors> extends ASPropertyWidget<T> {
 	
 	private ToolItem[] toolItems;
@@ -136,7 +138,7 @@ public class SPToolBarEnum<T extends IPropertyDescriptor & IEnumDescriptors> ext
 				currentItem.setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
 				if (getLabel() != null) {
 					getLabel().setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
-					getLabel().setForeground(ColorConstants.gray);
+					getLabel().setForeground(UIUtils.INHERITED_COLOR);
 				}
 			} else {
 				currentItem.setToolTipText(pDescriptor.getDescription());

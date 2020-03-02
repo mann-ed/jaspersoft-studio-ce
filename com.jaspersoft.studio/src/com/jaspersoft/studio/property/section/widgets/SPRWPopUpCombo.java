@@ -6,8 +6,6 @@ package com.jaspersoft.studio.property.section.widgets;
 
 import java.util.List;
 
-import net.sf.jasperreports.engine.type.LineStyleEnum;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -20,6 +18,9 @@ import com.jaspersoft.studio.property.combomenu.ComboItemAction;
 import com.jaspersoft.studio.property.combomenu.ComboMenuViewer;
 import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
 import com.jaspersoft.studio.property.section.AbstractSection;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.engine.type.LineStyleEnum;
 
 /**
  * The widget for a popup combo box
@@ -82,11 +83,11 @@ public class SPRWPopUpCombo extends ASPropertyWidget<NamedEnumPropertyDescriptor
 	public void setData(APropertyNode pnode, Object resolvedValue, Object elementValue) {
 		setData(pnode, resolvedValue);
 		if (elementValue == null) {
-			combo.setTextForeground(ColorConstants.gray);
+			combo.setTextForeground(UIUtils.INHERITED_COLOR);
 			combo.setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
 			if (getLabel() != null) {
 				getLabel().setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
-				getLabel().setForeground(ColorConstants.gray);
+				getLabel().setForeground(UIUtils.INHERITED_COLOR);
 			}
 		} else {
 			combo.setTextForeground(ColorConstants.black);

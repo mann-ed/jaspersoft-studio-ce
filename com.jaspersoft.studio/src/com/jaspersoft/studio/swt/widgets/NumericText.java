@@ -33,6 +33,7 @@ import org.mihalis.opal.utils.StringUtil;
 import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.ValidatedDecimalFormat;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.StringUtils;
 
 /**
@@ -282,7 +283,7 @@ public class NumericText extends Text {
 		if (isInherited != value){
 			if (value){
 				currentColor = getForeground();
-				super.setForeground(ColorConstants.gray);
+				super.setForeground(UIUtils.INHERITED_COLOR);
 			} else {
 				super.setForeground(currentColor);
 			}

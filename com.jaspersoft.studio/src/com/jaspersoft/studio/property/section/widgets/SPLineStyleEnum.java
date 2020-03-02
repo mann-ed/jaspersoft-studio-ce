@@ -7,6 +7,7 @@ package com.jaspersoft.studio.property.section.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.base.JRBasePen;
 import net.sf.jasperreports.engine.type.LineStyleEnum;
 
@@ -129,7 +130,7 @@ public class SPLineStyleEnum {
 	
 	protected void setInhterited(boolean isInherited) {
 		if (isInherited) {
-			combo.setTextForeground(ColorConstants.gray);
+			combo.setTextForeground(UIUtils.INHERITED_COLOR);
 		} else {
 			combo.setTextForeground(ColorConstants.black);
 		}

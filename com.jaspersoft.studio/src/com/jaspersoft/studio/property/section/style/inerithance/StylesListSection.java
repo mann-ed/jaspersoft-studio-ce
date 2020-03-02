@@ -242,7 +242,7 @@ public class StylesListSection extends AbstractSection {
 	/**
 	 * Color used from the label as background
 	 */
-	private static final Color labelBackgroundColor = SWTResourceManager.getColor(240, 240, 240);;
+	private static final Color labelBackgroundColor = SWTResourceManager.getColor(240, 240, 240);
 
 	/**
 	 * map cache of the colors, they are disposed when the section is disposed

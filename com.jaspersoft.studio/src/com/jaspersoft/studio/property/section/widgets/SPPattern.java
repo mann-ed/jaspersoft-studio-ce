@@ -22,6 +22,8 @@ import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.property.descriptor.pattern.dialog.PatternEditor;
 import com.jaspersoft.studio.property.section.AbstractSection;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+
 public class SPPattern extends SPText<IPropertyDescriptor> {
 
 	private Button btn;
@@ -81,11 +83,11 @@ public class SPPattern extends SPText<IPropertyDescriptor> {
 					getLabel().setForeground(ColorConstants.black);
 				}
 			} else {
-				ftext.setForeground(ColorConstants.gray);
+				ftext.setForeground(UIUtils.INHERITED_COLOR);
 				ftext.setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
 				if (getLabel() != null) {
 					getLabel().setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
-					getLabel().setForeground(ColorConstants.gray);
+					getLabel().setForeground(UIUtils.INHERITED_COLOR);
 				}
 			}
 		}

@@ -421,7 +421,7 @@ public class SPFont extends ASPropertyWidget<IPropertyDescriptor> {
 			if (fontValue.getOwnFontName() != null){
 				fontName.setForeground(ColorConstants.black);
 			} else {
-				fontName.setForeground(ColorConstants.gray);
+				fontName.setForeground(UIUtils.INHERITED_COLOR);
 			}
 
 			setFontSizeNumber(fontValue.getFontsize(), fontValue.getOwnFontsize());

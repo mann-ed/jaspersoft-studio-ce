@@ -38,6 +38,8 @@ import org.mihalis.opal.utils.StringUtil;
 import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.ValidatedDecimalFormat;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+
 /**
  * Extension of an swt widget to handle only numeric values. It uses different widgets in 
  * windows and other OS. In windows it is used internally a CCombo, this because there is an 
@@ -319,7 +321,7 @@ public class NumericCombo extends Composite {
 		if (isInherited != value){
 			if (value){
 				currentColor = getForeground();
-				setComboForeground(ColorConstants.gray);
+				setComboForeground(UIUtils.INHERITED_COLOR);
 			} else {
 				setComboForeground(currentColor);
 			}

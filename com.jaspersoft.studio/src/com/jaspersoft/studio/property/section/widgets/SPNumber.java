@@ -27,6 +27,8 @@ import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.ValidatedDecimalFormat;
 import com.jaspersoft.studio.utils.inputhistory.InputHistoryCache;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+
 public class SPNumber extends AHistorySPropertyWidget<IPropertyDescriptor> {
 	
 	/**
@@ -145,11 +147,11 @@ public class SPNumber extends AHistorySPropertyWidget<IPropertyDescriptor> {
 		Number ownNumber = (Number)elementValue;
 		setDataNumber(resolvedNumber, ownNumber);
 		if (elementValue == null) {
-			ftext.setForeground(ColorConstants.gray);
+			ftext.setForeground(UIUtils.INHERITED_COLOR);
 			ftext.setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
 			if (getLabel() != null) {
 				getLabel().setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
-				getLabel().setForeground(ColorConstants.gray);
+				getLabel().setForeground(UIUtils.INHERITED_COLOR);
 			}
 		} else {
 			ftext.setForeground(ColorConstants.black);

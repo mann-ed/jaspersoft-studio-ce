@@ -4,7 +4,6 @@
  ******************************************************************************/
 package com.jaspersoft.studio.property.section.widgets;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -18,6 +17,8 @@ import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.utils.UIUtil;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 public class SPBoolean<T extends IPropertyDescriptor> extends ASPropertyWidget<T> {
 	
@@ -47,7 +48,7 @@ public class SPBoolean<T extends IPropertyDescriptor> extends ASPropertyWidget<T
 	@Override
 	public void setData(APropertyNode pnode, Object resolvedValue, Object elementValue) {
 		if (elementValue == null) {
-			cmb3Bool.setForeground(ColorConstants.gray);
+			cmb3Bool.setForeground(UIUtils.INHERITED_COLOR);
 			cmb3Bool.setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
 		} else {
 			cmb3Bool.setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));

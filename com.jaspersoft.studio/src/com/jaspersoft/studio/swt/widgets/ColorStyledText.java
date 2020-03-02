@@ -31,6 +31,8 @@ import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptor.color.ColorLabelProvider;
 import com.jaspersoft.studio.utils.AlfaRGB;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+
 /**
  * This class is used to paint a "Color TextBox", a label where a color is expressed in hex value, with a representation
  * of that color on the left and a button to select a color from a SO dependent window. The color can be changed also
@@ -373,7 +375,7 @@ public class ColorStyledText extends Composite {
 	
 	public void setInhterited(boolean isInherithed){
 		if (isInherithed && !textArea.isDisposed()){
-			textArea.setForeground(ColorConstants.gray);
+			textArea.setForeground(UIUtils.INHERITED_COLOR);
 		} else {
 			textArea.setForeground(ColorConstants.black);
 		}

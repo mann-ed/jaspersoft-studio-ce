@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
-import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -75,7 +74,7 @@ public class UIUtil {
 	public static final String COLOR_OUTLINE_DISABLED = "org.eclipse.ui.workbench.ACTIVE_TAB_UNSELECTED_TEXT_COLOR";
 	public static final String COLOR_TEXT = "org.eclipse.ui.editors.foregroundColor";
 	public static final String FORMDIALOG_CONTAINER_BACKGROUND = "org.eclipse.ui.workbench.INFORMATION_BACKGROUND";
-
+	
 	private UIUtil() {
 	}
 

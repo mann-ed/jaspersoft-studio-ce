@@ -17,6 +17,8 @@ import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.property.section.AbstractSection;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+
 public class SP3Boolean<T extends IPropertyDescriptor> extends ASPropertyWidget<T> {
 	private Combo cmb3Bool;
 
@@ -54,11 +56,11 @@ public class SP3Boolean<T extends IPropertyDescriptor> extends ASPropertyWidget<
 	@Override
 	public void setData(APropertyNode pnode, Object resolvedValue, Object elementValue) {
 		if (elementValue == null) {
-			cmb3Bool.setForeground(ColorConstants.gray);
+			cmb3Bool.setForeground(UIUtils.INHERITED_COLOR);
 			cmb3Bool.setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
 			if (getLabel() != null) {
 				getLabel().setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
-				getLabel().setForeground(ColorConstants.gray);
+				getLabel().setForeground(UIUtils.INHERITED_COLOR);
 			}
 		} else {
 			cmb3Bool.setForeground(ColorConstants.black);

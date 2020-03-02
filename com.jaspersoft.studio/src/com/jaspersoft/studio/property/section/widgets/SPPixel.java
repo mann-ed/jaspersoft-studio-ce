@@ -1013,11 +1013,11 @@ public class SPPixel extends ASPropertyWidget<PixelPropertyDescriptor> {
 					getLabel().setForeground(UIUtil.getColor(JFacePreferences.INFORMATION_FOREGROUND_COLOR));
 				}
 			} else {
-				insertField.setForeground(ColorConstants.gray);
+				insertField.setForeground(UIUtils.INHERITED_COLOR);
 				insertField.setToolTipText(Messages.common_inherited_attribute + getTooltip());
 				if (getLabel() != null) {
 					getLabel().setToolTipText(Messages.common_inherited_attribute + pDescriptor.getDescription());
-					getLabel().setForeground(ColorConstants.gray);
+					getLabel().setForeground(UIUtils.INHERITED_COLOR);
 				}
 			}
 		}

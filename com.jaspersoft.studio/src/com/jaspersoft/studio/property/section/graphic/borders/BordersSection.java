@@ -56,6 +56,7 @@ import com.jaspersoft.studio.swt.widgets.NullableSpinner;
 import com.jaspersoft.studio.utils.AlfaRGB;
 import com.jaspersoft.studio.utils.Colors;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.JRLineBox;
 import net.sf.jasperreports.engine.base.JRBaseLineBox;
 import net.sf.jasperreports.engine.base.JRBasePen;
@@ -960,7 +961,7 @@ public class BordersSection extends AbstractSection {
 		if (isInherithed) {
 			paddingControl.setToolTipText(Messages.common_inherited_attribute + tooltipText);
 			paddingLabel.setToolTipText(Messages.common_inherited_attribute + tooltipText);
-			paddingLabel.setForeground(ColorConstants.gray);
+			paddingLabel.setForeground(UIUtils.INHERITED_COLOR);
 		} else {
 			paddingControl.setToolTipText(tooltipText);
 			paddingLabel.setToolTipText(tooltipText);
@@ -992,7 +993,7 @@ public class BordersSection extends AbstractSection {
 				if (isInherited) {
 					lineStyle.setToolTipText(Messages.common_inherited_attribute + "Style");
 					lineStyleLabel.setToolTipText(Messages.common_inherited_attribute + "Style");
-					lineStyleLabel.setForeground(ColorConstants.gray);
+					lineStyleLabel.setForeground(UIUtils.INHERITED_COLOR);
 				} else {
 					lineStyle.setToolTipText("Style");
 					lineStyleLabel.setToolTipText("Style");
@@ -1009,7 +1010,7 @@ public class BordersSection extends AbstractSection {
 				if (isInherited) {
 					lineColor.setToolTipText(Messages.common_inherited_attribute + "Color");
 					lineColorLabel.setToolTipText(Messages.common_inherited_attribute + "Color");
-					lineColorLabel.setForeground(ColorConstants.gray);
+					lineColorLabel.setForeground(UIUtils.INHERITED_COLOR);
 				} else {
 					lineColor.setToolTipText("Color");
 					lineColorLabel.setToolTipText("Color");
