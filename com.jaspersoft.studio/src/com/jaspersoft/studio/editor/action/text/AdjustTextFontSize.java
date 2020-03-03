@@ -146,7 +146,7 @@ public class AdjustTextFontSize extends ACachedSelectionAction {
 		FontUtil.getInstance(jConfig).getAttributesWithoutAwtFont(attributes, textElement);
 		JRStyledText styledText = JRStyledTextParser.getInstance().getStyledText(attributes, text, !JRCommonText.MARKUP_NONE.equals(textElement.getMarkup()), Locale.getDefault());
 		styledText = JRStyledTextUtil.getInstance(jConfig).resolveFonts(styledText, Locale.getDefault());
-		JRMeasuredText measuredText = measurer.measure(styledText, 0, textElement.getHeight(), false);
+		JRMeasuredText measuredText = measurer.measure(styledText, 0, textElement.getHeight(), false, false);
 		float currentSize = textElement.getFontsize();
 		float originalSize = textElement.getFontsize();
 		if (measuredText.getTextWidth() > textElement.getWidth() || measuredText.getTextHeight() > textElement.getHeight()) {
@@ -154,7 +154,7 @@ public class AdjustTextFontSize extends ACachedSelectionAction {
 				currentSize--;
 				attributes.put(TextAttribute.SIZE, currentSize);
 				styledText.setGlobalAttributes(attributes);
-				measuredText = measurer.measure(styledText, 0, textElement.getHeight(), false);
+				measuredText = measurer.measure(styledText, 0, textElement.getHeight(), false, false);
 			} while(measuredText.getTextWidth() > textElement.getWidth() || measuredText.getTextHeight() > textElement.getHeight());
 		} else {
 			//can need enlargement
@@ -162,7 +162,7 @@ public class AdjustTextFontSize extends ACachedSelectionAction {
 				currentSize++;
 				attributes.put(TextAttribute.SIZE, currentSize);
 				styledText.setGlobalAttributes(attributes);
-				measuredText = measurer.measure(styledText, 0, textElement.getHeight(), false);
+				measuredText = measurer.measure(styledText, 0, textElement.getHeight(), false, false);
 				if (measuredText.getTextWidth() == 0 || measuredText.getTextHeight() == 0) {
 					//some problem here fallback to the original size
 					return null;

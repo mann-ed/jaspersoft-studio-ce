@@ -521,7 +521,10 @@ public class CrosstabComponentFactory implements IComponentFactory {
 				else currentParent = currentParent.getParent();
 			}
 		}
-		
+		if (parent instanceof MGroupCell) {
+			System.out.println("mannaggia");
+		}
+		System.out.println(parent);
 		if (parent instanceof MPage) {
 			for (INode c : parent.getChildren()) {
 				if (c instanceof MCrosstab) {
@@ -530,7 +533,6 @@ public class CrosstabComponentFactory implements IComponentFactory {
 				}
 			}
 		}
-		
 		//Avoid to generate create command in the main editor
 		if (parent instanceof MCrosstab && !(parent.getParent() instanceof MPage)){
 			ANode ancestor = parent.getParent();
