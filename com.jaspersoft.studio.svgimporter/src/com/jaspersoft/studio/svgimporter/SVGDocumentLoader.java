@@ -370,7 +370,7 @@ public class SVGDocumentLoader {
 	  FontUtil.getInstance(jConfig).getAttributesWithoutAwtFont(attributes, newStaticText);
 	  JRStyledText styledText = JRStyledTextParser.getInstance().getStyledText(attributes, text, !JRCommonText.MARKUP_NONE.equals(newStaticText.getMarkup()), Locale.getDefault());
 	  styledText = JRStyledTextUtil.getInstance(jConfig).resolveFonts(styledText, Locale.getDefault());
-	  JRMeasuredText measuredText = measurer.measure(styledText, 0, 2000, false);
+	  JRMeasuredText measuredText = measurer.measure(styledText, 0, 2000, false, false);
 	  return measuredText;
   }
   
