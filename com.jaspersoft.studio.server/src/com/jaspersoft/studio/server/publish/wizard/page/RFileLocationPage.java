@@ -4,16 +4,17 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.publish.wizard.page;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -21,7 +22,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -29,72 +29,82 @@ import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescript
 import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.outline.ReportTreeContetProvider;
 import com.jaspersoft.studio.outline.ReportTreeLabelProvider;
-import com.jaspersoft.studio.server.ContextHelpIDs;
-import com.jaspersoft.studio.server.ServerManager;
+import com.jaspersoft.studio.server.ResourceFactory;
 import com.jaspersoft.studio.server.ServerProvider;
-import com.jaspersoft.studio.server.WSClientHelper;
 import com.jaspersoft.studio.server.action.resource.RefreshResourcesAction;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AFileResource;
-import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MContentResource;
 import com.jaspersoft.studio.server.model.MFolder;
 import com.jaspersoft.studio.server.model.MReportUnit;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
-import com.jaspersoft.studio.server.model.server.MServers;
 import com.jaspersoft.studio.server.publish.PublishUtil;
 import com.jaspersoft.studio.server.utils.ValidationUtils;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
-import com.jaspersoft.studio.wizards.JSSHelpWizardPage;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.ui.validator.IDStringValidator;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
 
-public class RFileLocationPage extends JSSHelpWizardPage {
-	private TreeViewer treeViewer;
-	private Text ruLabel;
+public class RFileLocationPage extends AFilesLocationPage {
 
-	private RefreshResourcesAction refreshAction;
-	private JasperReportsConfiguration jConfig;
+	private Text ruLabel;
 	private Text ruID;
 	private Text ruDescription;
 
-	private boolean isFillingInput;
-	private boolean canSuggestID;
 	private IFile file;
+	protected AFileResource newRes;
+	protected AFileResource fileRes;
 
-	public RFileLocationPage(JasperReportsConfiguration jConfig) {
-		super("serverfilepublish"); //$NON-NLS-1$
+	public RFileLocationPage(JasperReportsConfiguration jConfig, List<IFile> files) {
+		super("serverfilepublish", jConfig, files); //$NON-NLS-1$
 		setTitle(Messages.RUnitLocationPage_title);
 		setDescription(Messages.RFileLocationPage_0);
-		this.jConfig = jConfig;
 	}
 
-	public void refreshFile() {
-		file = (IFile) jConfig.get(FileUtils.KEY_FILE);
-		look4SelectedUnit();
-	}
+	public List<AFileResource> getSelectedNodes() {
+		List<AFileResource> fResources = new ArrayList<>();
+		if (fileRes != null) {
+			ResourceDescriptor rd = fileRes.getValue();
+			String purl = FilenameUtils.getFullPath(rd.getUriString());
+			boolean first = true;
+			AFileResource fres = fileRes;
+			for (IFile f : files) {
+				if (!first)
+					rd = new ResourceDescriptor();
+				String ext = f.getFileExtension().toLowerCase();
+				if (ext.equalsIgnoreCase("xml"))
+					rd.setWsType(ResourceDescriptor.TYPE_XML_FILE);
+				else if (ext.equalsIgnoreCase("jar") || ext.equalsIgnoreCase("zip"))
+					rd.setWsType(ResourceDescriptor.TYPE_CLASS_JAR);
+				else if (ext.equalsIgnoreCase("jrtx"))
+					rd.setWsType(ResourceDescriptor.TYPE_STYLE_TEMPLATE);
+				else if (ext.equalsIgnoreCase("css"))
+					rd.setWsType(ResourceDescriptor.TYPE_CSS_FILE);
+				else if (ext.equalsIgnoreCase("json"))
+					rd.setWsType(ResourceDescriptor.TYPE_JSON_FILE);
+				else if (ext.equalsIgnoreCase("properties"))
+					rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
+				else if (ext.equalsIgnoreCase("ttf") || ext.equalsIgnoreCase("eot") || ext.equalsIgnoreCase("woff"))
+					rd.setWsType(ResourceDescriptor.TYPE_FONT);
+				else if (ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif") || ext.equalsIgnoreCase("jpg")
+						|| ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("bmp") || ext.equalsIgnoreCase("tiff"))
+					rd.setWsType(ResourceDescriptor.TYPE_IMAGE);
+				else if (fres.getParent() instanceof MReportUnit)
+					rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
+				if (!first) {
+					rd.setName(IDStringValidator.safeChar(f.getName()));
+					rd.setLabel(f.getName());
+					rd.setUriString(purl + rd.getName());
+				}
+				fres = (AFileResource) ResourceFactory.getResource(fres.getParent(), rd, -1);
 
-	public AFileResource getSelectedNode() {
-		return fileRes;
-	}
-
-	/**
-	 * Return the context name for the help of this page
-	 */
-	@Override
-	protected String getContextName() {
-		return ContextHelpIDs.WIZARD_SELECT_SERVER;
-	}
-
-	@Override
-	public boolean isPageComplete() {
-		boolean isC = super.isPageComplete() && getErrorMessage() == null;
-		if (isC)
-			isC = isPageCompleteLogic();
-		return isC;
+				fres.setFile(new File(f.getRawLocationURI()));
+				fResources.add(fres);
+			}
+		}
+		return fResources;
 	}
 
 	protected boolean isPageCompleteLogic() {
@@ -107,16 +117,34 @@ public class RFileLocationPage extends JSSHelpWizardPage {
 		return isC;
 	}
 
-	@Override
-	public void setErrorMessage(String newMessage) {
-		super.setErrorMessage(newMessage);
-		setPageComplete(isPageComplete());
+	public void refreshFile() {
+		file = (IFile) jConfig.get(FileUtils.KEY_FILE);
+		look4SelectedUnit(file);
+	}
+
+	public AFileResource getSelectedNode() {
+		return fileRes;
+	}
+
+	protected AFileResource getNewRunit() {
+		if (newRes == null) {
+			ResourceDescriptor rd = AFileResource.createDescriptor(null);
+			rd.setWsType(ResourceDescriptor.TYPE_CONTENT_RESOURCE);
+			rd.setName(null);
+			String n = getRunitName();
+			PublishUtil.initResourceName(n, rd);
+			rd.setLabel(n);
+			newRes = new MContentResource(null, rd, -1);
+			newRes.setJasperConfiguration(jConfig);
+		}
+		return newRes;
 	}
 
 	/*
 	 * Perform validation checks and eventually set the error message.
 	 */
-	private void performPageChecks() {
+	@Override
+	protected void performPageChecks() {
 		String errorMsg = null;
 		errorMsg = ValidationUtils.validateName(ruID.getText());
 		if (errorMsg == null)
@@ -288,25 +316,11 @@ public class RFileLocationPage extends JSSHelpWizardPage {
 		fillInput();
 	}
 
-	private AFileResource newRes;
-	private AFileResource fileRes;
-
-	private AFileResource getNewRunit() {
-		if (newRes == null) {
-			ResourceDescriptor rd = AFileResource.createDescriptor(null);
-			rd.setWsType(ResourceDescriptor.TYPE_CONTENT_RESOURCE);
-			rd.setName(null);
-			String n = file != null ? file.getName() : "reportunit";
-			PublishUtil.initResourceName(n, rd);
-			rd.setLabel(n);
-			newRes = new MContentResource(null, rd, -1);
-			newRes.setJasperConfiguration(jConfig);
-		}
-		return newRes;
+	protected String getRunitName() {
+		return file != null ? file.getName() : "reportunit";
 	}
 
-	private boolean isRefresh = false;
-
+	@Override
 	protected void handleSelectionChanged(Object obj) {
 		if (isRefresh)
 			return;
@@ -338,90 +352,4 @@ public class RFileLocationPage extends JSSHelpWizardPage {
 		isRefresh = false;
 	}
 
-	private boolean skipEvents = false;
-	private MServers servers;
-
-	public void fillInput() {
-		Display.getDefault().asyncExec(() -> {
-			isFillingInput = true;
-			servers = new MServers(null);
-			ServerManager.loadServerProfilesCopy(servers);
-			treeViewer.setInput(servers);
-			refreshFile();
-			isFillingInput = false;
-		});
-	}
-
-	private void look4SelectedUnit() {
-		try {
-			getContainer().run(true, true, new IRunnableWithProgress() {
-
-				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask(Messages.RFileLocationPage_5, IProgressMonitor.UNKNOWN);
-					try {
-						List<String[]> paths = PublishUtil.loadPath(monitor, file);
-						String suri = null;
-						String spath = null;
-						String suser = null;
-						for (String[] p : paths) {
-							if (p[0].startsWith("JRSUSER.")) //$NON-NLS-1$
-								suser = p[1];
-							else {
-								suri = p[0];
-								spath = p[1];
-							}
-						}
-						if (suri != null) {
-							MServerProfile msp = null;
-							for (INode n : servers.getChildren()) {
-								if (n instanceof MServerProfile
-										&& ((MServerProfile) n).getValue().getUrl().equals(suri)) {
-									if (suser != null) {
-										String[] usr = suser.split("\\|"); //$NON-NLS-1$
-										if (!((MServerProfile) n).getValue().getUser().equals(usr[0]))
-											continue;
-										if (usr.length > 1
-												&& !((MServerProfile) n).getValue().getOrganisation().equals(usr[1]))
-											continue;
-									}
-									msp = (MServerProfile) n;
-									break;
-								}
-							}
-							if (msp != null)
-								selectResource(msp, spath, monitor);
-						}
-					} catch (Exception ce) {
-						ce.printStackTrace();
-					} finally {
-						monitor.done();
-					}
-				}
-
-				private boolean selectResource(MServerProfile msp, String uri, IProgressMonitor monitor)
-						throws Exception {
-					if (monitor.isCanceled())
-						return true;
-					ResourceDescriptor rd = new ResourceDescriptor();
-					rd.setUriString(uri);
-					final AMResource mres = WSClientHelper.findSelected(monitor, rd, msp);
-					if (mres == null)
-						return false;
-					UIUtils.getDisplay().asyncExec(() -> {
-						skipEvents = true;
-						treeViewer.refresh();
-						treeViewer.setSelection(new StructuredSelection(mres), true);
-						skipEvents = false;
-					});
-
-					return true;
-				}
-			});
-		} catch (InvocationTargetException e) {
-			UIUtils.showError(e.getCause());
-		} catch (InterruptedException e) {
-			UIUtils.showError(e.getCause());
-		}
-	}
 }

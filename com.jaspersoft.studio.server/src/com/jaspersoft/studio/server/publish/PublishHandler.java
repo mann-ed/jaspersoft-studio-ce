@@ -6,6 +6,7 @@ package com.jaspersoft.studio.server.publish;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipFile;
 
@@ -28,7 +29,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.part.MultiPageEditorPart;
 
 import com.jaspersoft.studio.editor.AbstractJRXMLEditor;
 import com.jaspersoft.studio.server.messages.Messages;
@@ -52,24 +52,26 @@ public class PublishHandler extends AbstractHandler {
 		boolean disposeJrContext = false;
 		ISelection sel = HandlerUtil.getCurrentSelection(event);
 		if (sel instanceof StructuredSelection) {
-			Object obj = ((StructuredSelection) sel).getFirstElement();
-			if (obj instanceof IFile) {
-				file.add((IFile) obj);
-			} else if (obj instanceof JarPackageFragmentRoot) {
-				try {
-					ZipFile zf = ((JarPackageFragmentRoot) obj).getJar();
-					if (zf != null)
-						file.add(getFileFromURI(new URI(zf.getName())));
-				} catch (Exception e) {
-					e.printStackTrace();
+			for (Iterator<?> it = ((StructuredSelection) sel).iterator(); it.hasNext();) {
+				Object obj = it.next();
+				if (obj instanceof IFile) {
+					file.add((IFile) obj);
+				} else if (obj instanceof JarPackageFragmentRoot) {
+					try {
+						ZipFile zf = ((JarPackageFragmentRoot) obj).getJar();
+						if (zf != null)
+							file.add(getFileFromURI(new URI(zf.getName())));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if (obj instanceof CompilationUnit) {
+					file.add(getFileFromURI(((CompilationUnit) obj).getPath().toFile().toURI()));
+				} else if (obj instanceof IProject || obj instanceof IFolder || obj instanceof IPackageFragment
+						|| obj instanceof PackageFragmentRoot || obj instanceof ClassPathContainer) {
+					UIUtils.showInformation(
+							"Currently this type of operation is not supported, only publishing files is supported");
+					return null;
 				}
-			} else if (obj instanceof CompilationUnit) {
-				file.add(getFileFromURI(((CompilationUnit) obj).getPath().toFile().toURI()));
-			} else if (obj instanceof IProject || obj instanceof IFolder || obj instanceof IPackageFragment
-					|| obj instanceof PackageFragmentRoot || obj instanceof ClassPathContainer) {
-				UIUtils.showInformation(
-						"Currently this type of operation is not supported, only publishing files is supported");
-				return null;
 			}
 		}
 		if (file.isEmpty()) {
@@ -83,9 +85,8 @@ public class PublishHandler extends AbstractHandler {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else if (ep instanceof MultiPageEditorPart) {
-					MultiPageEditorPart mep = (MultiPageEditorPart) ep;
-					Object obj = mep.getAdapter(IFile.class);
+				} else {
+					Object obj = ep.getAdapter(IFile.class);
 					if (obj instanceof List)
 						file.addAll((List<IFile>) obj);
 				}

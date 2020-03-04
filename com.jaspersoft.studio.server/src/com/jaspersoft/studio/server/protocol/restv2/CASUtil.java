@@ -34,6 +34,7 @@ import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -115,24 +116,11 @@ public class CASUtil {
 		} }, new SecureRandom());
 
 		// Allow TLSv1 protocol only
-		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[] { "TLSv1" }, null,
-				SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+//		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[] { "TLSv1" }, null,
+//				SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
-		CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf)
-				.setRedirectStrategy(new DefaultRedirectStrategy() {
-					@Override
-					protected boolean isRedirectable(String arg0) {
-						// TODO Auto-generated method stub
-						return super.isRedirectable(arg0);
-					}
-
-					@Override
-					public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context)
-							throws ProtocolException {
-						// TODO Auto-generated method stub
-						return super.isRedirected(request, response, context);
-					}
-				}).setDefaultCookieStore(new BasicCookieStore())
+		CloseableHttpClient httpclient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier())
+				.setRedirectStrategy(new DefaultRedirectStrategy()).setDefaultCookieStore(new BasicCookieStore())
 				.setUserAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0").build();
 
 		Executor exec = Executor.newInstance(httpclient);

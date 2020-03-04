@@ -331,8 +331,6 @@ Export-Package: com.jaspersoft.studio;
  com.jaspersoft.studio.editor.preview.element,
  com.jaspersoft.studio.editor.preview.input;uses:="net.sf.jasperreports.engine.design,org.eclipse.swt.graphics,org.eclipse.swt.widgets",
  com.jaspersoft.studio.editor.preview.input.ext,
- com.jaspersoft.studio.editor.preview.jive,
- com.jaspersoft.studio.editor.preview.jive.servlet,
  com.jaspersoft.studio.editor.preview.stats;uses:="net.sf.jasperreports.engine.scriptlets,net.sf.jasperreports.engine",
  com.jaspersoft.studio.editor.preview.toolbar;
   uses:="org.eclipse.jface.action,

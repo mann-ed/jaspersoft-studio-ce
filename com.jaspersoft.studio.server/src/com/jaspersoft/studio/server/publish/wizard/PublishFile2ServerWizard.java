@@ -4,8 +4,8 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.publish.wizard;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -26,27 +26,27 @@ import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.part.FileEditorInput;
 
-import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.server.ServerManager;
 import com.jaspersoft.studio.server.WSClientHelper;
+import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AFileResource;
-import com.jaspersoft.studio.server.model.MReportUnit;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.publish.PublishUtil;
+import com.jaspersoft.studio.server.publish.wizard.page.AFilesLocationPage;
 import com.jaspersoft.studio.server.publish.wizard.page.FileSelectionPage;
 import com.jaspersoft.studio.server.publish.wizard.page.RFileLocationPage;
+import com.jaspersoft.studio.server.publish.wizard.page.RFilesLocationPage;
 import com.jaspersoft.studio.utils.SelectionHelper;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.ui.validator.IDStringValidator;
 
 public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 	private JasperReportsConfiguration jrConfig;
 	private int startPage = 0;
-	private List<IFile> file;
-	private RFileLocationPage page1;
+	private List<IFile> files;
+	private AFilesLocationPage page1;
 	private ISelection selection;
 
 	public PublishFile2ServerWizard() {
@@ -55,20 +55,20 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 		setNeedsProgressMonitor(true);
 	}
 
-	public PublishFile2ServerWizard(List<IFile> file, int page) {
+	public PublishFile2ServerWizard(List<IFile> files, int page) {
 		this();
-		this.file = file;
+		this.files = files;
 		this.startPage = page;
 	}
 
 	private void init() {
-		if (file.isEmpty() && selection != null && selection instanceof IStructuredSelection) {
+		if (files.isEmpty() && selection != null && selection instanceof IStructuredSelection) {
 			Object obj = ((IStructuredSelection) selection).getFirstElement();
 			if (obj instanceof IFile)
-				file.add((IFile) obj);
+				files.add((IFile) obj);
 		}
 		if (jrConfig == null)
-			jrConfig = JasperReportsConfiguration.getDefaultJRConfig(file.get(0));
+			jrConfig = JasperReportsConfiguration.getDefaultJRConfig(files.get(0));
 	}
 
 	@Override
@@ -83,11 +83,14 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 	@Override
 	public void addPages() {
 		init();
-		if (file.isEmpty()) {
+		if (files.isEmpty()) {
 			FileSelectionPage page0 = new FileSelectionPage(jrConfig);
 			addPage(page0);
 		}
-		page1 = new RFileLocationPage(jrConfig);
+		if (files.size() > 1)
+			page1 = new RFilesLocationPage(jrConfig, files);
+		else
+			page1 = new RFileLocationPage(jrConfig, files);
 		addPage(page1);
 	}
 
@@ -106,52 +109,29 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						monitor.beginTask("Saving", IProgressMonitor.UNKNOWN);
-						AFileResource fres = page1.getSelectedNode();
+						List<AFileResource> fres = page1.getSelectedNodes();
 						if (fres != null) {
-							ResourceDescriptor rd = fres.getValue();
-							String purl = rd.getParentFolder();
-							boolean first = true;
-							for (IFile f : file) {
+							List<String> saved = new ArrayList<>();
+							for (int i = 0; i < fres.size(); i++) {
+								IFile f = files.get(i);
+								AFileResource fr = fres.get(i);
 								monitor.subTask(f.toString());
-								if (!first) {
-									rd.setName(IDStringValidator.safeChar(f.getName()));
-									rd.setLabel(f.getName());
-									rd.setUriString(purl + "/" + rd.getName());
-								}
 
-								String ext = f.getFileExtension().toLowerCase();
-								if (ext.equalsIgnoreCase("xml"))
-									rd.setWsType(ResourceDescriptor.TYPE_XML_FILE);
-								else if (ext.equalsIgnoreCase("jar") || ext.equalsIgnoreCase("zip"))
-									rd.setWsType(ResourceDescriptor.TYPE_CLASS_JAR);
-								else if (ext.equalsIgnoreCase("jrtx"))
-									rd.setWsType(ResourceDescriptor.TYPE_STYLE_TEMPLATE);
-								else if (ext.equalsIgnoreCase("css"))
-									rd.setWsType(ResourceDescriptor.TYPE_CSS_FILE);
-								else if (ext.equalsIgnoreCase("json"))
-									rd.setWsType(ResourceDescriptor.TYPE_JSON_FILE);
-								else if (ext.equalsIgnoreCase("properties"))
-									rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
-								else if (ext.equalsIgnoreCase("ttf") || ext.equalsIgnoreCase("eot")
-										|| ext.equalsIgnoreCase("woff"))
-									rd.setWsType(ResourceDescriptor.TYPE_FONT);
-								else if (ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif")
-										|| ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg")
-										|| ext.equalsIgnoreCase("bmp") || ext.equalsIgnoreCase("tiff"))
-									rd.setWsType(ResourceDescriptor.TYPE_IMAGE);
-								else if (fres.getParent() instanceof MReportUnit)
-									rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
+								WSClientHelper.save(monitor, fr);
 
-								fres.setFile(new File(f.getRawLocationURI()));
-								WSClientHelper.save(monitor, fres);
-								PublishUtil.savePath(f, fres);
-								first = false;
+								PublishUtil.savePath(f, fr);
+								saved.add(fr.getValue().getUriString());
 							}
-							INode n = fres.getRoot();
+							StringBuilder str = new StringBuilder(Messages.Publish_0);
+							for (String mres : saved)
+								str.append(mres).append("\n"); //$NON-NLS-1$
+							UIUtils.showInformation(str.toString());
+							AFileResource first = fres.get(0);
+							INode n = first.getRoot();
 							if (n != null && n instanceof MServerProfile) {
 								MServerProfile msp = ServerManager
 										.getServerByUrl(((MServerProfile) n).getValue().getUrl());
-								ServerManager.selectIfExists(monitor, msp, fres);
+								ServerManager.selectIfExists(monitor, msp, first);
 							}
 						}
 					} catch (Exception e) {
@@ -184,7 +164,7 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 				this.selection = selection;
 				return;
 			}
-			for (Object obj : selection.toList()) {
+			for (Object obj : selection.toList())
 				if (obj instanceof EditPart) {
 					IEditorInput ein = SelectionHelper.getActiveJRXMLEditor().getEditorInput();
 					if (ein instanceof FileEditorInput) {
@@ -193,7 +173,6 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 						return;
 					}
 				}
-			}
 		}
 		this.selection = selection;
 	}
