@@ -287,11 +287,20 @@ public class RUnitLocationPage extends JSSHelpWizardPage {
 			if (isRefresh)
 				return;
 			isRefresh = true;
+			MReportUnit mru = getNewRunit();
 			String rtext = ruID.getText();
 			String validationError = ValidationUtils.validateName(rtext);
+			if (validationError == null) {
+				ANode p = mru.getParent();
+				if (p != null)
+					for (INode n1 : p.getChildren())
+						if (n1 instanceof AMResource && n1 != mru
+								&& ((AMResource) n1).getValue().getName().equals(rtext))
+							validationError = "This id is already used in this folder";
+			}
 			setErrorMessage(validationError);
 			if (validationError == null) {
-				ResourceDescriptor ru = getNewRunit().getValue();
+				ResourceDescriptor ru = mru.getValue();
 				ru.setName(rtext);
 				ru.setUriString(ru.getParentFolder() + "/" + ru.getName());
 			}
