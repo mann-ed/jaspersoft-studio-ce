@@ -4,6 +4,9 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.protocol;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.jaspersoft.jasperserver.dto.serverinfo.ServerInfo;
 import com.jaspersoft.jasperserver.dto.serverinfo.ServerInfo.ServerEdition;
 import com.jaspersoft.studio.compatibility.JRXmlWriterHelper;
@@ -13,7 +16,19 @@ public class Version {
 		return si.getEdition() == ServerEdition.PRO;
 	}
 
+	private static final Map<String, String> jrs2jr = new HashMap<>();
+	static {
+		jrs2jr.put("7.1.0", "6.4.31");
+		jrs2jr.put("7.1.1", "6.4.32");
+		jrs2jr.put("7.1.2", "6.4.32");
+		jrs2jr.put("7.2.0", "6.8.1");
+		jrs2jr.put("7.5.0", "6.11.0");
+	}
+
 	public static String setJRVersion(ServerInfo si) {
+		String v = jrs2jr.get(si.getVersion());
+		if (v != null)
+			return v;
 		for (String av : JRXmlWriterHelper.getVersionsSet()) {
 			if (av.equals(si.getVersion()))
 				return av;
