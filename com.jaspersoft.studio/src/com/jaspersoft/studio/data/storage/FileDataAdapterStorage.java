@@ -135,7 +135,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 
 											return Status.OK_STATUS;
 										}
-									}.schedule(1000);
+									}.schedule(2000);
 								}
 
 								protected void processEvent(IResourceDelta delta) {
@@ -242,7 +242,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 				|| !file.exists())
 			return;
 		String ext = file.getFileExtension();
-		if (ext.equals("xml")) { //$NON-NLS-1$
+		if (ext.equalsIgnoreCase("xml")) { //$NON-NLS-1$
 			final DataAdapterDescriptor das = readDataADapter(file.getContents(), file);
 			if (das != null) {
 				das.setName(file.getProjectRelativePath().toOSString());
