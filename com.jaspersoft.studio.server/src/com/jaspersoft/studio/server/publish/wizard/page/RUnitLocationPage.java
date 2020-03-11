@@ -130,11 +130,24 @@ public class RUnitLocationPage extends JSSHelpWizardPage {
 		TreeSelection ts = (TreeSelection) treeViewer.getSelection();
 		Object firstElement = ts.getFirstElement();
 		isC = firstElement instanceof MJrxml || firstElement instanceof MFolder || firstElement instanceof MReportUnit;
+		AMJrxmlContainer runit = getReportUnit();
 		if (isC && firstElement instanceof MFolder) {
-			AMJrxmlContainer runit = getReportUnit();
 			isC = runit instanceof AMJrxmlContainer && runit.getParent() != null;
 			if (!(firstElement instanceof MFolder))
 				isC = bnRunit.getSelection();
+		}
+		if (isC && (firstElement instanceof MFolder || firstElement instanceof MServerProfile)) {
+			String nm = runit.getValue().getName();
+			String t = runit.getValue().getWsType();
+			for (INode n : ((ANode) firstElement).getChildren()) {
+				ResourceDescriptor rd = (ResourceDescriptor) n.getValue();
+				if(n == newjrxml || n == newrunit || rd == null)
+					continue;
+				if (rd.getName().equals(nm) && !rd.getWsType().equals(t)) {
+					super.setErrorMessage("A resource of different type already exist for the same name");
+					return false;
+				}
+			}
 		}
 		return isC;
 	}
