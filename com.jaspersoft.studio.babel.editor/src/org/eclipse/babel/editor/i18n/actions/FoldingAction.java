@@ -43,9 +43,11 @@ public class FoldingAction extends Action {
         if (expanded) {
             setImageDescriptor(UIUtils.getImageDescriptor("plus.gif"));
             i18NEntry.setExpanded(false);
+            expanded = false;
         } else {
             setImageDescriptor(UIUtils.getImageDescriptor("minus.gif"));
             i18NEntry.setExpanded(true);
+            expanded = true;
         }
     }
 
