@@ -51,6 +51,8 @@ public class SyncDatasetRunParameters {
 		QueryExecuterFactory qef = qeUtils.getExecuterFactory(mLang);
 		if (qef != null) {
 			Object[] prms = qef.getBuiltinParameters();
+			if (mLang.equalsIgnoreCase("plsql"))
+				return new Object[] {};
 			if (bipMap.containsKey(mLang)) {
 				Object[] params = bipMap.get(mLang);
 				if (prms == null || prms.length == 0)
