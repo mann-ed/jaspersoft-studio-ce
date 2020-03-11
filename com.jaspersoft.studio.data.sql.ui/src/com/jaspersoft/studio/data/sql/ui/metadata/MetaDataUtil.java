@@ -80,7 +80,9 @@ public class MetaDataUtil {
 			} else {
 				meta = dbmeta.checkClosed(meta);
 				rs = isSchema ? meta.getSchemas() : meta.getCatalogs();
+				boolean hasSchemas = false;
 				while (rs.next()) {
+					hasSchemas = true;
 					String tableCatalog = isCatalog && !isSchema ? rs.getString("TABLE_CAT") : null;// rs.getString("TABLE_CATALOG");
 					String tableSchema = isSchema ? rs.getString("TABLE_SCHEM") : tableCatalog;
 
@@ -91,6 +93,13 @@ public class MetaDataUtil {
 						for (String ttype : tableTypes)
 							new MDummy(new MTables(schema, ttype));
 					}
+				}
+				if(!hasSchemas) {
+					schema.removeChildren();
+					schema.setNotInMetadata(false);
+
+					for (String ttype : tableTypes)
+						new MDummy(new MTables(schema, ttype));
 				}
 			}
 		} catch (SQLException e) {
@@ -103,12 +112,16 @@ public class MetaDataUtil {
 	public synchronized static void readSchemaTables(DBMetadata dbmeta, DatabaseMetaData meta, MSqlSchema schema,
 			LinkedHashMap<String, MSqlTable> tables, IProgressMonitor monitor) {
 		try {
-			for (INode n : schema.getChildren())
+			for (INode n : schema.getChildren()) {
+//				if(n instanceof MDummy) {
+//					readTables(dbmeta, meta, "", "", mview, tblMap, monitor);
+//				}
 				if (n instanceof MTables) {
 					((MTables) n).setDbMetadata(schema.getDbMetadata());
 					MetaDataUtil.readTables(dbmeta, meta, schema.getValue(), schema.getTableCatalog(), (MTables) n,
 							tables, monitor);
 				}
+			}
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
