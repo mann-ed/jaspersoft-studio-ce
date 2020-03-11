@@ -44,7 +44,9 @@ public class ScalarOperand<T> extends AOperand {
 			if (Number.class.isAssignableFrom(type)) {
 				if (value instanceof String)
 					return (String) value;
-				return NumberFormat.getInstance().format((Number) value);
+				NumberFormat nf = NumberFormat.getInstance();
+				nf.setGroupingUsed(false);
+				return nf.format((Number) value);
 			}
 			if (Time.class.isAssignableFrom(type))
 				return "'"
