@@ -201,9 +201,7 @@ public class I18NPage extends ScrolledComposite implements ISelectionProvider {
     public void addI18NEntry(Locale locale) {
         AbstractI18NEntry i18NEntry = null;
         try {
-            Class<?> clazz = Class.forName(AbstractI18NEntry.INSTANCE_CLASS);
-            Constructor<?> cons = clazz.getConstructor(Composite.class, AbstractMessagesEditor.class, Locale.class);
-            i18NEntry = (AbstractI18NEntry) cons.newInstance(entriesComposite,editor, locale);
+            i18NEntry = new I18NEntry(entriesComposite,editor, locale);
         } catch (Exception e) {
             e.printStackTrace();
         }
