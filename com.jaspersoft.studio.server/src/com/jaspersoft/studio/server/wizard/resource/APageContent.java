@@ -83,7 +83,7 @@ public abstract class APageContent implements IPageCompleteListener {
 		return isPageComplete;
 	}
 
-	private boolean refresh = false;
+	protected boolean refresh = false;
 
 	@Override
 	public void pageCompleted(boolean completed) {

@@ -35,6 +35,7 @@ import com.jaspersoft.studio.server.model.MAdHocDataView;
 import com.jaspersoft.studio.server.protocol.Feature;
 import com.jaspersoft.studio.server.protocol.IConnection;
 import com.jaspersoft.studio.server.protocol.restv2.DiffFields;
+import com.jaspersoft.studio.server.utils.ValidationUtils;
 import com.jaspersoft.studio.server.wizard.permission.PermissionDialog;
 import com.jaspersoft.studio.server.wizard.permission.PermissionWizard;
 import com.jaspersoft.studio.server.wizard.resource.APageContent;
@@ -168,6 +169,20 @@ public class ResourcePageContent extends APageContent {
 					tid.setText(IDStringValidator.safeChar(Misc.nvl(tname.getText())));
 				}
 			});
+			tid.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					if (refresh)
+						return;
+					refresh = true;
+					String validationError = ValidationUtils.validateName(tid.getText());
+					page.setErrorMessage(validationError);
+					setPageComplete(validationError == null);
+					refresh = false;
+				}
+			});
+			tid.addVerifyListener(e -> e.text = IDStringValidator.safeChar(e.text));
 		}
 		rebind();
 
