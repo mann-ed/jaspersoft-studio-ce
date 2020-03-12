@@ -61,6 +61,16 @@ public class MSQLRoot extends MRoot {
 		this.iq = Misc.nvl(iq);
 	}
 
+	private boolean schemaTableQuote = false;
+
+	public void setSchemaTableQuote(boolean schemaTableQuote) {
+		this.schemaTableQuote = schemaTableQuote;
+	}
+
+	public boolean isSchemaTableQuote() {
+		return schemaTableQuote;
+	}
+
 	private List<TableJoinDetail> joins = new ArrayList<TableJoinDetail>();
 
 	public List<TableJoinDetail> getJoins() {

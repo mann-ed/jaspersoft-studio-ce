@@ -416,6 +416,7 @@ public class SQLQueryDesigner extends SimpleSQLQueryDesigner {
 		boolean quoteExceptions = jConfig.getPropertyBoolean(SQLEditorPreferencesPage.P_IDENTIFIER_QUOTEONLYEXCEPTIONS,
 				true); // $NON-NLS-1$
 		for (MSQLRoot r : roots) {
+			r.setSchemaTableQuote(dbMetadata.isSchemaTableQuote());
 			r.setIdentifierQuote(iq);
 			r.setQuoteExceptions(quoteExceptions);
 		}

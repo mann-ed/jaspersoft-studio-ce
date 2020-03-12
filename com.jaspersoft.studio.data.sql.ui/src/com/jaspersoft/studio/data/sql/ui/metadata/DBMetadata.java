@@ -416,10 +416,11 @@ public class DBMetadata {
 			schema = SchemaUtil.getSchemaPath(connection);
 		try {
 			DatabaseMetaData metaData = connection.getMetaData();
+			dbproduct = metaData.getDatabaseProductName();
 			identifierQuote = metaData.getIdentifierQuoteString();
 			designer.doRefreshRoots(false);
-			System.out.println("JDBC Quotes: " //$NON-NLS-1$
-					+ metaData.getIdentifierQuoteString());
+			System.out.println("db product name: " + dbproduct);//$NON-NLS-1$
+			System.out.println("JDBC Quotes: " + metaData.getIdentifierQuoteString());//$NON-NLS-1$
 			System.out.println("getExtraNameCharacters: " //$NON-NLS-1$
 					+ metaData.getExtraNameCharacters());
 			System.out.println("storesLowerCaseIdentifiers: " //$NON-NLS-1$
@@ -438,14 +439,23 @@ public class DBMetadata {
 					+ metaData.supportsMixedCaseIdentifiers());
 			System.out.println("supportsMixedCaseQuotedIdentifiers: " //$NON-NLS-1$
 					+ metaData.supportsMixedCaseQuotedIdentifiers());
+			System.out.println("catalogSeparator: " //$NON-NLS-1$
+					+ metaData.getCatalogSeparator());
+			
+			schemaTableQuote = dbproduct.equalsIgnoreCase("GoogleBigQuery");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return connection;
 	}
 
+	private String dbproduct;
+	private boolean schemaTableQuote = false;
 	private String identifierQuote = ""; //$NON-NLS-1$
 
+	public boolean isSchemaTableQuote() {
+		return schemaTableQuote;
+	}
 	public String getIdentifierQuote() {
 		return identifierQuote;
 	}

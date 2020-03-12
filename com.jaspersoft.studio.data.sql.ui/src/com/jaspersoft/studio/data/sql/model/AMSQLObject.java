@@ -46,6 +46,12 @@ public class AMSQLObject extends MDBObjects implements IQueryString {
 					String s = ((AMSQLObject) p).toSQLString();
 					if (Misc.isNullOrEmpty(s))
 						return Misc.quote(getValue(), IQ, onlyException);
+					if (this instanceof MSqlTable && r.isSchemaTableQuote()) {
+						String t = s + "." + Misc.quote(getValue(), IQ, onlyException);
+						t = t.replaceAll(IQ, "");
+						t = Misc.quote(t, IQ, onlyException);
+						return t;
+					}
 					return s + "." + Misc.quote(getValue(), IQ, onlyException);
 				}
 				p = p.getParent();
