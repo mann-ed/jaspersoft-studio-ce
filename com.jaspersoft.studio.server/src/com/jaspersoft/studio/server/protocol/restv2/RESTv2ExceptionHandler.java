@@ -17,31 +17,32 @@ import org.apache.http.client.HttpResponseException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
+import com.jaspersoft.studio.server.protocol.IConnection;
 
 import net.sf.jasperreports.eclipse.util.Misc;
 
 public class RESTv2ExceptionHandler {
-	private ARestV2Connection c;
+	private IConnection c;
 	private Map<String, String> map;
 
-	public RESTv2ExceptionHandler(ARestV2Connection c) {
+	public RESTv2ExceptionHandler(IConnection c) {
 		this.c = c;
 	}
 
 	private Map<String, String> getMap(IProgressMonitor monitor) {
 		if (map == null) {
 			map = new HashMap<>();
-			try {
-				c.getBundle(map, "jasperserver_messages", monitor);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			if (c instanceof ARestV2Connection)
+				try {
+					((ARestV2Connection) c).getBundle(map, "jasperserver_messages", monitor);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 		}
 		return map;
 	}
 
 	public void handleException(Response res, IProgressMonitor monitor) throws ClientProtocolException {
-		String msg = "";
 		int status = res.getStatus();
 		String ct = res.getHeaderString("Content-Type");
 		switch (status) {

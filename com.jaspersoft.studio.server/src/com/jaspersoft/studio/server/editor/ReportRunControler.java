@@ -42,7 +42,6 @@ import com.jaspersoft.studio.server.editor.input.VInputControls;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.protocol.IConnection;
 import com.jaspersoft.studio.server.protocol.ReportExecution;
-import com.jaspersoft.studio.server.protocol.restv2.ARestV2Connection;
 import com.jaspersoft.studio.server.protocol.restv2.RESTv2ExceptionHandler;
 import com.jaspersoft.studio.utils.Console;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
@@ -248,7 +247,7 @@ public class ReportRunControler {
 							Thread.sleep(100);
 						} else if (repExec.getStatus().equals("failed") || repExec.getStatus().equals("cancelled")) { //$NON-NLS-1$ //$NON-NLS-2$
 							RESTv2ExceptionHandler reh = new RESTv2ExceptionHandler(
-									(ARestV2Connection) WSClientHelper.getClient(monitor, repExec.getReportURIFull()));
+									WSClientHelper.getClient(monitor, repExec.getReportURIFull()));
 							throw new Exception(reh.buildMessage(monitor, "", repExec.getErrorDescriptor())); //$NON-NLS-1$
 						}
 						if (monitor.isCanceled()) {
