@@ -135,7 +135,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 
 											return Status.OK_STATUS;
 										}
-									}.schedule(2000);
+									}.schedule(100);
 								}
 
 								protected void processEvent(IResourceDelta delta) {
@@ -153,7 +153,8 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 														&& "xml".equalsIgnoreCase(res.getFileExtension())) //$NON-NLS-1$
 													switch (delta.getKind()) {
 													case IResourceDelta.ADDED:
-														checkFile((IFile) res);
+														// checkFile((IFile)
+														// res);
 														break;
 													case IResourceDelta.REMOVED:
 														UIUtils.getDisplay().asyncExec(() -> {
@@ -177,7 +178,12 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 																} catch (CoreException e) {
 																	UIUtils.showError(e);
 																}
-															}
+															} else
+																try {
+																	checkFile((IFile) res);
+																} catch (CoreException e) {
+																	UIUtils.showError(e);
+																}
 														});
 														break;
 													}
