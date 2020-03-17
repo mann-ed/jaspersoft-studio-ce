@@ -257,12 +257,12 @@ public class ConvertUtil {
 
 	public static String getDbName(String dbname) {
 		if (dbname != null && !dbname.isEmpty()) {
-			if (dbname.startsWith("\""))
+			if (dbname.startsWith("\"") || dbname.endsWith("\""))
 				return dbname.replace("\"", "");
-			if (dbname.startsWith("["))
+			if (dbname.startsWith("[") || dbname.endsWith("]"))
 				return dbname.replace("[", "").replace("]", "");
-			if (dbname.startsWith("`"))
-				return dbname.replace("`", "");
+			if (dbname.startsWith("`") || dbname.endsWith("`"))
+				return dbname.replace("`", "").replace("`$", "");
 		}
 		return dbname;
 	}
