@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +36,8 @@ import com.jaspersoft.studio.server.model.MReportUnit;
 import com.jaspersoft.studio.server.model.MXmlFile;
 import com.jaspersoft.studio.server.preferences.JRSPreferencesPage;
 import com.jaspersoft.studio.server.protocol.Version;
+import com.jaspersoft.studio.server.publish.AImpJdbcDataAdapter;
+import com.jaspersoft.studio.server.publish.ImpBigQueryDataAdapter;
 import com.jaspersoft.studio.server.publish.OverwriteEnum;
 import com.jaspersoft.studio.server.publish.PublishOptions;
 import com.jaspersoft.studio.server.publish.PublishOptions.ValueSetter;
@@ -46,11 +49,13 @@ import net.sf.jasperreports.data.DataAdapterParameterContributorFactory;
 import net.sf.jasperreports.data.FileDataAdapter;
 import net.sf.jasperreports.data.RepositoryDataLocation;
 import net.sf.jasperreports.data.StandardRepositoryDataLocation;
+import net.sf.jasperreports.data.jdbc.JdbcDataAdapter;
 import net.sf.jasperreports.data.json.JsonDataAdapter;
 import net.sf.jasperreports.data.xml.XmlDataAdapter;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.ui.validator.IDStringValidator;
 import net.sf.jasperreports.eclipse.util.FileUtils;
+import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignElement;
@@ -247,11 +252,32 @@ public class ImpDataAdapter extends AImpObject {
 	protected void setFileName(DataAdapter da, String fname) {
 		if (da instanceof FileDataAdapter && ((FileDataAdapter) da).getDataFile() instanceof RepositoryDataLocation)
 			((StandardRepositoryDataLocation) ((FileDataAdapter) da).getDataFile()).setLocation(fname);
+		if (da instanceof JdbcDataAdapter) {
+			JdbcDataAdapter jdbcDA = ((JdbcDataAdapter) da);
+			if (jdbcDA.getDriver() != null)
+				for (AImpJdbcDataAdapter d : jdbcFiles)
+					d.setFileName(jdbcDA, d.getKeys()[0], fname);
+		}
 	}
 
 	protected String getFileName(DataAdapter da) {
+		if (da instanceof JdbcDataAdapter) {
+			JdbcDataAdapter jdbcDA = ((JdbcDataAdapter) da);
+			if (jdbcDA.getDriver() != null)
+				for (AImpJdbcDataAdapter d : jdbcFiles) {
+					Map<String, String> res = d.getFileName(jdbcDA);
+					if (!Misc.isNullOrEmpty(res))
+						return res.values().iterator().next();
+				}
+		}
 		if (da instanceof FileDataAdapter && ((FileDataAdapter) da).getDataFile() instanceof RepositoryDataLocation)
 			return ((RepositoryDataLocation) ((FileDataAdapter) da).getDataFile()).getLocation();
 		return null;
 	}
+
+	private static Set<AImpJdbcDataAdapter> jdbcFiles = new HashSet<>();
+	static {
+		jdbcFiles.add(new ImpBigQueryDataAdapter());
+	}
+
 }
