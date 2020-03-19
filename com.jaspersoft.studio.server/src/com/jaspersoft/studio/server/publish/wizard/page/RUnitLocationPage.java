@@ -141,7 +141,7 @@ public class RUnitLocationPage extends JSSHelpWizardPage {
 			String t = runit.getValue().getWsType();
 			for (INode n : ((ANode) firstElement).getChildren()) {
 				ResourceDescriptor rd = (ResourceDescriptor) n.getValue();
-				if(n == newjrxml || n == newrunit || rd == null)
+				if (n == newjrxml || n == newrunit || rd == null)
 					continue;
 				if (rd.getName().equals(nm) && !rd.getWsType().equals(t)) {
 					super.setErrorMessage("A resource of different type already exist for the same name");
@@ -307,7 +307,7 @@ public class RUnitLocationPage extends JSSHelpWizardPage {
 				ANode p = mru.getParent();
 				if (p != null)
 					for (INode n1 : p.getChildren())
-						if (n1 instanceof AMResource && n1 != mru
+						if (n1 instanceof AMResource && n1 != mru && n1 != newjrxml
 								&& ((AMResource) n1).getValue().getName().equals(rtext))
 							validationError = "This id is already used in this folder";
 			}
