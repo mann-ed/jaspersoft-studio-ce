@@ -22,8 +22,6 @@ import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -37,10 +35,8 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -68,6 +64,7 @@ import com.jaspersoft.studio.swt.widgets.table.ListContentProvider;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.wizards.ContextHelpIDs;
 
+import net.sf.jasperreports.annotations.properties.PropertyScope;
 import net.sf.jasperreports.eclipse.ui.util.PersistentLocationDialog;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.FilePrefUtil;
@@ -77,6 +74,7 @@ import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.JRPropertiesUtil;
 import net.sf.jasperreports.properties.PropertyMetadata;
+import net.sf.jasperreports.properties.StandardPropertyMetadata;
 
 /**
  * List field editor to edit the JSS properties. The properties are shown as key
@@ -441,6 +439,21 @@ public class PropertyListFieldEditor extends FieldEditor {
 				pkeys.add(pm.getName());
 				pmMap.put(pm.getName(), pm);
 			}
+			Map<String, String> jrprops = DefaultJasperReportsContext.getInstance().getProperties();
+			for (String k : jrprops.keySet()) {
+				if (pkeys.contains(k))
+					continue;
+				StandardPropertyMetadata spm = new StandardPropertyMetadata();
+				spm.setName(k);
+				List<PropertyScope> scopes = new ArrayList<>();
+				scopes.add(PropertyScope.CONTEXT);
+				spm.setScopes(scopes);
+				spm.setDefaultValue(jrprops.get(k));
+				spm.setValueType(String.class.getCanonicalName());
+				pkeys.add(k);
+				pmMap.put(spm.getName(), spm);
+			}
+
 			Collections.sort(pkeys);
 		}
 		return pkeys;
