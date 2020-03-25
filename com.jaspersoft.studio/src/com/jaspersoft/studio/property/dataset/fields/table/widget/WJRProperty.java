@@ -72,7 +72,6 @@ import net.sf.jasperreports.engine.type.JREnum;
 import net.sf.jasperreports.engine.type.NamedEnum;
 import net.sf.jasperreports.engine.type.NamedValueEnum;
 import net.sf.jasperreports.engine.type.PropertyEvaluationTimeEnum;
-import net.sf.jasperreports.properties.PropertyMetadata;
 
 public class WJRProperty extends AWidget {
 
@@ -396,6 +395,8 @@ public class WJRProperty extends AWidget {
 			((PropertyExpressionsDTO) element).getProperties().add(tdto);
 		} else if (element instanceof JRPropertiesMap) {
 			JRPropertiesMap map = (JRPropertiesMap) element;
+			if(value instanceof Boolean)
+				value = value.toString();
 			map.setProperty(cName, (String) value);
 		}
 	}
