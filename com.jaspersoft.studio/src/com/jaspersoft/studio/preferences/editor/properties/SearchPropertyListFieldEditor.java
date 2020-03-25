@@ -73,9 +73,8 @@ public class SearchPropertyListFieldEditor extends PropertyListFieldEditor {
 			List<Object> result = new ArrayList<>();
 			for (Object obj : allElements) {
 				Pair pair = (Pair) obj;
-				if (searchString.isEmpty() || pair.getKey().contains(searchString)) {
+				if (searchString.isEmpty() || pair.getKey().toLowerCase().contains(searchString.toLowerCase()))
 					result.add(obj);
-				}
 			}
 			return result.toArray();
 		}
@@ -85,9 +84,8 @@ public class SearchPropertyListFieldEditor extends PropertyListFieldEditor {
 			if (inputElement instanceof List)
 				return getSubset((List<?>) inputElement);
 			// If it's not a list check if it is a least a collection
-			else if (inputElement instanceof Collection) {
+			else if (inputElement instanceof Collection)
 				return getSubset((Collection<?>) inputElement);
-			}
 			return new Object[0];
 		}
 
