@@ -28,15 +28,12 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -44,10 +41,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
@@ -738,7 +733,7 @@ public class PropertyListFieldEditor extends FieldEditor {
 				layout.addColumnData(new ColumnWeightData(100, columnWidths[columnNames.length - 1], true));
 				table.setLayout(layout);
 			}
-			attachCellEditors();
+			// attachCellEditors();
 
 			viewer.addDoubleClickListener(event -> editPressed());
 		}
@@ -820,68 +815,6 @@ public class PropertyListFieldEditor extends FieldEditor {
 			return new Font(Display.getCurrent(), italicValues);
 		}
 
-	}
-
-	/**
-	 * Attach the cell editor on doubleclick to the table. The table must be
-	 * created before to call this method.
-	 */
-	protected void attachCellEditors() {
-		final TableEditor editor = new TableEditor(table);
-		editor.horizontalAlignment = SWT.LEFT;
-		editor.grabHorizontal = true;
-		table.addListener(SWT.MouseDoubleClick, event -> {
-			Rectangle clientArea = table.getClientArea();
-			Point pt = new Point(event.x, event.y);
-			int index = table.getTopIndex();
-			final Pair selectedItem = (Pair) ((StructuredSelection) viewer.getSelection()).getFirstElement();
-			while (index < table.getItemCount()) {
-				boolean visible = false;
-				final TableItem selectedCell = table.getItem(index);
-				for (int i = 0; i < table.getColumnCount(); i++) {
-					Rectangle rect = selectedCell.getBounds(i);
-					if (rect.contains(pt)) {
-						final int column = i;
-						final Text text = new Text(table, SWT.NONE);
-						Listener textListener = e -> {
-							if (e.type == SWT.FocusOut) {
-								if (column == 0)
-									selectedItem.setKey(text.getText());
-								else
-									selectedItem.setValue(text.getText());
-								text.dispose();
-								viewer.refresh();
-							} else if (e.type == SWT.Traverse) {
-								if (e.detail == SWT.TRAVERSE_RETURN) {
-									if (column == 0)
-										selectedItem.setKey(text.getText());
-									else
-										selectedItem.setValue(text.getText());
-									text.dispose();
-									viewer.refresh();
-									// FALL THROUGH
-								} else if (e.detail == SWT.TRAVERSE_ESCAPE) {
-									text.dispose();
-									e.doit = false;
-								}
-							}
-						};
-						text.addListener(SWT.FocusOut, textListener);
-						text.addListener(SWT.Traverse, textListener);
-						editor.setEditor(text, selectedCell, i);
-						text.setText(selectedCell.getText(i));
-						text.selectAll();
-						text.setFocus();
-						return;
-					}
-					if (!visible && rect.intersects(clientArea))
-						visible = true;
-				}
-				if (!visible)
-					return;
-				index++;
-			}
-		});
 	}
 
 	/**
