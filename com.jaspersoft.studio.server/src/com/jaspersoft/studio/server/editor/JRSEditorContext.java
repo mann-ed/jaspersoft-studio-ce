@@ -23,6 +23,7 @@ import org.eclipse.jdt.core.JavaCore;
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.data.storage.ADataAdapterStorage;
 import com.jaspersoft.studio.data.storage.FileDataAdapterStorage;
+import com.jaspersoft.studio.data.storage.PreferencesDataAdapterStorage;
 import com.jaspersoft.studio.editor.context.AEditorContext;
 import com.jaspersoft.studio.editor.context.JSSClasspathListener;
 import com.jaspersoft.studio.server.ServerManager;
@@ -198,7 +199,7 @@ public class JRSEditorContext extends AEditorContext {
 
 	@Override
 	public boolean isDataAdapterStorage(ADataAdapterStorage storage) {
-		return storage instanceof FileDataAdapterStorage
-				&& ((FileDataAdapterStorage) storage).getProject().equals(f.getProject());
+		return storage instanceof PreferencesDataAdapterStorage || (storage instanceof FileDataAdapterStorage
+				&& ((FileDataAdapterStorage) storage).getProject().equals(f.getProject()));
 	}
 }
