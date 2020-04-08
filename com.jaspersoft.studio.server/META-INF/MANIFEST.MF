@@ -52,7 +52,8 @@ Bundle-ClassPath: patch-library.jar,
  lib/jersey213/jersey-media-multipart-2.13.jar,
  lib/jersey213/mimepull-1.9.6.jar,
  lib/jersey/net.java.html.json-0.7.1.jar,
- lib/jasperserver-dto-7.5.0.jar,
+ lib/validation-api-1.1.0.Final.jar,
+ lib/jasperserver-dto-story-JS-57373-CalcFieldinDetail-SNAPSHOT.jar,
  .
 Eclipse-RegisterBuddy: com.jaspersoft.studio, com.jaspersoft.studio.bundles.jackson
 Eclipse-BuddyPolicy: registered

@@ -78,6 +78,29 @@ public abstract class ARestV2ConnectionJersey extends ARestV2Connection {
 		return r;
 	}
 
+	public <T> T toObjFromMapper(Response res, ClassSelector selector, IProgressMonitor monitor, ObjectMapper mapper)
+			throws IOException {
+		T r = null;
+		try {
+			switch (res.getStatus()) {
+			case 200:
+			case 201:
+				String str = res.readEntity(String.class);
+				r = (T) mapper.readValue(str, selector.checkClazz(res));
+			case 204:
+				break;
+			default:
+				eh.handleException(res, monitor);
+			}
+		} catch (IOException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
+			throw e;
+		} finally {
+			res.close();
+		}
+		return r;
+	}
+
 	@SuppressWarnings("unchecked")
 	protected <T> Class<T> checkClazz(Response res, Class<T> clazz) {
 		if (clazz == null) {

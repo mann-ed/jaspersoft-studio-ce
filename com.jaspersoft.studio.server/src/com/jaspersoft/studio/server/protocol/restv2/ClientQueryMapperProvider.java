@@ -4,6 +4,8 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.protocol.restv2;
 
+import java.io.IOException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.ext.ContextResolver;
@@ -11,10 +13,14 @@ import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.jaxrs.cfg.Annotations;
@@ -97,13 +103,15 @@ public class ClientQueryMapperProvider extends JacksonJaxbJsonProvider implement
 			synchronized (ClientQueryMapperProvider.class) {
 				if (mapper == null) {
 					mapper = new ObjectMapper();
-					AnnotationIntrospector primary = new JaxbAnnotationIntrospector();
+					AnnotationIntrospector primary = new JaxbAnnotationIntrospector(mapper.getTypeFactory());
 					AnnotationIntrospector secondary = new JacksonAnnotationIntrospector();
 					AnnotationIntrospector pair = AnnotationIntrospector.pair(primary, secondary);
 					mapper.setAnnotationIntrospector(pair);
 					// Serialize dates using ISO8601 format
 					// Jackson uses timestamps by default, so use StdDateFormat to get ISO8601
 					mapper.setDateFormat(new StdDateFormat());
+					// Deserialize dates using ISO8601 format
+					mapper.getDeserializationConfig().with(new StdDateFormat());
 					// Prevent exceptions from being thrown for unknown properties
 					mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 					// Use XML wrapper name as JSON property name
@@ -111,6 +119,16 @@ public class ClientQueryMapperProvider extends JacksonJaxbJsonProvider implement
 					mapper.configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, true);
 					// ignore fields with null values
 					mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+					mapper.setDefaultPropertyInclusion(
+							JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.ALWAYS));
+					mapper.addHandler(new DeserializationProblemHandler() {
+						@Override
+						public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser jp,
+								JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName)
+								throws IOException, JsonProcessingException {
+							return true;
+						}
+					});
 				}
 			}
 		}

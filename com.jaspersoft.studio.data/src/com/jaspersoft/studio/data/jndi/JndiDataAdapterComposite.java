@@ -4,10 +4,6 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.jndi;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.jndi.JndiDataAdapter;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
@@ -20,6 +16,10 @@ import org.eclipse.swt.widgets.Text;
 import com.jaspersoft.studio.data.ADataAdapterComposite;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.messages.Messages;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.jndi.JndiDataAdapter;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class JndiDataAdapterComposite extends ADataAdapterComposite {
 

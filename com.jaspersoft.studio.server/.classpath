@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/jasperserver-dto-7.5.0.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/jasperserver-dto-story-JS-57373-CalcFieldinDetail-SNAPSHOT.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="lib" path="lib/validation-api-1.1.0.Final.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jersey/net.java.html.json-0.7.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jersey213/mimepull-1.9.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jersey213/jersey-media-multipart-2.13.jar"/>
@@ -18,9 +22,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/jaxrs-ri/ext/osgi-resource-locator-1.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxrs-ri/ext/persistence-api-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxrs-ri/api/javax.ws.rs-api-2.0.1.jar" sourcepath="/home/slavic/Downloads/javax.ws.rs-api-2.0.1-sources.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/js-extra-classes.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jersey/asm-all-repackaged-2.2.0-b24.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jersey/cglib-2.2.0-b23.jar"/>
