@@ -18,10 +18,10 @@ public class Version {
 
 	private static final Map<String, String> jrs2jr = new HashMap<>();
 	static {
-		jrs2jr.put("7.1.0", "6.4.31");
-		jrs2jr.put("7.1.1", "6.4.32");
-		jrs2jr.put("7.1.2", "6.4.32");
-		jrs2jr.put("7.2.0", "6.8.1");
+		jrs2jr.put("7.1.0", "6.4.3");
+		jrs2jr.put("7.1.1", "6.4.3");
+		jrs2jr.put("7.1.2", "6.4.3");
+		jrs2jr.put("7.2.0", "6.5.1");
 		jrs2jr.put("7.5.0", "6.11.0");
 	}
 

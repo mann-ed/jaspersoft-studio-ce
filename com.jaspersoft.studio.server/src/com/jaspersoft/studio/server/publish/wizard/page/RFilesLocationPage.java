@@ -8,7 +8,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -32,6 +34,7 @@ import com.jaspersoft.studio.server.ServerProvider;
 import com.jaspersoft.studio.server.action.resource.RefreshResourcesAction;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AFileResource;
+import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MFolder;
 import com.jaspersoft.studio.server.model.MReportUnit;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
@@ -44,23 +47,23 @@ public class RFilesLocationPage extends AFilesLocationPage {
 
 	private TreeViewer bTView;
 
-	public RFilesLocationPage(JasperReportsConfiguration jConfig, List<IFile> files) {
+	public RFilesLocationPage(JasperReportsConfiguration jConfig, List<IResource> files) {
 		super("serverfilespublish", jConfig, files); //$NON-NLS-1$
 		setTitle(Messages.RUnitLocationPage_title);
 		setDescription("Select location where files will be published");
 	}
 
-	private List<AFileResource> rs;
+	private List<AMResource> rs;
 
 	@Override
-	public List<AFileResource> getSelectedNodes() {
+	public List<AMResource> getSelectedNodes() {
 		String puri = "/";
 		if (pNode instanceof MFolder)
 			puri = ((MFolder) pNode).getValue().getUriString() + "/";
 		if (pNode instanceof MReportUnit)
 			puri = ((MReportUnit) pNode).getValue().getUriString() + "_files/";
-		List<AFileResource> res = new ArrayList<>();
-		for (AFileResource f : rs) {
+		List<AMResource> res = new ArrayList<>();
+		for (AMResource f : rs) {
 			ResourceDescriptor rd = f.getValue();
 			rd.setUriString(puri + rd.getName());
 			res.add(getResource(f));
@@ -68,12 +71,13 @@ public class RFilesLocationPage extends AFilesLocationPage {
 		return res;
 	}
 
-	private AFileResource getResource(AFileResource f) {
+	private AMResource getResource(AMResource f) {
 		String uri = f.getValue().getUriString();
 		for (INode n : pNode.getChildren()) {
-			if (n instanceof AFileResource && ((AFileResource) n).getValue().getUriString().equals(uri)) {
+			if (n instanceof AFileResource && ((AFileResource) n).getValue().getUriString().equals(uri)
+					&& f instanceof AFileResource) {
 				AFileResource fr = (AFileResource) n;
-				fr.setFile(f.getFile());
+				fr.setFile(((AFileResource) f).getFile());
 				return fr;
 			}
 		}
@@ -182,38 +186,49 @@ public class RFilesLocationPage extends AFilesLocationPage {
 	}
 
 	@Override
-	protected void doFillInput() {
+	protected void doFillInput() throws CoreException {
 		rs = new ArrayList<>();
-		for (IFile f : files) {
-			ResourceDescriptor rd = new ResourceDescriptor();
-			String ext = f.getFileExtension().toLowerCase();
-			if (ext.equalsIgnoreCase("xml"))
-				rd.setWsType(ResourceDescriptor.TYPE_XML_FILE);
-			else if (ext.equalsIgnoreCase("jar") || ext.equalsIgnoreCase("zip"))
-				rd.setWsType(ResourceDescriptor.TYPE_CLASS_JAR);
-			else if (ext.equalsIgnoreCase("jrtx"))
-				rd.setWsType(ResourceDescriptor.TYPE_STYLE_TEMPLATE);
-			else if (ext.equalsIgnoreCase("css"))
-				rd.setWsType(ResourceDescriptor.TYPE_CSS_FILE);
-			else if (ext.equalsIgnoreCase("jrxml"))
-				rd.setWsType(ResourceDescriptor.TYPE_JRXML);
-			else if (ext.equalsIgnoreCase("json"))
-				rd.setWsType(ResourceDescriptor.TYPE_JSON_FILE);
-			else if (ext.equalsIgnoreCase("properties"))
-				rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
-			else if (ext.equalsIgnoreCase("ttf") || ext.equalsIgnoreCase("eot") || ext.equalsIgnoreCase("woff"))
-				rd.setWsType(ResourceDescriptor.TYPE_FONT);
-			else if (ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif") || ext.equalsIgnoreCase("jpg")
-					|| ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("bmp") || ext.equalsIgnoreCase("tiff"))
-				rd.setWsType(ResourceDescriptor.TYPE_IMAGE);
-			else
-				rd.setWsType(ResourceDescriptor.TYPE_CONTENT_RESOURCE);
-			rd.setName(IDStringValidator.safeChar(f.getName()));
-			rd.setLabel(f.getName());
-
-			rs.add((AFileResource) ResourceFactory.getResource(null, rd, -1));
-		}
+		for (IResource f : files)
+			rs.add(doGetResource(f, null));
 		bTView.setInput(rs);
+	}
+
+	private AMResource doGetResource(IResource r, AMResource parent) throws CoreException {
+		ResourceDescriptor rd = new ResourceDescriptor();
+		rd.setName(IDStringValidator.safeChar(r.getName()));
+		rd.setLabel(r.getName());
+		String ext = r.getFileExtension() != null ? r.getFileExtension().toLowerCase() : "";
+		if (r instanceof IFolder) {
+			rd.setWsType(ResourceDescriptor.TYPE_FOLDER);
+			MFolder mf = (MFolder) ResourceFactory.getResource(parent, rd, -1);
+			mf.removeChildren();
+			IFolder fd = (IFolder) r;
+			for (IResource ff : fd.members())
+				doGetResource(ff, mf);
+			return mf;
+		} else if (ext.equalsIgnoreCase("xml"))
+			rd.setWsType(ResourceDescriptor.TYPE_XML_FILE);
+		else if (ext.equalsIgnoreCase("jar") || ext.equalsIgnoreCase("zip"))
+			rd.setWsType(ResourceDescriptor.TYPE_CLASS_JAR);
+		else if (ext.equalsIgnoreCase("jrtx"))
+			rd.setWsType(ResourceDescriptor.TYPE_STYLE_TEMPLATE);
+		else if (ext.equalsIgnoreCase("css"))
+			rd.setWsType(ResourceDescriptor.TYPE_CSS_FILE);
+		else if (ext.equalsIgnoreCase("jrxml"))
+			rd.setWsType(ResourceDescriptor.TYPE_JRXML);
+		else if (ext.equalsIgnoreCase("json"))
+			rd.setWsType(ResourceDescriptor.TYPE_JSON_FILE);
+		else if (ext.equalsIgnoreCase("properties"))
+			rd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
+		else if (ext.equalsIgnoreCase("ttf") || ext.equalsIgnoreCase("eot") || ext.equalsIgnoreCase("woff"))
+			rd.setWsType(ResourceDescriptor.TYPE_FONT);
+		else if (ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif") || ext.equalsIgnoreCase("jpg")
+				|| ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("bmp") || ext.equalsIgnoreCase("tiff"))
+			rd.setWsType(ResourceDescriptor.TYPE_IMAGE);
+		else
+			rd.setWsType(ResourceDescriptor.TYPE_CONTENT_RESOURCE);
+
+		return (AMResource) ResourceFactory.getResource(parent, rd, -1);
 	}
 
 	protected void createFilesView(Composite composite) {
