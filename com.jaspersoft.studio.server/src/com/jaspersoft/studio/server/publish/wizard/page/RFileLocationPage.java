@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -34,6 +36,7 @@ import com.jaspersoft.studio.server.ServerProvider;
 import com.jaspersoft.studio.server.action.resource.RefreshResourcesAction;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AFileResource;
+import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MContentResource;
 import com.jaspersoft.studio.server.model.MFolder;
 import com.jaspersoft.studio.server.model.MReportUnit;
@@ -57,24 +60,26 @@ public class RFileLocationPage extends AFilesLocationPage {
 	protected AFileResource newRes;
 	protected AFileResource fileRes;
 
-	public RFileLocationPage(JasperReportsConfiguration jConfig, List<IFile> files) {
+	public RFileLocationPage(JasperReportsConfiguration jConfig, List<IResource> files) {
 		super("serverfilepublish", jConfig, files); //$NON-NLS-1$
 		setTitle(Messages.RUnitLocationPage_title);
 		setDescription(Messages.RFileLocationPage_0);
 	}
 
-	public List<AFileResource> getSelectedNodes() {
-		List<AFileResource> fResources = new ArrayList<>();
+	public List<AMResource> getSelectedNodes() {
+		List<AMResource> fResources = new ArrayList<>();
 		if (fileRes != null) {
 			ResourceDescriptor rd = fileRes.getValue();
 			String purl = FilenameUtils.getFullPath(rd.getUriString());
 			boolean first = true;
 			AFileResource fres = fileRes;
-			for (IFile f : files) {
+			for (IResource f : files) {
 				if (!first)
 					rd = new ResourceDescriptor();
-				String ext = f.getFileExtension().toLowerCase();
-				if (ext.equalsIgnoreCase("xml"))
+				String ext = f.getFileExtension() != null ? f.getFileExtension().toLowerCase() : "";
+				if (f instanceof IFolder)
+					rd.setWsType(ResourceDescriptor.TYPE_FOLDER);
+				else if (ext.equalsIgnoreCase("xml"))
 					rd.setWsType(ResourceDescriptor.TYPE_XML_FILE);
 				else if (ext.equalsIgnoreCase("jar") || ext.equalsIgnoreCase("zip"))
 					rd.setWsType(ResourceDescriptor.TYPE_CLASS_JAR);
@@ -99,8 +104,8 @@ public class RFileLocationPage extends AFilesLocationPage {
 					rd.setUriString(purl + rd.getName());
 				}
 				fres = (AFileResource) ResourceFactory.getResource(fres.getParent(), rd, -1);
-
-				fres.setFile(new File(f.getRawLocationURI()));
+				if (f instanceof IFile)
+					fres.setFile(new File(f.getRawLocationURI()));
 				fResources.add(fres);
 			}
 		}

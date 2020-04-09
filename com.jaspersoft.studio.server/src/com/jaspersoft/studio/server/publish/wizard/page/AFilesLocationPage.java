@@ -8,6 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -40,9 +42,9 @@ public abstract class AFilesLocationPage extends JSSHelpWizardPage {
 	protected JasperReportsConfiguration jConfig;
 	protected boolean isFillingInput;
 	protected boolean canSuggestID;
-	protected List<IFile> files;
+	protected List<IResource> files;
 
-	public AFilesLocationPage(String id, JasperReportsConfiguration jConfig, List<IFile> files) {
+	public AFilesLocationPage(String id, JasperReportsConfiguration jConfig, List<IResource> files) {
 		super(id);
 		this.jConfig = jConfig;
 		this.files = files;
@@ -51,7 +53,7 @@ public abstract class AFilesLocationPage extends JSSHelpWizardPage {
 	public void refreshFile() {
 	}
 
-	public abstract List<AFileResource> getSelectedNodes();
+	public abstract List<AMResource> getSelectedNodes();
 
 	/**
 	 * Return the context name for the help of this page
@@ -103,12 +105,16 @@ public abstract class AFilesLocationPage extends JSSHelpWizardPage {
 			ServerManager.loadServerProfilesCopy(servers);
 			treeViewer.setInput(servers);
 			refreshFile();
-			doFillInput();
+			try {
+				doFillInput();
+			} catch (CoreException e) {
+				UIUtils.showError(e);
+			}
 			isFillingInput = false;
 		});
 	}
 
-	protected void doFillInput() {
+	protected void doFillInput() throws CoreException {
 
 	}
 

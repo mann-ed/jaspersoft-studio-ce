@@ -11,6 +11,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -30,7 +31,7 @@ import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.server.ServerManager;
 import com.jaspersoft.studio.server.WSClientHelper;
 import com.jaspersoft.studio.server.messages.Messages;
-import com.jaspersoft.studio.server.model.AFileResource;
+import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.publish.PublishUtil;
 import com.jaspersoft.studio.server.publish.wizard.page.AFilesLocationPage;
@@ -45,7 +46,7 @@ import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 	private JasperReportsConfiguration jrConfig;
 	private int startPage = 0;
-	private List<IFile> files;
+	private List<IResource> files;
 	private AFilesLocationPage page1;
 	private ISelection selection;
 
@@ -55,7 +56,7 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 		setNeedsProgressMonitor(true);
 	}
 
-	public PublishFile2ServerWizard(List<IFile> files, int page) {
+	public PublishFile2ServerWizard(List<IResource> files, int page) {
 		this();
 		this.files = files;
 		this.startPage = page;
@@ -64,11 +65,11 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 	private void init() {
 		if (files.isEmpty() && selection != null && selection instanceof IStructuredSelection) {
 			Object obj = ((IStructuredSelection) selection).getFirstElement();
-			if (obj instanceof IFile)
-				files.add((IFile) obj);
+			if (obj instanceof IFile || obj instanceof IFolder)
+				files.add((IResource) obj);
 		}
-		if (jrConfig == null)
-			jrConfig = JasperReportsConfiguration.getDefaultJRConfig(files.get(0));
+		if (jrConfig == null && files.get(0) instanceof IFile)
+			jrConfig = JasperReportsConfiguration.getDefaultJRConfig((IFile) files.get(0));
 	}
 
 	@Override
@@ -76,7 +77,8 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 		// it is safe to dispose this context since it can only be created
 		// inside this
 		// class in the init() method
-		jrConfig.dispose();
+		if (jrConfig != null)
+			jrConfig.dispose();
 		super.dispose();
 	}
 
@@ -87,7 +89,7 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 			FileSelectionPage page0 = new FileSelectionPage(jrConfig);
 			addPage(page0);
 		}
-		if (files.size() > 1)
+		if (files.size() > 1 || files.get(0) instanceof IFolder)
 			page1 = new RFilesLocationPage(jrConfig, files);
 		else
 			page1 = new RFileLocationPage(jrConfig, files);
@@ -109,24 +111,26 @@ public class PublishFile2ServerWizard extends Wizard implements IExportWizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						monitor.beginTask("Saving", IProgressMonitor.UNKNOWN);
-						List<AFileResource> fres = page1.getSelectedNodes();
+						List<AMResource> fres = page1.getSelectedNodes();
 						if (fres != null) {
 							List<String> saved = new ArrayList<>();
 							for (int i = 0; i < fres.size(); i++) {
-								IFile f = files.get(i);
-								AFileResource fr = fres.get(i);
-								monitor.subTask(f.toString());
+								if (files.get(i) instanceof IFile) {
+									IFile f = (IFile) files.get(i);
+									AMResource fr = fres.get(i);
+									monitor.subTask(f.toString());
 
-								WSClientHelper.save(monitor, fr);
+									WSClientHelper.save(monitor, fr);
 
-								PublishUtil.savePath(f, fr);
-								saved.add(fr.getValue().getUriString());
+									PublishUtil.savePath(f, fr);
+									saved.add(fr.getValue().getUriString());
+								}
 							}
 							StringBuilder str = new StringBuilder(Messages.Publish_0);
 							for (String mres : saved)
 								str.append(mres).append("\n"); //$NON-NLS-1$
 							UIUtils.showInformation(str.toString());
-							AFileResource first = fres.get(0);
+							AMResource first = fres.get(0);
 							INode n = first.getRoot();
 							if (n != null && n instanceof MServerProfile) {
 								MServerProfile msp = ServerManager

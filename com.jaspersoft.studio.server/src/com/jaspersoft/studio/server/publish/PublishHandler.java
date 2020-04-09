@@ -16,6 +16,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -47,7 +48,7 @@ public class PublishHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		List<IFile> file = new ArrayList<>();
+		List<IResource> file = new ArrayList<>();
 		JasperReportsConfiguration jContext = null;
 		boolean disposeJrContext = false;
 		ISelection sel = HandlerUtil.getCurrentSelection(event);
@@ -56,6 +57,8 @@ public class PublishHandler extends AbstractHandler {
 				Object obj = it.next();
 				if (obj instanceof IFile) {
 					file.add((IFile) obj);
+				} else if (obj instanceof IFolder) {
+					file.add((IResource) obj);
 				} else if (obj instanceof JarPackageFragmentRoot) {
 					try {
 						ZipFile zf = ((JarPackageFragmentRoot) obj).getJar();
@@ -66,7 +69,7 @@ public class PublishHandler extends AbstractHandler {
 					}
 				} else if (obj instanceof CompilationUnit) {
 					file.add(getFileFromURI(((CompilationUnit) obj).getPath().toFile().toURI()));
-				} else if (obj instanceof IProject || obj instanceof IFolder || obj instanceof IPackageFragment
+				} else if (obj instanceof IProject || obj instanceof IPackageFragment
 						|| obj instanceof PackageFragmentRoot || obj instanceof ClassPathContainer) {
 					UIUtils.showInformation(
 							"Currently this type of operation is not supported, only publishing files is supported");
@@ -88,35 +91,37 @@ public class PublishHandler extends AbstractHandler {
 				} else {
 					Object obj = ep.getAdapter(IFile.class);
 					if (obj instanceof List)
-						file.addAll((List<IFile>) obj);
+						file.addAll((List<IResource>) obj);
 				}
 			}
 		}
 		if (file.isEmpty())
 			UIUtils.showInformation(Messages.PublishHandler_0);
 		else {
-			IFile f = file.get(0);
-			String ext = f.getFileExtension();
-			if (ext.equals(FileExtension.JRXML) || ext.equals(FileExtension.JASPER) || Misc.isNullOrEmpty(ext)) {
-				if (jContext == null) {
-					jContext = JasperReportsConfiguration.getDefaultJRConfig(f);
-					disposeJrContext = true;
-					try {
-						jContext.setJasperDesign(JRXMLUtils.getJasperDesign(jContext, f.getContents(), null));
-					} catch (Exception e) {
-						e.printStackTrace();
-						jContext.dispose();
-						jContext = null;
+			if (file.get(0) instanceof IFile) {
+				IFile f = (IFile) file.get(0);
+				String ext = f.getFileExtension();
+				if (ext.equals(FileExtension.JRXML) || ext.equals(FileExtension.JASPER) || Misc.isNullOrEmpty(ext)) {
+					if (jContext == null) {
+						jContext = JasperReportsConfiguration.getDefaultJRConfig(f);
+						disposeJrContext = true;
+						try {
+							jContext.setJasperDesign(JRXMLUtils.getJasperDesign(jContext, f.getContents(), null));
+						} catch (Exception e) {
+							e.printStackTrace();
+							jContext.dispose();
+							jContext = null;
+						}
 					}
-				}
-				if (jContext != null) {
-					JrxmlPublishAction publishAction = new JrxmlPublishAction(1, null);
-					publishAction.setJrConfig(jContext);
-					publishAction.run();
-					// Check if the context was created internally and must be disposed
-					if (disposeJrContext)
-						jContext.dispose();
-					return null;
+					if (jContext != null) {
+						JrxmlPublishAction publishAction = new JrxmlPublishAction(1, null);
+						publishAction.setJrConfig(jContext);
+						publishAction.run();
+						// Check if the context was created internally and must be disposed
+						if (disposeJrContext)
+							jContext.dispose();
+						return null;
+					}
 				}
 			}
 			PublishFile2ServerWizard wizard = new PublishFile2ServerWizard(file, 1);
