@@ -27,6 +27,7 @@ import com.jaspersoft.studio.data.sql.messages.Messages;
 import com.jaspersoft.studio.data.sql.model.query.expression.AMExpression;
 import com.jaspersoft.studio.data.sql.model.query.operand.AOperand;
 import com.jaspersoft.studio.data.sql.model.query.operand.FieldOperand;
+import com.jaspersoft.studio.data.sql.model.query.operand.FunctionOperand;
 import com.jaspersoft.studio.data.sql.model.query.operand.ParameterNotPOperand;
 import com.jaspersoft.studio.data.sql.model.query.operand.ParameterPOperand;
 import com.jaspersoft.studio.data.sql.model.query.operand.ScalarOperand;
@@ -107,9 +108,7 @@ public class Factory {
 		if (operand instanceof ParameterNotPOperand)
 			return new ParameterWidget(parent, (ParameterNotPOperand) operand, designer);
 		if (operand instanceof ParameterPOperand)
-			return new ParameterWidget(parent, (ParameterPOperand) operand, designer);
-		if (operand instanceof UnknownOperand)
-			return new UnknownOperandWidget(parent, (UnknownOperand) operand, designer);
+			return new ParameterWidget(parent, (ParameterPOperand) operand, designer);		
 		if (operand instanceof ScalarOperand) {
 			Class<?> type = ((ScalarOperand<?>) operand).getType();
 			if (Number.class.isAssignableFrom(type))
@@ -135,6 +134,10 @@ public class Factory {
 			// if (opval instanceof Date)
 			// return new DateWidget(parent, (ScalarOperand<Date>) operand);
 		}
+		if(operand instanceof FunctionOperand)
+			return new FunctionWidget(parent, (FunctionOperand)operand, designer);
+		if (operand instanceof UnknownOperand)
+			return new UnknownOperandWidget(parent, (UnknownOperand) operand, designer);
 		return w;
 	}
 
