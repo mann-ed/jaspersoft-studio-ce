@@ -4,6 +4,7 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.sql.ui.metadata;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -32,12 +33,21 @@ public class SchemaUtil {
 		try {
 			String dbproduct = c.getMetaData().getDatabaseProductName();
 			System.out.println(dbproduct);
-			if (dbproduct.equalsIgnoreCase("Oracle"))
-				return runSchemaQuery(c,
-						"select sys_context('USERENV', 'CURRENT_SCHEMA') from dual");
-			// else if (dbproduct.equalsIgnoreCase("SQL Anywhere"))
-			// return runSchemaQuery(c, "select db_name()");
-			else if (dbproduct.equalsIgnoreCase("PostgreSQL")) {
+			if (dbproduct.equalsIgnoreCase("Oracle")) {
+				if (c.getClass().getName().equals("oracle.jdbc.driver.OracleConnection")) {
+					Method m;
+					try {
+						m = c.getClass().getMethod("setIncludeSynonyms", boolean.class);
+						m.invoke(c, true);
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+							| IllegalArgumentException | InvocationTargetException e) {
+						e.printStackTrace();
+					}
+				}
+				return runSchemaQuery(c, "select sys_context('USERENV', 'CURRENT_SCHEMA') from dual");
+				// else if (dbproduct.equalsIgnoreCase("SQL Anywhere"))
+				// return runSchemaQuery(c, "select db_name()");
+			} else if (dbproduct.equalsIgnoreCase("PostgreSQL")) {
 				Statement stmt = c.createStatement();
 				ResultSet rs = stmt.executeQuery("SHOW search_path");
 				while (rs.next()) {
@@ -46,10 +56,8 @@ public class SchemaUtil {
 				}
 				rs.close();
 				stmt.close();
-			} else if (dbproduct.equalsIgnoreCase("Apache Hive")
-					|| dbproduct.equalsIgnoreCase("Impala")
-					|| dbproduct.equalsIgnoreCase("ApacheHive")
-					|| dbproduct.equalsIgnoreCase("Spark SQL")) {
+			} else if (dbproduct.equalsIgnoreCase("Apache Hive") || dbproduct.equalsIgnoreCase("Impala")
+					|| dbproduct.equalsIgnoreCase("ApacheHive") || dbproduct.equalsIgnoreCase("Spark SQL")) {
 				List<String> schemas = new ArrayList<String>();
 				ResultSet rs = c.getMetaData().getSchemas();
 				try {
@@ -67,18 +75,15 @@ public class SchemaUtil {
 		return res;
 	}
 
-	public static String getMetadataAllSymbol(DatabaseMetaData dbmeta)
-			throws SQLException {
+	public static String getMetadataAllSymbol(DatabaseMetaData dbmeta) throws SQLException {
 		String dbproduct = dbmeta.getDatabaseProductName();
-		if (dbproduct.equalsIgnoreCase("Apache Hive")
-				|| dbproduct.equalsIgnoreCase("Impala")
+		if (dbproduct.equalsIgnoreCase("Apache Hive") || dbproduct.equalsIgnoreCase("Impala")
 				|| dbproduct.equalsIgnoreCase("ApacheHive"))
 			return null;
 		return "%";
 	}
 
-	protected static String[] runSchemaQuery(Connection c, String query)
-			throws SQLException {
+	protected static String[] runSchemaQuery(Connection c, String query) throws SQLException {
 		List<String> paths = new ArrayList<String>();
 		Statement stmt = c.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
