@@ -155,7 +155,7 @@ public class ImpDataAdapter extends AImpObject {
 			try {
 				is = new FileInputStream(f);
 				final DataAdapterDescriptor dad = FileDataAdapterStorage.readDataADapter(is,
-						(IFile) jrConfig.get(FileUtils.KEY_FILE));
+						(IFile) jrConfig.get(FileUtils.KEY_FILE), jrConfig);
 				if (dad != null) {
 					final DataAdapter da = dad.getDataAdapter();
 					String fname = getFileName(da);

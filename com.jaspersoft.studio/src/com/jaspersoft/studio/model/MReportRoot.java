@@ -6,6 +6,7 @@ package com.jaspersoft.studio.model;
 
 import java.beans.PropertyChangeEvent;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.util.IPropertyChangeListener;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
@@ -17,6 +18,7 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import net.sf.jasperreports.eclipse.IDisposeListener;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.FilePrefUtil;
+import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 
@@ -66,7 +68,8 @@ public class MReportRoot extends MRoot {
 	public MReportRoot(JasperReportsConfiguration jConfig, Object value) {
 		super(null, value);
 		setJasperConfiguration(jConfig);
-		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
+		JaspersoftStudioPlugin.getInstance()
+				.addPreferenceListener(preferenceListener, (IResource) jConfig.get(FileUtils.KEY_FILE));
 		//Add a dispose listener to the jconfig to remove the previous one when the report is closed
 		jConfig.addDisposeListener(new IDisposeListener() {
 			

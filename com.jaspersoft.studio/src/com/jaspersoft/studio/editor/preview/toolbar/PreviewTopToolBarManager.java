@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IToolBarManager;
@@ -88,7 +89,8 @@ public class PreviewTopToolBarManager extends ATopToolBarManager {
 							refreshDataAdapters();
 					}
 				};
-			JaspersoftStudioPlugin.getInstance().addPreferenceListener(prefListener);
+			JaspersoftStudioPlugin.getInstance()
+					.addPreferenceListener(prefListener, (IResource) container.getJrContext().get(FileUtils.KEY_FILE));
 		}
 		tbManager.add(dataSourceWidget);
 

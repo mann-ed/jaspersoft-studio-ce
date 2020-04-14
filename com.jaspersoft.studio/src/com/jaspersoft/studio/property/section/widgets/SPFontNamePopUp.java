@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -37,6 +38,7 @@ import com.jaspersoft.studio.utils.ImageUtils;
 import com.jaspersoft.studio.utils.ModelUtils;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.engine.JRFont;
 import net.sf.jasperreports.engine.design.JRDesignFont;
 import net.sf.jasperreports.engine.fonts.FontUtil;
@@ -48,9 +50,9 @@ import net.sf.jasperreports.engine.fonts.FontUtil;
  * 
  */
 public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWidget<T> {
-	
+
 	private static final String FONT_PREVIEW_MESSAGE = "Sample";
-	
+
 	private PreferenceListener preferenceListener = new PreferenceListener();
 
 	private final class PreferenceListener implements IPropertyChangeListener {
@@ -66,20 +68,23 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
 	 * The combo popup
 	 */
 	protected WritableComboTableViewer combo;
-	
+
 	private APropertyNode pnode;
 
 	/**
-	 * True if the combo popup was already initialized with the data, false otherwise
+	 * True if the combo popup was already initialized with the data, false
+	 * otherwise
 	 */
 	protected boolean dataSetted;
 
 	public SPFontNamePopUp(Composite parent, AbstractSection section, T pDescriptor) {
 		super(parent, section, pDescriptor);
 		dataSetted = false;
-		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
+		JaspersoftStudioPlugin.getInstance()
+				.addPreferenceListener(preferenceListener,
+				(IResource) section.getJasperReportsContext().get(FileUtils.KEY_FILE));
 	}
-	
+
 	/**
 	 * Resize the passed image keeping its aspect ratio. If the image has
 	 * already the the correct width or height the original one is returned
@@ -96,12 +101,12 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
 		int oldWidth = img.getWidth();
 		int oldHeight = img.getHeight();
 
-		if (newWidth == oldWidth || newHeight == oldHeight){
+		if (newWidth == oldWidth || newHeight == oldHeight) {
 			return img;
 		}
 
 		int scaledHeight = newHeight;
-		int scaledWidth =  Math.max((int) ((float) oldWidth * scaledHeight) / oldHeight, 1);
+		int scaledWidth = Math.max((int) ((float) oldWidth * scaledHeight) / oldHeight, 1);
 		if (scaledWidth > newWidth) {
 			scaledWidth = newWidth;
 			scaledHeight = Math.max((int) ((float) oldHeight * scaledWidth) / oldWidth, 1);
@@ -140,7 +145,7 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
 		int height = 16;
 		int width = 55;
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-	  Graphics2D ig2 = bi.createGraphics();
+		Graphics2D ig2 = bi.createGraphics();
 		ig2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		ig2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
@@ -150,14 +155,16 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
 		Font font = util.getAwtFont(jrFont, Locale.getDefault());
 		ig2.setFont(font);
 		FontMetrics metrics = ig2.getFontMetrics(font);
-		int stringWidth =  metrics.stringWidth(FONT_PREVIEW_MESSAGE);
+		int stringWidth = metrics.stringWidth(FONT_PREVIEW_MESSAGE);
 		int stringHeight = metrics.getAscent() + 5;
 		ig2.dispose();
-		
-		if (stringWidth <= 0) stringWidth = width;
-		if (stringHeight <= 0) stringHeight = height;
+
+		if (stringWidth <= 0)
+			stringWidth = width;
+		if (stringHeight <= 0)
+			stringHeight = height;
 		bi = new BufferedImage(stringWidth, stringHeight, BufferedImage.TYPE_INT_ARGB);
-	  ig2 = bi.createGraphics();
+		ig2 = bi.createGraphics();
 		ig2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		ig2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		ig2.setFont(font);
@@ -168,13 +175,14 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
 	}
 
 	/**
-	 * Set the data and uses the text color of the text to show if the value is inherited or not
+	 * Set the data and uses the text color of the text to show if the value is
+	 * inherited or not
 	 */
 	@Override
 	public void setData(APropertyNode pnode, Object resolvedValue, Object elementValue) {
 		setData(pnode, resolvedValue);
-		if (combo != null && !combo.getControl().isDisposed()){
-			if (elementValue != null){
+		if (combo != null && !combo.getControl().isDisposed()) {
+			if (elementValue != null) {
 				combo.setInherithed(false);
 				combo.setToolTipText(pDescriptor.getDescription());
 			} else {
@@ -183,9 +191,10 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
 			}
 		}
 	}
-	
+
 	/**
-	 * Set the data of the combo popup, and if it wasn't initialized the fonts will be added
+	 * Set the data of the combo popup, and if it wasn't initialized the fonts
+	 * will be added
 	 */
 	@Override
 	public void setData(APropertyNode pnode, Object b) {
@@ -202,12 +211,13 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
 					public void exec() {
 						Object selectionValue = combo.getSelectionValue();
 						String newValue = null;
-						if (selectionValue != null && !selectionValue.toString().trim().isEmpty()){
+						if (selectionValue != null && !selectionValue.toString().trim().isEmpty()) {
 							newValue = selectionValue.toString();
 						}
 						boolean valueChanged = section.changeProperty(pDescriptor.getId(), newValue);
-						if (valueChanged){
-							setData(section.getElement(), section.getElement().getPropertyActualValue(pDescriptor.getId()), newValue);
+						if (valueChanged) {
+							setData(section.getElement(),
+									section.getElement().getPropertyActualValue(pDescriptor.getId()), newValue);
 						}
 					}
 				});
@@ -229,8 +239,9 @@ public class SPFontNamePopUp<T extends IPropertyDescriptor> extends ASPropertyWi
 			String[] fonts = fontsList.get(index);
 			for (String element : fonts) {
 				Image resolvedImage = ResourceManager.getImage(element);
-				if (resolvedImage == null){
-					resolvedImage = new Image(UIUtils.getDisplay(), ImageUtils.convertToSWT(createFontImage(element, util)));
+				if (resolvedImage == null) {
+					resolvedImage = new Image(UIUtils.getDisplay(),
+							ImageUtils.convertToSWT(createFontImage(element, util)));
 					ResourceManager.addImage(element, resolvedImage);
 				}
 				itemsList.add(new ComboItem(element, true, resolvedImage, i, element, element));

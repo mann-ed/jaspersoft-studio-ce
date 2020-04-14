@@ -8,6 +8,7 @@ import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
@@ -29,6 +30,7 @@ import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.engine.base.JRBaseFont;
 
 /**
@@ -55,7 +57,8 @@ public class SPFontNameCombo<T extends IPropertyDescriptor> extends ASPropertyWi
 	protected Combo combo;
 
 	/**
-	 * True if the combo popup was already initialized with the data, false otherwise
+	 * True if the combo popup was already initialized with the data, false
+	 * otherwise
 	 */
 	protected boolean isRefreshing;
 
@@ -68,15 +71,19 @@ public class SPFontNameCombo<T extends IPropertyDescriptor> extends ASPropertyWi
 
 	public SPFontNameCombo(Composite parent, AbstractSection section, T pDescriptor) {
 		super(parent, section, pDescriptor);
-		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
+		JaspersoftStudioPlugin.getInstance()
+				.addPreferenceListener(preferenceListener,
+				(IResource) section.getJasperReportsContext().get(FileUtils.KEY_FILE));
 	}
 
 	/**
-	 * Given a combo and and a string return the index of the string in the combo
+	 * Given a combo and and a string return the index of the string in the
+	 * combo
 	 * 
 	 * @param combo
 	 * @param searchedString
-	 * @return the index of the string in the combo, or 0 if the string is not found
+	 * @return the index of the string in the combo, or 0 if the string is not
+	 * found
 	 */
 	private int indexOf(Combo combo, String searchedString) {
 		String[] elements = combo.getItems();
@@ -105,7 +112,8 @@ public class SPFontNameCombo<T extends IPropertyDescriptor> extends ASPropertyWi
 	private APropertyNode pnode;
 
 	/**
-	 * Set the data of the combo popup, and if it wasn't initialized the fonts will be added
+	 * Set the data of the combo popup, and if it wasn't initialized the fonts
+	 * will be added
 	 */
 	@Override
 	public void setData(final APropertyNode pnode, Object b) {
@@ -120,12 +128,12 @@ public class SPFontNameCombo<T extends IPropertyDescriptor> extends ASPropertyWi
 			isRefreshing = false;
 		}
 	}
-	
+
 	@Override
 	public void setData(APropertyNode pnode, Object resolvedValue, Object elementValue) {
 		setData(pnode, resolvedValue);
-		if (combo != null && !combo.isDisposed()){
-			if (elementValue != null){
+		if (combo != null && !combo.isDisposed()) {
+			if (elementValue != null) {
 				combo.setForeground(ColorConstants.black);
 			} else {
 				combo.setForeground(UIUtils.INHERITED_COLOR);
@@ -167,8 +175,8 @@ public class SPFontNameCombo<T extends IPropertyDescriptor> extends ASPropertyWi
 							if (!value.equals(separator))
 								propertyChange(section, JRBaseFont.PROPERTY_FONT_NAME, combo.getText());
 							else
-								combo.select(indexOf(combo,
-										(String) section.getElement().getPropertyActualValue(JRBaseFont.PROPERTY_FONT_NAME)));
+								combo.select(indexOf(combo, (String) section.getElement()
+										.getPropertyActualValue(JRBaseFont.PROPERTY_FONT_NAME)));
 							int stringLength = combo.getText().length();
 							combo.setSelection(new Point(stringLength, stringLength));
 						}

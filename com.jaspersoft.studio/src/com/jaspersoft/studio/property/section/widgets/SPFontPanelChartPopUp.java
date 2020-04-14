@@ -7,6 +7,7 @@ package com.jaspersoft.studio.property.section.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -40,6 +41,7 @@ import com.jaspersoft.studio.swt.widgets.NumericCombo;
 import com.jaspersoft.studio.utils.ImageUtils;
 import com.jaspersoft.studio.utils.ModelUtils;
 
+import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.engine.JRFont;
 import net.sf.jasperreports.engine.base.JRBaseFont;
 import net.sf.jasperreports.engine.base.JRBaseStyle;
@@ -48,7 +50,8 @@ import net.sf.jasperreports.engine.fonts.FontUtil;
 import net.sf.jasperreports.engine.util.StyleResolver;
 
 /**
- * This class implement the subsection into the chart property tab using the font combo for the font name
+ * This class implement the subsection into the chart property tab using the
+ * font combo for the font name
  * 
  * @author Chicu Veaceslav & Orlandin Marco
  *
@@ -99,7 +102,8 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 	private ToolItem strikeTroughtButton;
 
 	/**
-	 * Flag to check if the font name was already been inserted into the combo popup
+	 * Flag to check if the font name was already been inserted into the combo
+	 * popup
 	 */
 	private boolean itemsSetted;
 
@@ -121,7 +125,9 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 	public SPFontPanelChartPopUp(Composite parent, AbstractSection section, IPropertyDescriptor pDescriptor) {
 		super(parent, section, pDescriptor);
 		preferenceListener = new PreferenceListener();
-		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
+		JaspersoftStudioPlugin.getInstance()
+				.addPreferenceListener(preferenceListener,
+				(IResource) section.getJasperReportsContext().get(FileUtils.KEY_FILE));
 		itemsSetted = false;
 	}
 
@@ -131,10 +137,11 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 	}
 
 	/**
-	 * Convert a list of array of string into a List of ComboItem, ready to be inserted into a combo popup
+	 * Convert a list of array of string into a List of ComboItem, ready to be
+	 * inserted into a combo popup
 	 * 
-	 * @param fontsList
-	 *          List of array of fonts, between every array will be inserted a separator
+	 * @param fontsList List of array of fonts, between every array will be
+	 * inserted a separator
 	 * @return List of combo item
 	 */
 	private List<ComboItem> stringToItems(List<String[]> fontsList) {
@@ -145,8 +152,9 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 			String[] fonts = fontsList.get(index);
 			for (String element : fonts) {
 				Image resolvedImage = ResourceManager.getImage(element);
-				if (resolvedImage == null){
-					resolvedImage = new Image(null, ImageUtils.convertToSWT(SPFontNamePopUp.createFontImage(element, util)));
+				if (resolvedImage == null) {
+					resolvedImage = new Image(null,
+							ImageUtils.convertToSWT(SPFontNamePopUp.createFontImage(element, util)));
 					ResourceManager.addImage(element, resolvedImage);
 				}
 				itemsList.add(new ComboItem(element, true, resolvedImage, i, element, element));
@@ -173,7 +181,8 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 	}
 
 	/**
-	 * The increment\decrement font size button, adapted to the chart font structure
+	 * The increment\decrement font size button, adapted to the chart font
+	 * structure
 	 * 
 	 * @author Orlandin Marco
 	 *
@@ -192,8 +201,8 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 		}
 
 		/**
-		 * The ovverrided version first change the font into a temp. mfont item, the use this object to replace the font
-		 * size inside the chart model
+		 * The ovverrided version first change the font into a temp. mfont item,
+		 * the use this object to replace the font size inside the chart model
 		 */
 		@Override
 		protected void createCommand(boolean increment) {
@@ -252,7 +261,7 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 		fontSize.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		fontSize.setItems(pd1.getItems());
 		fontSize.addSelectionListener(new SelectionAdapter() {
-			
+
 			private int time = 0;
 
 			public void widgetSelected(SelectionEvent e) {
@@ -282,18 +291,16 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 
 		underlineButton = createItem(toolBar, JRBaseStyle.PROPERTY_UNDERLINE, "icons/resources/edit-underline.png");
 
-		strikeTroughtButton = createItem(toolBar, JRBaseStyle.PROPERTY_STRIKE_THROUGH, "icons/resources/edit-strike.png");
+		strikeTroughtButton = createItem(toolBar, JRBaseStyle.PROPERTY_STRIKE_THROUGH,
+				"icons/resources/edit-strike.png");
 	}
 
 	/**
 	 * Create a tool bar button
 	 * 
-	 * @param toolBar
-	 *          the parent tool bar
-	 * @param id
-	 *          the id of the property changed by the button press
-	 * @param image
-	 *          the image of the tool button
+	 * @param toolBar the parent tool bar
+	 * @param id the id of the property changed by the button press
+	 * @param image the image of the tool button
 	 * @return the created tool button
 	 */
 	private ToolItem createItem(ToolBar toolBar, Object id, String image) {
@@ -317,12 +324,11 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 	}
 
 	/**
-	 * Set the font size value on the widget, setting also the information if it is inherited or not
+	 * Set the font size value on the widget, setting also the information if it
+	 * is inherited or not
 	 * 
-	 * @param resolvedNumber
-	 *          the font size value resolved
-	 * @param ownNumber
-	 *          the font size value of the element selected
+	 * @param resolvedNumber the font size value resolved
+	 * @param ownNumber the font size value of the element selected
 	 */
 	public void setFontSizeNumber(Number resolvedNumber, Number ownNumber) {
 		if (resolvedNumber != null) {
@@ -346,7 +352,8 @@ public class SPFontPanelChartPopUp extends ASPropertyWidget<IPropertyDescriptor>
 	}
 
 	/**
-	 * Set the font name, the font size and the font attribute in the respective controls
+	 * Set the font name, the font size and the font attribute in the respective
+	 * controls
 	 */
 	public void setData(APropertyNode pnode, Object value) {
 		this.parentNode = pnode;

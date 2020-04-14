@@ -66,7 +66,7 @@ public class CalloutEditPart extends AJDEditPart implements PropertyChangeListen
 	public void activate() {
 		super.activate();
 		preferenceListener = new PreferenceListener();
-		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
+		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener, getAssociatedFile());
 	}
 
 	@Override
@@ -95,9 +95,10 @@ public class CalloutEditPart extends AJDEditPart implements PropertyChangeListen
 	}
 
 	/**
-	 * Instead of the default drag tracker an overridden one is returned, in this way we can control the edit part
-	 * targeted from a drag & drop operation, and if the target is isn't an IContainer then it's parent is returned Change
-	 * by Orlandin Marco
+	 * Instead of the default drag tracker an overridden one is returned, in
+	 * this way we can control the edit part targeted from a drag & drop
+	 * operation, and if the target is isn't an IContainer then it's parent is
+	 * returned Change by Orlandin Marco
 	 */
 	@Override
 	public org.eclipse.gef.DragTracker getDragTracker(org.eclipse.gef.Request request) {
@@ -166,8 +167,7 @@ public class CalloutEditPart extends AJDEditPart implements PropertyChangeListen
 	/**
 	 * Sets the up figure.
 	 * 
-	 * @param rect
-	 *          the new up figure
+	 * @param rect the new up figure
 	 */
 	protected void setupFigure(IFigure rect) {
 		ANode model = getModel();
@@ -182,10 +182,10 @@ public class CalloutEditPart extends AJDEditPart implements PropertyChangeListen
 
 		String text = (String) m.getPropertyValue(MCallout.PROP_TEXT);
 		((CalloutFigure) rect).setText(text);
-		rect.setBackgroundColor(SWTResourceManager.getColor(
-				AlfaRGB.safeGetRGB((AlfaRGB) m.getPropertyValue(MCallout.PROP_BACKGROUND))));
-		rect.setForegroundColor(SWTResourceManager.getColor(
-				AlfaRGB.safeGetRGB((AlfaRGB) m.getPropertyValue(MCallout.PROP_FOREGROUND))));
+		rect.setBackgroundColor(SWTResourceManager
+				.getColor(AlfaRGB.safeGetRGB((AlfaRGB) m.getPropertyValue(MCallout.PROP_BACKGROUND))));
+		rect.setForegroundColor(SWTResourceManager
+				.getColor(AlfaRGB.safeGetRGB((AlfaRGB) m.getPropertyValue(MCallout.PROP_FOREGROUND))));
 		rect.setBounds(new Rectangle(x, y, w, h));
 	}
 
@@ -199,7 +199,8 @@ public class CalloutEditPart extends AJDEditPart implements PropertyChangeListen
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.
+	 * PropertyChangeEvent)
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		refresh();
@@ -208,7 +209,8 @@ public class CalloutEditPart extends AJDEditPart implements PropertyChangeListen
 
 	@Override
 	protected ConnectionEditPart createConnection(Object model) {
-		PinConnectorEditPart connectPart = (PinConnectorEditPart) getRoot().getViewer().getEditPartRegistry().get(model);
+		PinConnectorEditPart connectPart = (PinConnectorEditPart) getRoot().getViewer().getEditPartRegistry()
+				.get(model);
 		if (connectPart == null) {
 			connectPart = new PinConnectorEditPart();
 			connectPart.setModel(model);

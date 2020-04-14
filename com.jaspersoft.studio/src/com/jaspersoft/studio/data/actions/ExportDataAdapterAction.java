@@ -7,9 +7,6 @@ package com.jaspersoft.studio.data.actions;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.util.FileUtils;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -31,6 +28,9 @@ import com.jaspersoft.studio.data.MDataAdapter;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileUtils;
+
 public class ExportDataAdapterAction extends Action {
 	public static final String ID = "exportDataAdapteraction"; //$NON-NLS-1$
 	private TreeViewer treeViewer;
@@ -42,10 +42,10 @@ public class ExportDataAdapterAction extends Action {
 		setText(Messages.ExportDataAdapterAction_exportName);
 		setDescription(Messages.ExportDataAdapterAction_exportDescription);
 		setToolTipText(Messages.ExportDataAdapterAction_exportTooltip);
-		setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"org.eclipse.ui", "$nl$/icons/full/etool16/export_wiz.gif")); //$NON-NLS-1$ //$NON-NLS-2$
-		setDisabledImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(
-				"org.eclipse.ui", "$nl$/icons/full/dtool16/export_wiz.gif")); //$NON-NLS-1 //$NON-NLS-1$ //$NON-NLS-2$
+		setImageDescriptor(
+				AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.ui", "$nl$/icons/full/etool16/export_wiz.gif")); //$NON-NLS-1$ //$NON-NLS-2$
+		setDisabledImageDescriptor(
+				AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.ui", "$nl$/icons/full/dtool16/export_wiz.gif")); // $NON-NLS-1 //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 
@@ -80,19 +80,25 @@ public class ExportDataAdapterAction extends Action {
 			try {
 				pm.run(true, true, new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						JasperReportsConfiguration jConf = JasperReportsConfiguration.getDefaultJRConfig(file);
 						try {
 							DataAdapterDescriptor m = ((MDataAdapter) obj).getValue();
-							String xml = DataAdapterManager.toDataAdapterFile(m, JasperReportsConfiguration.getDefaultJRConfig(file));
+							String xml = DataAdapterManager.toDataAdapterFile(m, jConf);
 							if (file.exists())
-								file.setContents(new ByteArrayInputStream(xml.getBytes(FileUtils.UTF8_ENCODING)), true, true, monitor); 
+								file.setContents(new ByteArrayInputStream(xml.getBytes(FileUtils.UTF8_ENCODING)), true,
+										true, monitor);
 							else
-								file.create(new ByteArrayInputStream(xml.getBytes(FileUtils.UTF8_ENCODING)), true, monitor);
-							// Force the default editor for the data adapter file
-							// so that it can be opened with the same one in the future
+								file.create(new ByteArrayInputStream(xml.getBytes(FileUtils.UTF8_ENCODING)), true,
+										monitor);
+							// Force the default editor for the data adapter
+							// file
+							// so that it can be opened with the same one in the
+							// future
 							IDE.setDefaultEditor(file, DataAdapterEditorPart.ID);
 						} catch (Throwable e) {
 							throw new InvocationTargetException(e);
 						} finally {
+							jConf.dispose();
 							monitor.done();
 						}
 					}

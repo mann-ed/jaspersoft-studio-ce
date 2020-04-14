@@ -42,9 +42,9 @@ import com.jaspersoft.studio.property.ISetValueCommandProvider;
 import com.jaspersoft.studio.property.SetValueCommand;
 import com.jaspersoft.studio.property.section.widgets.ASPropertyWidget;
 import com.jaspersoft.studio.property.section.widgets.SPWidgetFactory;
+import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.engine.JasperReportsContext;
 
 /*
  * Abstract class for a section in a tab in the properties view.
@@ -53,7 +53,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 		implements PropertyChangeListener, IWidgetsProviderSection {
 	protected Map<Object, ASPropertyWidget<?>> widgets = new HashMap<>();
 
-	protected JasperReportsContext jasperReportsContext;
+	protected JasperReportsConfiguration jasperReportsContext;
 	private List<APropertyNode> elements;
 	private APropertyNode element;
 	private EditDomain editDomain;
@@ -184,7 +184,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 					if (model != null) {
 						jasperReportsContext = model.getJasperConfiguration();
 						if (element == null) {
-							EditorContributor provider = (EditorContributor)part.getAdapter(EditorContributor.class);
+							EditorContributor provider = (EditorContributor) part.getAdapter(EditorContributor.class);
 							if (provider != null)
 								setEditDomain(provider.getEditDomain());
 							if (getElement() != model) {
@@ -521,7 +521,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 		return widgets.get(propertyId);
 	}
 
-	public JasperReportsContext getJasperReportsContext() {
+	public JasperReportsConfiguration getJasperReportsContext() {
 		return jasperReportsContext;
 	}
 }

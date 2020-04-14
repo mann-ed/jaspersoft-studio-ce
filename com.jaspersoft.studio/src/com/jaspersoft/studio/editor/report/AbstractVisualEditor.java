@@ -7,6 +7,7 @@ package com.jaspersoft.studio.editor.report;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.FigureCanvas;
@@ -189,6 +190,7 @@ import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileUtils;
 
 /*
  * The Class AbstractVisualEditor.
@@ -1264,7 +1266,8 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 					if (property.equals(DesignerPreferencePage.P_TITLEICON))
 						setTextIcon();
 				};
-				JaspersoftStudioPlugin.getInstance().addPreferenceListener(pcListener);
+				JaspersoftStudioPlugin.getInstance()
+						.addPreferenceListener(pcListener, (IResource) jc.get(FileUtils.KEY_FILE));
 			}
 
 			for (ActionContributionItem act : act4TextIcon)

@@ -119,7 +119,8 @@ public class StyleTemplateNewWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * Return the WizardPage used to select the destination resource for the template reference
+	 * Return the WizardPage used to select the destination resource for the
+	 * template reference
 	 * 
 	 * @return a not null {@link WizardNewFileCreationPage}
 	 */
@@ -133,8 +134,8 @@ public class StyleTemplateNewWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * This method is called when 'Finish' button is pressed in the wizard. We will create an operation and run it using
-	 * wizard as execution context.
+	 * This method is called when 'Finish' button is pressed in the wizard. We
+	 * will create an operation and run it using wizard as execution context.
 	 */
 	@Override
 	public boolean performFinish() {
@@ -180,8 +181,9 @@ public class StyleTemplateNewWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * The worker method. It will find the container, create the file if missing or just replace its contents, and open
-	 * the editor on the newly created file.
+	 * The worker method. It will find the container, create the file if missing
+	 * or just replace its contents, and open the editor on the newly created
+	 * file.
 	 */
 
 	private void doFinish(String containerName, String fileName, IProgressMonitor monitor) throws CoreException {
@@ -242,13 +244,14 @@ public class StyleTemplateNewWizard extends Wizard implements INewWizard {
 	 * We will initialize file contents with a sample text.
 	 */
 	protected InputStream openContentStream() {
+		JasperReportsConfiguration jConf = null;
 		try {
 			JRSimpleTemplate tmp = new JRSimpleTemplate();
 
 			JRDesignStyle jrDesignStyle = new JRDesignStyle();
 			jrDesignStyle.setName("SimpleStyle"); //$NON-NLS-1$
 			tmp.addStyle(jrDesignStyle);
-			JasperReportsConfiguration jConf = null;
+
 			if (file != null)
 				jConf = JasperReportsConfiguration.getDefaultJRConfig(file);
 			else if (reportFile != null)
@@ -262,6 +265,8 @@ public class StyleTemplateNewWizard extends Wizard implements INewWizard {
 			return new ByteArrayInputStream(contents.getBytes());
 		} catch (JRException e) {
 			e.printStackTrace();
+		} finally {
+			jConf.dispose();
 		}
 		return null;
 	}
@@ -283,7 +288,8 @@ public class StyleTemplateNewWizard extends Wizard implements INewWizard {
 				if (obj instanceof EditPart) {
 					IEditorInput ein = SelectionHelper.getActiveJRXMLEditor().getEditorInput();
 					if (ein instanceof FileEditorInput) {
-						this.selection = new TreeSelection(new TreePath(new Object[] { ((FileEditorInput) ein).getFile() }));
+						this.selection = new TreeSelection(
+								new TreePath(new Object[] { ((FileEditorInput) ein).getFile() }));
 						return;
 					}
 				}

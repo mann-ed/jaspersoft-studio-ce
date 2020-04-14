@@ -85,14 +85,14 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	public static final String KEY_JRPARAMETERS = "KEY_PARAMETERS";
 
 	/**
-	 * Key used to store the drawer used to paint the JRElements, it is stored in
-	 * the configuration to be easily accessible
+	 * Key used to store the drawer used to paint the JRElements, it is stored
+	 * in the configuration to be easily accessible
 	 */
 	public static final String KEY_DRAWER = "REPORT_DRAWER";
 
 	/**
-	 * Key used to store the report converter used to paint the JRElements, it is
-	 * stored in the configuration to be easily accessible
+	 * Key used to store the report converter used to paint the JRElements, it
+	 * is stored in the configuration to be easily accessible
 	 */
 	public static final String KEY_CONVERTER = "REPORT_CONVERTER";
 
@@ -126,8 +126,8 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	}
 
 	/**
-	 * When an event of resource loaded happen it rebuild the extrenral styles in
-	 * the report drawer and trigger a refresh of the editor
+	 * When an event of resource loaded happen it rebuild the extrenral styles
+	 * in the report drawer and trigger a refresh of the editor
 	 * 
 	 * @author Orlandin Marco
 	 *
@@ -140,13 +140,16 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 		}
 
 		private void refreshStyles() {
-			// clear the style cache of this configuration, since a resource could be
+			// clear the style cache of this configuration, since a resource
+			// could be
 			// changed for it
 			// and styles need to be loaded another time
 			ExternalStylesManager.removeCachedStyles(JasperReportsConfiguration.this);
-			// Not sure if the resource is a style, so this call will regenerate first the
+			// Not sure if the resource is a style, so this call will regenerate
+			// first the
 			// styles
-			// and trigger a complete refresh of the editor. Doing so it will cover every
+			// and trigger a complete refresh of the editor. Doing so it will
+			// cover every
 			// case of
 			// late loading of a resource
 			refreshCachedStyles();
@@ -272,7 +275,7 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 		isPropsCached = false;
 		if (preferenceListener == null) {
 			preferenceListener = new PreferenceListener();
-			JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
+			JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener, file);
 		}
 
 		if (resourceLoadedListener == null) {
@@ -403,7 +406,8 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 		if (smap != null && !smap.isEmpty())
 			propmap.putAll(smap);
 		setPropertiesMap(propmap);
-		// get properties from eclipse stored jr properties (eclipse, project, file
+		// get properties from eclipse stored jr properties (eclipse, project,
+		// file
 		// level)
 		Properties props = cntx.getJrProperties();
 		for (Object key : props.keySet()) {
@@ -438,7 +442,8 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 		return super.getProperty(key);
 
 		// let's try with ireport prefix prefix ? why we need it?
-		// val = Misc.nullIfEmpty(pstore.getString(PROPERTY_JRPROPERTY_PREFIX + key));
+		// val = Misc.nullIfEmpty(pstore.getString(PROPERTY_JRPROPERTY_PREFIX +
+		// key));
 		// if (val != null)
 		// return val;
 		// val = props.getProperty(PROPERTY_JRPROPERTY_PREFIX + key);
@@ -593,8 +598,9 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 
 	/**
 	 * Return the font extension both by resolving the property of the current
-	 * project and from the commons extension. If it is available instead of request
-	 * the extension from the superclass it search it in the common cache
+	 * project and from the commons extension. If it is available instead of
+	 * request the extension from the superclass it search it in the common
+	 * cache
 	 * 
 	 * @return a not null font extension
 	 */
@@ -655,9 +661,10 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	}
 
 	/**
-	 * Return the components extension both by resolving the property of the current
-	 * project and from the commons extension. If it is available instead of request
-	 * the extension from the superclass it search it in the common cache
+	 * Return the components extension both by resolving the property of the
+	 * current project and from the commons extension. If it is available
+	 * instead of request the extension from the superclass it search it in the
+	 * common cache
 	 * 
 	 * @return a not null components extension
 	 */
@@ -675,9 +682,10 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	}
 
 	/**
-	 * Return the functions extension both by resolving the property of the current
-	 * project and from the commons extension. If it is available instead of request
-	 * the extension from the superclass it search it in the common cache
+	 * Return the functions extension both by resolving the property of the
+	 * current project and from the commons extension. If it is available
+	 * instead of request the extension from the superclass it search it in the
+	 * common cache
 	 * 
 	 * @return a not null functions extension
 	 */
@@ -692,8 +700,9 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 
 	/**
 	 * Return the castor extension both by resolving the property of the current
-	 * project and from the commons extension. If it is available instead of request
-	 * the extension from the superclass it search it in the common cache
+	 * project and from the commons extension. If it is available instead of
+	 * request the extension from the superclass it search it in the common
+	 * cache
 	 * 
 	 * @return a not null functions extension
 	 */
@@ -709,8 +718,9 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 
 	/**
 	 * Return the Chart Theme extension both by resolving the property of the
-	 * current project and from the commons extension. If it is available instead of
-	 * request the extension from the superclass it search it in the common cache
+	 * current project and from the commons extension. If it is available
+	 * instead of request the extension from the superclass it search it in the
+	 * common cache
 	 * 
 	 * @return a not null functions extension
 	 */
@@ -741,9 +751,11 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	@Override
 	public <T> void setExtensions(Class<T> extensionType, List<? extends T> extensions) {
 		if (extensionType == ChartThemeBundle.class) {
-			// In some case the extension is set manually, like in the initialization or the
+			// In some case the extension is set manually, like in the
+			// initialization or the
 			// JRCTX editor,
-			// in this case we don't want to invalidate and reload the extension on a
+			// in this case we don't want to invalidate and reload the extension
+			// on a
 			// classpath change, since
 			// it was manually set to a specific value
 			chartThemesBundles.setValue((List<ChartThemeBundle>) extensions);
@@ -808,7 +820,8 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 			Thread.currentThread().setContextClassLoader(oldCL);
 		}
 		if (result != null && result.indexOf(null) >= 0) {
-			// this theoretically should not happen, but practically, we have it sometimes
+			// this theoretically should not happen, but practically, we have it
+			// sometimes
 			try {
 				result.removeAll(Collections.singleton(null));
 			} catch (UnsupportedOperationException e) {
@@ -820,8 +833,8 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	}
 
 	/*
-	 * private <T> List<T> getCachedExtension(Class<T> extensionType){ if (parent ==
-	 * DefaultJasperReportsContext.getInstance()){ Object cache =
+	 * private <T> List<T> getCachedExtension(Class<T> extensionType){ if
+	 * (parent == DefaultJasperReportsContext.getInstance()){ Object cache =
 	 * extensionCache.get(extensionType); if (cache != null ) return
 	 * (List<T>)parent; }
 	 */
@@ -833,8 +846,8 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	}
 
 	/**
-	 * @return a default {@link JasperReportsConfiguration} instance, based on the
-	 *         {@link DefaultJasperReportsContext}.
+	 * @return a default {@link JasperReportsConfiguration} instance, based on
+	 * the {@link DefaultJasperReportsContext}.
 	 */
 	public static JasperReportsConfiguration getDefaultJRConfig() {
 		return new JasperReportsConfiguration(DefaultJasperReportsContext.getInstance(), null);
@@ -845,8 +858,8 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	}
 
 	/**
-	 * @return a default {@link JasperReportsConfiguration} instance, based on the
-	 *         {@link DefaultJasperReportsContext}.
+	 * @return a default {@link JasperReportsConfiguration} instance, based on
+	 * the {@link DefaultJasperReportsContext}.
 	 */
 	public static JasperReportsConfiguration getDefaultInstance() {
 		if (instance == null)
@@ -866,21 +879,23 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	}
 
 	/**
-	 * Force the reload of the styles for jasperreports, should be called when an
-	 * used external style change, this will discard all the loaded styles and
-	 * reload them another time. Then it trigger the repaint of every element in the
-	 * report
+	 * Force the reload of the styles for jasperreports, should be called when
+	 * an used external style change, this will discard all the loaded styles
+	 * and reload them another time. Then it trigger the repaint of every
+	 * element in the report
 	 */
 	public void refreshCachedStyles() {
 		JSSReportConverter reportConverter = getReportConverter();
 		if (reportConverter != null) {
 			reportConverter.refreshCachedStyles();
 			JasperDesign design = getJasperDesign();
-			// Since JasperReports doesn't render correctly the element with a style
+			// Since JasperReports doesn't render correctly the element with a
+			// style
 			// reference at design time we use the trick
 			// to set an external style as local one, so set in the element the
 			// JRDesignStyle object of the external style, along
-			// with the name reference. So when a reference is updated we need to iterate
+			// with the name reference. So when a reference is updated we need
+			// to iterate
 			// all style and if thy are using a reference
 			// refresh its copy of the internal style as well
 			for (JRStyle style : design.getStyles()) {
@@ -900,7 +915,8 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	/**
 	 * Return the report converter used to paint the report elements
 	 * 
-	 * @return return the current report converter or null if it can't be resolved
+	 * @return return the current report converter or null if it can't be
+	 * resolved
 	 */
 	public JSSReportConverter getReportConverter() {
 		Object converter = get(JasperReportsConfiguration.KEY_CONVERTER);

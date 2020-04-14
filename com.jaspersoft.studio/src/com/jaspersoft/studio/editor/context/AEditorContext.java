@@ -122,7 +122,7 @@ public class AEditorContext {
 	}
 
 	protected String add(List<RepositoryService> list, Set<String> rset, String root) {
-		System.out.println("Adding root: " + root);
+//		System.out.println("Adding root: " + root);
 		if (rset.contains(root))
 			return null;
 		rset.add(root);

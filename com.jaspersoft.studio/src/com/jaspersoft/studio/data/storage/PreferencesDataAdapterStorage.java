@@ -64,6 +64,7 @@ public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 				convertDataAdapterName);
 		// Read the configuration from the file storage
 		File[] storageContent = ConfigurationManager.getStorageContent(PREF_KEYS_DATA_ADAPTERS);
+		JasperReportsConfiguration jConf = JasperReportsConfiguration.getDefaultInstance();
 		for (File storageElement : storageContent) {
 			InputStream inputStream = null;
 			try {
@@ -96,10 +97,10 @@ public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 							inputStream.close();
 
 							inputStream = new FileInputStream(storageElement);
-							dataAdapter = (DataAdapter) CastorUtil
-									.getInstance(JasperReportsConfiguration.getDefaultInstance()).read(inputStream);
+							dataAdapter = (DataAdapter) CastorUtil.getInstance(jConf).read(inputStream);
 							dataAdapterDescriptor.setDataAdapter(dataAdapter);
-							// Always add the data adapter read from the file regardless of the name
+							// Always add the data adapter read from the file
+							// regardless of the name
 							super.forceAddDataAdapter(dataAdapterDescriptor);
 							fileAdapterMap.put(dataAdapterDescriptor, storageElement.getName());
 						}
@@ -120,7 +121,7 @@ public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 				InputStream in = null;
 				try {
 					in = urls.nextElement().openStream();
-					DataAdapterDescriptor dad = FileDataAdapterStorage.readDataADapter(in, null);
+					DataAdapterDescriptor dad = FileDataAdapterStorage.readDataADapter(in, null, jConf);
 					if (dad != null)
 						addDataAdapter(dad);
 				} catch (IOException e) {
@@ -132,7 +133,8 @@ public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 		}
 		for (DataAdapterDescriptor dad : JaspersoftStudioPlugin.getDefaultDAManager().getDefaultDAs()) {
 			DataAdapterDescriptor oldDa = daDescriptors.get(dad.getName());
-			// maybe name is the same, but if type changed, we should change dataadapter
+			// maybe name is the same, but if type changed, we should change
+			// dataadapter
 			if (oldDa != null && !oldDa.getClass().getCanonicalName().equals(dad.getClass().getCanonicalName()))
 				removeDataAdapter(oldDa);
 			// Add new data adapter only if it has a factory
@@ -145,8 +147,8 @@ public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 	}
 
 	/**
-	 * Save an element on the data adapter file storage. The url is the name of the
-	 * resource that will be created inside the storage
+	 * Save an element on the data adapter file storage. The url is the name of
+	 * the resource that will be created inside the storage
 	 */
 	protected void save(DataAdapterDescriptor adapter) {
 		String fileName = convertDataAdapterName.getFileName(null);
@@ -178,8 +180,8 @@ public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 	}
 
 	/**
-	 * Remove a data adapter from the storage, the url is the name of the resource
-	 * to remove
+	 * Remove a data adapter from the storage, the url is the name of the
+	 * resource to remove
 	 */
 	@Override
 	public boolean removeDataAdapter(DataAdapterDescriptor da) {
@@ -192,8 +194,8 @@ public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 	}
 
 	/**
-	 * Add a data adapter from the file storage. As data adapter file name is used
-	 * the url, manipulated if necessary to get a valid an unique file name
+	 * Add a data adapter from the file storage. As data adapter file name is
+	 * used the url, manipulated if necessary to get a valid an unique file name
 	 */
 	@Override
 	public boolean addDataAdapter(DataAdapterDescriptor adapter) {

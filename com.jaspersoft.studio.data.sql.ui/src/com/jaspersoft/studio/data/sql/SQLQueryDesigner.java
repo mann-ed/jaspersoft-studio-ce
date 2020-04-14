@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
@@ -71,7 +72,6 @@ public class SQLQueryDesigner extends SimpleSQLQueryDesigner {
 	public SQLQueryDesigner() {
 		super();
 		refreshViewer();
-		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
 	}
 
 	@Override
@@ -328,6 +328,8 @@ public class SQLQueryDesigner extends SimpleSQLQueryDesigner {
 	@Override
 	public void setQuery(JasperDesign jDesign, JRDataset jDataset, JasperReportsConfiguration jConfig) {
 		super.setQuery(jDesign, jDataset, jConfig);
+		JaspersoftStudioPlugin.getInstance()
+				.addPreferenceListener(preferenceListener, (IResource) jConfig.get(FileUtils.KEY_FILE));
 		initSashForm(sf);
 		doRefreshRoots(false);
 	}

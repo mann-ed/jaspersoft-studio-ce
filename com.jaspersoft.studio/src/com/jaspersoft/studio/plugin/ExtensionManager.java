@@ -204,7 +204,6 @@ public class ExtensionManager {
 			}
 		}
 		return new AEditorContext();
-
 	}
 
 	public List<IReportRunner> getReportRunners() {
@@ -287,7 +286,8 @@ public class ExtensionManager {
 	 * Returns the support factory for the expression editor.
 	 * 
 	 * <p>
-	 * The method seeks for a custom support factory or a default one (fallback).
+	 * The method seeks for a custom support factory or a default one
+	 * (fallback).
 	 * 
 	 * @return the contributed support factory, null <code>otherwise</code>
 	 */
@@ -335,8 +335,8 @@ public class ExtensionManager {
 	 * Returns the list of contributed template provider, on the extension point
 	 * templateProviderSupport
 	 * 
-	 * @return the list of contributed template provider, it can be empty but not
-	 *         null
+	 * @return the list of contributed template provider, it can be empty but
+	 * not null
 	 */
 	public List<TemplateProvider> getTemplateProviders() {
 
@@ -435,10 +435,10 @@ public class ExtensionManager {
 	}
 
 	/**
-	 * Return a list of the contributed actions, this action are the one that must
-	 * be executed the first time JSS is started. Between all the contributed
-	 * actions are returned only the ones that are not overridden by another startup
-	 * action.
+	 * Return a list of the contributed actions, this action are the one that
+	 * must be executed the first time JSS is started. Between all the
+	 * contributed actions are returned only the ones that are not overridden by
+	 * another startup action.
 	 * 
 	 * @return a not null list of IFirstStartupAction
 	 */
@@ -484,11 +484,11 @@ public class ExtensionManager {
 
 	/**
 	 * Return a list of the contributed key bindings, these are the keybindings
-	 * contributed to the studio keybindings manager. The key binding of a specific
-	 * action can be read from the returned map using its id
+	 * contributed to the studio keybindings manager. The key binding of a
+	 * specific action can be read from the returned map using its id
 	 * 
-	 * @return a not null list Map of binding where the key is the id of the binded
-	 *         key and the value is the definition of the binding key
+	 * @return a not null list Map of binding where the key is the id of the
+	 * binded key and the value is the definition of the binding key
 	 */
 	public static HashMap<String, BindingElement> getContributedBindings() {
 		if (contributedBindings == null) {
@@ -517,8 +517,8 @@ public class ExtensionManager {
 	}
 
 	/**
-	 * List of handler used to export or import Jaspersoft Studio resources. It is
-	 * used as cache for the contributed items
+	 * List of handler used to export or import Jaspersoft Studio resources. It
+	 * is used as cache for the contributed items
 	 */
 	private static List<IExportedResourceHandler> contributedExporters = null;
 
@@ -793,7 +793,7 @@ public class ExtensionManager {
 		}
 		return list;
 	}
-	
+
 	public List<Action> getEditorActions(AbstractVisualEditor editor) {
 		List<Action> list = new ArrayList<Action>();
 		for (IEditorContributor f : eContributor) {
@@ -805,7 +805,7 @@ public class ExtensionManager {
 		}
 		return list;
 	}
-	
+
 	public List<String> getEditorActionsIDs() {
 		List<String> list = new ArrayList<String>();
 		for (IEditorContributor f : eContributor) {
@@ -830,8 +830,7 @@ public class ExtensionManager {
 	/**
 	 * Looks for contributions related to the specified preview mode ID.
 	 * 
-	 * @param previewModeID
-	 *            the preview mode identifier
+	 * @param previewModeID the preview mode identifier
 	 * @return the list of contributed information
 	 */
 	public List<PreviewModeDetails> getAllPreviewModeDetails(String previewModeID) {
@@ -866,8 +865,8 @@ public class ExtensionManager {
 	 * Return the list of all contributed hyperlink types.
 	 * <p>
 	 * 
-	 * A plugin can contribute custom hyperlink through the extension point with id
-	 * <code>com.jaspersoft.studio.hyperlinkTypes</code>.
+	 * A plugin can contribute custom hyperlink through the extension point with
+	 * id <code>com.jaspersoft.studio.hyperlinkTypes</code>.
 	 * 
 	 * @return list of custom hyperlink types
 	 */
@@ -934,11 +933,12 @@ public class ExtensionManager {
 	}
 
 	/**
-	 * Returns a list, maybe empty, of default parameters that can be suggested when
-	 * choosing the specified hyperlink type.
+	 * Returns a list, maybe empty, of default parameters that can be suggested
+	 * when choosing the specified hyperlink type.
 	 * 
 	 * @param hyperlinkType
-	 * @return the list of default parameters, if any, associated to the hyperlink
+	 * @return the list of default parameters, if any, associated to the
+	 * hyperlink
 	 */
 	public List<HyperlinkDefaultParameter> getDefaultParametersForCustomHyperlink(String hyperlinkType) {
 		if (defaultHyperlinkParametersByCustomType == null) {
@@ -951,8 +951,8 @@ public class ExtensionManager {
 
 	/**
 	 * Returns a list, maybe empty, of ids that refer to UI elements that are
-	 * supposed to be used in dialogs, widgets and composites that allow the final
-	 * user to modify hyperlinks.
+	 * supposed to be used in dialogs, widgets and composites that allow the
+	 * final user to modify hyperlinks.
 	 * 
 	 * @param hyperlinkType
 	 * @return the list of ui elements, if any, associated to the hyperlink
@@ -963,7 +963,8 @@ public class ExtensionManager {
 			getContributedHyperlinkTypes();
 		}
 		List<UIElement> list = uiElementsIDByCustomType.get(hyperlinkType);
-		// When the list is null then there is no contribution at plugin.xml level
+		// When the list is null then there is no contribution at plugin.xml
+		// level
 		// As fallback solution we return all the available UI elements
 		return list != null ? list : Arrays.asList(UIElement.values());
 	}

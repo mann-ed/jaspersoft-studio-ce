@@ -9,6 +9,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import com.jaspersoft.studio.data.sql.FullExpression;
 import com.jaspersoft.studio.data.sql.JRParameter;
 import com.jaspersoft.studio.data.sql.Like;
 import com.jaspersoft.studio.data.sql.LikeOperand;
+import com.jaspersoft.studio.data.sql.OpFunction;
+import com.jaspersoft.studio.data.sql.OpFunctionArg;
 import com.jaspersoft.studio.data.sql.Operand;
 import com.jaspersoft.studio.data.sql.Operands;
 import com.jaspersoft.studio.data.sql.OrExpr;
@@ -42,6 +45,7 @@ import com.jaspersoft.studio.data.sql.model.query.expression.MExpressionX;
 import com.jaspersoft.studio.data.sql.model.query.from.MFromTable;
 import com.jaspersoft.studio.data.sql.model.query.operand.AOperand;
 import com.jaspersoft.studio.data.sql.model.query.operand.FieldOperand;
+import com.jaspersoft.studio.data.sql.model.query.operand.FunctionOperand;
 import com.jaspersoft.studio.data.sql.model.query.operand.ParameterNotPOperand;
 import com.jaspersoft.studio.data.sql.model.query.operand.ParameterPOperand;
 import com.jaspersoft.studio.data.sql.model.query.operand.ScalarOperand;
@@ -239,6 +243,25 @@ public class ConvertExpression {
 			}
 		} else if (op.getSubq() != null) {
 
+		} else if (op.getFunc() != null) {
+			OpFunction f = op.getFunc();
+			if (f.getStar() != null)
+				aop = new FunctionOperand(me, f.getFname(), f.getStar());
+			else if (f.getArgs() != null) {
+				List<AOperand> args = new ArrayList<>();
+				OpFunctionArg fargsImpl = f.getArgs();
+				for (EObject eobj : fargsImpl.eContents()) {
+					if (eobj instanceof Operands)
+						args.add(getOperand(designer, msel, ((Operands) eobj), me));
+					else if (eobj instanceof Operand)
+						args.add(getOperand(designer, msel, (Operand) eobj, me));
+				}
+				aop = new FunctionOperand(me, f.getFname(), args);
+			} else if (f.getFan() != null) {
+				String v = "HERE ANALYTICAL CLAUSE";
+				// f.getFan().getAnClause().get .
+				aop = new FunctionOperand(me, f.getFname(), v);
+			}
 		}
 		return Misc.nvl(aop, new ScalarOperand<String>(me, "NULL"));
 	}

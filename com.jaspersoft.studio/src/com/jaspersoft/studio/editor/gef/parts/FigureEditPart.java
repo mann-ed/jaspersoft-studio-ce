@@ -82,7 +82,7 @@ public class FigureEditPart extends AJDEditPart implements PropertyChangeListene
 	public void activate() {
 		super.activate();
 		preferenceListener = new PreferenceListener();
-		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener);
+		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener, getAssociatedFile());
 		if (getModel() != null)
 			getModel().getPropertyChangeSupport().addPropertyChangeListener(this);
 	}
