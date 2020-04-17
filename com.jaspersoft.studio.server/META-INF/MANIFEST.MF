@@ -53,7 +53,7 @@ Bundle-ClassPath: patch-library.jar,
  lib/jersey213/mimepull-1.9.6.jar,
  lib/jersey/net.java.html.json-0.7.1.jar,
  lib/validation-api-1.1.0.Final.jar,
- lib/jasperserver-dto-story-JS-57373-CalcFieldinDetail-SNAPSHOT.jar,
+ lib/jasperserver-dto-story-JS-57373-CalcFieldinDetail-20200416.155319-1.jar,
  .
 Eclipse-RegisterBuddy: com.jaspersoft.studio, com.jaspersoft.studio.bundles.jackson
 Eclipse-BuddyPolicy: registered
@@ -84,6 +84,7 @@ Export-Package: com.jaspersoft.ireport.jasperserver.ws,
  com.jaspersoft.jasperserver.dto.executions,
  com.jaspersoft.jasperserver.dto.jdbcdrivers,
  com.jaspersoft.jasperserver.dto.permissions,
+ com.jaspersoft.jasperserver.dto.query,
  com.jaspersoft.jasperserver.dto.reports,
  com.jaspersoft.jasperserver.dto.reports.inputcontrols,
  com.jaspersoft.jasperserver.dto.resources,
