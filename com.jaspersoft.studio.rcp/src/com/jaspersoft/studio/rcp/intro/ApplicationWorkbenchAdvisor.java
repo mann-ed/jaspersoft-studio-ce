@@ -37,6 +37,8 @@ import com.jaspersoft.studio.rcp.messages.Messages;
 import com.jaspersoft.studio.rcp.p2.P2Util;
 import com.jaspersoft.studio.utils.BrandingInfo;
 
+import net.sf.jasperreports.eclipse.util.BundleCommonUtils;
+
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	private OpenDocumentEventProcessor openDocProcessor;
@@ -69,7 +71,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		// Sets the branding information
 		BrandingInfo info = new BrandingInfo();
 		info.setProductName(Messages.ApplicationWorkbenchAdvisor_ProductName);
-		info.setProductVersion(Activator.getDefault().getBundle().getVersion().toString());
+		info.setProductVersion(BundleCommonUtils.getBundleVersion(Activator.PLUGIN_ID));
 		info.setProductMainBundleID(Activator.PLUGIN_ID);
 		JaspersoftStudioPlugin.getInstance().setBrandingInformation(info);
 	}
@@ -350,7 +352,9 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		//		  org.eclipse.equinox.p2.touchpoint.eclipse.addRepository(type:0,location:http${#58}//jasperstudio.sf.net/jssproductrepo_E4_CE/);\
 		//		  org.eclipse.equinox.p2.touchpoint.eclipse.addRepository(type:1,location:http${#58}//jasperstudio.sf.net/jssproductrepo_E4_CE/);
 		try {
-			URL siteEntry = Activator.getDefault().getBundle().getEntry("updatesite.properties"); //$NON-NLS-1$
+			URL siteEntry = 
+					FileLocator.toFileURL(
+							BundleCommonUtils.getBundle(Activator.PLUGIN_ID).getEntry("updatesite.properties")); //$NON-NLS-1$
 			InputStream propsIS = siteEntry.openStream();
 			Properties props = new Properties();
 			props.load(propsIS);
@@ -359,7 +363,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 				P2Util.setRepositories(Arrays.asList(urlString));
 			}
 		} catch (Exception e) {
-			Activator.getDefault().logError(Messages.ApplicationWorkbenchAdvisor_RepositoryURLReadError, e);
+			BundleCommonUtils.logError(Activator.PLUGIN_ID, Messages.ApplicationWorkbenchAdvisor_RepositoryURLReadError, e);
 		}
 	}
 

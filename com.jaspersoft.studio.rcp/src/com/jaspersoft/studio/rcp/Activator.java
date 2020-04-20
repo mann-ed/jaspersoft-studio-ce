@@ -13,20 +13,18 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.equinox.p2.ui.Policy;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.internal.util.PrefUtil;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 import com.jaspersoft.studio.rcp.p2.JSSP2Policy;
 
-import net.sf.jasperreports.eclipse.AbstractJRUIPlugin;
-
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractJRUIPlugin {
+public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.jaspersoft.studio.rcp"; //$NON-NLS-1$
@@ -37,7 +35,6 @@ public class Activator extends AbstractJRUIPlugin {
 	// Stuff for JSS P2 Policy
 	private ServiceRegistration<?> p2PolicyRegistration;
 	private JSSP2Policy policy;
-	private IPropertyChangeListener preferenceListener;
 	
 	/**
 	 * The constructor
@@ -54,7 +51,6 @@ public class Activator extends AbstractJRUIPlugin {
 		plugin = this;
 		// Register the p2 UI policy
 		registerP2Policy(context);
-		getPreferenceStore().addPropertyChangeListener(getPreferenceListener());
 		Job prefSettings = new Job("Preferences setting"){
 
 			@Override
@@ -84,9 +80,6 @@ public class Activator extends AbstractJRUIPlugin {
 		// Unregister the UI policy
 		p2PolicyRegistration.unregister();
 		p2PolicyRegistration = null;
-		getPreferenceStore().removePropertyChangeListener(preferenceListener);
-		preferenceListener = null;
-		super.stop(context);
 	}
 
 	/**
@@ -98,11 +91,6 @@ public class Activator extends AbstractJRUIPlugin {
 		return plugin;
 	}
 
-	@Override
-	public String getPluginID() {
-		return PLUGIN_ID;
-	}
-	
 	/*
 	 * Registers the P2 policy.
 	 */
@@ -112,15 +100,4 @@ public class Activator extends AbstractJRUIPlugin {
 		p2PolicyRegistration = context.registerService(Policy.class.getName(), policy, null);
 	}
 	
-	private IPropertyChangeListener getPreferenceListener() {
-		if (preferenceListener == null) {
-			preferenceListener = new IPropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent event) {
-					policy.updateForPreferences();
-				}
-			};
-		}
-		return preferenceListener;
-	}
-
 }

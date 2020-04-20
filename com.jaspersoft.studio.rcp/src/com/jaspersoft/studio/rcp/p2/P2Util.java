@@ -16,6 +16,8 @@ import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import com.jaspersoft.studio.rcp.Activator;
 import com.jaspersoft.studio.rcp.messages.Messages;
 
+import net.sf.jasperreports.eclipse.util.BundleCommonUtils;
+
 /**
  * Utility class for P2 related tasks.
  * 
@@ -46,7 +48,7 @@ public class P2Util {
 			ElementUtils.updateRepositoryUsingElements(
 					ProvisioningUI.getDefaultUI(), repos.toArray(new MetadataRepositoryElement[repos.size()]));
 		} catch (URISyntaxException e) {
-			Activator.getDefault().logError(Messages.P2Util_ErrorMessage, e);
+			BundleCommonUtils.logError(Activator.PLUGIN_ID,Messages.P2Util_ErrorMessage, e);
 		}
 	}
 	

@@ -69,6 +69,8 @@ import org.eclipse.ui.menus.IMenuService;
 import com.jaspersoft.studio.rcp.Activator;
 import com.jaspersoft.studio.rcp.workspace.ActionSwitchWorkspace;
 
+import net.sf.jasperreports.eclipse.util.BundleCommonUtils;
+
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	private final IWorkbenchWindow window;
@@ -1128,7 +1130,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		buildProjectAction = IDEActionFactory.BUILD_PROJECT.create(window);
 		register(buildProjectAction);
 
-		switchWorkspaceAction = new ActionSwitchWorkspace(Activator.getDefault().getImage("icons/jss_icon_64.png"));
+		switchWorkspaceAction = new ActionSwitchWorkspace(
+				BundleCommonUtils.getImage(Activator.PLUGIN_ID,"icons/jss_icon_64.png"));
 		register(switchWorkspaceAction);
 		
 		projectPropertyDialogAction = IDEActionFactory.OPEN_PROJECT_PROPERTIES

@@ -24,6 +24,8 @@ import com.jaspersoft.studio.rcp.messages.Messages;
 import com.jaspersoft.studio.rcp.workspace.PickWorkspaceDialog;
 import com.jaspersoft.studio.rcp.workspace.WorkspaceUtils;
 
+import net.sf.jasperreports.eclipse.util.BundleCommonUtils;
+
 /**
  * This class controls all aspects of the application's execution
  */
@@ -61,7 +63,8 @@ public class Application implements IApplication {
 								FileLocator.toFileURL(instanceLoc.getURL()).getPath());
 						if(warningDialog.open()==Window.OK) {
 							// Show chooser dialog
-				            PickWorkspaceDialog pwd = new PickWorkspaceDialog(false,Activator.getDefault().getImage("icons/jss_icon_64.png"),true);  //$NON-NLS-1$
+				            PickWorkspaceDialog pwd = new PickWorkspaceDialog(
+				            		false,BundleCommonUtils.getImage(Activator.PLUGIN_ID,"icons/jss_icon_64.png"),true);  //$NON-NLS-1$
 				            int pick = pwd.open(); 
 				 
 				            // if the user cancelled, we can't do anything as we need a workspace, so in this case, we tell them and exit 
