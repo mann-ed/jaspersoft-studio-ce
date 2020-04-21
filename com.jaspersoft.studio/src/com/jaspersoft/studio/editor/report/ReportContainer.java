@@ -299,6 +299,7 @@ public class ReportContainer extends MultiPageToolbarEditorPart
 			if (ave == null) {
 				JasperDesign jd = getModel().getJasperDesign();
 				MRoot root = new MRoot(null, jd);
+				root.setJasperConfiguration(jrContext);
 				MPage rep = new MPage(root, jd);
 				rep.setJasperConfiguration(jrContext);
 				ANode node = m.createNode(rep, obj, -1);
