@@ -169,7 +169,8 @@ public class JDReportOutlineView extends ContentOutlinePage implements IAdaptabl
 		IResource r = null;
 		if (editor.getModel() instanceof ANode) {
 			ANode n = (ANode) editor.getModel();
-			r = (IResource) n.getJasperConfiguration().get(FileUtils.KEY_FILE);
+			if (n.getJasperConfiguration() != null)
+				r = (IResource) n.getJasperConfiguration().get(FileUtils.KEY_FILE);
 		}
 		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener, r);
 
