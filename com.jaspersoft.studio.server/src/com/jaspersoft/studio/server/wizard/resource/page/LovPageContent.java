@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ListItem;
 import com.jaspersoft.studio.model.ANode;
+import com.jaspersoft.studio.server.editor.input.lov.KeyValueDialog;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.wizard.resource.APageContent;
@@ -31,7 +32,6 @@ import com.jaspersoft.studio.swt.widgets.table.INewElement;
 import com.jaspersoft.studio.swt.widgets.table.ListContentProvider;
 import com.jaspersoft.studio.swt.widgets.table.ListOrderButtons;
 import com.jaspersoft.studio.swt.widgets.table.NewButton;
-import com.jaspersoft.studio.utils.KeyValueDialog;
 
 public class LovPageContent extends APageContent {
 
@@ -58,7 +58,6 @@ public class LovPageContent extends APageContent {
 		res.getValue().setListOfValues((List) tableViewer.getInput());
 		super.dispose();
 	}
- 
 
 	private TableViewer tableViewer;
 
@@ -77,7 +76,8 @@ public class LovPageContent extends APageContent {
 		bnew.createNewButtons(bGroup, tableViewer, new INewElement() {
 
 			public Object newElement(List<?> input, int pos) {
-				KeyValueDialog d = new KeyValueDialog(parent.getShell(), getName(), "");
+				KeyValueDialog d = new KeyValueDialog(parent.getShell(), getName(), "",
+						(List<ListItem>) tableViewer.getInput());
 				if (d.open() == Dialog.OK) {
 					ListItem li = new ListItem();
 					li.setLabel(d.getKey());
@@ -101,7 +101,8 @@ public class LovPageContent extends APageContent {
 		EditButton<ListItem> bedit = new EditButton<>();
 		bedit.createEditButtons(bGroup, tableViewer, (input, pos) -> {
 			ListItem li = input.get(pos);
-			KeyValueDialog d = new KeyValueDialog(parent.getShell(), li.getLabel(), (String) li.getValue());
+			KeyValueDialog d = new KeyValueDialog(parent.getShell(), li.getLabel(), (String) li.getValue(),
+					(List<ListItem>) tableViewer.getInput());
 			if (d.open() == Dialog.OK) {
 				li.setLabel(d.getKey());
 				li.setValue(d.getValue());

@@ -12,6 +12,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -47,8 +48,8 @@ public class JSSApacheConnectorFactory extends ApacheConnectorProvider {
 
 	public synchronized Response get(Builder builder, IProgressMonitor monitor) throws Exception {
 		builder.header("Accept-Timezone", TimeZone.getDefault().getID());
-		builder.header("User-Agent", HttpUtils.USER_AGENT_JASPERSOFT_STUDIO);
-		builder.header("Cache-Control", "no-cache");
+		builder.header(HttpHeaders.USER_AGENT, HttpUtils.USER_AGENT_JASPERSOFT_STUDIO);
+		builder.header(HttpHeaders.CACHE_CONTROL, "no-cache");
 		return doWait(builder.async().get(), monitor);
 	}
 

@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ListItem;
+import com.jaspersoft.studio.server.editor.input.lov.KeyValueDialog;
 import com.jaspersoft.studio.server.wizard.resource.LovLabelProvider;
 import com.jaspersoft.studio.swt.widgets.table.DeleteButton;
 import com.jaspersoft.studio.swt.widgets.table.EditButton;
@@ -28,7 +29,6 @@ import com.jaspersoft.studio.swt.widgets.table.INewElement;
 import com.jaspersoft.studio.swt.widgets.table.ListContentProvider;
 import com.jaspersoft.studio.swt.widgets.table.ListOrderButtons;
 import com.jaspersoft.studio.swt.widgets.table.NewButton;
-import com.jaspersoft.studio.utils.KeyValueDialog;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
@@ -65,7 +65,7 @@ public class LovComposite {
 		bnew.createNewButtons(bGroup, tableViewer, new INewElement() {
 
 			public Object newElement(List<?> input, int pos) {
-				KeyValueDialog d = new KeyValueDialog(UIUtils.getShell(), getName(), "");
+				KeyValueDialog d = new KeyValueDialog(UIUtils.getShell(), getName(), "", value);
 				if (d.open() == Dialog.OK) {
 					ListItem li = new ListItem();
 					li.setLabel(d.getKey());
@@ -93,7 +93,7 @@ public class LovComposite {
 		};
 		bedit.createEditButtons(bGroup, tableViewer, (input, pos) -> {
 			ListItem li = input.get(pos);
-			KeyValueDialog d = new KeyValueDialog(UIUtils.getShell(), li.getLabel(), (String) li.getValue());
+			KeyValueDialog d = new KeyValueDialog(UIUtils.getShell(), li.getLabel(), (String) li.getValue(), value);
 			if (d.open() == Dialog.OK) {
 				li.setLabel(d.getKey());
 				li.setValue(d.getValue());

@@ -32,6 +32,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -465,7 +466,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 				ClientFile cf = (ClientFile) crl;
 				tgt = target.path("resources" + uri); //$NON-NLS-1$
 				try {
-					req = HttpUtils.getRequest(tgt, cf.getType().getMimeType()).header("Accept", //$NON-NLS-1$
+					req = HttpUtils.getRequest(tgt, cf.getType().getMimeType()).header(HttpHeaders.ACCEPT,
 							cf.getType().getMimeType());
 					readFile(connector.get(req, monitor), f, monitor);
 				} catch (HttpResponseException e) {
@@ -540,7 +541,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 		tgt = tgt.queryParam("overwrite", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 		tgt = tgt.queryParam("createFolders", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		Builder req = HttpUtils.getRequest(tgt).header("Content-Location", rd.getUriString()); //$NON-NLS-1$
+		Builder req = HttpUtils.getRequest(tgt).header(HttpHeaders.CONTENT_LOCATION, rd.getUriString());
 		Response r = connector.post(req, Entity.entity("", getMediaType()), monitor); //$NON-NLS-1$
 		ClientResource<?> crl = toObj(r, WsTypes.INST().getType(rtype), monitor);
 		if (crl != null) {
@@ -556,7 +557,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 		if (cf.getContent() == null) {
 			WebTarget tgt = target.path("resources" + cf.getUri()); //$NON-NLS-1$
 			try {
-				Builder req = HttpUtils.getRequest(tgt, cf.getType().getMimeType()).header("Accept", //$NON-NLS-1$
+				Builder req = HttpUtils.getRequest(tgt, cf.getType().getMimeType()).header(HttpHeaders.ACCEPT,
 						cf.getType().getMimeType());
 				byte[] bytes = readFile(connector.get(req, monitor), monitor);
 				if (bytes != null)
@@ -850,8 +851,8 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 					Response r = connector.get(req, monitor);
 					if (ee.getOutputResource() == null) {
 						OutputResourceDescriptor or = new OutputResourceDescriptor();
-						or.setContentType(r.getHeaderString("Content-Type")); //$NON-NLS-1$
-						String fname = r.getHeaderString("Content-Disposition");
+						or.setContentType(r.getHeaderString(HttpHeaders.CONTENT_TYPE)); // $NON-NLS-1$
+						String fname = r.getHeaderString(HttpHeaders.CONTENT_DISPOSITION);
 						if (fname != null) {
 							int indx = fname.indexOf("attachment; filename=");
 							if (indx >= 0)
