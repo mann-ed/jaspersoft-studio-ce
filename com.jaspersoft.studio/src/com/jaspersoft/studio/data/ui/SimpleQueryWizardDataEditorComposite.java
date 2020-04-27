@@ -55,10 +55,12 @@ import net.sf.jasperreports.engine.design.JRDesignQuery;
  */
 public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorComposite {
 
+	protected String[] langs;
+
 	/**
-	 * Question return code. This variable is used across a thread UI and background
-	 * process thread. We assume there will never pop up two identical questions at
-	 * the same time.
+	 * Question return code. This variable is used across a thread UI and
+	 * background process thread. We assume there will never pop up two
+	 * identical questions at the same time.
 	 */
 	private int questionReturnCode = SWT.OK;
 
@@ -84,24 +86,31 @@ public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorCompo
 	protected StyledText styledText = null;
 
 	/**
-	 * A simple title to be used to say something like: "Write a query in SQL..."
+	 * A simple title to be used to say something like: "Write a query in
+	 * SQL..."
 	 */
 	private String title = null;
 
 	private DataAdapterService das;
 
 	public SimpleQueryWizardDataEditorComposite(Composite parent, WizardPage page, String lang) {
-		this(parent, page, null, lang);
+		this(parent, page, null, lang, new String[] { lang });
 	}
 
 	public SimpleQueryWizardDataEditorComposite(Composite parent, WizardPage page,
 			DataAdapterDescriptor dataAdapterDescriptor) {
-		this(parent, page, dataAdapterDescriptor, ""); //$NON-NLS-1$
+		this(parent, page, dataAdapterDescriptor, "", new String[0]); //$NON-NLS-1$
 	}
 
 	public SimpleQueryWizardDataEditorComposite(Composite parent, WizardPage page,
 			DataAdapterDescriptor dataAdapterDescriptor, String lang) {
+		this(parent, page, dataAdapterDescriptor, lang, new String[] { lang });
+	}
+
+	public SimpleQueryWizardDataEditorComposite(Composite parent, WizardPage page,
+			DataAdapterDescriptor dataAdapterDescriptor, String lang, String[] langs) {
 		super(parent, page);
+		this.langs = langs;
 		setQueryLanguage(lang);
 		this.dataAdapterDescriptor = dataAdapterDescriptor;
 		init();
@@ -109,17 +118,18 @@ public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorCompo
 	}
 
 	/**
-	 * Initializes additional information that are supposed to be sub-class specific
-	 * and executed in the constructor before the main composite content creation.
-	 * This method is called before {@link #createCompositeContent()}.
+	 * Initializes additional information that are supposed to be sub-class
+	 * specific and executed in the constructor before the main composite
+	 * content creation. This method is called before
+	 * {@link #createCompositeContent()}.
 	 */
 	protected void init() {
 		// do nothig - default behavior
 	}
 
 	/**
-	 * Sets layout and creates the content of the main composite. Created widgets
-	 * should use <code>this</code> as parent composite.
+	 * Sets layout and creates the content of the main composite. Created
+	 * widgets should use <code>this</code> as parent composite.
 	 */
 	protected void createCompositeContent() {
 		setLayout(new FormLayout());
@@ -166,8 +176,7 @@ public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorCompo
 	}
 
 	/**
-	 * @param title
-	 *            the title to set
+	 * @param title the title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -186,8 +195,7 @@ public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorCompo
 	}
 
 	/**
-	 * @param queryLanguage
-	 *            the queryLanguage to set
+	 * @param queryLanguage the queryLanguage to set
 	 */
 	public void setQueryLanguage(String queryLanguage) {
 		this.queryLanguage = queryLanguage;
@@ -196,15 +204,15 @@ public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorCompo
 	/**
 	 * Return the fields.
 	 * 
-	 * If the dataAdapterDescriptor implements IFieldsProvider, this interface is
-	 * used to get the fields automatically.
+	 * If the dataAdapterDescriptor implements IFieldsProvider, this interface
+	 * is used to get the fields automatically.
 	 * 
-	 * This method is invoked on a thread which is not in the UI event thread, so no
-	 * UI update should be performed without using a proper async thread.
+	 * This method is invoked on a thread which is not in the UI event thread,
+	 * so no UI update should be performed without using a proper async thread.
 	 * 
-	 * return the result of IFieldsProvider.getFields() or an empty list of JRField
-	 * is the DataAdapterDescriptor does not implement the IFieldsProvider
-	 * interface.
+	 * return the result of IFieldsProvider.getFields() or an empty list of
+	 * JRField is the DataAdapterDescriptor does not implement the
+	 * IFieldsProvider interface.
 	 */
 	public List<JRDesignField> readFields() throws Exception {
 		List<JRDesignField> fields = null;
@@ -271,8 +279,8 @@ public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorCompo
 	 * Convenient way to crate a dataset object to be passed to the
 	 * IFieldsProvider.getFields method
 	 * 
-	 * @return JRDesignDataset return a dataset with the proper query and language
-	 *         set...
+	 * @return JRDesignDataset return a dataset with the proper query and
+	 * language set...
 	 */
 	public JRDesignDataset getDataset() {
 		if (dataset == null) {
@@ -294,8 +302,7 @@ public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorCompo
 	}
 
 	/**
-	 * @param dataAdapterDescriptor
-	 *            the dataAdapterDescriptor to set
+	 * @param dataAdapterDescriptor the dataAdapterDescriptor to set
 	 */
 	public void setDataAdapterDescriptor(DataAdapterDescriptor dataAdapterDescriptor) {
 		this.dataAdapterDescriptor = dataAdapterDescriptor;

@@ -8,15 +8,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.design.JRDesignField;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.IQueryDesigner;
@@ -25,23 +25,57 @@ import com.jaspersoft.studio.data.designer.AQueryStatus;
 import com.jaspersoft.studio.property.dataset.dialog.QDesignerFactory;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
-public class WizardQueryEditorComposite extends SimpleQueryWizardDataEditorComposite {
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.design.JRDesignField;
 
-	public WizardQueryEditorComposite(Composite parent, WizardPage page, DataAdapterDescriptor dataAdapterDescriptor,
-			String lang) {
-		super(parent, page, lang);
+public class LanguagesWizardQueryEditorComposite extends SimpleQueryWizardDataEditorComposite {
+
+	public LanguagesWizardQueryEditorComposite(Composite parent, WizardPage page,
+			DataAdapterDescriptor dataAdapterDescriptor, String lang, String[] langs) {
+		super(parent, page, null, lang, langs);
 		this.setDataAdapterDescriptor(dataAdapterDescriptor);
 	}
 
 	protected IQueryDesigner designer;
 	protected QDesignerFactory qdfactory;
+	private Composite cmp;
 
 	@Override
 	protected void createCompositeContent() {
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		setLayout(layout);
+
+		new Label(this, SWT.NONE).setText("Language");
+
+		Combo cmb = new Combo(this, SWT.READ_ONLY);
+		cmb.setItems(langs);
+		cmb.select(0);
+		cmb.addModifyListener(e -> {
+			qdfactory.dispose();
+			setQueryLanguage(langs[cmb.getSelectionIndex()]);
+			buildEditor();
+			setDataAdapterDescriptor(getDataAdapterDescriptor());
+			LanguagesWizardQueryEditorComposite.this.update();
+			LanguagesWizardQueryEditorComposite.this.layout(true);
+		});
+
+		buildEditor();
+	}
+
+	protected void buildEditor() {
+		if (cmp != null)
+			cmp.dispose();
+		cmp = new Composite(this, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		setLayout(layout);
+		cmp.setLayout(layout);
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan = 2;
+		cmp.setLayoutData(gd);
 
 		AQueryDesignerContainer qdc = new AQueryDesignerContainer() {
 			protected void createStatusBar(Composite comp) {
@@ -106,7 +140,7 @@ public class WizardQueryEditorComposite extends SimpleQueryWizardDataEditorCompo
 				}
 			}
 		};
-		qdfactory = new QDesignerFactory(this, null, qdc);
+		qdfactory = new QDesignerFactory(cmp, null, qdc);
 		designer = qdfactory.getDesigner(getQueryLanguage());
 
 		designer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
