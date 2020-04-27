@@ -77,7 +77,7 @@ public class KeyValueDialog extends ATitledDialog {
 			setError("Name can't be empty.");
 			canFinish(this, false);
 		} else if (exists(txt)) {
-			setError("This value already exists.");
+			setError("This name already exists.");
 			canFinish(this, false);
 		} else {
 			setError(null);
