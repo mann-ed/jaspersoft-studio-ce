@@ -267,9 +267,12 @@ public class RUnitLocationPage extends JSSHelpWizardPage {
 				if (p != null)
 					for (INode n1 : p.getChildren()) {
 						if (n1 instanceof AMResource && n1 != mru) {
-							if (((AMResource) n1).getValue().getName().equals(id))
+							ResourceDescriptor amr = ((AMResource) n1).getValue();
+							if (amr.getIsNew())
+								continue;
+							if (amr.getName().equals(id))
 								validationError = "This id is already used in this folder";
-							else if (((AMResource) n1).getValue().getLabel().equals(rtext))
+							else if (amr.getLabel().equals(rtext))
 								validationError = "This label is already used in this folder";
 						}
 					}
