@@ -14,6 +14,10 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -29,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.studio.model.ANode;
+import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MAdHocDataView;
@@ -170,13 +175,13 @@ public class ResourcePageContent extends APageContent {
 				}
 			});
 			tid.addModifyListener(new ModifyListener() {
-				
+
 				@Override
 				public void modifyText(ModifyEvent e) {
 					if (refresh)
 						return;
 					refresh = true;
-					String validationError = ValidationUtils.validateName(tid.getText());
+					String validationError = validateID(tid.getText());
 					page.setErrorMessage(validationError);
 					setPageComplete(validationError == null);
 					refresh = false;
@@ -188,6 +193,32 @@ public class ResourcePageContent extends APageContent {
 
 		tname.setFocus();
 		return composite;
+	}
+
+	class IDValidator implements IValidator<String> {
+		private IDStringValidator validator = new IDStringValidator();
+
+		@Override
+		public IStatus validate(String value) {
+			IStatus status = validator.validate(value);
+			if (status.equals(Status.OK_STATUS)) {
+				String err = validateID(value);
+				if (err != null)
+					status = ValidationStatus.error(err);
+			}
+			return status;
+		}
+
+	}
+
+	private String validateID(String t) {
+		String validationError = ValidationUtils.validateName(t);
+		if (validationError == null)
+			for (INode n1 : pnode.getChildren())
+				if (n1 instanceof AMResource && n1 != res && ((AMResource) n1).getValue().getName() != null
+						&& ((AMResource) n1).getValue().getName().equals(t))
+					return "This id is already used in this folder";
+		return validationError;
 	}
 
 	@Override
@@ -230,7 +261,7 @@ public class ResourcePageContent extends APageContent {
 		bindingContext.bindValue(SWTObservables.observeSelection(bisRef),
 				PojoObservables.observeValue(rd, "isReference")); //$NON-NLS-1$
 		bindingContext.bindValue(SWTObservables.observeText(tid, SWT.Modify), PojoObservables.observeValue(rd, "name"), //$NON-NLS-1$
-				new UpdateValueStrategy().setAfterConvertValidator(new IDStringValidator()), null);
+				new UpdateValueStrategy().setAfterConvertValidator(new IDValidator()), null);
 
 		bindingContext.bindValue(SWTObservables.observeText(tname, SWT.Modify),
 				PojoObservables.observeValue(rd, "label"), //$NON-NLS-1$
@@ -265,9 +296,8 @@ public class ResourcePageContent extends APageContent {
 
 	@Override
 	public boolean isPageComplete() {
-		if (tid.getText().trim().isEmpty() || tname.getText().trim().isEmpty()) {
+		if (tid.getText().trim().isEmpty() || tname.getText().trim().isEmpty())
 			return false;
-		}
 		return super.isPageComplete();
 	}
 

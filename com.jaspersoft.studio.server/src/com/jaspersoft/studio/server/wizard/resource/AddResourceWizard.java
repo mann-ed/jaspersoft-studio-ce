@@ -178,7 +178,6 @@ public class AddResourceWizard extends Wizard {
 				@Override
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException, InterruptedException {
-
 					monitor.beginTask(Messages.AddResourceWizard_1,
 							IProgressMonitor.UNKNOWN);
 					File tmpfile = null;
