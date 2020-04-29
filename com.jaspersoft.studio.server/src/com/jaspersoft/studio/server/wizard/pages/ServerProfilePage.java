@@ -97,7 +97,6 @@ import com.jaspersoft.studio.server.protocol.Version;
 import com.jaspersoft.studio.server.protocol.restv2.CertChainValidator;
 import com.jaspersoft.studio.server.secret.JRServerSecretsProvider;
 import com.jaspersoft.studio.server.wizard.ServerProfileWizardDialog;
-import com.jaspersoft.studio.server.wizard.validator.URLValidator;
 import com.jaspersoft.studio.swt.widgets.ClasspathComponent;
 import com.jaspersoft.studio.swt.widgets.WLocale;
 import com.jaspersoft.studio.swt.widgets.WSecretText;
@@ -109,6 +108,7 @@ import com.jaspersoft.studio.wizards.WizardEndingStateListener;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.ui.validator.EmptyStringValidator;
 import net.sf.jasperreports.eclipse.ui.validator.NotEmptyIFolderValidator;
+import net.sf.jasperreports.eclipse.ui.validator.URLValidator;
 import net.sf.jasperreports.eclipse.util.CastorHelper;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.HttpUtils;
@@ -233,7 +233,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 			dbc.bindValue(SWTObservables.observeText(tname, SWT.Modify), PojoObservables.observeValue(value, "name"), //$NON-NLS-1$
 					new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator() {
 						@Override
-						public IStatus validate(Object value) {
+						public IStatus validate(String value) {
 							IStatus s = super.validate(value);
 							if (s.equals(Status.OK_STATUS) && !ServerManager.isUniqueName(sprofile, (String) value)) {
 								return ValidationStatus.warning(Messages.ServerProfilePage_13);
@@ -244,7 +244,7 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 			dbc.bindValue(SWTObservables.observeText(turl, SWT.Modify), PojoObservables.observeValue(proxy, "url"), //$NON-NLS-1$
 					new UpdateValueStrategy().setAfterConvertValidator(new URLValidator() {
 						@Override
-						public IStatus validate(Object value) {
+						public IStatus validate(String value) {
 							IStatus status = super.validate(Misc.nvl(value, "").trim());
 							((ServerProfileWizardDialog) getContainer()).setTestButtonEnabled(status.isOK());
 							return status;
