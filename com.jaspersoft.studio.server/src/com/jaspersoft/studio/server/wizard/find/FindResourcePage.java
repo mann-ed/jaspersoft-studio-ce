@@ -97,7 +97,10 @@ public class FindResourcePage extends WizardPage {
 		this.containedResource = containedResource;
 		setTitle(Messages.FindResourcePage_1);
 		setDescription(Messages.FindResourcePage_2);
-		finderUI = new FinderUI(ServerManager.getMServerProfileCopy(sp));
+		MServerProfile msp = ServerManager.getMServerProfileCopy(sp);
+		if (msp == null)
+			msp = sp;
+		finderUI = new FinderUI(msp);
 		this.sp = sp;
 	}
 

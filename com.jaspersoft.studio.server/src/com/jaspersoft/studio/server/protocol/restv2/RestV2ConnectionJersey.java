@@ -218,13 +218,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			client.register(new org.glassfish.jersey.filter.LoggingFilter(logger, true));
 		}
 
-		String url = sp.getUrl().trim();
-		if (url.endsWith("/services/repository/")) //$NON-NLS-1$
-			url = url.substring(0, url.lastIndexOf("/services/repository/")); //$NON-NLS-1$
-		else if (url.endsWith("services/repository")) //$NON-NLS-1$
-			url = url.substring(0, url.lastIndexOf("/services/repository")); //$NON-NLS-1$
-		if (!url.endsWith("/")) //$NON-NLS-1$
-			url += "/"; //$NON-NLS-1$
+		String url = ServerProfile.normaliseUrl(sp.getUrl());
 		if (!doConnect(monitor, sp, url))
 			return false;
 		getServerInfo(monitor);

@@ -264,9 +264,10 @@ public class ServerManager {
 	}
 
 	public static MServerProfile getServerByUrl(String url) {
+		String nurl = ServerProfile.normaliseUrl(url);
 		for (MServerProfile sp : getServerProfiles()) {
 			try {
-				if (sp.getValue().getUrl().equals(url))
+				if (ServerProfile.normaliseUrl(sp.getValue().getUrl()).equals(nurl))
 					return sp;
 			} catch (MalformedURLException | URISyntaxException e) {
 				e.printStackTrace();
@@ -277,10 +278,11 @@ public class ServerManager {
 
 	public static MServerProfile getServerByUrl(String url, String user) {
 		MServerProfile res = null;
+		String nurl = ServerProfile.normaliseUrl(url);
 		for (MServerProfile sp : getServerProfiles()) {
 			ServerProfile v = sp.getValue();
 			try {
-				if (v.getUrl().equals(url)) {
+				if (ServerProfile.normaliseUrl(v.getUrl()).equals(nurl)) {
 					res = sp;
 					if (user != null) {
 						if (AExporter.encodeUsr(v).equals(user))
@@ -297,9 +299,10 @@ public class ServerManager {
 
 	public static int getServerIndexByUrl(String url) {
 		int i = 0;
+		String nurl = ServerProfile.normaliseUrl(url);
 		for (MServerProfile sp : getServerProfiles()) {
 			try {
-				if (sp.getValue().getUrl().equals(url))
+				if (ServerProfile.normaliseUrl(sp.getValue().getUrl()).equals(nurl))
 					return i;
 			} catch (MalformedURLException | URISyntaxException e) {
 				e.printStackTrace();
@@ -312,12 +315,13 @@ public class ServerManager {
 	public static int getServerIndexByUrl(String url, String user) {
 		int i = 0;
 		int j = -1;
+		String nurl = ServerProfile.normaliseUrl(url);
 		if (user != null && user.endsWith("|"))
 			user = user.substring(0, user.length() - 1);
 		for (MServerProfile sp : getServerProfiles()) {
 			ServerProfile v = sp.getValue();
 			try {
-				if (v.getUrl().equals(url)) {
+				if (ServerProfile.normaliseUrl(v.getUrl()).equals(nurl)) {
 					j = i;
 					if (user != null) {
 						String u = v.getUser()

@@ -259,4 +259,15 @@ public class ServerProfile implements Resource, Cloneable, Serializable, JRChang
 	public JRPropertyChangeSupport getEventSupport() {
 		return propertyChange;
 	}
+
+	public static String normaliseUrl(String url) {
+		url = url.trim();
+		if (url.endsWith("/services/repository/")) //$NON-NLS-1$
+			url = url.substring(0, url.lastIndexOf("/services/repository/")); //$NON-NLS-1$
+		else if (url.endsWith("services/repository")) //$NON-NLS-1$
+			url = url.substring(0, url.lastIndexOf("/services/repository")); //$NON-NLS-1$
+		if (!url.endsWith("/")) //$NON-NLS-1$
+			url += "/"; //$NON-NLS-1$
+		return url;
+	}
 }

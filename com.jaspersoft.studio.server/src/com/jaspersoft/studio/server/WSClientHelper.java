@@ -110,7 +110,7 @@ public class WSClientHelper {
 	public static void connectGetData(MServerProfile msp, IProgressMonitor monitor, boolean reconnect)
 			throws Exception {
 		msp.removeChildren();
-		IConnection c = msp.getWsClient();
+		IConnection c = msp.getWsClient(monitor);
 		if (reconnect || c == null) {
 			c = connect(msp, monitor);
 			if (monitor.isCanceled())
