@@ -20,6 +20,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -39,17 +40,20 @@ import com.jaspersoft.studio.utils.UIUtil;
 
 import net.sf.jasperreports.data.DataAdapter;
 import net.sf.jasperreports.data.jdbc.JdbcDataAdapter;
+import net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl;
+import net.sf.jasperreports.data.jdbc.TransactionIsolation;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class JDBCDataAdapterComposite extends ADataAdapterComposite {
-	
+
 	private final static JDBCDriverDefinition[] jdbcDefinitions;
-	
+
 	static {
-		List<JDBCDriverDefinition> tmpDefinitions = JaspersoftStudioPlugin.getExtensionManager().getJDBCDriverDefinitions();
+		List<JDBCDriverDefinition> tmpDefinitions = JaspersoftStudioPlugin.getExtensionManager()
+				.getJDBCDriverDefinitions();
 		jdbcDefinitions = tmpDefinitions.toArray(new JDBCDriverDefinition[tmpDefinitions.size()]);
-		Arrays.sort(jdbcDefinitions,new Comparator<JDBCDriverDefinition>() {
+		Arrays.sort(jdbcDefinitions, new Comparator<JDBCDriverDefinition>() {
 			@Override
 			public int compare(JDBCDriverDefinition o1, JDBCDriverDefinition o2) {
 				return o1.getDbName().compareTo(o2.getDbName());
@@ -93,7 +97,8 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 
 		CTabFolder tabFolder = new CTabFolder(this, SWT.BOTTOM);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
-		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		tabFolder.setSelectionBackground(
+				Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		createLocationTab(tabFolder);
@@ -132,9 +137,20 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 		tbtmNewItem.setText(Messages.JDBCDataAdapterComposite_connectionproperties);
 
 		Composite composite = new Composite(tabFolder, SWT.NONE);
-		composite.setLayout(new GridLayout());
+		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		tbtmNewItem.setControl(composite);
+
+		new Label(composite, SWT.NONE).setText("Auto Commit");
+
+		bAc = new Button(composite, SWT.CHECK);
+
+		new Label(composite, SWT.NONE).setText("Read Only");
+		bRO = new Button(composite, SWT.CHECK);
+
+		new Label(composite, SWT.NONE).setText("Transaction Isolation");
+		bTI = new Combo(composite, SWT.READ_ONLY);
+		bTI.setItems(new String[] { "None", "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" });
 
 		cproperties = new PropertiesComponent(composite) {
 			@Override
@@ -142,7 +158,9 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 				pchangesuport.firePropertyChange("dirty", false, true);
 			}
 		};
-		cproperties.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		gd.horizontalSpan = 2;
+		cproperties.getControl().setLayoutData(gd);
 	}
 
 	protected void createLocationTab(CTabFolder tabFolder) {
@@ -176,9 +194,10 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 		for (int i = 0; i < definitions.length; ++i)
 			items[i] = definitions[i].toString();
 		comboJDBCDriver.setItems(items);
-		final CustomAutoCompleteField driverAutocomplete = new CustomAutoCompleteField(comboJDBCDriver, new ComboContentAdapter(), items);
+		final CustomAutoCompleteField driverAutocomplete = new CustomAutoCompleteField(comboJDBCDriver,
+				new ComboContentAdapter(), items);
 		comboJDBCDriver.addMouseListener(new MouseAdapter() {
-			
+
 			@Override
 			public void mouseDown(MouseEvent e) {
 				driverAutocomplete.closeProposalPopup();
@@ -188,15 +207,15 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 		comboJDBCDriver.select(0);
 		comboJDBCDriver.addModifyListener(driverModifyListener);
 	}
-	
+
 	private ModifyListener driverModifyListener = new ModifyListener() {
-		
+
 		@Override
 		public void modifyText(ModifyEvent e) {
-			Combo combo = (Combo)e.widget;
+			Combo combo = (Combo) e.widget;
 			String text = combo.getText();
 			int selectionIndex = -1;
-			for(int i = 0; i<definitions.length; i++) {
+			for (int i = 0; i < definitions.length; i++) {
 				String definition = definitions[i].toString();
 				if (definition.equals(text)) {
 					selectionIndex = i;
@@ -210,7 +229,7 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 				currentdriver = new JDBCDriverDefinition("", text, textJDBCUrl.getText());
 				pchangesuport.firePropertyChange("dirty", false, true);
 			}
-			
+
 		}
 	};
 
@@ -316,8 +335,8 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 	}
 
 	/**
-	 * Set the DataAdapter to edit. The UI will be updated with the content of
-	 * this adapter
+	 * Set the DataAdapter to edit. The UI will be updated with the content of this
+	 * adapter
 	 * 
 	 * @param dataAdapter
 	 */
@@ -349,24 +368,81 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 			}
 		}
 		if (currentdriver == null) {
-			currentdriver = new JDBCDriverDefinition("", comboJDBCDriver.getText(), ((JdbcDataAdapter)dataAdapter).getUrl());
+			currentdriver = new JDBCDriverDefinition("", comboJDBCDriver.getText(),
+					((JdbcDataAdapter) dataAdapter).getUrl());
 		}
-		
 
-		bindingContext.bindValue(SWTObservables.observeText(textUsername, SWT.Modify), PojoObservables.observeValue(dataAdapter, "username")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(textPassword, SWT.Modify), PojoObservables.observeValue(dataAdapter, "password")); //$NON-NLS-1$
+		bindingContext.bindValue(SWTObservables.observeText(textUsername, SWT.Modify),
+				PojoObservables.observeValue(dataAdapter, "username")); //$NON-NLS-1$
+		bindingContext.bindValue(SWTObservables.observeText(textPassword, SWT.Modify),
+				PojoObservables.observeValue(dataAdapter, "password")); //$NON-NLS-1$
 		bindURLAssistant(dataAdapter);
-		bindingContext.bindValue(SWTObservables.observeText(textJDBCUrl, SWT.Modify), PojoObservables.observeValue(dataAdapter, "url")); //$NON-NLS-1$
+		bindingContext.bindValue(SWTObservables.observeText(textJDBCUrl, SWT.Modify),
+				PojoObservables.observeValue(dataAdapter, "url")); //$NON-NLS-1$
+
+		bindingContext.bindValue(SWTObservables.observeSelection(bAc),
+				PojoObservables.observeValue(dataAdapter, "autoCommit")); //$NON-NLS-1$
+		bindingContext.bindValue(SWTObservables.observeSelection(bRO),
+				PojoObservables.observeValue(dataAdapter, "readOnly")); //$NON-NLS-1$
+		bindingContext.bindValue(SWTObservables.observeSingleSelectionIndex(bTI),
+				PojoObservables.observeValue(new Proxy((JdbcDataAdapterImpl) dataAdapter), "transactionIsolation")); //$NON-NLS-1$
 
 		cpath.setClasspaths(jdbcDataAdapter.getClasspath());
 		cproperties.setProperties(jdbcDataAdapter.getProperties());
 	}
 
+	class Proxy {
+		private JdbcDataAdapterImpl da;
+
+		public Proxy(JdbcDataAdapterImpl da) {
+			this.da = da;
+		}
+
+		public void setTransactionIsolation(int indx) {
+			da.setTransactionIsolation(JDBCDataAdapterComposite.getTransactionIsolation(indx));
+		}
+
+		public int getTransactionIsolation() {
+			TransactionIsolation ti = da.getTransactionIsolation();
+			if (ti != null) {
+				if (ti.equals(TransactionIsolation.NONE))
+					return 0;
+				if (ti.equals(TransactionIsolation.READ_UNCOMMITTED))
+					return 1;
+				if (ti.equals(TransactionIsolation.READ_COMMITTED))
+					return 2;
+				if (ti.equals(TransactionIsolation.REPEATABLE_READ))
+					return 3;
+				if (ti.equals(TransactionIsolation.SERIALIZABLE))
+					return 4;
+			}
+			return 0;
+		}
+	}
+
+	public static TransactionIsolation getTransactionIsolation(int indx) {
+		switch (indx) {
+		case 0:
+			return TransactionIsolation.NONE;
+		case 1:
+			return TransactionIsolation.READ_UNCOMMITTED;
+		case 2:
+			return TransactionIsolation.READ_COMMITTED;
+		case 3:
+			return TransactionIsolation.REPEATABLE_READ;
+		case 4:
+			return TransactionIsolation.SERIALIZABLE;
+		}
+		return null;
+	}
+
 	protected void bindURLAssistant(DataAdapter dataAdapter) {
 		if (textServerAddress != null)
-			bindingContext.bindValue(SWTObservables.observeText(textServerAddress, SWT.Modify), PojoObservables.observeValue(dataAdapter, "serverAddress")); //$NON-NLS-1$
+			bindingContext.bindValue(SWTObservables.observeText(textServerAddress, SWT.Modify),
+					PojoObservables.observeValue(dataAdapter, "serverAddress")); //$NON-NLS-1$
 		if (textDatabase != null)
-			bindingContext.bindValue(SWTObservables.observeText(textDatabase, SWT.Modify), PojoObservables.observeValue(dataAdapter, "database")); //$NON-NLS-1$
+			bindingContext.bindValue(SWTObservables.observeText(textDatabase, SWT.Modify),
+					PojoObservables.observeValue(dataAdapter, "database")); //$NON-NLS-1$
 	}
 
 	public DataAdapterDescriptor getDataAdapter() {
@@ -389,7 +465,7 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 		} else {
 			jdbcDataAdapter.setDriver(currentdriver.getDriverName());
 		}
-		
+
 		jdbcDataAdapter.setUsername(textUsername.getText());
 		jdbcDataAdapter.setPassword(textPassword.getText());
 		jdbcDataAdapter.setUrl(textJDBCUrl.getText());
@@ -398,6 +474,9 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 
 		jdbcDataAdapter.setClasspath(cpath.getClasspaths());
 		jdbcDataAdapter.setProperties(cproperties.getProperties());
+		jdbcDataAdapter.setAutoCommit(bAc.getSelection());
+		jdbcDataAdapter.setReadOnly(bRO.getSelection());
+		jdbcDataAdapter.setTransactionIsolation(getTransactionIsolation(bTI.getSelectionIndex()));
 
 		return dataAdapterDesc;
 	}
@@ -414,6 +493,9 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 	}
 
 	protected String contextId;
+	private Button bAc;
+	private Button bRO;
+	private Combo bTI;
 
 	@Override
 	public String getHelpContextId() {
