@@ -24,6 +24,8 @@ public class KeyValueDialog extends ATitledDialog {
 	private String key;
 	private String value;
 	private List<ListItem> items;
+	private Text vtxt;
+	private Text txt;
 
 	public KeyValueDialog(Shell parentShell, String key, String value, List<ListItem> items) {
 		super(parentShell, false);
@@ -47,7 +49,7 @@ public class KeyValueDialog extends ATitledDialog {
 
 		new Label(cmp, SWT.NONE).setText("Name");
 
-		final Text txt = new Text(cmp, SWT.BORDER);
+		txt = new Text(cmp, SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 150;
 		txt.setLayoutData(gd);
@@ -56,7 +58,7 @@ public class KeyValueDialog extends ATitledDialog {
 
 		new Label(cmp, SWT.NONE).setText("Value");
 
-		final Text vtxt = new Text(cmp, SWT.BORDER);
+		vtxt = new Text(cmp, SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 150;
 		vtxt.setLayoutData(gd);
@@ -68,15 +70,22 @@ public class KeyValueDialog extends ATitledDialog {
 
 	protected void handleValueChanged(String txt) {
 		value = txt;
-		getButton(OK).setEnabled(!Misc.isNullOrEmpty(value));
+		validateForm();
 	}
 
 	protected void handleNameChanged(String txt) {
 		key = txt;
-		if (Misc.isNullOrEmpty(txt)) {
+		validateForm();
+	}
+
+	private void validateForm() {
+		if (Misc.isNullOrEmpty(vtxt.getText())) {
+			setError("Value can't be empty.");
+			canFinish(this, false);
+		} else if (Misc.isNullOrEmpty(txt.getText())) {
 			setError("Name can't be empty.");
 			canFinish(this, false);
-		} else if (exists(txt)) {
+		} else if (exists(txt.getText())) {
 			setError("This name already exists.");
 			canFinish(this, false);
 		} else {
