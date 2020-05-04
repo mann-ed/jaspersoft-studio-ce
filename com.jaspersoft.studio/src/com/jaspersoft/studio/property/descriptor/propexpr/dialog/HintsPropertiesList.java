@@ -35,6 +35,8 @@ import net.sf.jasperreports.properties.PropertyMetadata;
 public class HintsPropertiesList {
 
 	public static String getToolTip(PropertyMetadata pm) {
+		if (pm == null)
+			return "";
 		String tt = pm.getName() + "\n";
 		if (pm.isDeprecated())
 			tt += "\nDeprecated\n";
