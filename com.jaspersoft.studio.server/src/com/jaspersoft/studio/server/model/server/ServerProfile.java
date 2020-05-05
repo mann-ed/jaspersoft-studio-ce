@@ -261,6 +261,8 @@ public class ServerProfile implements Resource, Cloneable, Serializable, JRChang
 	}
 
 	public static String normaliseUrl(String url) {
+		if (url == null)
+			return "";
 		url = url.trim();
 		if (url.endsWith("/services/repository/")) //$NON-NLS-1$
 			url = url.substring(0, url.lastIndexOf("/services/repository/")); //$NON-NLS-1$
