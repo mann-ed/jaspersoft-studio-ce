@@ -33,7 +33,7 @@ public class JRDSProviderFieldsProvider implements IFieldsProvider {
 		this.jrdsp = jrdsp;
 	}
 
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		if (jrdsp != null)
 			return jrdsp.supportsGetFieldsOperation();
 		return false;

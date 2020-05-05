@@ -25,7 +25,7 @@ import com.jaspersoft.studio.utils.parameter.ParameterUtil;
  * 
  */
 public class MongoDbFieldsProvider implements IFieldsProvider {
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		return true;
 	}
 

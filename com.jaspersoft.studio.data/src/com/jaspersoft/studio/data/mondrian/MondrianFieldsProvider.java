@@ -25,7 +25,7 @@ import com.jaspersoft.studio.utils.parameter.SimpleValueParameter;
 public class MondrianFieldsProvider implements IFieldsProvider {
 	
 	@Override
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		return true;
 	}
 

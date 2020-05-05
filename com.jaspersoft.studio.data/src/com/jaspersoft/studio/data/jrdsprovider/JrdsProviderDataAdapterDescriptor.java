@@ -56,9 +56,9 @@ public class JrdsProviderDataAdapterDescriptor extends DataAdapterDescriptor
 		return fprovider.getFields(con, jConfig, jDataset);
 	}
 
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		getFieldProvider(jConfig);
-		return fprovider.supportsGetFieldsOperation(jConfig);
+		return fprovider.supportsGetFieldsOperation(jConfig, jDataset);
 	}
 
 	private void getFieldProvider(JasperReportsConfiguration jConfig) {

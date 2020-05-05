@@ -62,9 +62,9 @@ public class ExcelDataAdapterDescriptor extends DataAdapterDescriptor implements
 		return fprovider.getFields(con, jConfig, reportDataset);
 	}
 
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		getFieldProvider();
-		return fprovider.supportsGetFieldsOperation(jConfig);
+		return fprovider.supportsGetFieldsOperation(jConfig, jDataset);
 	}
 
 	private void getFieldProvider() {

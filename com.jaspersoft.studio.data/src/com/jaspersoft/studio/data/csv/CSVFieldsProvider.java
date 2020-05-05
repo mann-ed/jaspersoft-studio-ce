@@ -85,7 +85,7 @@ public class CSVFieldsProvider implements IFieldsProvider {
 		columns.add(field);
 	}
 
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		return true;
 	}
 

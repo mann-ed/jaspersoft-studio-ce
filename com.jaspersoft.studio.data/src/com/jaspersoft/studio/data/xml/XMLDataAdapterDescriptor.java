@@ -87,7 +87,7 @@ public class XMLDataAdapterDescriptor extends DataAdapterDescriptor
 	}
 
 	@Override
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		return true;
 	}
 

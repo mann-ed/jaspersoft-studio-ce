@@ -85,10 +85,10 @@ public class ConfigurableDataAdapterDescriptor extends DataAdapterDescriptor imp
 	 * is also a {@link IFieldsProvider} and support the operation
 	 */
 	@Override
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		IAdapterPropertyHandler setter = descriptor.getAdapterPropertyHandler(jConfig);
 		if (setter != null && setter instanceof IFieldsProvider) {
-			return ((IFieldsProvider)setter).supportsGetFieldsOperation(jConfig);
+			return ((IFieldsProvider)setter).supportsGetFieldsOperation(jConfig, jDataset);
 		}
 		return false;
 	}

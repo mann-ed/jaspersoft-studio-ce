@@ -59,7 +59,7 @@ public class XLSXFieldsProvider implements IFieldsProvider {
 		return null;
 	}
 
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		return true;
 	}
 

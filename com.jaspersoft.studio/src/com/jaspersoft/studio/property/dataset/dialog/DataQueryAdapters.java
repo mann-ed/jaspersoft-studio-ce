@@ -471,7 +471,7 @@ public abstract class DataQueryAdapters extends AQueryDesignerContainer {
 	@Override
 	protected void doGetFields(IProgressMonitor monitor) {
 		final DataAdapterDescriptor da = dscombo.getSelected();
-		if (da != null && da instanceof IFieldsProvider && ((IFieldsProvider) da).supportsGetFieldsOperation(jConfig)) {
+		if (da != null && da instanceof IFieldsProvider && ((IFieldsProvider) da).supportsGetFieldsOperation(jConfig, newdataset)) {
 			qStatus.showInfo(""); //$NON-NLS-1$
 
 			monitor.beginTask(Messages.DataQueryAdapters_jobname, -1);

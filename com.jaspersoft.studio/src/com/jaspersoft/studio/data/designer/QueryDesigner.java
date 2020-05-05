@@ -132,7 +132,7 @@ public class QueryDesigner extends AQueryDesigner {
 	}
 
 	public void setDataAdapter(DataAdapterDescriptor da) {
-		boolean enable = (da instanceof IFieldsProvider && ((IFieldsProvider) da).supportsGetFieldsOperation(container.getjConfig()));
+		boolean enable = (da instanceof IFieldsProvider && ((IFieldsProvider) da).supportsGetFieldsOperation(container.getjConfig(), getjDataset()));
 		setFieldProviderEnabled(enable);
 	}
 

@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import net.sf.jasperreports.data.mondrian.MondrianDataAdapterImpl;
 import net.sf.jasperreports.engine.JRConstants;
+import net.sf.jasperreports.engine.JRDataset;
 
 import com.jaspersoft.studio.data.AWizardDataEditorComposite;
 import com.jaspersoft.studio.data.DataAdapterEditor;
@@ -39,9 +40,9 @@ public class MondrianDataAdapterDescriptor extends JDBCDataAdapterDescriptor {
 	}
 
 	@Override
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		getFieldProvider();
-		return fprovider.supportsGetFieldsOperation(jConfig);
+		return fprovider.supportsGetFieldsOperation(jConfig, jDataset);
 	}
 	
 	@Override

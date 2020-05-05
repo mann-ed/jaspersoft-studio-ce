@@ -39,7 +39,7 @@ import net.sf.jasperreports.engine.util.JRQueryExecuterUtils;
 
 public class JDBCFieldsProvider implements IFieldsProvider {
 
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		return true;
 	}
 

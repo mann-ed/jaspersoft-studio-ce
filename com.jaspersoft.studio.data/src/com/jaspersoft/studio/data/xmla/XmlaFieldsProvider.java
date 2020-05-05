@@ -33,7 +33,7 @@ import com.jaspersoft.studio.utils.parameter.ParameterUtil;
 public class XmlaFieldsProvider implements IFieldsProvider {
 
 	@Override
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		return true;
 	}
 

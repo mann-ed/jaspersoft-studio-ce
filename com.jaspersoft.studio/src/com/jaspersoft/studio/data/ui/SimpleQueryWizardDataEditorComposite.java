@@ -216,11 +216,12 @@ public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorCompo
 	 */
 	public List<JRDesignField> readFields() throws Exception {
 		List<JRDesignField> fields = null;
-		if (getDataAdapterDescriptor() != null && getDataAdapterDescriptor() instanceof IFieldsProvider) {
+		DataAdapterDescriptor dad = getDataAdapterDescriptor();
+		if (dad != null && dad instanceof IFieldsProvider) {
 			questionReturnCode = SWT.OK;
 			JasperReportsConfiguration jContext = getJasperReportsConfiguration();
 			das = DataAdapterServiceUtil.getInstance(new ParameterContributorContext(jContext, null, null))
-					.getService(getDataAdapterDescriptor().getDataAdapter());
+					.getService(dad.getDataAdapter());
 
 			try {
 				JRDesignDataset tmpDataset = getDataset();
@@ -236,7 +237,7 @@ public class SimpleQueryWizardDataEditorComposite extends AWizardDataEditorCompo
 						throw JSSWizardRunnablePage.USER_CANCEL_EXCEPTION;
 					}
 				} else {
-					fields = ((IFieldsProvider) getDataAdapterDescriptor()).getFields(das, jContext, dataset);
+					fields = ((IFieldsProvider) dad).getFields(das, jContext, dataset);
 				}
 			} catch (final JRException ex) {
 				Display.getDefault().syncExec(() -> {

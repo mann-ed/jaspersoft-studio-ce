@@ -69,9 +69,9 @@ public class MongoDbDataAdapterDescriptor extends DataAdapterDescriptor
 			fieldsProvider = new MongoDbFieldsProvider();
 	}
 
-	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig) {
+	public boolean supportsGetFieldsOperation(JasperReportsConfiguration jConfig, JRDataset jDataset) {
 		getFieldProvider();
-		return fieldsProvider.supportsGetFieldsOperation(jConfig);
+		return fieldsProvider.supportsGetFieldsOperation(jConfig, jDataset);
 	}
 
 	@Override

@@ -26,7 +26,9 @@ import com.jaspersoft.studio.property.dataset.dialog.QDesignerFactory;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignField;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
 
 public class LanguagesWizardQueryEditorComposite extends SimpleQueryWizardDataEditorComposite {
 
@@ -55,7 +57,12 @@ public class LanguagesWizardQueryEditorComposite extends SimpleQueryWizardDataEd
 		cmb.select(0);
 		cmb.addModifyListener(e -> {
 			qdfactory.dispose();
-			setQueryLanguage(langs[cmb.getSelectionIndex()]);
+			String ln = langs[cmb.getSelectionIndex()];
+			setQueryLanguage(ln);
+			JRDesignDataset ds = getDataset();
+			if (ds.getQuery() == null)
+				ds.setQuery(new JRDesignQuery());
+			((JRDesignQuery) ds.getQuery()).setLanguage(ln);
 			buildEditor();
 			setDataAdapterDescriptor(getDataAdapterDescriptor());
 			LanguagesWizardQueryEditorComposite.this.update();
