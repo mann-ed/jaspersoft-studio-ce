@@ -133,6 +133,7 @@ public class WsTypes {
 		setSoapType(ResourceDescriptor.TYPE_XML_FILE, ResourceMediaType.FILE_CLIENT_TYPE);
 		setSoapType(ResourceDescriptor.TYPE_JSON_FILE, ResourceMediaType.FILE_CLIENT_TYPE);
 		setSoapType(ResourceDescriptor.TYPE_CSS_FILE, ResourceMediaType.FILE_CLIENT_TYPE);
+		setSoapType(ResourceDescriptor.TYPE_SECURE_FILE, ResourceMediaType.FILE_CLIENT_TYPE);
 
 		setSoapFileType(ResourceDescriptor.TYPE_ACCESS_GRANT_SCHEMA, FileType.accessGrantSchema);
 		setSoapFileType(ResourceDescriptor.TYPE_CLASS_JAR, FileType.jar);
@@ -146,6 +147,7 @@ public class WsTypes {
 		setSoapFileType(ResourceDescriptor.TYPE_XML_FILE, FileType.xml);
 		setSoapFileType(ResourceDescriptor.TYPE_CSS_FILE, FileType.css);
 		setSoapFileType(ResourceDescriptor.TYPE_JSON_FILE, FileType.json);
+		setSoapFileType(ResourceDescriptor.TYPE_SECURE_FILE, FileType.secureFile);
 
 		setRestFileType(FileType.accessGrantSchema, ResourceDescriptor.TYPE_ACCESS_GRANT_SCHEMA);
 		setRestFileType(FileType.css, ResourceDescriptor.TYPE_CSS_FILE);
@@ -169,6 +171,7 @@ public class WsTypes {
 		setRestFileType(FileType.xlsx, ResourceDescriptor.TYPE_CONTENT_RESOURCE);
 		setRestFileType(FileType.xml, ResourceDescriptor.TYPE_XML_FILE);
 		setRestFileType(FileType.json, ResourceDescriptor.TYPE_JSON_FILE);
+		setRestFileType(FileType.secureFile, ResourceDescriptor.TYPE_SECURE_FILE);
 
 		Activator.getExtManager().initWsTypes(this);
 	}

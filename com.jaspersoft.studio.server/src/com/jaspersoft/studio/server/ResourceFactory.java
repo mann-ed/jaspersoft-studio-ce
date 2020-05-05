@@ -34,6 +34,7 @@ import com.jaspersoft.studio.server.model.MRFont;
 import com.jaspersoft.studio.server.model.MRImage;
 import com.jaspersoft.studio.server.model.MRJson;
 import com.jaspersoft.studio.server.model.MRQuery;
+import com.jaspersoft.studio.server.model.MRSecureFile;
 import com.jaspersoft.studio.server.model.MRStyleTemplate;
 import com.jaspersoft.studio.server.model.MReference;
 import com.jaspersoft.studio.server.model.MReportUnit;
@@ -114,6 +115,9 @@ public class ResourceFactory {
 				else if (resource instanceof MRCSS)
 					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
 							new CSSPageContent(parent, resource));
+				else if (resource instanceof MRSecureFile)
+					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
+							new FilePageContent(parent, resource));
 
 				else if (resource instanceof MRFont)
 					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
@@ -247,6 +251,8 @@ public class ResourceFactory {
 
 		if (wstype.equals(ResourceDescriptor.TYPE_IMAGE))
 			return new MRImage(parent, resource, index);
+		if (wstype.equals(ResourceDescriptor.TYPE_SECURE_FILE))
+			return new MRSecureFile(parent, resource, index);
 
 		if (wstype.equals(ResourceDescriptor.TYPE_REFERENCE))
 			return new MReference(parent, resource, index);
@@ -343,6 +349,7 @@ public class ResourceFactory {
 	private static Set<String> fileTypes = new HashSet<>();
 	static {
 		fileTypes.add(ResourceDescriptor.TYPE_IMAGE);
+		fileTypes.add(ResourceDescriptor.TYPE_SECURE_FILE);
 		fileTypes.add(ResourceDescriptor.TYPE_FONT);
 		fileTypes.add(ResourceDescriptor.TYPE_JRXML);
 		fileTypes.add(ResourceDescriptor.TYPE_CLASS_JAR);

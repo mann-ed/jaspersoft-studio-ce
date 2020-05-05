@@ -43,6 +43,7 @@ import com.jaspersoft.studio.server.model.MRDataAdapter;
 import com.jaspersoft.studio.server.model.MRFont;
 import com.jaspersoft.studio.server.model.MRImage;
 import com.jaspersoft.studio.server.model.MRQuery;
+import com.jaspersoft.studio.server.model.MRSecureFile;
 import com.jaspersoft.studio.server.model.MRStyleTemplate;
 import com.jaspersoft.studio.server.model.MReference;
 import com.jaspersoft.studio.server.model.MReportUnit;
@@ -222,6 +223,7 @@ public class AddResourcePage extends JSSHelpWizardPage {
 			new MResourceBundle(root, MResourceBundle.createDescriptor(parent), -1);
 			new MRFont(root, MRFont.createDescriptor(parent), -1);
 			new MRImage(root, MRImage.createDescriptor(parent), -1);
+			new MRSecureFile(root, MRSecureFile.createDescriptor(parent), -1);
 			new MContentResource(root, MContentResource.createDescriptor(parent), -1);
 			new MRStyleTemplate(root, MRStyleTemplate.createDescriptor(parent), -1);
 			new MXmlFile(root, MXmlFile.createDescriptor(parent), -1);

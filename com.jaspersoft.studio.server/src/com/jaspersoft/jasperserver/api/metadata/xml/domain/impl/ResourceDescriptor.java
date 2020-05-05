@@ -83,6 +83,7 @@ public class ResourceDescriptor implements Serializable {
 	public static final String TYPE_XML_FILE = FileResource.TYPE_XML;
 	public static final String TYPE_CSS_FILE = FileResource.TYPE_CSS;
 	public static final String TYPE_JSON_FILE = FileResource.TYPE_JSON;
+	public static final String TYPE_SECURE_FILE = "secure";
 
 	public static final String XML_ATT_NAME = "name";
 	public static final String XML_ATT_WSTYPE = "wsType";
@@ -924,10 +925,8 @@ public class ResourceDescriptor implements Serializable {
 	/**
 	 * Set a boolean resource property value.
 	 * 
-	 * @param resourcePropertyName
-	 *            the property name
-	 * @param value
-	 *            the value
+	 * @param resourcePropertyName the property name
+	 * @param value                the value
 	 * @see #setResourceProperty(String, String)
 	 * @see #getResourcePropertyValueAsBoolean(String)
 	 */
@@ -938,10 +937,8 @@ public class ResourceDescriptor implements Serializable {
 	/**
 	 * Set an integer resource property value.
 	 * 
-	 * @param resourcePropertyName
-	 *            the property name
-	 * @param value
-	 *            the value
+	 * @param resourcePropertyName the property name
+	 * @param value                the value
 	 * @see #setResourceProperty(String, String)
 	 * @see #getResourcePropertyValueAsInteger(String)
 	 */

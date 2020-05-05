@@ -32,6 +32,7 @@ import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MContentResource;
 import com.jaspersoft.studio.server.model.MRDataAdapter;
 import com.jaspersoft.studio.server.model.MRJson;
+import com.jaspersoft.studio.server.model.MRSecureFile;
 import com.jaspersoft.studio.server.model.MReportUnit;
 import com.jaspersoft.studio.server.model.MXmlFile;
 import com.jaspersoft.studio.server.preferences.JRSPreferencesPage;
@@ -187,7 +188,9 @@ public class ImpDataAdapter extends AImpObject {
 									mdaf = new MXmlFile(mrunit, rd, -1);
 								else if (da instanceof JsonDataAdapter)
 									mdaf = new MRJson(mrunit, rd, -1);
-								else
+								else if (da instanceof JdbcDataAdapter) {
+									mdaf = new MRSecureFile(mrunit, rd, -1);
+								} else
 									mdaf = new MContentResource(mrunit, rd, -1);
 								if (mdaf != null) {
 									mdaf.setFile(file);
