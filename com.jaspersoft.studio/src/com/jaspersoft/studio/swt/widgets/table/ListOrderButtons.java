@@ -29,13 +29,14 @@ public class ListOrderButtons {
 	private Button upField;
 	private Button downFields;
 
-	private Set<ChangeListener> listeners = new HashSet<>(1); // or can use ChangeSupport in NB 6.0
+	private Set<ChangeListener> listeners = new HashSet<>(1); // or can use
+																// ChangeSupport
+																// in NB 6.0
 
 	/**
 	 * Add a change listener to listen for changes on the selected fields
 	 * 
-	 * @param ChangeListener
-	 *            a listener
+	 * @param ChangeListener a listener
 	 */
 	public final void addChangeListener(ChangeListener l) {
 		synchronized (listeners) {
@@ -66,10 +67,12 @@ public class ListOrderButtons {
 	private final class ElementOrderChanger extends SelectionAdapter {
 		private final TableViewer tableViewer;
 		private boolean up;
+		private MoveHandler moveHandler;
 
-		private ElementOrderChanger(TableViewer tableViewer, boolean up) {
+		private ElementOrderChanger(TableViewer tableViewer, boolean up, MoveHandler moveHandler) {
 			this.tableViewer = tableViewer;
 			this.up = up;
+			this.moveHandler = moveHandler;
 		}
 
 		@SuppressWarnings({ "rawtypes" })
@@ -91,6 +94,10 @@ public class ListOrderButtons {
 			Object[] selected = new Object[indxs.length];
 			for (int i = 0; i < indxs.length; i++)
 				selected[i] = lst.get(indxs[i]);
+			if (up)
+				moveHandler.moveUp(selected);
+			else
+				moveHandler.moveDown(selected);
 			List nlst = new ArrayList();
 			for (int i = 0; i < lst.size(); i++) {
 				if (Arrays.binarySearch(indxs, i) > -1)
@@ -118,17 +125,21 @@ public class ListOrderButtons {
 	}
 
 	public void createOrderButtons(Composite composite, final TableViewer tableViewer) {
+		createOrderButtons(composite, tableViewer, new MoveHandler());
+	}
+
+	public void createOrderButtons(Composite composite, final TableViewer tableViewer, MoveHandler moveHandler) {
 		upField = new Button(composite, SWT.PUSH);
 		upField.setText(Messages.common_up);
 		upField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-		upField.addSelectionListener(new ElementOrderChanger(tableViewer, true));
+		upField.addSelectionListener(new ElementOrderChanger(tableViewer, true, moveHandler));
 
 		downFields = new Button(composite, SWT.PUSH);
 		downFields.setText(Messages.common_down);
 		downFields.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-		downFields.addSelectionListener(new ElementOrderChanger(tableViewer, false));
+		downFields.addSelectionListener(new ElementOrderChanger(tableViewer, false, moveHandler));
 		Object obj = tableViewer.getInput();
-		setEnabled(obj != null && obj instanceof Collection<?> && !((Collection<?>) obj).isEmpty());
+		setEnabled(obj instanceof Collection<?> && !((Collection<?>) obj).isEmpty());
 		tableViewer.addSelectionChangedListener(event -> {
 			StructuredSelection sel = (StructuredSelection) event.getSelection();
 			setEnabled(sel != null && sel.size() > 0 && tableViewer.getTable().getItemCount() > 1);

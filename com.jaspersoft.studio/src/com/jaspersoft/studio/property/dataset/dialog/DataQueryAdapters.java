@@ -258,10 +258,12 @@ public abstract class DataQueryAdapters extends AQueryDesignerContainer {
 				langCombo.setItem(0, lang);
 				langCombo.select(0);
 				// On windows the selection of an entry select also all the
-				// text inside the combo, so we need to restore the old selection
+				// text inside the combo, so we need to restore the old
+				// selection
 				langCombo.setSelection(oldSelection);
 			} else if (index > 0 && !languages[0].isEmpty()) {
-				// if the input language is a known language and there was before an
+				// if the input language is a known language and there was
+				// before an
 				// entry for a not recognized language then remove it
 				languages[0] = ""; //$NON-NLS-1$
 				langCombo.setItem(0, ""); //$NON-NLS-1$
@@ -471,7 +473,8 @@ public abstract class DataQueryAdapters extends AQueryDesignerContainer {
 	@Override
 	protected void doGetFields(IProgressMonitor monitor) {
 		final DataAdapterDescriptor da = dscombo.getSelected();
-		if (da != null && da instanceof IFieldsProvider && ((IFieldsProvider) da).supportsGetFieldsOperation(jConfig, newdataset)) {
+		if (da != null && da instanceof IFieldsProvider
+				&& ((IFieldsProvider) da).supportsGetFieldsOperation(jConfig, newdataset)) {
 			qStatus.showInfo(""); //$NON-NLS-1$
 
 			monitor.beginTask(Messages.DataQueryAdapters_jobname, -1);
@@ -531,6 +534,8 @@ public abstract class DataQueryAdapters extends AQueryDesignerContainer {
 
 	protected boolean setupLanguagesCombo(String[] langs) {
 		boolean changeLang = true;
+		if (langCombo.isDisposed())
+			return false;
 		String lang = langCombo.getText();
 		langCombo.removeAll();
 		if (Misc.isNullOrEmpty(langs) || ArrayUtils.contains(langs, "*")) { //$NON-NLS-1$
