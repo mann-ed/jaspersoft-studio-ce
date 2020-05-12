@@ -20,7 +20,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -143,14 +142,17 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 
 		new Label(composite, SWT.NONE).setText("Auto Commit");
 
-		bAc = new Button(composite, SWT.CHECK);
+		bAc = new Combo(composite, SWT.READ_ONLY);
+		bAc.setItems(new String[] { "", "True", "False" });
 
 		new Label(composite, SWT.NONE).setText("Read Only");
-		bRO = new Button(composite, SWT.CHECK);
+		bRO = new Combo(composite, SWT.READ_ONLY);
+		bRO.setItems(new String[] { "", "True", "False" });
 
 		new Label(composite, SWT.NONE).setText("Transaction Isolation");
 		bTI = new Combo(composite, SWT.READ_ONLY);
-		bTI.setItems(new String[] { "None", "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" });
+		bTI.setItems(
+				new String[] { "", "None", "Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable" });
 
 		cproperties = new PropertiesComponent(composite) {
 			@Override
@@ -380,12 +382,13 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 		bindingContext.bindValue(SWTObservables.observeText(textJDBCUrl, SWT.Modify),
 				PojoObservables.observeValue(dataAdapter, "url")); //$NON-NLS-1$
 
-		bindingContext.bindValue(SWTObservables.observeSelection(bAc),
-				PojoObservables.observeValue(dataAdapter, "autoCommit")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bRO),
-				PojoObservables.observeValue(dataAdapter, "readOnly")); //$NON-NLS-1$
+		Proxy p = new Proxy((JdbcDataAdapterImpl) dataAdapter);
+		bindingContext.bindValue(SWTObservables.observeSingleSelectionIndex(bAc),
+				PojoObservables.observeValue(p, "autoCommit")); //$NON-NLS-1$
+		bindingContext.bindValue(SWTObservables.observeSingleSelectionIndex(bRO),
+				PojoObservables.observeValue(p, "readOnly")); //$NON-NLS-1$
 		bindingContext.bindValue(SWTObservables.observeSingleSelectionIndex(bTI),
-				PojoObservables.observeValue(new Proxy((JdbcDataAdapterImpl) dataAdapter), "transactionIsolation")); //$NON-NLS-1$
+				PojoObservables.observeValue(p, "transactionIsolation")); //$NON-NLS-1$
 
 		cpath.setClasspaths(jdbcDataAdapter.getClasspath());
 		cproperties.setProperties(jdbcDataAdapter.getProperties());
@@ -398,6 +401,44 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 			this.da = da;
 		}
 
+		public int getAutoCommit() {
+			if (da.getAutoCommit() == null)
+				return 0;
+			return da.getAutoCommit() ? 1 : 2;
+		}
+
+		public void setAutoCommit(int indx) {
+			switch (indx) {
+			case 0:
+				da.setAutoCommit(null);
+				break;
+			case 1:
+				da.setAutoCommit(true);
+				break;
+			default:
+				da.setAutoCommit(false);
+			}
+		}
+
+		public int getReadOnly() {
+			if (da.getReadOnly() == null)
+				return 0;
+			return da.getReadOnly() ? 1 : 2;
+		}
+
+		public void setReadOnly(int indx) {
+			switch (indx) {
+			case 0:
+				da.setReadOnly(null);
+				break;
+			case 1:
+				da.setReadOnly(true);
+				break;
+			default:
+				da.setReadOnly(false);
+			}
+		}
+
 		public void setTransactionIsolation(int indx) {
 			da.setTransactionIsolation(JDBCDataAdapterComposite.getTransactionIsolation(indx));
 		}
@@ -406,15 +447,15 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 			TransactionIsolation ti = da.getTransactionIsolation();
 			if (ti != null) {
 				if (ti.equals(TransactionIsolation.NONE))
-					return 0;
-				if (ti.equals(TransactionIsolation.READ_UNCOMMITTED))
 					return 1;
-				if (ti.equals(TransactionIsolation.READ_COMMITTED))
+				if (ti.equals(TransactionIsolation.READ_UNCOMMITTED))
 					return 2;
-				if (ti.equals(TransactionIsolation.REPEATABLE_READ))
+				if (ti.equals(TransactionIsolation.READ_COMMITTED))
 					return 3;
-				if (ti.equals(TransactionIsolation.SERIALIZABLE))
+				if (ti.equals(TransactionIsolation.REPEATABLE_READ))
 					return 4;
+				if (ti.equals(TransactionIsolation.SERIALIZABLE))
+					return 5;
 			}
 			return 0;
 		}
@@ -422,15 +463,15 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 
 	public static TransactionIsolation getTransactionIsolation(int indx) {
 		switch (indx) {
-		case 0:
-			return TransactionIsolation.NONE;
 		case 1:
-			return TransactionIsolation.READ_UNCOMMITTED;
+			return TransactionIsolation.NONE;
 		case 2:
-			return TransactionIsolation.READ_COMMITTED;
+			return TransactionIsolation.READ_UNCOMMITTED;
 		case 3:
-			return TransactionIsolation.REPEATABLE_READ;
+			return TransactionIsolation.READ_COMMITTED;
 		case 4:
+			return TransactionIsolation.REPEATABLE_READ;
+		case 5:
 			return TransactionIsolation.SERIALIZABLE;
 		}
 		return null;
@@ -474,9 +515,6 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 
 		jdbcDataAdapter.setClasspath(cpath.getClasspaths());
 		jdbcDataAdapter.setProperties(cproperties.getProperties());
-		jdbcDataAdapter.setAutoCommit(bAc.getSelection());
-		jdbcDataAdapter.setReadOnly(bRO.getSelection());
-		jdbcDataAdapter.setTransactionIsolation(getTransactionIsolation(bTI.getSelectionIndex()));
 
 		return dataAdapterDesc;
 	}
@@ -493,8 +531,8 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 	}
 
 	protected String contextId;
-	private Button bAc;
-	private Button bRO;
+	private Combo bAc;
+	private Combo bRO;
 	private Combo bTI;
 
 	@Override
