@@ -62,7 +62,6 @@ import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.eclipse.util.StringUtils;
 import net.sf.jasperreports.engine.JRCloneable;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRRuntimeException;
 import net.sf.jasperreports.engine.fonts.FontExtensionsCollector;
 import net.sf.jasperreports.engine.fonts.FontFace;
 import net.sf.jasperreports.engine.fonts.FontFamily;
@@ -183,7 +182,8 @@ public class FontListFieldEditor extends TreeFieldEditor {
 			String s = getPreferenceStore().getDefaultString(getPreferenceName());
 			if (Misc.isNullOrEmpty(s))
 				return;
-			// Load the list of the extension parsing the xml but without loading actually the fonts
+			// Load the list of the extension parsing the xml but without
+			// loading actually the fonts
 			SimpleFontExtensionHelper.getInstance().loadFontExtensions(JasperReportsConfiguration.getDefaultInstance(),
 					new ByteArrayInputStream(s.getBytes()), fontFamilies, false);
 			tree.refresh(true);
@@ -198,7 +198,8 @@ public class FontListFieldEditor extends TreeFieldEditor {
 			String s = getPreferenceStore().getString(getPreferenceName());
 			if (Misc.isNullOrEmpty(s))
 				return;
-			// Load the list of the extension parsing the xml but without loading actually the fonts
+			// Load the list of the extension parsing the xml but without
+			// loading actually the fonts
 			SimpleFontExtensionHelper.getInstance().loadFontExtensions(JasperReportsConfiguration.getDefaultInstance(),
 					new ByteArrayInputStream(s.getBytes()), fontFamilies, false);
 			tree.refresh(true);
@@ -412,11 +413,11 @@ public class FontListFieldEditor extends TreeFieldEditor {
 		if (sel.isEmpty())
 			return;
 
-		List<FontFamily> ff = new ArrayList<FontFamily>();
+		List<FontFamily> ff = new ArrayList<>();
 		for (Object obj : sel.toList())
 			if (obj instanceof FontFamily)
 				ff.add((FontFamily) ((JRCloneable) obj).clone());
-		List<FontSet> fs = new ArrayList<FontSet>();
+		List<FontSet> fs = new ArrayList<>();
 		for (Object obj : sel.toList())
 			if (obj instanceof FontSet) {
 				fs.add((FontSet) ((JRCloneable) obj).clone());
@@ -466,10 +467,11 @@ public class FontListFieldEditor extends TreeFieldEditor {
 						e.printStackTrace();
 						UIUtils.getDisplay().asyncExec(new Runnable() {
 							public void run() {
-								IStatus status = new OperationStatus(IStatus.ERROR, JaspersoftStudioPlugin.getUniqueIdentifier(), 1,
-										"Error saving file.", e.getCause()); //$NON-NLS-1$
-								ErrorDialog.openError(Display.getDefault().getActiveShell(), Messages.FontListFieldEditor_errorSave,
-										null, status);
+								IStatus status = new OperationStatus(IStatus.ERROR,
+										JaspersoftStudioPlugin.getUniqueIdentifier(), 1, "Error saving file.", //$NON-NLS-1$
+										e.getCause());
+								ErrorDialog.openError(Display.getDefault().getActiveShell(),
+										Messages.FontListFieldEditor_errorSave, null, status);
 							}
 						});
 					} finally {
@@ -499,10 +501,11 @@ public class FontListFieldEditor extends TreeFieldEditor {
 
 			pw.println(
 					"net.sf.jasperreports.extension.registry.factory.fonts=net.sf.jasperreports.engine.fonts.SimpleFontExtensionsRegistryFactory"); //$NON-NLS-1$
-			pw.println("net.sf.jasperreports.extension.simple.font.families.ireport" + prefix + "=fonts/" + fontXmlFile); //$NON-NLS-1$ //$NON-NLS-2$
+			pw.println(
+					"net.sf.jasperreports.extension.simple.font.families.ireport" + prefix + "=fonts/" + fontXmlFile); //$NON-NLS-1$ //$NON-NLS-2$
 
 			pw.flush();
-			Set<String> names = new HashSet<String>();
+			Set<String> names = new HashSet<>();
 			for (FontFamily f : c.getFontFamilies()) {
 				writeFont2zip(names, zipos, f, (SimpleFontFace) f.getNormalFace());
 				writeFont2zip(names, zipos, f, (SimpleFontFace) f.getBoldFace());
@@ -532,8 +535,8 @@ public class FontListFieldEditor extends TreeFieldEditor {
 		if (font == null)
 			return;
 		try {
-			font.setTtf(writeFont(names, zipos, fontFamily, font, font.getTtf()));
-		} catch (JRRuntimeException r) {
+			font.setTtf(writeFont(names, zipos, fontFamily, font, font.getTtf()), false);
+		} catch (Exception r) {
 		}
 		font.setPdf(writeFont(names, zipos, fontFamily, font, font.getPdf()));
 		font.setEot(writeFont(names, zipos, fontFamily, font, font.getEot()));
@@ -552,9 +555,11 @@ public class FontListFieldEditor extends TreeFieldEditor {
 				ZipEntry ttfZipEntry = new ZipEntry(name);
 				zipos.putNextEntry(ttfZipEntry);
 
-				FileInputStream in = new FileInputStream(fontname); // Stream to read file
+				FileInputStream in = new FileInputStream(fontname); // Stream to
+																	// read file
 				try {
-					byte[] buffer = new byte[4096]; // Create a buffer for copying
+					byte[] buffer = new byte[4096]; // Create a buffer for
+													// copying
 					int bytesRead;
 					while ((bytesRead = in.read(buffer)) != -1)
 						zipos.write(buffer, 0, bytesRead);
