@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.studio.property.dataset.fields.table.widget.AWidget;
+import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMResource;
 
@@ -86,6 +87,11 @@ public class WInputControlPathSelector extends WResourcePathSelector {
 			p = (JRDesignParameter) aw.getElement();
 		else if (aw.getTColumn().getValue1() instanceof JRDesignParameter)
 			p = (JRDesignParameter) aw.getTColumn().getValue1();
+		else if (aw.getElement() instanceof PropertyExpressionsDTO) {
+			Object obj = ((PropertyExpressionsDTO) aw.getElement()).getJrElement();
+			if (obj instanceof JRDesignParameter)
+				p = (JRDesignParameter) obj;
+		}
 		if (p != null)
 			return p.getName();
 		return null;
