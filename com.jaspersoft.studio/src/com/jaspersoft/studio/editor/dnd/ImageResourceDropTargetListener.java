@@ -35,8 +35,8 @@ import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 /**
- * Implementation of a drop target listener that is supposed to handle the dropping of images inside
- * {@link EditPartViewer}s.
+ * Implementation of a drop target listener that is supposed to handle the
+ * dropping of images inside {@link EditPartViewer}s.
  * 
  * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
  *
@@ -56,7 +56,8 @@ public class ImageResourceDropTargetListener extends AbstractTransferDropTargetL
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.gef.dnd.AbstractTransferDropTargetListener#updateTargetRequest()
+	 * @see org.eclipse.gef.dnd.AbstractTransferDropTargetListener#
+	 * updateTargetRequest()
 	 */
 	@Override
 	protected void updateTargetRequest() {
@@ -96,7 +97,8 @@ public class ImageResourceDropTargetListener extends AbstractTransferDropTargetL
 				}
 			}
 		} else if (ImageURLTransfer.getInstance().isSupportedType(event.currentDataType)) {
-			// Dropping an image dropped from a contributed view (i.e: repository view)
+			// Dropping an image dropped from a contributed view (i.e:
+			// repository view)
 			return (event.data instanceof String);
 		}
 
@@ -124,30 +126,37 @@ public class ImageResourceDropTargetListener extends AbstractTransferDropTargetL
 	}
 
 	/*
-	 * Updates the image creation command with the valid expression for the newly created image element.
+	 * Updates the image creation command with the valid expression for the
+	 * newly created image element.
 	 */
 	private Command setImageExpression(CreateImageCommand command) throws InterruptedException {
-		if (ResourceTransfer.getInstance().isSupportedType(getCurrentEvent().currentDataType)) {
+		DropTargetEvent cevt = getCurrentEvent();
+		if (cevt.data == null)
+			return null;
+		if (ResourceTransfer.getInstance().isSupportedType(cevt.currentDataType)) {
 			// Dropping an image resource from inside workspace
-			IResource imgResource = ((IResource[]) getCurrentEvent().data)[0];
+			IResource imgResource = ((IResource[]) cevt.data)[0];
 
-			// Starting from JR 6.2.2 the file name is supported even to load SVG files.
+			// Starting from JR 6.2.2 the file name is supported even to load
+			// SVG files.
 			// In previous versions the user should relay on an expression like:
-			// "net.sf.jasperreports.renderers.BatikRenderer.getInstanceFromLocation($P{JASPER_REPORTS_CONTEXT}, <file
+			// "net.sf.jasperreports.renderers.BatikRenderer.getInstanceFromLocation($P{JASPER_REPORTS_CONTEXT},
+			// <file
 			// name>)";
 			String expression = "\"" + imgResource.getProjectRelativePath() + "\"";
 
 			command.setImageExpression(new JRDesignExpression(expression));
-		} else if (FileTransfer.getInstance().isSupportedType(getCurrentEvent().currentDataType)) {
+		} else if (FileTransfer.getInstance().isSupportedType(cevt.currentDataType)) {
 			// Dropping an image resource from outside workspace
-			String filepath = ((String[]) getCurrentEvent().data)[0];
+			String filepath = ((String[]) cevt.data)[0];
 			if (filepath != null) {
 				String expression = "\"" + filepath + "\"";
 				command.setImageExpression(new JRDesignExpression(expression));
 			}
-		} else if (ImageURLTransfer.getInstance().isSupportedType(getCurrentEvent().currentDataType)) {
-			// Dropping an image dropped from a contributed view (i.e: repository view)
-			String filepath = (String) getCurrentEvent().data;
+		} else if (ImageURLTransfer.getInstance().isSupportedType(cevt.currentDataType)) {
+			// Dropping an image dropped from a contributed view (i.e:
+			// repository view)
+			String filepath = (String) cevt.data;
 			if (filepath != null) {
 				String expr = filepath;
 				command.setImageExpression(new JRDesignExpression("\"" + expr.trim() + "\""));
@@ -166,8 +175,8 @@ public class ImageResourceDropTargetListener extends AbstractTransferDropTargetL
 							INode r = ((APropertyNode) obj).getRoot();
 							CompoundCommand cc = new CompoundCommand(command.getLabel());
 							if (r != null)
-								for (IRepositoryViewProvider rvp : JaspersoftStudioPlugin.getInstance().getExtensionManager()
-										.getRepositoryProviders()) {
+								for (IRepositoryViewProvider rvp : JaspersoftStudioPlugin.getInstance()
+										.getExtensionManager().getRepositoryProviders()) {
 									List<Command> c = rvp.dropResource(srv, r);
 									if (!Misc.isNullOrEmpty(c))
 										for (Command item : c)
