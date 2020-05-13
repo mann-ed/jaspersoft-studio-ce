@@ -19,6 +19,7 @@ import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescript
 import com.jaspersoft.studio.model.ANode;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMResource;
+import com.jaspersoft.studio.server.protocol.ProxyConnection;
 import com.jaspersoft.studio.server.wizard.resource.APageContent;
 import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.UIUtil;
@@ -70,8 +71,10 @@ public class QueryPageContent extends APageContent {
 			UIUtil.createLabel(composite, Messages.RDQueryPage_language);
 
 			clang = new Combo(composite, SWT.BORDER);
-
 			clang.setItems(LANGUAGES);
+			if (res.getWsClient().getServerInfo().getVersion().compareTo(ProxyConnection.ONYX1) > 0)
+				clang.add("jasperQL");
+
 			// clang.setItems(ModelUtils.getQueryLanguages(res.getJasperConfiguration()));
 
 		}
