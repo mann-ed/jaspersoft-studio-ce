@@ -2,18 +2,20 @@
  * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
  * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
-package com.jaspersoft.studio.server.publish;
+package com.jaspersoft.studio.server.publish.imp.da;
 
-public class ImpBigQueryDataAdapter extends AImpJdbcDataAdapter {
+import net.sf.jasperreports.data.jdbc.GbqSimbaDataAdapterService;
+
+public class ImpSimbaBigQueryDataAdapter extends AImpJdbcDataAdapter {
 	public static final String dname = "tibcosoftware.jdbc.googlebigquery.GoogleBigQueryDriver";
 
-	public ImpBigQueryDataAdapter() {
-		super(dname, new String[] { "ServiceAccountPrivateKey" });
+	public ImpSimbaBigQueryDataAdapter() {
+		super(dname, new String[] { GbqSimbaDataAdapterService.GBQ_CONNECTION_PARAMETER_PRIVATE_KEY });
 	}
 
 	@Override
 	protected String getJdbcPrefix() {
-		return "jdbc:tibcosoftware:googlebigquery:";
+		return "jdbc:bigquery:";
 	}
 
 }

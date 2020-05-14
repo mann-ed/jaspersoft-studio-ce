@@ -37,12 +37,13 @@ import com.jaspersoft.studio.server.model.MReportUnit;
 import com.jaspersoft.studio.server.model.MXmlFile;
 import com.jaspersoft.studio.server.preferences.JRSPreferencesPage;
 import com.jaspersoft.studio.server.protocol.Version;
-import com.jaspersoft.studio.server.publish.AImpJdbcDataAdapter;
-import com.jaspersoft.studio.server.publish.ImpBigQueryDataAdapter;
 import com.jaspersoft.studio.server.publish.OverwriteEnum;
 import com.jaspersoft.studio.server.publish.PublishOptions;
 import com.jaspersoft.studio.server.publish.PublishOptions.ValueSetter;
 import com.jaspersoft.studio.server.publish.PublishUtil;
+import com.jaspersoft.studio.server.publish.imp.da.AImpJdbcDataAdapter;
+import com.jaspersoft.studio.server.publish.imp.da.ImpBigQueryDataAdapter;
+import com.jaspersoft.studio.server.publish.imp.da.ImpSimbaBigQueryDataAdapter;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.data.DataAdapter;
@@ -281,6 +282,7 @@ public class ImpDataAdapter extends AImpObject {
 	private static Set<AImpJdbcDataAdapter> jdbcFiles = new HashSet<>();
 	static {
 		jdbcFiles.add(new ImpBigQueryDataAdapter());
+		jdbcFiles.add(new ImpSimbaBigQueryDataAdapter());
 	}
 
 }
