@@ -5,15 +5,17 @@
 package com.jaspersoft.studio.data;
 
 import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.DataAdapterContributorFactory;
 import net.sf.jasperreports.data.DataAdapterService;
 import net.sf.jasperreports.data.DefaultDataAdapterServiceFactory;
 import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.engine.ParameterContributorContext;
 
 /**
  * @author Teodor Danciu (teodord@users.sourceforge.net)
  * @version $Id: JRBaseBand.java 4319 2011-05-17 09:22:14Z teodord $
  */
-public class DataAdapterServiceFactoryImpl extends DefaultDataAdapterServiceFactory {
+public class DataAdapterServiceFactoryImpl implements DataAdapterContributorFactory {
 
 	/**
 	 *
@@ -27,17 +29,17 @@ public class DataAdapterServiceFactoryImpl extends DefaultDataAdapterServiceFact
 		return INSTANCE;
 	}
 
-	/**
-	 *
-	 */
-	public DataAdapterService getDataAdapterService(JasperReportsContext jasperReportsContext, DataAdapter dataAdapter) {
+	@Override
+	public DataAdapterService getDataAdapterService(ParameterContributorContext context, DataAdapter dataAdapter) {
 		DataAdapterService dataAdapterService = null;
 
 		DataAdapterFactory daf = DataAdapterManager.findFactoryByDataAdapterClass(dataAdapter.getClass().getName());
+		JasperReportsContext jContext = context.getJasperReportsContext();
 		if (daf != null)
-			dataAdapterService = daf.createDataAdapterService(jasperReportsContext, dataAdapter);
+			dataAdapterService = daf.createDataAdapterService(jContext, dataAdapter);
 		if (daf == null)
-			return super.getDataAdapterService(jasperReportsContext, dataAdapter);
+			return DefaultDataAdapterServiceFactory.getInstance().getDataAdapterService(
+					new ParameterContributorContext(jContext, null, null), dataAdapter);
 		return dataAdapterService;
 	}
 
