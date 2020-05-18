@@ -20,8 +20,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -91,12 +89,10 @@ public class ResourcePageContent extends APageContent {
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 3;
 		tparent.setLayoutData(gd);
-		// tparent.setEnabled(false);
 
 		UIUtil.createLabel(composite, Messages.AResourcePage_type);
 		ttype = new Text(composite, SWT.BORDER | SWT.READ_ONLY);
 		ttype.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		// ttype.setEnabled(false);
 
 		bisRef = new Button(composite, SWT.CHECK);
 		bisRef.setText(Messages.ResourcePageContent_isReference);
@@ -128,7 +124,6 @@ public class ResourcePageContent extends APageContent {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 3;
 		tcdate.setLayoutData(gd);
-		// tcdate.setEnabled(false);
 
 		ResourceDescriptor rd = res.getValue();
 		proxy = new Proxy(rd);
@@ -167,25 +162,15 @@ public class ResourcePageContent extends APageContent {
 		tid.setEditable(rd.getIsNew());
 		if (rd.getIsNew()) {
 			rd.setName(rd.getLabel());
-			tname.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(ModifyEvent e) {
-					tid.setText(IDStringValidator.safeChar(Misc.nvl(tname.getText())));
-				}
-			});
-			tid.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(ModifyEvent e) {
-					if (refresh)
-						return;
-					refresh = true;
-					String validationError = validateID(tid.getText());
-					page.setErrorMessage(validationError);
-					setPageComplete(validationError == null);
-					refresh = false;
-				}
+			tname.addModifyListener(e -> tid.setText(IDStringValidator.safeChar(Misc.nvl(tname.getText()))));
+			tid.addModifyListener(e -> {
+				if (refresh)
+					return;
+				refresh = true;
+				String validationError = validateID(tid.getText());
+				page.setErrorMessage(validationError);
+				setPageComplete(validationError == null);
+				refresh = false;
 			});
 			tid.addVerifyListener(e -> e.text = IDStringValidator.safeChar(e.text));
 		}
@@ -236,7 +221,7 @@ public class ResourcePageContent extends APageContent {
 
 			public Object convert(Object fromObject) {
 				try {
-					if (fromObject != null && fromObject instanceof String && !((String) fromObject).isEmpty())
+					if (fromObject instanceof String && !((String) fromObject).isEmpty())
 						return f.parseObject((String) fromObject);
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -269,7 +254,6 @@ public class ResourcePageContent extends APageContent {
 		bindingContext.bindValue(SWTObservables.observeText(tdesc, SWT.Modify),
 				PojoObservables.observeValue(rd, "description")); //$NON-NLS-1$
 		bindingContext.updateTargets();
-		// bindingContext.updateModels();
 
 		final IConnection con = getWsClient();
 		if (!rd.getIsNew() && !con.isSupported(Feature.SEARCHREPOSITORY) && res instanceof MAdHocDataView) {
@@ -278,13 +262,9 @@ public class ResourcePageContent extends APageContent {
 				tname.setEnabled(false);
 			if (tdesc != null)
 				tdesc.setEnabled(false);
-			UIUtils.getDisplay().asyncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					setPageComplete(false);
-					page.setDescription(Messages.ResourcePageContent_3);
-				}
+			UIUtils.getDisplay().asyncExec(() -> {
+				setPageComplete(false);
+				page.setDescription(Messages.ResourcePageContent_3);
 			});
 		}
 	}

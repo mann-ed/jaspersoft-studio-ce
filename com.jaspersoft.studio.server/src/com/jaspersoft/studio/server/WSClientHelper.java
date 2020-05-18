@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -172,6 +171,10 @@ public class WSClientHelper {
 					return -1;
 				if (wsType1.equals(ResourceDescriptor.TYPE_DOMAIN_TOPICS))
 					return 1;
+				if (wsType0.equals(ResourceDescriptor.TYPE_ADHOC_DATA_VIEW))
+					return -1;
+				if (wsType1.equals(ResourceDescriptor.TYPE_ADHOC_DATA_VIEW))
+					return 1;
 				return wsType0.compareTo(wsType1);
 			});
 		}
@@ -190,7 +193,8 @@ public class WSClientHelper {
 				if (r.getWsType().equals(ResourceDescriptor.TYPE_FOLDER)) {
 					listFolder(node, client, r.getUriString(), monitor, depth);
 				} else if (r.getWsType().equals(ResourceDescriptor.TYPE_REPORTUNIT)
-						|| rd.getWsType().equals(ResourceDescriptor.TYPE_DOMAIN_TOPICS)) {
+						|| rd.getWsType().equals(ResourceDescriptor.TYPE_DOMAIN_TOPICS)
+						|| rd.getWsType().equals(ResourceDescriptor.TYPE_ADHOC_DATA_VIEW)) {
 					r = client.get(monitor, r, null);
 					Set<String> setRU = new HashSet<>();
 					List<ResourceDescriptor> children2 = r.getChildren();
@@ -504,9 +508,13 @@ public class WSClientHelper {
 			ResourceDescriptor rd = mr.getValue();
 			String uri = rd.getUriString();
 			if (rd.getWsType() != null && !rd.getWsType().equals(ResourceDescriptor.TYPE_FOLDER))
-				listFolder(mr, -1, cli, monitor, rd, 0);
-			else
-				listFolder(mr, cli, uri, monitor, 0);
+				if (rd.getWsType().equals(ResourceDescriptor.TYPE_REPORTUNIT)
+						|| rd.getWsType().equals(ResourceDescriptor.TYPE_DASHBOARD)
+						|| rd.getWsType().equals(ResourceDescriptor.TYPE_DOMAIN_TOPICS)
+						|| rd.getWsType().equals(ResourceDescriptor.TYPE_ADHOC_DATA_VIEW))
+					listFolder(mr, -1, cli, monitor, rd, 0);
+				else
+					listFolder(mr, cli, uri, monitor, 0);
 			return findSelected(mr.getChildren(), monitor, prunit, cli);
 		}
 		return null;
@@ -571,8 +579,7 @@ public class WSClientHelper {
 	 * Usually the resource root element is an {@link MServerProfile} instance that
 	 * holds a valid connection.
 	 * 
-	 * @param resource
-	 *            the remote resource
+	 * @param resource the remote resource
 	 * @return a valid {@link IConnection} if any associated, <code>null</code>
 	 *         otherwise
 	 * @throws Exception

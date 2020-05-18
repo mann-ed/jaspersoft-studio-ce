@@ -4,14 +4,11 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.wizard.resource;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -25,12 +22,14 @@ import com.jaspersoft.studio.server.ResourceFactory;
 import com.jaspersoft.studio.server.ServerManager;
 import com.jaspersoft.studio.server.WSClientHelper;
 import com.jaspersoft.studio.server.messages.Messages;
+import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MReference;
 import com.jaspersoft.studio.server.model.MReportUnit;
-import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.wizard.resource.page.AddResourcePage;
 import com.jaspersoft.studio.server.wizard.resource.page.ResourceDescriptorPage;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 public class AddResourceWizard extends Wizard {
 	private AddResourcePage page0;
@@ -102,7 +101,7 @@ public class AddResourceWizard extends Wizard {
 	}
 
 	private ResourceFactory rfactory = new ResourceFactory();
-	private Map<Class<? extends AMResource>, IWizardPage[]> pagemap = new HashMap<Class<? extends AMResource>, IWizardPage[]>();
+	private Map<Class<? extends AMResource>, IWizardPage[]> pagemap = new HashMap<>();
 
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
@@ -112,22 +111,14 @@ public class AddResourceWizard extends Wizard {
 				int size = getPageCount();
 				try {
 					Field f = Wizard.class.getDeclaredField("pages"); //$NON-NLS-1$
-					f.setAccessible(true); // FIXME, REALLY UGLY :( BUT IT'S
-					// FASTER
+					f.setAccessible(true); // FIXME, REALLY UGLY :( BUT IT'S FASTER
 					List<IWizardPage> wpages = (List<IWizardPage>) f.get(this);
-					for (int i = 1; i < size; i++) {
+					for (int i = 1; i < size; i++)
 						wpages.remove(1);
-					}
-				} catch (SecurityException e) {
-					e.printStackTrace();
-				} catch (NoSuchFieldException e) {
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
+				} catch (SecurityException | NoSuchFieldException | IllegalArgumentException
+						| IllegalAccessException e) {
 					e.printStackTrace();
 				}
-
 				IWizardPage[] rpage = pagemap.get(r.getClass());
 				if (rpage == null) {
 					rpage = rfactory.getResourcePage(parent, r);
@@ -176,11 +167,9 @@ public class AddResourceWizard extends Wizard {
 			getContainer().run(false, true, new IRunnableWithProgress() {
 
 				@Override
-				public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException {
-					monitor.beginTask(Messages.AddResourceWizard_1,
-							IProgressMonitor.UNKNOWN);
-					File tmpfile = null;
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					monitor.beginTask(Messages.AddResourceWizard_1, IProgressMonitor.UNKNOWN);
+
 					try {
 						AMResource resource = getResource();
 						ResourceDescriptor res = resource.getValue();
@@ -188,22 +177,18 @@ public class AddResourceWizard extends Wizard {
 							res.setUriString(res.getParentFolder() + "/" //$NON-NLS-1$
 									+ res.getName());
 							INode r = parent.getRoot();
-							if (r != null && r instanceof MServerProfile) {
+							if (r instanceof MServerProfile) {
 								MServerProfile msp = (MServerProfile) r;
 								msp = ServerManager.getMServerProfileCopy(msp);
-								if (WSClientHelper.findSelected(monitor,
-										resource.getValue(), msp) != null
-										&& !UIUtils.showConfirmation(
-												Messages.AddResourceWizard_3,
-												Messages.AddResourceWizard_4)) {
+								if (WSClientHelper.findSelected(monitor, resource.getValue(), msp) != null && !UIUtils
+										.showConfirmation(Messages.AddResourceWizard_3, Messages.AddResourceWizard_4)) {
 									canFinish = false;
 									return;
 								}
 							}
 						}
 						if (parent instanceof MReportUnit
-								&& (resource instanceof MReference || resource
-										.getValue().getIsReference())) {
+								&& (resource instanceof MReference || resource.getValue().getIsReference())) {
 							MReportUnit mrunit = (MReportUnit) parent;
 							WSClientHelper.refreshResource(mrunit, monitor);
 
@@ -218,8 +203,6 @@ public class AddResourceWizard extends Wizard {
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					} finally {
-						if (tmpfile != null)
-							tmpfile.delete();
 						monitor.done();
 					}
 				}
