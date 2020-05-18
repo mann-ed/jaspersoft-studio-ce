@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -73,15 +74,26 @@ public class ImpDataAdapter extends AImpObject {
 	private Map<String, PublishOptions> files = new HashMap<>();
 
 	private class DAValueSetter extends ValueSetter<List<JRDesignDataset>> {
+		private boolean removeDA = false;
 
 		public DAValueSetter(PublishOptions publishOptions) {
+			this(publishOptions, false);
+		}
+
+		public DAValueSetter(PublishOptions publishOptions, boolean removeDA) {
 			publishOptions.super(new ArrayList<>());
+			this.removeDA = removeDA;
 		}
 
 		@Override
 		public void setup() {
-			for (JRDesignDataset ds : object)
-				ds.setProperty(DataAdapterParameterContributorFactory.PROPERTY_DATA_ADAPTER_LOCATION, getValue());
+			for (JRDesignDataset ds : object) {
+				if (removeDA)
+					ds.getPropertiesMap()
+							.removeProperty(DataAdapterParameterContributorFactory.PROPERTY_DATA_ADAPTER_LOCATION);
+				else
+					ds.setProperty(DataAdapterParameterContributorFactory.PROPERTY_DATA_ADAPTER_LOCATION, getValue());
+			}
 		}
 
 	}
@@ -102,11 +114,13 @@ public class ImpDataAdapter extends AImpObject {
 			PublishOptions popt = createOptions(jrConfig, dpath);
 			files.put(dpath, popt);
 			popt.setFilePath(dpath);
-			// popt.setDataset(jd);
 			AFileResource fr = addResource(monitor, mrunit, fileset, f, popt);
-			DAValueSetter vs = new DAValueSetter(popt);
+			DAValueSetter vs = popt.getOverwrite().equals(OverwriteEnum.REMOVE) ? new DAValueSetter(popt, true)
+					: new DAValueSetter(popt);
 			vs.getObject().add(jd);
 			popt.setValueSetter(vs);
+			if (fr == null)
+				return null;
 			vs.setValue("repo:" + fr.getValue().getUriString());
 		}
 		return f;
@@ -152,99 +166,95 @@ public class ImpDataAdapter extends AImpObject {
 		PublishUtil.loadPreferences(monitor, (IFile) jrConfig.get(FileUtils.KEY_FILE), mres);
 		List<AMResource> resourses = PublishUtil.getResources(mrunit, monitor, jrConfig);
 		resourses.add(mres);
-		if (true) {
-			FileInputStream is = null;
-			try {
-				is = new FileInputStream(f);
-				final DataAdapterDescriptor dad = FileDataAdapterStorage.readDataADapter(is,
-						(IFile) jrConfig.get(FileUtils.KEY_FILE), jrConfig);
-				if (dad != null) {
-					final DataAdapter da = dad.getDataAdapter();
-					String fname = getFileName(da);
-					if (fname != null) {
-						InputStream fis = null;
-						OutputStream fos = null;
-						try {
-							fis = RepositoryUtil.getInstance(jrConfig).getInputStreamFromLocation(fname);
-							File file = FileUtils.createTempFile("tmp", "");
-							fos = new FileOutputStream(file);
-							if (fis != null) {
-								IOUtils.copy(fis, fos);
+		FileInputStream is = null;
+		try {
+			is = new FileInputStream(f);
+			final DataAdapterDescriptor dad = FileDataAdapterStorage.readDataADapter(is,
+					(IFile) jrConfig.get(FileUtils.KEY_FILE), jrConfig);
+			if (dad != null) {
+				final DataAdapter da = dad.getDataAdapter();
+				if (da.getClass().getName().equals("com.jaspersoft.jasperreports.data.jrs.JrsDataAdapterImpl"))
+					popt.setOverwrite(OverwriteEnum.REMOVE);
 
-								fname = fname.replace("\\", "/");
+				String fname = getFileName(da);
+				if (fname != null) {
+					InputStream fis = null;
+					OutputStream fos = null;
+					try {
+						fis = RepositoryUtil.getInstance(jrConfig).getInputStreamFromLocation(fname);
+						File file = FileUtils.createTempFile("tmp", "");
+						fos = new FileOutputStream(file);
+						if (fis != null) {
+							IOUtils.copy(fis, fos);
 
-								int indx = fname.lastIndexOf('/');
-								if (indx >= 0 && indx + 1 < fname.length())
-									fname = fname.substring(indx + 1);
+							fname = fname.replace("\\", "/");
 
-								rd = getResource(da, mrunit);
-								rd.setName(IDStringValidator.safeChar(fname));
-								rd.setLabel(fname);
+							int indx = fname.lastIndexOf('/');
+							if (indx >= 0 && indx + 1 < fname.length())
+								fname = fname.substring(indx + 1);
 
-								rd.setParentFolder(runit.getParentFolder());
-								rd.setUriString(runit.getParentFolder() + "/" + rd.getName());
+							rd = getResource(da, mrunit);
+							rd.setName(IDStringValidator.safeChar(fname));
+							rd.setLabel(fname);
 
-								AFileResource mdaf = null;
-								if (da instanceof XmlDataAdapter)
-									mdaf = new MXmlFile(mrunit, rd, -1);
-								else if (da instanceof JsonDataAdapter)
-									mdaf = new MRJson(mrunit, rd, -1);
-								else if (da instanceof JdbcDataAdapter) {
-									mdaf = new MRSecureFile(mrunit, rd, -1);
-								} else
-									mdaf = new MContentResource(mrunit, rd, -1);
-								if (mdaf != null) {
-									mdaf.setFile(file);
-									PublishOptions fpopt = createOptions(jrConfig, fname);
-									if (b.equals("true") && rd.getIsNew())
-										fpopt.setOverwrite(OverwriteEnum.OVERWRITE);
-									mdaf.setPublishOptions(fpopt);
-									fpopt.setValueSetter(popt.new ValueSetter<DataAdapter>(da) {
+							rd.setParentFolder(runit.getParentFolder());
+							rd.setUriString(runit.getParentFolder() + "/" + rd.getName());
 
-										@Override
-										public void setup() {
-											setFileName(da, value);
-											try {
-												File f = FileUtils.createTempFile("tmp", "");
-												org.apache.commons.io.FileUtils.writeStringToFile(f,
-														DataAdapterManager.toDataAdapterFile(dad, jrConfig));
-												mres.setFile(f);
-											} catch (IOException e) {
-												UIUtils.showError(e);
-											}
+							AFileResource mdaf = null;
+							if (da instanceof XmlDataAdapter)
+								mdaf = new MXmlFile(mrunit, rd, -1);
+							else if (da instanceof JsonDataAdapter)
+								mdaf = new MRJson(mrunit, rd, -1);
+							else if (da instanceof JdbcDataAdapter) {
+								mdaf = new MRSecureFile(mrunit, rd, -1);
+							} else
+								mdaf = new MContentResource(mrunit, rd, -1);
+							if (mdaf != null) {
+								mdaf.setFile(file);
+								PublishOptions fpopt = createOptions(jrConfig, fname);
+								if (b.equals("true") && rd.getIsNew())
+									fpopt.setOverwrite(OverwriteEnum.OVERWRITE);
+								mdaf.setPublishOptions(fpopt);
+								fpopt.setValueSetter(popt.new ValueSetter<DataAdapter>(da) {
+
+									@Override
+									public void setup() {
+										setFileName(da, value);
+										try {
+											File f = FileUtils.createTempFile("tmp", "");
+											org.apache.commons.io.FileUtils.writeStringToFile(f,
+													DataAdapterManager.toDataAdapterFile(dad, jrConfig),
+													StandardCharsets.UTF_8);
+											mres.setFile(f);
+										} catch (IOException e) {
+											UIUtils.showError(e);
 										}
-									});
-									fpopt.getValueSetter().setValue("repo:" + rd.getUriString());
+									}
+								});
+								fpopt.getValueSetter().setValue("repo:" + rd.getUriString());
 
-									PublishUtil.loadPreferences(monitor, (IFile) jrConfig.get(FileUtils.KEY_FILE),
-											mdaf);
-									resourses.add(mdaf);
-								}
-
-								// setFileName(da, "repo:" + rd.getUriString());
-								f = FileUtils.createTempFile("tmp", "");
-								org.apache.commons.io.FileUtils.writeStringToFile(f,
-										DataAdapterManager.toDataAdapterFile(dad, jrConfig));
-								mres.setFile(f);
+								PublishUtil.loadPreferences(monitor, (IFile) jrConfig.get(FileUtils.KEY_FILE), mdaf);
+								resourses.add(mdaf);
 							}
-						} catch (JRException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						} finally {
-							FileUtils.closeStream(fis);
-							FileUtils.closeStream(fos);
+							f = FileUtils.createTempFile("tmp", "");
+							org.apache.commons.io.FileUtils.writeStringToFile(f,
+									DataAdapterManager.toDataAdapterFile(dad, jrConfig), StandardCharsets.UTF_8);
+							mres.setFile(f);
 						}
+					} catch (JRException | IOException e) {
+						e.printStackTrace();
+					} finally {
+						FileUtils.closeStream(fis);
+						FileUtils.closeStream(fos);
 					}
 				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} finally {
-				FileUtils.closeStream(is);
 			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			FileUtils.closeStream(is);
 		}
 		return mres;
-
 	}
 
 	protected ResourceDescriptor getResource(DataAdapter da, MReportUnit parent) {

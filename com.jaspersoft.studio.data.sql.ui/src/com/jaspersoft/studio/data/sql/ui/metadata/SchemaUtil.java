@@ -58,7 +58,7 @@ public class SchemaUtil {
 				stmt.close();
 			} else if (dbproduct.equalsIgnoreCase("Apache Hive") || dbproduct.equalsIgnoreCase("Impala")
 					|| dbproduct.equalsIgnoreCase("ApacheHive") || dbproduct.equalsIgnoreCase("Spark SQL")) {
-				List<String> schemas = new ArrayList<String>();
+				List<String> schemas = new ArrayList<>();
 				ResultSet rs = c.getMetaData().getSchemas();
 				try {
 					while (rs.next())
@@ -84,7 +84,7 @@ public class SchemaUtil {
 	}
 
 	protected static String[] runSchemaQuery(Connection c, String query) throws SQLException {
-		List<String> paths = new ArrayList<String>();
+		List<String> paths = new ArrayList<>();
 		Statement stmt = c.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		while (rs.next()) {

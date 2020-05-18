@@ -5,7 +5,8 @@
 package com.jaspersoft.studio.server.publish;
 
 public enum OverwriteEnum {
-	OVERWRITE("true"), IGNORE("false"), ONLY_EXPRESSION("overwriteExpression");
+	OVERWRITE("true"), IGNORE("false"), ONLY_EXPRESSION("overwriteExpression"), REMOVE("remove");
+
 	private String value;
 
 	OverwriteEnum(String value) {
@@ -25,6 +26,8 @@ public enum OverwriteEnum {
 			return IGNORE;
 		if (value.equals(ONLY_EXPRESSION.getValue()))
 			return ONLY_EXPRESSION;
+		if (value.equals(REMOVE.getValue()))
+			return REMOVE;
 		return null;
 	}
 }

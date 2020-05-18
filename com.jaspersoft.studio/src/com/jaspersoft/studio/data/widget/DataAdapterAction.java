@@ -164,8 +164,10 @@ public class DataAdapterAction extends Action implements IMenuCreator, PropertyC
 		this.parent = parent;
 		if (listMenu != null)
 			listMenu.dispose();
-		if (parent.isDisposed())
+		if (parent.isDisposed()) {
 			UIUtils.showError(new Exception("he is disposed"));
+			return null;
+		}
 		listMenu = new Menu(parent);
 
 		SelectionAdapter listener = new SelectionAdapter() {

@@ -4,6 +4,7 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.publish.wizard.page;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -97,7 +98,20 @@ public class ResourcesPage extends JSSHelpWizardPage {
 
 		tableViewer = new TableViewer(composite,
 				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-		tableViewer.setContentProvider(new ListContentProvider());
+		tableViewer.setContentProvider(new ListContentProvider() {
+			@Override
+			public Object[] getElements(Object inputElement) {
+				Object[] items = super.getElements(inputElement);
+				List<AMResource> res = new ArrayList<>();
+				for (Object it : items)
+					if (it instanceof AMResource) {
+						AMResource mres = (AMResource) it;
+						if (!mres.getPublishOptions().getOverwrite().equals(OverwriteEnum.REMOVE))
+							res.add(mres);
+					}
+				return res.toArray();
+			}
+		});
 		ColumnViewerToolTipSupport.enableFor(tableViewer);
 		Table table = (Table) tableViewer.getControl();
 		table.setHeaderVisible(true);

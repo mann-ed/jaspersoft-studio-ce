@@ -111,7 +111,7 @@ public class DBMetadata {
 				if (parentElement instanceof INode) {
 					INode node = (INode) parentElement;
 					List<INode> children = node.getChildren();
-					List<INode> newchildren = new ArrayList<INode>();
+					List<INode> newchildren = new ArrayList<>();
 					for (INode n : children) {
 						if (n instanceof INotInMetadata && ((INotInMetadata) n).isNotInMetadata())
 							continue;
@@ -397,7 +397,7 @@ public class DBMetadata {
 	public Connection getConnection(final DataAdapterService das, boolean readCurrentSchema) {
 		schema = null;
 		SchemaUtil.close(connection);
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		try {
 			if (das != null)
 				das.contributeParameters(parameters);
@@ -441,7 +441,7 @@ public class DBMetadata {
 					+ metaData.supportsMixedCaseQuotedIdentifiers());
 			System.out.println("catalogSeparator: " //$NON-NLS-1$
 					+ metaData.getCatalogSeparator());
-			
+
 			schemaTableQuote = dbproduct.equalsIgnoreCase("GoogleBigQuery");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -456,6 +456,7 @@ public class DBMetadata {
 	public boolean isSchemaTableQuote() {
 		return schemaTableQuote;
 	}
+
 	public String getIdentifierQuote() {
 		return identifierQuote;
 	}
@@ -530,13 +531,13 @@ public class DBMetadata {
 	}
 
 	private LinkedHashMap<String, MSqlTable> tblMap;
-	private List<IProgressMonitor> monitors = new ArrayList<IProgressMonitor>();
+	private List<IProgressMonitor> monitors = new ArrayList<>();
 	private List<String> tableTypes;
 	private Connection connection;
 
 	public LinkedHashMap<String, MSqlTable> getTables() {
 		if (tblMap == null)
-			tblMap = new LinkedHashMap<String, MSqlTable>();
+			tblMap = new LinkedHashMap<>();
 		return tblMap;
 	}
 
@@ -555,7 +556,7 @@ public class DBMetadata {
 	}
 
 	public static List<String> readTableTypes(DatabaseMetaData meta) throws SQLException {
-		List<String> tableTypes = new ArrayList<String>();
+		List<String> tableTypes = new ArrayList<>();
 		ResultSet rs = meta.getTableTypes();
 		while (rs.next())
 			tableTypes.add(rs.getString("TABLE_TYPE")); //$NON-NLS-1$

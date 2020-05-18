@@ -43,7 +43,7 @@ public class PublishUtil {
 			JasperReportsConfiguration jrConfig) {
 		List<AMResource> resources = (List<AMResource>) jrConfig.get(KEY_PUBLISH2JSS_DATA);
 		if (resources == null)
-			jrConfig.put(KEY_PUBLISH2JSS_DATA, new ArrayList<AMResource>());
+			jrConfig.put(KEY_PUBLISH2JSS_DATA, new ArrayList<>());
 		loadPreferences(parent, monitor, (IFile) jrConfig.get(FileUtils.KEY_FILE), resources);
 		return resources;
 	}
