@@ -133,6 +133,7 @@ public class DateInput extends ADataInput {
 	protected void handleTimestampChanged() {
 		Date sdate = date.getSelection();
 		Timestamp d = sdate != null ? new java.sql.Timestamp(sdate.getTime()) : null;
+		d.setNanos(0);
 		updateModel(isNumeric && d != null ? d.getTime() : d);
 	}
 
