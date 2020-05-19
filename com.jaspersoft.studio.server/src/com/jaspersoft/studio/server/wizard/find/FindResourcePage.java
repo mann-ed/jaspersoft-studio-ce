@@ -27,6 +27,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -43,6 +44,7 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile.FileType;
@@ -82,8 +84,7 @@ public class FindResourcePage extends WizardPage {
 		List<String> tps = finderUI.getTypes();
 		tps.clear();
 		if (itypes != null)
-			for (String t : itypes)
-				tps.add(t);
+			Collections.addAll(tps, itypes);
 		if (etypes != null)
 			for (String t : etypes)
 				if (tps.contains(t))
@@ -106,6 +107,7 @@ public class FindResourcePage extends WizardPage {
 
 	@Override
 	public void createControl(Composite parent) {
+
 		Composite cmp = new Composite(parent, SWT.NONE);
 		cmp.setLayout(new GridLayout(3, false));
 		setControl(cmp);
@@ -130,6 +132,8 @@ public class FindResourcePage extends WizardPage {
 		});
 		if (itypes == null && etypes == null) {
 			Section expcmp = new Section(cmp, ExpandableComposite.TREE_NODE);
+			expcmp.setTitleBarBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND));
+
 			expcmp.setText(Messages.FindResourcePage_5);
 			GridData gd = new GridData(GridData.FILL_BOTH);
 			gd.horizontalSpan = 3;
@@ -256,7 +260,7 @@ public class FindResourcePage extends WizardPage {
 
 	private void createDatasourceFilters(Composite scmp, Map<String, String> typeNames) {
 		Composite dsCmp = new Composite(scmp, SWT.NONE);
-		dsCmp.setLayout(new GridLayout(1, false));
+		dsCmp.setLayout(new GridLayout(2, false));
 		dsCmp.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
 		bds = new Button(dsCmp, SWT.CHECK);
@@ -540,9 +544,7 @@ public class FindResourcePage extends WizardPage {
 						}
 					}
 				});
-			} catch (InvocationTargetException e1) {
-				e1.printStackTrace();
-			} catch (InterruptedException e1) {
+			} catch (InvocationTargetException | InterruptedException e1) {
 				e1.printStackTrace();
 			}
 	}
