@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 public final class FindWizardDialog extends WizardDialog {
 	public FindWizardDialog(Shell parentShell, IWizard newWizard) {
 		super(parentShell, newWizard);
+		setHelpAvailable(false);
 	}
 
 	@Override
