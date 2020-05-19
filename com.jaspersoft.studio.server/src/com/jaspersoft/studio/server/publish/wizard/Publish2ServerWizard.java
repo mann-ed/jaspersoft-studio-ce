@@ -232,6 +232,7 @@ public class Publish2ServerWizard extends Wizard implements IExportWizard {
 				canFinish = true;
 				return null;
 			}
+			page2.configurePage(node.getParent(), node);
 		}
 		if (page == page2) {
 			if (node instanceof MJrxml) {
