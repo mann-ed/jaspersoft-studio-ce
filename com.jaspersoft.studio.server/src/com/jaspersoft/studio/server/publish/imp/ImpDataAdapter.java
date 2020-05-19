@@ -206,6 +206,7 @@ public class ImpDataAdapter extends AImpObject {
 							else if (da instanceof JsonDataAdapter)
 								mdaf = new MRJson(mrunit, rd, -1);
 							else if (da instanceof JdbcDataAdapter) {
+								rd.setWsType(ResourceDescriptor.TYPE_SECURE_FILE);
 								mdaf = new MRSecureFile(mrunit, rd, -1);
 							} else
 								mdaf = new MContentResource(mrunit, rd, -1);
