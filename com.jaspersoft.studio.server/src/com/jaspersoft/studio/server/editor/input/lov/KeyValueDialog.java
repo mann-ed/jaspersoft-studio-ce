@@ -21,25 +21,21 @@ import net.sf.jasperreports.eclipse.ui.ATitledDialog;
 import net.sf.jasperreports.eclipse.util.Misc;
 
 public class KeyValueDialog extends ATitledDialog {
-	private String key;
-	private String value;
+	private ListItem listItem;
+	private ListItem oldItem;
 	private List<ListItem> items;
 	private Text vtxt;
 	private Text txt;
 
-	public KeyValueDialog(Shell parentShell, String key, String value, List<ListItem> items) {
+	public KeyValueDialog(Shell parentShell, ListItem listItem, List<ListItem> items) {
 		super(parentShell, false);
-		this.key = key;
-		this.value = value;
+		this.listItem = new ListItem(listItem.getLabel(), listItem.getValue());
+		this.oldItem = listItem;
 		this.items = items;
 	}
 
-	public String getKey() {
-		return key;
-	}
-
-	public String getValue() {
-		return value;
+	public ListItem getListItem() {
+		return listItem;
 	}
 
 	@Override
@@ -53,7 +49,7 @@ public class KeyValueDialog extends ATitledDialog {
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 150;
 		txt.setLayoutData(gd);
-		txt.setText(Misc.nvl(key));
+		txt.setText(Misc.nvl(listItem.getLabel()));
 		txt.addModifyListener(e -> handleNameChanged(txt.getText()));
 
 		new Label(cmp, SWT.NONE).setText("Value");
@@ -62,19 +58,19 @@ public class KeyValueDialog extends ATitledDialog {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 150;
 		vtxt.setLayoutData(gd);
-		vtxt.setText(Misc.nvl(value));
+		vtxt.setText(Misc.nvl((String) listItem.getValue()));
 		vtxt.addModifyListener(e -> handleValueChanged(vtxt.getText()));
 
 		return cmp;
 	}
 
 	protected void handleValueChanged(String txt) {
-		value = txt;
+		listItem.setValue(txt);
 		validateForm();
 	}
 
 	protected void handleNameChanged(String txt) {
-		key = txt;
+		listItem.setLabel(txt);
 		validateForm();
 	}
 
@@ -96,7 +92,7 @@ public class KeyValueDialog extends ATitledDialog {
 
 	private boolean exists(String value) {
 		for (ListItem li : items)
-			if (li.getLabel().equals(value))
+			if (li != oldItem && li.getLabel().equals(value))
 				return true;
 		return false;
 	}

@@ -65,11 +65,11 @@ public class LovComposite {
 		bnew.createNewButtons(bGroup, tableViewer, new INewElement() {
 
 			public Object newElement(List<?> input, int pos) {
-				KeyValueDialog d = new KeyValueDialog(UIUtils.getShell(), getName(), "", value);
+				KeyValueDialog d = new KeyValueDialog(UIUtils.getShell(), new ListItem(getName(), ""), value);
 				if (d.open() == Dialog.OK) {
 					ListItem li = new ListItem();
-					li.setLabel(d.getKey());
-					li.setValue(d.getValue());
+					li.setLabel(d.getListItem().getLabel());
+					li.setValue(d.getListItem().getValue());
 					return li;
 				}
 				return null;
@@ -93,10 +93,10 @@ public class LovComposite {
 		};
 		bedit.createEditButtons(bGroup, tableViewer, (input, pos) -> {
 			ListItem li = input.get(pos);
-			KeyValueDialog d = new KeyValueDialog(UIUtils.getShell(), li.getLabel(), (String) li.getValue(), value);
+			KeyValueDialog d = new KeyValueDialog(UIUtils.getShell(), li, value);
 			if (d.open() == Dialog.OK) {
-				li.setLabel(d.getKey());
-				li.setValue(d.getValue());
+				li.setLabel(d.getListItem().getLabel());
+				li.setValue(d.getListItem().getValue());
 			}
 		});
 		bedit.editOnDoubleClick();
