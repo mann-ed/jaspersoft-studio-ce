@@ -84,9 +84,8 @@ public class Publish2ServerWizard extends Wizard implements IExportWizard {
 	 * Create the wizard
 	 * 
 	 * @param jDesign
-	 * @param jrConfig
-	 *            a JasperReportsConfiguration, when passed in this way this
-	 *            jrConfig is not disposed at the end of the wizard
+	 * @param jrConfig a JasperReportsConfiguration, when passed in this way this
+	 *                 jrConfig is not disposed at the end of the wizard
 	 * @param page
 	 */
 	public Publish2ServerWizard(JasperDesign jDesign, JasperReportsConfiguration jrConfig, int page) {
@@ -232,7 +231,8 @@ public class Publish2ServerWizard extends Wizard implements IExportWizard {
 				canFinish = true;
 				return null;
 			}
-			page2.configurePage(node.getParent(), node);
+			if (node != null)
+				page2.configurePage(node.getParent(), node);
 		}
 		if (page == page2) {
 			if (node instanceof MJrxml) {
