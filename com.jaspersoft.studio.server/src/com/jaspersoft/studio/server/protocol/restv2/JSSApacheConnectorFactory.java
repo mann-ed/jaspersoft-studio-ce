@@ -64,7 +64,12 @@ public class JSSApacheConnectorFactory extends ApacheConnectorProvider {
 	}
 
 	public Response post(Builder builder, Entity<?> entity, IProgressMonitor monitor, TimeZone tz) throws Exception {
-		builder.header("Accept-Timezone", tz.getID());
+		return this.post(builder, entity, monitor, tz != null ? tz.getID() : null);
+	}
+
+	public Response post(Builder builder, Entity<?> entity, IProgressMonitor monitor, String tz) throws Exception {
+		if (tz != null)
+			builder.header("Accept-Timezone", tz);
 		// builder.header("User-Agent", HttpUtils.USER_AGENT_JASPERSOFT_STUDIO);
 		return doWait(builder.async().post(entity), monitor);
 	}
