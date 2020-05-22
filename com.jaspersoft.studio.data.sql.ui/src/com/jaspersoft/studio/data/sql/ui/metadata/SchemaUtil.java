@@ -34,15 +34,15 @@ public class SchemaUtil {
 			String dbproduct = c.getMetaData().getDatabaseProductName();
 			System.out.println(dbproduct);
 			if (dbproduct.equalsIgnoreCase("Oracle")) {
-				if (c.getClass().getName().equals("oracle.jdbc.driver.OracleConnection")) {
-					Method m;
-					try {
-						m = c.getClass().getMethod("setIncludeSynonyms", boolean.class);
+				try {
+					Method m = c.getClass().getMethod("setIncludeSynonyms", boolean.class);
+					if (m != null) {
+						m.setAccessible(true);
 						m.invoke(c, true);
-					} catch (NoSuchMethodException | SecurityException | IllegalAccessException
-							| IllegalArgumentException | InvocationTargetException e) {
-						e.printStackTrace();
 					}
+				} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+						| InvocationTargetException e) {
+					e.printStackTrace();
 				}
 				return runSchemaQuery(c, "select sys_context('USERENV', 'CURRENT_SCHEMA') from dual");
 				// else if (dbproduct.equalsIgnoreCase("SQL Anywhere"))
@@ -85,15 +85,15 @@ public class SchemaUtil {
 
 	protected static String[] runSchemaQuery(Connection c, String query) throws SQLException {
 		List<String> paths = new ArrayList<>();
-		Statement stmt = c.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
-		while (rs.next()) {
-			String str = rs.getString(1);
-			paths.add(str);
-			System.out.println(str);
+		try (Statement stmt = c.createStatement()) {
+			try (ResultSet rs = stmt.executeQuery(query)) {
+				while (rs.next()) {
+					String str = rs.getString(1);
+					paths.add(str);
+					System.out.println(str);
+				}
+			}
 		}
-		rs.close();
-		stmt.close();
 		if (!paths.isEmpty())
 			return paths.toArray(new String[paths.size()]);
 		return null;

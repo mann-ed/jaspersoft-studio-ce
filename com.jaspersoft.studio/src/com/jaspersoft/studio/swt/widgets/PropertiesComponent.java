@@ -35,12 +35,12 @@ import com.jaspersoft.studio.swt.widgets.table.ListContentProvider;
 import com.jaspersoft.studio.swt.widgets.table.NewButton;
 
 public class PropertiesComponent {
-	
+
 	private Map<String, String> properties;
 	private Control control;
 	private TableViewer tviewer;
 	private Table wtable;
-	
+
 	class Property {
 		public String key;
 		public String value;
@@ -84,10 +84,10 @@ public class PropertiesComponent {
 
 	public void setProperties(Map<String, String> properties) {
 		if (properties == null) {
-			properties = new HashMap<String, String>();
+			properties = new HashMap<>();
 		}
 		this.properties = properties;
-		List<Property> list = new ArrayList<Property>();
+		List<Property> list = new ArrayList<>();
 		for (Entry<String, String> entry : properties.entrySet()) {
 			list.add(new Property(entry.getKey(), entry.getValue()));
 		}
@@ -135,9 +135,9 @@ public class PropertiesComponent {
 		Composite bGroup = new Composite(composite, SWT.NONE);
 		bGroup.setLayout(new GridLayout(1, false));
 		bGroup.setLayoutData(new GridData(GridData.FILL_VERTICAL));
-		bGroup.setBackground(parent.getBackground());
+//		bGroup.setBackground(parent.getBackground());
 
-		new NewButton(){
+		new NewButton() {
 			protected void afterElementAdded(Object selement) {
 				handlePropertiesChanged();
 			}
@@ -148,13 +148,12 @@ public class PropertiesComponent {
 			}
 
 		});
-		new DeleteButton(){
+		new DeleteButton() {
 			protected void afterElementDeleted(Object element) {
 				handlePropertiesChanged();
 			}
-			
-		}
-		.createDeleteButton(bGroup, tviewer);
+
+		}.createDeleteButton(bGroup, tviewer);
 
 		this.control = composite;
 	}
@@ -196,7 +195,7 @@ public class PropertiesComponent {
 		viewer.setCellEditors(new CellEditor[] { new TextCellEditor(parent), new TextCellEditor(parent) });
 		viewer.setColumnProperties(new String[] { "KEY", "VALUE" }); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
 	protected void handlePropertiesChanged() {
 	}
 }

@@ -94,7 +94,7 @@ public class MetaDataUtil {
 							new MDummy(new MTables(schema, ttype));
 					}
 				}
-				if(!hasSchemas) {
+				if (!hasSchemas) {
 					schema.removeChildren();
 					schema.setNotInMetadata(false);
 
@@ -152,7 +152,6 @@ public class MetaDataUtil {
 
 	public synchronized static void readTableColumns(DatabaseMetaData meta, MSqlTable mtable, IProgressMonitor monitor)
 			throws SQLException {
-
 		MTables tables = (MTables) mtable.getParent();
 		mtable.removeChildren();
 		ResultSet rs = meta.getColumns(tables.getTableCatalog(), tables.getTableSchema(), mtable.getValue(),
