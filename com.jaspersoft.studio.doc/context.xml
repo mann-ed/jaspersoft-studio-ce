@@ -34,6 +34,12 @@
 		<topic href="html/wizard/jasperserver/publishreport.html" label="How to publish a report to JasperReports Server"/>
 		<topic href="html/view/repository/repository.html" label="JasperReport Server details in Repository Explorer" />
 	</context>
+	<context id="jasperserver_permission_wizardpage">
+		<description>This page allows you to modify the permissions of individual resources or an entire folder of the JasperReports Server repository.</description>
+		<topic href="html/wizard/jasperserver/connection.html" label="How to connect to JasperReports Server"/>
+		<topic href="html/wizard/jasperserver/publishreport.html" label="How to publish a report to JasperReports Server"/>
+		<topic href="html/view/repository/repository.html" label="JasperReport Server details in Repository Explorer" />	
+	</context>
 	<context id="select_template">
 		<description>Here you can select a template for the new report, to define its base layout. Select the template by clicking on it, then hit the button "Next" to proceed.</description>
 		<topic

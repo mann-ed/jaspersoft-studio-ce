@@ -21,5 +21,6 @@ public class ContextHelpIDs {
 	public static final String WIZARD_SERVER_EDITRESOURCE_PAGE = DOC_PREFIX + "jasperserver_resourceeditor_wizardpage";
 	public static final String WIZARD_SERVER_IMPORTMETADATA_PAGE = DOC_PREFIX + "jasperserver_importmetadata_wizardpage";
 	public static final String WIZARD_SERVER_EXPORTMETADATA_PAGE = DOC_PREFIX + "jasperserver_exportmetadata_wizardpage";
+	public static final String WIZARD_SERVER_PERMISSION_PAGE = DOC_PREFIX + "jasperserver_permission_wizardpage";
 
 }

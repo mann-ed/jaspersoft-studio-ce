@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -31,14 +30,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
+import com.jaspersoft.studio.server.ContextHelpIDs;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.protocol.IConnection;
+import com.jaspersoft.studio.wizards.JSSHelpWizardPage;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
 
-public class PermissionPage extends WizardPage {
+public class PermissionPage extends JSSHelpWizardPage {
 	private AMResource res;
 	private PermissionOptions optRole = new PermissionOptions();
 	private PermissionOptions optUser = new PermissionOptions();
@@ -320,5 +321,10 @@ public class PermissionPage extends WizardPage {
 		int indx = cperm.getSelectionIndex();
 		if (indx >= 0 && indx < masks.length)
 			perm.setMask(masks[indx]);
+	}
+
+	@Override
+	protected String getContextName() {
+		return ContextHelpIDs.WIZARD_SERVER_PERMISSION_PAGE;
 	}
 }
