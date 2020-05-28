@@ -6,19 +6,16 @@ package com.jaspersoft.studio.server.publish.imp.da;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 
-import net.sf.jasperreports.data.jdbc.GbqSimbaDataAdapterService;
+public class ImpMongoDbDataAdapter extends AImpJdbcDataAdapter {
+	public static final String DNAME = "tibcosoftware.jdbc.mongodb.MongoDBDriver";
 
-public class ImpSimbaBigQueryDataAdapter extends AImpJdbcDataAdapter {
-	public static final String DNAME = "com.simba.googlebigquery.jdbc41.Driver";
-
-	public ImpSimbaBigQueryDataAdapter() {
-		super(DNAME, new String[][] { { GbqSimbaDataAdapterService.GBQ_CONNECTION_PARAMETER_PRIVATE_KEY,
-				ResourceDescriptor.TYPE_SECURE_FILE } });
+	public ImpMongoDbDataAdapter() {
+		super(DNAME, new String[][] { { "SchemaDefinition", ResourceDescriptor.TYPE_CONTENT_RESOURCE } });
 	}
 
 	@Override
 	protected String getJdbcPrefix() {
-		return "jdbc:bigquery:";
+		return "jdbc:tibcosoftware:mongodb:";
 	}
 
 }

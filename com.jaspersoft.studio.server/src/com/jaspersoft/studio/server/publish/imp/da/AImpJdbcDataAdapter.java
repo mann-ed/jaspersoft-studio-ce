@@ -4,23 +4,33 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.publish.imp.da;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 
 import net.sf.jasperreports.data.jdbc.JdbcDataAdapter;
 import net.sf.jasperreports.eclipse.util.Misc;
 
 public abstract class AImpJdbcDataAdapter {
 	private String dname;
-	private String[] keys;
+	private String[][] keys;
 
-	public AImpJdbcDataAdapter(String dname, String[] key) {
+	public AImpJdbcDataAdapter(String dname, String[][] key) {
 		this.dname = dname;
 		this.keys = key;
 	}
 
-	public String[] getKeys() {
+	public String[][] getKeys() {
 		return keys;
+	}
+
+	public String getResourceType(String key) {
+		for (int i = 0; i < keys.length; i++)
+			if (keys[0][0].equals(key))
+				return keys[i][1];
+		return ResourceDescriptor.TYPE_CONTENT_RESOURCE;
 	}
 
 	protected String getProperties(String url) {
@@ -32,11 +42,15 @@ public abstract class AImpJdbcDataAdapter {
 
 	protected abstract String getJdbcPrefix();
 
+	public boolean isHandling(JdbcDataAdapter da) {
+		return da.getDriver() != null && da.getDriver().equals(dname);
+	}
+
 	public Map<String, String> getFileName(JdbcDataAdapter da) {
-		if (da.getDriver() != null && da.getDriver().equals(dname)) {
+		if (isHandling(da)) {
 			Map<String, String> res = new HashMap<>();
 			if (da.getProperties() != null) {
-				for (String s : keys) {
+				for (String s : keys[0]) {
 					String t = da.getProperties().get(s);
 					if (t != null)
 						res.put(s, t);
@@ -46,7 +60,7 @@ public abstract class AImpJdbcDataAdapter {
 				String[] props = getProperties(da.getUrl()).split(";");
 				for (String p : props) {
 					String[] kv = p.split("=");
-					for (String t : keys)
+					for (String t : keys[0])
 						if (kv[0].equals(t))
 							res.put(kv[0], kv[1]);
 				}
@@ -59,7 +73,7 @@ public abstract class AImpJdbcDataAdapter {
 	public boolean setFileName(JdbcDataAdapter da, String key, String fname) {
 		if (fname.startsWith("repo:"))
 			fname = fname.substring("repo:".length());
-		if (da.getDriver() != null && da.getDriver().equals(dname)) {
+		if (isHandling(da)) {
 			if (da.getProperties() != null && da.getProperties().get(key) != null)
 				da.getProperties().put(key, fname);
 			String prefix = getJdbcPrefix();
@@ -69,6 +83,8 @@ public abstract class AImpJdbcDataAdapter {
 			String del = "";
 			for (String p : props) {
 				String[] kv = p.split("=");
+				if (kv.length != 2)
+					continue;
 				if (kv[0].equals(key))
 					kv[1] = fname;
 				newp += del + kv[0] + "=" + kv[1];

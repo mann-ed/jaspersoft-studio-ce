@@ -44,6 +44,7 @@ import com.jaspersoft.studio.server.publish.PublishOptions.ValueSetter;
 import com.jaspersoft.studio.server.publish.PublishUtil;
 import com.jaspersoft.studio.server.publish.imp.da.AImpJdbcDataAdapter;
 import com.jaspersoft.studio.server.publish.imp.da.ImpBigQueryDataAdapter;
+import com.jaspersoft.studio.server.publish.imp.da.ImpMongoDbDataAdapter;
 import com.jaspersoft.studio.server.publish.imp.da.ImpSimbaBigQueryDataAdapter;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
@@ -176,79 +177,89 @@ public class ImpDataAdapter extends AImpObject {
 				if (da.getClass().getName().equals("com.jaspersoft.jasperreports.data.jrs.JrsDataAdapterImpl"))
 					popt.setOverwrite(OverwriteEnum.REMOVE);
 
-				String fname = getFileName(da);
-				if (fname != null) {
-					InputStream fis = null;
-					OutputStream fos = null;
-					try {
-						fis = RepositoryUtil.getInstance(jrConfig).getInputStreamFromLocation(fname);
-						File file = FileUtils.createTempFile("tmp", "");
-						fos = new FileOutputStream(file);
-						if (fis != null) {
-							IOUtils.copy(fis, fos);
+				Map<String, String> rs = getFileName(da);
+				if (rs != null)
+					rs.forEach((key, fname) -> {
+						InputStream fis = null;
+						OutputStream fos = null;
+						try {
+							fis = RepositoryUtil.getInstance(jrConfig).getInputStreamFromLocation(fname);
+							File file = FileUtils.createTempFile("tmp", "");
+							fos = new FileOutputStream(file);
+							if (fis != null) {
+								IOUtils.copy(fis, fos);
 
-							fname = fname.replace("\\", "/");
+								fname = fname.replace("\\", "/");
 
-							int indx = fname.lastIndexOf('/');
-							if (indx >= 0 && indx + 1 < fname.length())
-								fname = fname.substring(indx + 1);
+								int indx = fname.lastIndexOf('/');
+								if (indx >= 0 && indx + 1 < fname.length())
+									fname = fname.substring(indx + 1);
 
-							rd = getResource(da, mrunit);
-							rd.setName(IDStringValidator.safeChar(fname));
-							rd.setLabel(fname);
+								ResourceDescriptor rd1 = getResource(da, mrunit);
+								rd1.setName(IDStringValidator.safeChar(fname));
+								rd1.setLabel(fname);
 
-							rd.setParentFolder(runit.getParentFolder());
-							rd.setUriString(runit.getParentFolder() + "/" + rd.getName());
+								rd1.setParentFolder(runit.getParentFolder());
+								rd1.setUriString(runit.getParentFolder() + "/" + rd1.getName());
 
-							AFileResource mdaf = null;
-							if (da instanceof XmlDataAdapter)
-								mdaf = new MXmlFile(mrunit, rd, -1);
-							else if (da instanceof JsonDataAdapter)
-								mdaf = new MRJson(mrunit, rd, -1);
-							else if (da instanceof JdbcDataAdapter) {
-								rd.setWsType(ResourceDescriptor.TYPE_SECURE_FILE);
-								mdaf = new MRSecureFile(mrunit, rd, -1);
-							} else
-								mdaf = new MContentResource(mrunit, rd, -1);
-							if (mdaf != null) {
-								mdaf.setFile(file);
-								PublishOptions fpopt = createOptions(jrConfig, fname);
-								if (b.equals("true") && rd.getIsNew())
-									fpopt.setOverwrite(OverwriteEnum.OVERWRITE);
-								mdaf.setPublishOptions(fpopt);
-								fpopt.setValueSetter(popt.new ValueSetter<DataAdapter>(da) {
-
-									@Override
-									public void setup() {
-										setFileName(da, value);
-										try {
-											File f = FileUtils.createTempFile("tmp", "");
-											org.apache.commons.io.FileUtils.writeStringToFile(f,
-													DataAdapterManager.toDataAdapterFile(dad, jrConfig),
-													StandardCharsets.UTF_8);
-											mres.setFile(f);
-										} catch (IOException e) {
-											UIUtils.showError(e);
+								AFileResource mdaf = null;
+								if (da instanceof XmlDataAdapter)
+									mdaf = new MXmlFile(mrunit, rd1, -1);
+								else if (da instanceof JsonDataAdapter)
+									mdaf = new MRJson(mrunit, rd1, -1);
+								else if (da instanceof JdbcDataAdapter) {
+									for (AImpJdbcDataAdapter d : jdbcFiles) {
+										if (d.isHandling((JdbcDataAdapter) da)) {
+											rd1.setWsType(d.getResourceType(key));
+											if (rd1.getWsType().equals(ResourceDescriptor.TYPE_SECURE_FILE))
+												mdaf = new MRSecureFile(mrunit, rd1, -1);
+											else
+												mdaf = new MContentResource(mrunit, rd1, -1);
+											break;
 										}
 									}
-								});
-								fpopt.getValueSetter().setValue("repo:" + rd.getUriString());
+								} else
+									mdaf = new MContentResource(mrunit, rd1, -1);
+								if (mdaf != null) {
+									mdaf.setFile(file);
+									PublishOptions fpopt = createOptions(jrConfig, fname);
+									if (b.equals("true") && rd1.getIsNew())
+										fpopt.setOverwrite(OverwriteEnum.OVERWRITE);
+									mdaf.setPublishOptions(fpopt);
+									fpopt.setValueSetter(popt.new ValueSetter<DataAdapter>(da) {
 
-								PublishUtil.loadPreferences(monitor, (IFile) jrConfig.get(FileUtils.KEY_FILE), mdaf);
-								resourses.add(mdaf);
+										@Override
+										public void setup() {
+											setFileName(da, value);
+											try {
+												File f = FileUtils.createTempFile("tmp", "");
+												org.apache.commons.io.FileUtils.writeStringToFile(f,
+														DataAdapterManager.toDataAdapterFile(dad, jrConfig),
+														StandardCharsets.UTF_8);
+												mres.setFile(f);
+											} catch (IOException e) {
+												UIUtils.showError(e);
+											}
+										}
+									});
+									fpopt.getValueSetter().setValue("repo:" + rd1.getUriString());
+
+									PublishUtil.loadPreferences(monitor, (IFile) jrConfig.get(FileUtils.KEY_FILE),
+											mdaf);
+									resourses.add(mdaf);
+								}
+								File ftmp = FileUtils.createTempFile("tmp", "");
+								org.apache.commons.io.FileUtils.writeStringToFile(ftmp,
+										DataAdapterManager.toDataAdapterFile(dad, jrConfig), StandardCharsets.UTF_8);
+								mres.setFile(ftmp);
 							}
-							f = FileUtils.createTempFile("tmp", "");
-							org.apache.commons.io.FileUtils.writeStringToFile(f,
-									DataAdapterManager.toDataAdapterFile(dad, jrConfig), StandardCharsets.UTF_8);
-							mres.setFile(f);
+						} catch (JRException | IOException e) {
+							e.printStackTrace();
+						} finally {
+							FileUtils.closeStream(fis);
+							FileUtils.closeStream(fos);
 						}
-					} catch (JRException | IOException e) {
-						e.printStackTrace();
-					} finally {
-						FileUtils.closeStream(fis);
-						FileUtils.closeStream(fos);
-					}
-				}
+					});
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -271,23 +282,26 @@ public class ImpDataAdapter extends AImpObject {
 			JdbcDataAdapter jdbcDA = ((JdbcDataAdapter) da);
 			if (jdbcDA.getDriver() != null)
 				for (AImpJdbcDataAdapter d : jdbcFiles)
-					if (d.setFileName(jdbcDA, d.getKeys()[0], fname))
+					if (d.setFileName(jdbcDA, d.getKeys()[0][0], fname))
 						break;
 		}
 	}
 
-	protected String getFileName(DataAdapter da) {
+	protected Map<String, String> getFileName(DataAdapter da) {
 		if (da instanceof JdbcDataAdapter) {
 			JdbcDataAdapter jdbcDA = ((JdbcDataAdapter) da);
 			if (jdbcDA.getDriver() != null)
 				for (AImpJdbcDataAdapter d : jdbcFiles) {
 					Map<String, String> res = d.getFileName(jdbcDA);
 					if (!Misc.isNullOrEmpty(res))
-						return res.values().iterator().next();
+						return res;
 				}
 		}
-		if (da instanceof FileDataAdapter && ((FileDataAdapter) da).getDataFile() instanceof RepositoryDataLocation)
-			return ((RepositoryDataLocation) ((FileDataAdapter) da).getDataFile()).getLocation();
+		if (da instanceof FileDataAdapter && ((FileDataAdapter) da).getDataFile() instanceof RepositoryDataLocation) {
+			Map<String, String> res = new HashMap<>();
+			res.put("property", ((RepositoryDataLocation) ((FileDataAdapter) da).getDataFile()).getLocation());
+			return res;
+		}
 		return null;
 	}
 
@@ -295,6 +309,7 @@ public class ImpDataAdapter extends AImpObject {
 	static {
 		jdbcFiles.add(new ImpBigQueryDataAdapter());
 		jdbcFiles.add(new ImpSimbaBigQueryDataAdapter());
+		jdbcFiles.add(new ImpMongoDbDataAdapter());
 	}
 
 }
