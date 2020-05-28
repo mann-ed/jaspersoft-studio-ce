@@ -43,7 +43,7 @@ public abstract class AImpJdbcDataAdapter {
 				}
 			}
 			if (Misc.isNullOrEmpty(res)) {
-				String[] props = getProperties(((JdbcDataAdapter) da).getUrl()).split(";");
+				String[] props = getProperties(da.getUrl()).split(";");
 				for (String p : props) {
 					String[] kv = p.split("=");
 					for (String t : keys)
@@ -56,14 +56,14 @@ public abstract class AImpJdbcDataAdapter {
 		return null;
 	}
 
-	public void setFileName(JdbcDataAdapter da, String key, String fname) {
+	public boolean setFileName(JdbcDataAdapter da, String key, String fname) {
 		if (fname.startsWith("repo:"))
 			fname = fname.substring("repo:".length());
 		if (da.getDriver() != null && da.getDriver().equals(dname)) {
 			if (da.getProperties() != null && da.getProperties().get(key) != null)
 				da.getProperties().put(key, fname);
 			String prefix = getJdbcPrefix();
-			String url = ((JdbcDataAdapter) da).getUrl().substring(prefix.length());
+			String url = da.getUrl().substring(prefix.length());
 			String[] props = url.split(";");
 			String newp = "";
 			String del = "";
@@ -75,6 +75,8 @@ public abstract class AImpJdbcDataAdapter {
 				del = ";";
 			}
 			da.setUrl(prefix + newp);
+			return true;
 		}
+		return false;
 	}
 }

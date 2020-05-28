@@ -271,7 +271,8 @@ public class ImpDataAdapter extends AImpObject {
 			JdbcDataAdapter jdbcDA = ((JdbcDataAdapter) da);
 			if (jdbcDA.getDriver() != null)
 				for (AImpJdbcDataAdapter d : jdbcFiles)
-					d.setFileName(jdbcDA, d.getKeys()[0], fname);
+					if (d.setFileName(jdbcDA, d.getKeys()[0], fname))
+						break;
 		}
 	}
 

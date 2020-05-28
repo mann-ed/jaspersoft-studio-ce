@@ -7,7 +7,7 @@ package com.jaspersoft.studio.server.publish.imp.da;
 import net.sf.jasperreports.data.jdbc.GbqSimbaDataAdapterService;
 
 public class ImpSimbaBigQueryDataAdapter extends AImpJdbcDataAdapter {
-	public static final String dname = "tibcosoftware.jdbc.googlebigquery.GoogleBigQueryDriver";
+	public static final String dname = "com.simba.googlebigquery.jdbc41.Driver";
 
 	public ImpSimbaBigQueryDataAdapter() {
 		super(dname, new String[] { GbqSimbaDataAdapterService.GBQ_CONNECTION_PARAMETER_PRIVATE_KEY });

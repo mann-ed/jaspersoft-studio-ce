@@ -114,10 +114,13 @@ public class RESTv2ExceptionHandler {
 
 	protected void handleErrorDescriptor(Response res, IProgressMonitor monitor, int status)
 			throws HttpResponseException {
+		String ct = res.getHeaderString("Content-Type");
 		res.bufferEntity();
 		String sent = res.readEntity(String.class);
 		try {
-			ErrorDescriptor ed = JacksonHelper.getJSONMapper().readValue(sent, ErrorDescriptor.class);
+			ErrorDescriptor ed = ct.contains("xml")
+					? JacksonHelper.getXMLMapper().readValue(sent, ErrorDescriptor.class)
+					: JacksonHelper.getJSONMapper().readValue(sent, ErrorDescriptor.class);
 			String msg = ed.getErrorCode() != null ? ed.getErrorCode() + "\n" : "";
 			msg += buildMessage(monitor, "", ed);
 			if (ed.getErrorCode() != null && !ed.getErrorCode().contains("{0}") && ed.getParameters() != null)

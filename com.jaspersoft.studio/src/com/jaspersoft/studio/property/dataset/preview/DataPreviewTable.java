@@ -23,8 +23,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -99,7 +97,7 @@ public class DataPreviewTable implements DatasetReaderListener {
 			IDataPreviewInfoProvider previewInfoProvider, Color background) {
 		this.previewInfoProvider = previewInfoProvider;
 		this.designer = designer;
-		this.previewItems = new ArrayList<DataPreviewTable.DataPreviewBean>(RECORDS_NUM_100);
+		this.previewItems = new ArrayList<>(RECORDS_NUM_100);
 		this.background = background;
 		createControl(parent);
 	}
@@ -111,12 +109,10 @@ public class DataPreviewTable implements DatasetReaderListener {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setBackground(background);
 		composite.setLayout(new GridLayout(4, false));
-		composite.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				statusOK = false;
-				if (refreshPrevieDataJob != null) {
-					refreshPrevieDataJob.cancel();
-				}
+		composite.addDisposeListener(e -> {
+			statusOK = false;
+			if (refreshPrevieDataJob != null) {
+				refreshPrevieDataJob.cancel();
 			}
 		});
 
@@ -138,6 +134,7 @@ public class DataPreviewTable implements DatasetReaderListener {
 					MenuItem itemRadio = new MenuItem(dropMenu, SWT.RADIO);
 					itemRadio.setText(Messages.DataPreviewTable_PreviewButton);
 					itemRadio.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent e) {
 							itemDrop.setText(Messages.DataPreviewTable_PreviewButton);
 							composite.update();
@@ -163,7 +160,8 @@ public class DataPreviewTable implements DatasetReaderListener {
 					});
 				}
 				if (e.detail == SWT.ARROW) {
-					// Position the menu below and vertically aligned with the the drop down tool
+					// Position the menu below and vertically aligned with the
+					// the drop down tool
 					// button.
 					final ToolItem toolItem = (ToolItem) e.widget;
 					final ToolBar toolBar = toolItem.getParent();
@@ -279,8 +277,8 @@ public class DataPreviewTable implements DatasetReaderListener {
 	}
 
 	/*
-	 * Notifies the need of a table refresh due to information modification, i.e.
-	 * table columns modification.
+	 * Notifies the need of a table refresh due to information modification,
+	 * i.e. table columns modification.
 	 */
 	private void refreshDataPreview() {
 		// Refresh layout for the table
@@ -299,7 +297,8 @@ public class DataPreviewTable implements DatasetReaderListener {
 				// FIXME - TEMPORARY FIX THAT SHOULD BE REMOVED!
 				// Using JFace Databinding for fields list of the dataset
 				// makes the internal fields map to be out of synch.
-				// Modifications should occur using the JRDesignDataset#add and #remove methods.
+				// Modifications should occur using the JRDesignDataset#add and
+				// #remove methods.
 				JRDesignDataset clonedDS = (JRDesignDataset) previewInfoProvider.getDesignDataset().clone();
 				clonedDS.getFieldsList().clear();
 				clonedDS.getFieldsMap().clear();
@@ -376,7 +375,7 @@ public class DataPreviewTable implements DatasetReaderListener {
 	 * Gets the column names.
 	 */
 	public List<String> getColumns() {
-		List<String> columns = new ArrayList<String>();
+		List<String> columns = new ArrayList<>();
 		for (JRDesignField f : previewInfoProvider.getFieldsForPreview()) {
 			columns.add(f.getName());
 		}
@@ -387,8 +386,8 @@ public class DataPreviewTable implements DatasetReaderListener {
 		return previewInfoProvider.getFieldsForPreview();
 	}
 
-	private static SimpleDateFormat TIMESTAMP = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss.SSSS"); //$NON-NLS-1$
-	private static SimpleDateFormat TIME = new SimpleDateFormat("hh:mm:ss.SSSS"); //$NON-NLS-1$
+	private static SimpleDateFormat TIMESTAMP = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSZ"); //$NON-NLS-1$
+	private static SimpleDateFormat TIME = new SimpleDateFormat("HH:mm:ss.SSSS"); //$NON-NLS-1$
 	private ToolBar toolbar;
 
 	/*
@@ -409,7 +408,7 @@ public class DataPreviewTable implements DatasetReaderListener {
 			tableContainer.setLayout(tColLayout);
 
 			List<JRDesignField> fields = previewInfoProvider.getFieldsForPreview();
-			if (fields.size() > 0) {
+			if (!fields.isEmpty()) {
 				for (JRDesignField f : fields) {
 					TableViewerColumn tvc = new TableViewerColumn(tviewer, SWT.NONE);
 					tvc.getColumn().setText(f.getName());
@@ -445,8 +444,8 @@ public class DataPreviewTable implements DatasetReaderListener {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.jaspersoft.studio.data.reader.DatasetReaderListener#newRecord(java.lang.
-	 * Object[])
+	 * com.jaspersoft.studio.data.reader.DatasetReaderListener#newRecord(java.
+	 * lang. Object[])
 	 */
 	public void newRecord(final Object[] values) {
 		previewItems.add(new DataPreviewBean(values));
@@ -459,33 +458,32 @@ public class DataPreviewTable implements DatasetReaderListener {
 	 * @see com.jaspersoft.studio.data.reader.DatasetReaderListener#finished()
 	 */
 	public void finished() {
-		UIUtils.getDisplay().syncExec(new Runnable() {
-			public void run() {
-				if (progressBar.isDisposed())
-					return;
-				if (tableFiller != null) {
-					tableFiller.done();
-					tableFiller = null;
-				}
-				flushPreviewItems();
-				progressBar.setVisible(false);
-				cancelPreviewBtn.setEnabled(false);
-				((GridData) progressBar.getLayoutData()).exclude = true;
-				if (isValidStatus()) {
-					infoMsg.setText(
-							MessageFormat.format(Messages.DataPreviewTable_ReadyReadData, new Object[] { readItems }));
-				}
-				toolbar.setEnabled(true);
-				infoComposite.layout();
-				readItems = 0;
+		UIUtils.getDisplay().syncExec(() -> {
+			if (progressBar.isDisposed())
+				return;
+			if (tableFiller != null) {
+				tableFiller.done();
+				tableFiller = null;
 			}
+			flushPreviewItems();
+			progressBar.setVisible(false);
+			cancelPreviewBtn.setEnabled(false);
+			((GridData) progressBar.getLayoutData()).exclude = true;
+			if (isValidStatus()) {
+				infoMsg.setText(
+						MessageFormat.format(Messages.DataPreviewTable_ReadyReadData, new Object[] { readItems }));
+			}
+			toolbar.setEnabled(true);
+			infoComposite.layout();
+			readItems = 0;
 		});
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.jaspersoft.studio.data.reader.DatasetReaderListener#isValidStatus()
+	 * @see
+	 * com.jaspersoft.studio.data.reader.DatasetReaderListener#isValidStatus()
 	 */
 	public boolean isValidStatus() {
 		return statusOK;
@@ -516,8 +514,8 @@ public class DataPreviewTable implements DatasetReaderListener {
 	}
 
 	/*
-	 * This thread is responsible to update the table with chunks of data read from
-	 * the dataset.
+	 * This thread is responsible to update the table with chunks of data read
+	 * from the dataset.
 	 */
 	private class TableFillerThread extends Thread {
 		private boolean done = false;
@@ -543,24 +541,22 @@ public class DataPreviewTable implements DatasetReaderListener {
 	 * Flush buffered items.
 	 */
 	private void flushPreviewItems() {
-		Object[] tmpItems = new Object[0];
+		Object[] tmpItems = null;
 		synchronized (previewItems) {
 			tmpItems = previewItems.toArray();
 			previewItems.clear();
 		}
 		final Object[] items = tmpItems;
-		UIUtils.getDisplay().syncExec(new Runnable() {
-			public void run() {
-				if (!wtable.isDisposed() && statusOK) {
-					tviewer.add(items);
-				}
+		UIUtils.getDisplay().syncExec(() -> {
+			if (!wtable.isDisposed() && statusOK) {
+				tviewer.add(items);
 			}
 		});
 
 	}
 
 	public List<DataPreviewBean> getPreviewItems() {
-		List<DataPreviewBean> res = new ArrayList<DataPreviewTable.DataPreviewBean>();
+		List<DataPreviewBean> res = new ArrayList<>();
 		for (TableItem ti : tviewer.getTable().getItems())
 			res.add((DataPreviewBean) ti.getData());
 		return res;
