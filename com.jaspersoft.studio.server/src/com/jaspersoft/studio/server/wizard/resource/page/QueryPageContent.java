@@ -5,6 +5,7 @@
 package com.jaspersoft.studio.server.wizard.resource.page;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
@@ -23,6 +24,9 @@ import com.jaspersoft.studio.server.protocol.ProxyConnection;
 import com.jaspersoft.studio.server.wizard.resource.APageContent;
 import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.UIUtil;
+
+import net.sf.jasperreports.eclipse.ui.validator.EmptyStringValidator;
+import net.sf.jasperreports.eclipse.util.Misc;
 
 public class QueryPageContent extends APageContent {
 
@@ -95,7 +99,15 @@ public class QueryPageContent extends APageContent {
 		if (clang != null && !clang.isDisposed())
 			bindingContext.bindValue(SWTObservables.observeText(clang),
 					PojoObservables.observeValue(getProxy(r), "language")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(tsql, SWT.Modify), PojoObservables.observeValue(r, "sql")); //$NON-NLS-1$
+		bindingContext.bindValue(SWTObservables.observeText(tsql, SWT.Modify), PojoObservables.observeValue(r, "sql"), //$NON-NLS-1$
+				new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator()), null);
+	}
+
+	@Override
+	public boolean isPageComplete() {
+		if (Misc.isNullOrEmpty(tsql.getText().trim()))
+			return false;
+		return super.isPageComplete();
 	}
 
 	private static QProxy getProxy(ResourceDescriptor rd) {
