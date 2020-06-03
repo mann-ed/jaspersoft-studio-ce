@@ -37,7 +37,8 @@ import com.jaspersoft.studio.swt.widgets.table.ListContentProvider;
 import com.jaspersoft.studio.swt.widgets.table.ListOrderButtons;
 
 /**
- * Page to sort, add, edit or delete parameters from a generic list of parameters
+ * Page to sort, add, edit or delete parameters from a generic list of
+ * parameters
  * 
  * @author Orlandin Marco Marco
  *
@@ -65,38 +66,38 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 	/**
 	 * List of the parameters currently defined, used to avoid duplicated names
 	 */
-	protected List<GenericJSSParameter> values = new ArrayList<GenericJSSParameter>();
-	
+	protected List<GenericJSSParameter> values = new ArrayList<>();
+
 	/**
 	 * Table where the user can interact with the parameters
 	 */
 	private Table table;
-	
+
 	/**
 	 * Viewer of the table
 	 */
 	protected TableViewer tableViewer;
-	
+
 	/**
 	 * Actual expression context
 	 */
 	private ExpressionContext expContext;
-	
+
 	/**
-	 * Button used to edit a parameter 
+	 * Button used to edit a parameter
 	 */
 	private Button editButton;
-	
+
 	/**
-	 * Button used to delete a parameter 
+	 * Button used to delete a parameter
 	 */
 	private Button deleteButton;
-	
+
 	/**
 	 * Button used to create a new parameter
 	 */
 	private Button addButton;
-	
+
 	/**
 	 * Create an instance of the pace
 	 */
@@ -105,7 +106,7 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 		setTitle(getPageTitle());
 		setDescription(getPageDescription());
 	}
-	
+
 	/**
 	 * Return a list of all the actually defined parameters
 	 * 
@@ -114,7 +115,7 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 	public List<GenericJSSParameter> getValue() {
 		return values;
 	}
-	
+
 	/**
 	 * Set the list of currently defined parameters
 	 * 
@@ -150,78 +151,78 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 	 * 
 	 * @param bGroup parent control of the buttons
 	 */
-	protected void generateButtons(Composite bGroup){
-		
-		//CREATE THE ADD BUTTON
-	
+	protected void generateButtons(Composite bGroup) {
+
+		// CREATE THE ADD BUTTON
+
 		addButton = new Button(bGroup, SWT.PUSH);
 		addButton.setText(Messages.common_add);
 		addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		addButton.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputParameterDialog inputDialog = getEditDialog(new GenericJSSParameter());
 				inputDialog.setExpressionContext(expContext);
-				if (inputDialog.open() == Dialog.OK){
+				if (inputDialog.open() == Dialog.OK) {
 					values.add(inputDialog.getValue());
 					tableViewer.refresh();
 				}
 			}
 		});
-		
-		//CREATE THE EDIT BUTTON
-		
+
+		// CREATE THE EDIT BUTTON
+
 		editButton = new Button(bGroup, SWT.PUSH);
 		editButton.setText(Messages.common_edit);
 		editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		editButton.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				StructuredSelection selection = (StructuredSelection)tableViewer.getSelection();
-				if (selection.size() > 0){
-					GenericJSSParameter selectedValue = (GenericJSSParameter)selection.getFirstElement();
+				StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
+				if (selection.size() > 0) {
+					GenericJSSParameter selectedValue = (GenericJSSParameter) selection.getFirstElement();
 					editElement(selectedValue);
 				}
 			}
 		});
-		
+
 		editButton.setEnabled(false);
-		
-		//CREATE THE DELETE BUTTON
-		
+
+		// CREATE THE DELETE BUTTON
+
 		deleteButton = new Button(bGroup, SWT.PUSH);
 		deleteButton.setText(Messages.common_delete);
 		deleteButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		deleteButton.addSelectionListener(new SelectionAdapter() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				StructuredSelection selection = (StructuredSelection)tableViewer.getSelection();
-				if (selection.size() > 0){
-					GenericJSSParameter selectedValue = (GenericJSSParameter)selection.getFirstElement();
+				StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
+				if (selection.size() > 0) {
+					GenericJSSParameter selectedValue = (GenericJSSParameter) selection.getFirstElement();
 					int index = values.indexOf(selectedValue);
 					values.remove(index);
 					tableViewer.refresh();
 				}
 			}
 		});
-		
+
 		deleteButton.setEnabled(false);
 		new ListOrderButtons().createOrderButtons(bGroup, tableViewer);
 	}
-	
+
 	/**
 	 * Edit an element opened a dialog to allow to modify it
 	 * 
 	 * @param edited the element to edit, must be not null
 	 */
-	private void editElement(GenericJSSParameter edited){
+	private void editElement(GenericJSSParameter edited) {
 		GenericJSSParameter result = edited.clone();
 		InputParameterDialog inputDialog = getEditDialog(result);
 		inputDialog.setExpressionContext(expContext);
-		if (inputDialog.open() == Dialog.OK){
+		if (inputDialog.open() == Dialog.OK) {
 			int index = values.indexOf(edited);
 			values.set(index, result);
 			tableViewer.refresh();
@@ -267,19 +268,19 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 	 */
 	private void attachCellEditors(final TableViewer viewer) {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			
+
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				int selectedIndex = table.getSelectionIndex();
-				if (selectedIndex != -1){
+				if (selectedIndex != -1) {
 					GenericJSSParameter selectedElement = values.get(selectedIndex);
 					editElement(selectedElement);
 				}
 			}
 		});
-		
+
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				int selectedIndex = table.getSelectionIndex();
@@ -288,7 +289,7 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 				deleteButton.setEnabled(buttonEnabled);
 			}
 		});
-		
+
 		viewer.setColumnProperties(new String[] { "NAME", "VALUE" }); //$NON-NLS-1$ //$NON-NLS-2$
 		viewer.setLabelProvider(new TLabelProvider());
 	}
@@ -301,46 +302,46 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 			tableViewer.setInput(values);
 		}
 	}
-	
+
 	/**
-	 * Set the expression context, used when opening the expression
-	 * editor to provide a parameter expression
+	 * Set the expression context, used when opening the expression editor to
+	 * provide a parameter expression
 	 */
 	public void setExpressionContext(ExpressionContext expContext) {
 		this.expContext = expContext;
 	}
-	
+
 	/**
-	 * Return the title for the current page, can be overridden to provide
-	 * a custom title since this is a generic page
+	 * Return the title for the current page, can be overridden to provide a
+	 * custom title since this is a generic page
 	 * 
 	 * @return a not null page title
 	 */
-	public String getPageTitle(){
+	public String getPageTitle() {
 		return Messages.ParameterPage_dataset_parameters;
 	}
-	
+
 	/**
 	 * Return the description for the current page, can be overridden to provide
 	 * a custom title since this is a generic page
 	 * 
 	 * @return a not null page description
 	 */
-	public String getPageDescription(){
+	public String getPageDescription() {
 		return Messages.ParameterPage_description;
 	}
 
 	/**
-	 * Return the dialog to edit a parameter. Can be overridden to provide custom 
-	 * dialog. The parameter passed to the dialog is edited directly so it's better
-	 * to provide a copy of the parameter
+	 * Return the dialog to edit a parameter. Can be overridden to provide
+	 * custom dialog. The parameter passed to the dialog is edited directly so
+	 * it's better to provide a copy of the parameter
 	 * 
-	 * @param editedParameter a not null parameter to edit. Should be a copy of the edited
-	 * one to avoid side effect
+	 * @param editedParameter a not null parameter to edit. Should be a copy of
+	 * the edited one to avoid side effect
 	 * 
 	 * @return A dialog to edit the passed parameter
 	 */
-	protected InputParameterDialog getEditDialog(GenericJSSParameter editedParameter){
+	protected InputParameterDialog getEditDialog(GenericJSSParameter editedParameter) {
 		return new InputParameterDialog(getShell(), editedParameter, values);
 	}
 }

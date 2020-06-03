@@ -27,22 +27,22 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 public class SubreportParameterEditor extends ParameterEditor {
-	
+
 	/**
 	 * The loaded report for the inspect of the parameters
 	 */
 	private JRReport subreportDesign;
-	
+
 	/**
 	 * True if the report is currently under loading, false otherwise
 	 */
 	private boolean isLoading = false;
-	
+
 	/**
 	 * The jasper design of the current report
 	 */
 	private JasperDesign jd;
-	
+
 	/**
 	 * the model of the edited subreport
 	 */
@@ -54,43 +54,40 @@ public class SubreportParameterEditor extends ParameterEditor {
 		this.subReport = subReport;
 		preloadReport(subReport);
 	}
-	
+
 	@Override
 	protected ParameterPage getEditingPage() {
-		SubreportParameterPage page = new SubreportParameterPage(subReport, jd,  getSubreportJasperDesign());
+		SubreportParameterPage page = new SubreportParameterPage(subReport, jd, getSubreportJasperDesign());
 		return page;
 	}
-	
+
 	/**
-	 * Set the value of the loading flag. This method is
-	 * thread safe
+	 * Set the value of the loading flag. This method is thread safe
 	 * 
 	 * @param value the new loading status
 	 */
-	private synchronized void setLoading(boolean value){
+	private synchronized void setLoading(boolean value) {
 		isLoading = value;
 	}
-	
+
 	/**
-	 * Check if the report is currently under loading. This
-	 * method is thread safe
+	 * Check if the report is currently under loading. This method is thread
+	 * safe
 	 * 
-	 * @return true if the design is currently under loading,
-	 * false otherwise
+	 * @return true if the design is currently under loading, false otherwise
 	 */
-	private synchronized boolean isLoading(){
+	private synchronized boolean isLoading() {
 		return isLoading;
 	}
-	
+
 	/**
-	 * Return the loaded jasperdesign. If it is currently
-	 * loading then it wait until the load is complete
+	 * Return the loaded jasperdesign. If it is currently loading then it wait
+	 * until the load is complete
 	 * 
-	 * @return The jasperdesign or null if the jasper design
-	 * can not be found
+	 * @return The jasperdesign or null if the jasper design can not be found
 	 */
-	public JRReport getSubreportJasperDesign(){
-		while(isLoading()){
+	public JRReport getSubreportJasperDesign() {
+		while (isLoading()) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -99,12 +96,12 @@ public class SubreportParameterEditor extends ParameterEditor {
 		}
 		return subreportDesign;
 	}
-	
+
 	/**
 	 * Run the thread that pre-load the target report
 	 * 
-	 * @param subreport part containing the expression of the target report
-	 * to preload
+	 * @param subreport part containing the expression of the target report to
+	 * preload
 	 */
 	private void preloadReport(final MSubreport subreport) {
 		Thread t = new Thread(new Runnable() {
@@ -120,16 +117,16 @@ public class SubreportParameterEditor extends ParameterEditor {
 					if (jrSubreport != null) {
 						JRExpression subreportExp = jrSubreport.getExpression();
 						if (subreportExp != null) {
-							JRDesignDataset dataset = (JRDesignDataset)subreport.getJasperDesign().getMainDataset();
+							JRDesignDataset dataset = (JRDesignDataset) subreport.getJasperDesign().getMainDataset();
 							reportFileName = ExpressionUtil.cachedExpressionEvaluation(subreportExp, context, dataset);
 						}
 					}
 
 					// Report not found
-					if (reportFileName != null){
+					if (reportFileName != null) {
 						if (reportFileName instanceof File) {
 							reportFileName = ((File) reportFileName).toURI().toString();
-						} 
+						}
 						if (!(reportFileName instanceof String)) {
 							return; // We only understand string paths...
 						}
@@ -140,10 +137,10 @@ public class SubreportParameterEditor extends ParameterEditor {
 							location = location.substring(0, location.length() - ".jasper".length()) + ".jrxml";
 							f = findFile(location, context);
 						}
-						if (f.getName().toLowerCase().endsWith(".jasper")){
+						if (f.getName().toLowerCase().endsWith(".jasper")) {
 							subreportDesign = (JRReport) JRLoader.loadObject(f);
 						} else {
-							subreportDesign = (JRReport) JRXmlLoader.load(f);
+							subreportDesign = JRXmlLoader.load(f);
 						}
 					}
 				} catch (Exception ex) {
@@ -155,60 +152,64 @@ public class SubreportParameterEditor extends ParameterEditor {
 		});
 		t.start();
 	}
-	
+
 	/**
-	 * Convenient method to look for a file.
-	 * Find the file with an euristic approach....
-     * Attention... this could be slow in very very large environments..
-	 * Search is performed in the following way:
+	 * Convenient method to look for a file. Find the file with an euristic
+	 * approach.... Attention... this could be slow in very very large
+	 * environments.. Search is performed in the following way:
 	 * 
-	 * 1. Check if location can be found on the file system (assuming location an absolute path)
-	 * 2. Check if the location can be loaded from the classpath (assuming a file in a folder present in the classpath of the report)
-	 * 3. Check if the file can be found relatively to the current report file (pointed by this context)
-	 * 4. Check if the file can be found relatively to the current project (to which the file at point 3 belongs to)
+	 * 1. Check if location can be found on the file system (assuming location
+	 * an absolute path) 2. Check if the location can be loaded from the
+	 * classpath (assuming a file in a folder present in the classpath of the
+	 * report) 3. Check if the file can be found relatively to the current
+	 * report file (pointed by this context) 4. Check if the file can be found
+	 * relatively to the current project (to which the file at point 3 belongs
+	 * to)
 	 * 
 	 * @param location
 	 * @param context
 	 * @return
 	 */
-	public static File findFile(String location, JasperReportsConfiguration context)
-	{
+	public static File findFile(String location, JasperReportsConfiguration context) {
 		// Check if the location is an absolute path...
 		File f = new File(location);
-		if (f.exists()) return f;
-		
-		
+		if (f.exists())
+			return f;
+
 		// Check if the file can be found in the classpath...
 		URL url = context.getClassLoader().getResource(location);
-		
-		if (url != null)
-		{
+
+		if (url != null) {
 			try {
-				f = new File( url.toURI());
-				if (f.exists()) return f;
+				f = new File(url.toURI());
+				if (f.exists())
+					return f;
 			} catch (URISyntaxException e) {
 			}
 		}
-		
-		// We check locally to the current file directory... maybe we are more lucky...
-		IFile file = (IFile)context.get(FileUtils.KEY_FILE);
-		if (file != null)
-		{
+
+		// We check locally to the current file directory... maybe we are more
+		// lucky...
+		IFile file = (IFile) context.get(FileUtils.KEY_FILE);
+		if (file != null) {
 			// Located the parent...
 			f = new File(file.getParent().getLocationURI());
 			// ... try to build the full path...
 			f = new File(f, location);
-			if (f.exists()) return f;
-			
+			if (f.exists())
+				return f;
+
 			// Finally we look inside this project...
-			// We check locally to the current file directory... maybe we are more lucky...
+			// We check locally to the current file directory... maybe we are
+			// more lucky...
 			f = new File(file.getProject().getLocationURI());
 			// ... try to build the full path...
 			f = new File(f, location);
-			if (f.exists()) return f;
+			if (f.exists())
+				return f;
 		}
-		
+
 		return null;
 	}
-	
+
 }

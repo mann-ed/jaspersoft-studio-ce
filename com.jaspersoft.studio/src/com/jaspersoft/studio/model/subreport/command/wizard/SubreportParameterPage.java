@@ -29,9 +29,9 @@ import net.sf.jasperreports.engine.design.JRDesignSubreportParameter;
 import net.sf.jasperreports.engine.design.JasperDesign;
 
 public class SubreportParameterPage extends ParameterPage {
-	
+
 	private JRReport subreportJD;
-	
+
 	private JasperDesign mainReportJD;
 
 	@Override
@@ -56,14 +56,14 @@ public class SubreportParameterPage extends ParameterPage {
 						JRDesignSubreportParameter param = new JRDesignSubreportParameter();
 						param.setName(name);
 						param.setExpression(ExprUtil.createExpression("$P{" + name + "}")); //$NON-NLS-1$ //$NON-NLS-2$
-						values.add(new GenericJSSParameter(param));	
+						values.add(new GenericJSSParameter(param));
 					}
 				}
 				tableViewer.refresh(true);
 			}
 		});
 	}
-	
+
 	@Override
 	protected void fillTable() {
 		if (values == null) {
@@ -116,14 +116,11 @@ public class SubreportParameterPage extends ParameterPage {
 				}
 			}
 		}
-		if (mainReportJD != null) {
-			for (JRParameter param : mainReportJD.getParameters()) {
-				if (!usedParams.contains(param.getName())) {
-					if (param.getName() != null)
-						result.add(param.getName());
-				}
-			}
-		}
+		if (mainReportJD != null)
+			for (JRParameter param : mainReportJD.getParameters())
+				if (!usedParams.contains(param.getName()) && param.getName() != null
+						&& !result.contains(param.getName()))
+					result.add(param.getName());
 		Collections.sort(result);
 		return result;
 	}

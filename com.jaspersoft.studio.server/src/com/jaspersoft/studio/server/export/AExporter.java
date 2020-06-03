@@ -224,7 +224,7 @@ public class AExporter {
 	private IFile downloadFile(AMResource res, ResourceDescriptor rd, IFile f, IProgressMonitor monitor) {
 		try {
 			IPath p = f.getRawLocation();
-			if(p == null)
+			if (p == null)
 				p = f.getFullPath();
 			WSClientHelper.getResource(monitor, res, rd, p.toFile());
 			f.refreshLocal(1, monitor);

@@ -237,16 +237,16 @@ public abstract class DataQueryAdapters extends AQueryDesignerContainer {
 		GridData gd = new GridData();
 		gd.widthHint = 200;
 		langCombo.setLayoutData(gd);
-		langCombo.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				changeLanguage();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-		});
+//		langCombo.addSelectionListener(new SelectionListener() {
+//
+//			public void widgetSelected(SelectionEvent e) {
+//				changeLanguage();
+//			}
+//
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				widgetSelected(e);
+//			}
+//		});
 		langCombo.addModifyListener(e -> {
 			if (isRefresh)
 				return;
@@ -303,7 +303,7 @@ public abstract class DataQueryAdapters extends AQueryDesignerContainer {
 				lang = "SQL"; //$NON-NLS-1$
 				langCombo.setText("SQL"); //$NON-NLS-1$
 			}
-			langCombo.setToolTipText(lang);
+			langCombo.setToolTipText(lang); 
 			((JRDesignQuery) newdataset.getQuery()).setLanguage(lang);
 			final IQueryDesigner designer = qdfactory.getDesigner(lang);
 			langLayout.topControl = designer.getControl();

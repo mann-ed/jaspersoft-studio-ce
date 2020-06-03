@@ -31,11 +31,10 @@ import net.sf.jasperreports.engine.design.JRDesignSubreportParameter;
 import net.sf.jasperreports.engine.design.JasperDesign;
 
 /**
- * Page to edit the parameters of a subreport. In addition to the 
- * default page it offers a button to get all the parameters from the current report,
- * in the dataset scope of the subreport.
- * The parameter name can be chosen from a combo between the names of the parameters
- * inside the subreport or inserted manually 
+ * Page to edit the parameters of a subreport. In addition to the default page
+ * it offers a button to get all the parameters from the current report, in the
+ * dataset scope of the subreport. The parameter name can be chosen from a combo
+ * between the names of the parameters inside the subreport or inserted manually
  * 
  * @author Orlandin Marco
  *
@@ -43,11 +42,11 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 public class SubreportParameterPage extends ComboParametersPage {
 
 	private MSubreport subreportModel;
-	
+
 	private JRReport subreportJD;
 
 	private JasperDesign mainReportJD;
-	
+
 	public SubreportParameterPage(MSubreport subreportModel, JasperDesign jd, JRReport subreportDesign) {
 		super(null);
 		this.subreportModel = subreportModel;
@@ -77,14 +76,14 @@ public class SubreportParameterPage extends ComboParametersPage {
 							JRDesignSubreportParameter param = new JRDesignSubreportParameter();
 							param.setName(name);
 							param.setExpression(ExprUtil.createExpression("$P{" + name + "}")); //$NON-NLS-1$ //$NON-NLS-2$
-							values.add(new GenericJSSParameter(param));	
+							values.add(new GenericJSSParameter(param));
 						}
 					}
 				}
 				tableViewer.refresh(true);
 			}
 		});
-		
+
 		Button bImport = new Button(bGroup, SWT.PUSH);
 		bImport.setText(Messages.SubreportParameterPage_importFromSubreport);
 		bImport.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -104,7 +103,7 @@ public class SubreportParameterPage extends ComboParametersPage {
 							JRDesignSubreportParameter param = new JRDesignSubreportParameter();
 							param.setName(name);
 							param.setExpression(ExprUtil.createExpression("$P{" + name + "}")); //$NON-NLS-1$ //$NON-NLS-2$
-							values.add(new GenericJSSParameter(param));	
+							values.add(new GenericJSSParameter(param));
 						}
 					}
 				}
@@ -112,14 +111,14 @@ public class SubreportParameterPage extends ComboParametersPage {
 			}
 		});
 		bImport.setEnabled(subreportJD != null);
-		
+
 		if (!hasUserDefinedParams()) {
 			setMessage(Messages.SubreportParameterPage_noParametersWarning, IMessageProvider.WARNING);
 		} else {
 			setMessage(null);
 		}
 	}
-	
+
 	private boolean hasUserDefinedParams() {
 		if (subreportJD != null) {
 			for (JRParameter param : subreportJD.getParameters()) {
@@ -131,18 +130,19 @@ public class SubreportParameterPage extends ComboParametersPage {
 		}
 		return true;
 	}
-	
+
 	/**
-	 * Return the input of the combo, a list of the parameter names of the original subreport file
+	 * Return the input of the combo, a list of the parameter names of the
+	 * original subreport file
 	 * 
 	 * @return the list of string displayed in the combo
 	 */
 	@Override
-	protected List<String> createNameComboInput(){
-		List<String> result = new ArrayList<String>();
-		HashSet<String> usedParams = new HashSet<String>();
-		for(GenericJSSParameter param : values){
-				usedParams.add(param.getName());
+	protected List<String> createNameComboInput() {
+		List<String> result = new ArrayList<>();
+		HashSet<String> usedParams = new HashSet<>();
+		for (GenericJSSParameter param : values) {
+			usedParams.add(param.getName());
 		}
 		if (subreportJD != null) {
 			for (JRParameter param : subreportJD.getParameters()) {
@@ -152,28 +152,25 @@ public class SubreportParameterPage extends ComboParametersPage {
 				}
 			}
 		}
-		if (mainReportJD != null) {
-			for (JRParameter param : mainReportJD.getParameters()) {
-				if (!usedParams.contains(param.getName())) {
-					if (param.getName() != null)
-						result.add(param.getName());
-				}
-			}
-		}
+		if (mainReportJD != null)
+			for (JRParameter param : mainReportJD.getParameters())
+				if (!usedParams.contains(param.getName()) && param.getName() != null
+						&& !result.contains(param.getName()))
+					result.add(param.getName());
 		Collections.sort(result);
 		return result;
 	}
-	
+
 	@Override
 	public String getPageDescription() {
 		return Messages.SubreportPropertyPage_description;
 	}
-	
+
 	@Override
 	public String getPageTitle() {
 		return Messages.common_subreport_parameters;
 	}
-	
+
 	@Override
 	protected InputParameterDialog getEditDialog(GenericJSSParameter editedParameter) {
 		return new ComboInputParameterDialog(getShell(), createNameComboInput(), editedParameter, SWT.DROP_DOWN);
