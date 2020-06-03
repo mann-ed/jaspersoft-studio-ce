@@ -47,17 +47,18 @@ public final class DataAdapterParameterContributorFactory implements ParameterCo
 	 *
 	 */
 	public List<ParameterContributor> getContributors(ParameterContributorContext context) throws JRException {
-		List<ParameterContributor> contributors = new ArrayList<ParameterContributor>();
+		List<ParameterContributor> contributors = new ArrayList<>();
 
 		DataAdapter dataAdapter = null;
 		Object param = context.getParameterValues().get(PARAMETER_DATA_ADAPTER);
-		if (param != null && param instanceof DataAdapter)
+		if (param instanceof DataAdapter)
 			dataAdapter = (DataAdapter) param;
 		if (dataAdapter == null) {
 			String dataAdapterUri = JRPropertiesUtil.getInstance(context.getJasperReportsContext())
 					.getProperty(context.getDataset(), "net.sf.jasperreports.data.adapter");
 			if (dataAdapterUri != null) {
-				if (dataAdapterUri.startsWith("../") || dataAdapterUri.startsWith("./")) {
+				if (dataAdapterUri.startsWith("../") || dataAdapterUri.startsWith("./")
+						|| !dataAdapterUri.startsWith("/")) {
 					Object obj = ((JasperReportsConfiguration) context.getJasperReportsContext())
 							.get(FileUtils.KEY_FILE);
 					if (obj instanceof IFile) {
@@ -70,6 +71,9 @@ public final class DataAdapterParameterContributorFactory implements ParameterCo
 						} else if (dataAdapterUri.startsWith("./") && f.getParent() != null) {
 							pref = f.getParent().getProjectRelativePath().toString();
 							dataAdapterUri = pref + dataAdapterUri.substring(1);
+						} else if (!dataAdapterUri.startsWith("/")) {
+							pref = f.getParent().getProjectRelativePath().toString();
+							dataAdapterUri = pref + "/" + dataAdapterUri;
 						}
 					}
 				}
