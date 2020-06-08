@@ -357,11 +357,11 @@ public final class PageFormatDialog extends FormDialog {
 
 		pwidth = new ValueUnitsWidget();
 		pwidth.createComponent(tleft, Messages.PageFormatDialog_22, Messages.PageFormatDialog_23);
-		pwidth.setMaxPixels(5000);
+		pwidth.setMaxPixels(Integer.MAX_VALUE / 2);
 
 		pheigh = new ValueUnitsWidget();
 		pheigh.createComponent(tleft, Messages.PageFormatDialog_24, Messages.PageFormatDialog_25);
-		pheigh.setMaxPixels(5000);
+		pheigh.setMaxPixels(Integer.MAX_VALUE / 2);
 
 		uvWidgets.add(pwidth);
 		uvWidgets.add(pheigh);
