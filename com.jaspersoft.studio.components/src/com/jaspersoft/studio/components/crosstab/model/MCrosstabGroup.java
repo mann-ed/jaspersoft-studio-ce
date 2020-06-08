@@ -129,7 +129,7 @@ public abstract class MCrosstabGroup extends MDatasetGroupNode implements IPrope
 			return mBucket;
 		}
 		if (id.equals(JRDesignCrosstabGroup.PROPERTY_MERGE_HEADER_CELLS)) {
-			boolean result = jrField.getMergeHeaderCells() != null ? jrField.getMergeHeaderCells() : false;
+			boolean result = jrField.getMergeHeaderCells() != null ? jrField.getMergeHeaderCells() : true;
 			return new Boolean(result);
 		}
 		return null;
