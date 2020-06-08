@@ -105,7 +105,7 @@ public class QueryPageContent extends APageContent {
 
 	@Override
 	public boolean isPageComplete() {
-		if (Misc.isNullOrEmpty(tsql.getText().trim()))
+		if (tsql == null || tsql.getText() == null || Misc.isNullOrEmpty(tsql.getText().trim()))
 			return false;
 		return super.isPageComplete();
 	}
