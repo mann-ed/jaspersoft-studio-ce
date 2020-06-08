@@ -138,7 +138,7 @@ public class ColorDialog extends PersistentLocationDialog{
 		if (shellTitle != null){
 			newShell.setText(shellTitle);
 		}
-		defheight = 450;
+		defheight = 500;
 		defwidth = 600;
 	}
 	
