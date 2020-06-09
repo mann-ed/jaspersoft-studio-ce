@@ -20,14 +20,15 @@ import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.parameter.MParameters;
 
 /**
- * This command takes care of removing the all the current parameters from a {@link JRDesignDataset} instance
- * and replace them with the newly specified ones. 
+ * This command takes care of removing the all the current parameters from a
+ * {@link JRDesignDataset} instance and replace them with the newly specified
+ * ones.
  * 
  * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
  *
  */
 public class ReplaceAllParametersCommand extends Command {
-	
+
 	private List<JRDesignParameter> oldJRParameters;
 	private List<JRDesignParameter> newOrderedJRParameters;
 	private JRDesignDataset jrDataset;
@@ -42,39 +43,39 @@ public class ReplaceAllParametersCommand extends Command {
 		super(Messages.ReplaceAllParametersCommand_Label);
 		this.jrDataset = (JRDesignDataset) mParameters.getValue();
 		this.newOrderedJRParameters = children;
-		this.oldJRParameters = new ArrayList<JRDesignParameter>(jrDataset.getParametersList().size());
+		this.oldJRParameters = new ArrayList<>(jrDataset.getParametersList().size());
 	}
 
 	@Override
 	public void execute() {
 		try {
 			JRParameter[] originalParameters = jrDataset.getParameters();
-			for(int i=0;i<originalParameters.length;i++) {
+			for (int i = 0; i < originalParameters.length; i++) {
 				jrDataset.removeParameter(originalParameters[i]);
 				oldJRParameters.add((JRDesignParameter) originalParameters[i]);
 			}
-			for(int j=0;j<newOrderedJRParameters.size();j++) {
+			for (int j = 0; j < newOrderedJRParameters.size(); j++) {
 				jrDataset.addParameter(newOrderedJRParameters.get(j));
 			}
 		} catch (JRException e) {
-			BundleCommonUtils.logError(
-					JaspersoftStudioPlugin.PLUGIN_ID, Messages.ReplaceAllParametersCommand_ExecuteError, e);
+			BundleCommonUtils.logError(JaspersoftStudioPlugin.PLUGIN_ID,
+					Messages.ReplaceAllParametersCommand_ExecuteError, e);
 		}
-	}	
+	}
 
 	@Override
 	public void undo() {
 		try {
 			JRParameter[] fields = jrDataset.getParameters();
-			for(JRParameter f : fields) {
+			for (JRParameter f : fields) {
 				jrDataset.removeParameter(f);
 			}
-			for(JRParameter f : oldJRParameters) {
+			for (JRParameter f : oldJRParameters) {
 				jrDataset.addParameter(f);
 			}
 		} catch (JRException e) {
-			BundleCommonUtils.logError(
-					JaspersoftStudioPlugin.PLUGIN_ID, Messages.ReplaceAllParametersCommand_UndoError, e);
+			BundleCommonUtils.logError(JaspersoftStudioPlugin.PLUGIN_ID, Messages.ReplaceAllParametersCommand_UndoError,
+					e);
 		}
 	}
 

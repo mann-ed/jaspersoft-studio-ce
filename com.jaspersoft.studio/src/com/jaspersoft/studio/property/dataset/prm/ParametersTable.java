@@ -471,10 +471,14 @@ public class ParametersTable extends AbstractModifyTable {
 						dataset.removeParameter(oldF.getName());
 						try {
 							obj = d.getElement();
+							JRDesignParameter newP = (JRDesignParameter) obj;
 							if (pos >= 0 && pos < dataset.getParametersList().size())
-								dataset.addParameter(pos, (JRParameter) obj);
+								dataset.addParameter(pos, newP);
 							else
-								dataset.addParameter((JRParameter) obj);
+								dataset.addParameter(newP);
+							if (!oldF.getName().equals(newP.getName()))
+								newP.getEventSupport().firePropertyChange(JRDesignParameter.PROPERTY_NAME,
+										oldF.getName(), newP.getName());
 						} catch (JRException ex) {
 							UIUtils.showError(ex);
 						}
@@ -711,10 +715,14 @@ public class ParametersTable extends AbstractModifyTable {
 				if (d.open() == Dialog.OK) {
 					dataset.removeParameter(oldF);
 					try {
+						JRDesignParameter newP = d.getElement();
 						if (pos >= 0 && pos < dataset.getParametersList().size())
-							dataset.addParameter(pos, d.getElement());
+							dataset.addParameter(pos, newP);
 						else
-							dataset.addParameter(d.getElement());
+							dataset.addParameter(newP);
+						if (!oldF.getName().equals(newP.getName()))
+							newP.getEventSupport().firePropertyChange(JRDesignParameter.PROPERTY_NAME, oldF.getName(),
+									newP.getName());
 						input.set(pos, d.getElement());
 					} catch (JRException e) {
 						UIUtils.showError(e);

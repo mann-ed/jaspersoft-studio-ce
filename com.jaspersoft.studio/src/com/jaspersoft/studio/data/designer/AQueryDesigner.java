@@ -26,6 +26,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignField;
+import net.sf.jasperreports.engine.design.JRDesignParameter;
 import net.sf.jasperreports.engine.design.JasperDesign;
 
 public abstract class AQueryDesigner implements IQueryDesigner, IRunnableContext {
@@ -74,7 +75,25 @@ public abstract class AQueryDesigner implements IQueryDesigner, IRunnableContext
 	public void setQuery(JasperDesign jDesign, JRDataset jDataset, JasperReportsConfiguration jConfig) {
 		this.jDesign = jDesign;
 		this.jDataset = (JRDesignDataset) jDataset;
+		((JRDesignDataset) jDataset).getEventSupport().addPropertyChangeListener(evt -> {
+			if (evt.getPropertyName().equals(JRDesignDataset.PROPERTY_PARAMETERS) && evt.getNewValue() != null)
+				listenParameter((JRDesignParameter) evt.getNewValue());
+		});
+		for (JRParameter p : jDataset.getParameters())
+			listenParameter((JRDesignParameter) p);
+
 		this.jConfig = jConfig;
+	}
+
+	protected void listenParameter(JRDesignParameter p) {
+		p.getEventSupport().addPropertyChangeListener(e -> {
+			if (e.getPropertyName().equals(JRDesignParameter.PROPERTY_NAME))
+				parameterNameChanged((String) e.getOldValue(), (String) e.getNewValue());
+		});
+	}
+
+	protected void parameterNameChanged(String oldValue, String newValue) {
+		// do nothing, override by editor to change the query
 	}
 
 	public String getQuery() {
