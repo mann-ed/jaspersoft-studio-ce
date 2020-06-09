@@ -41,9 +41,9 @@ public class QueryPageContent extends APageContent {
 	}
 
 	private boolean showLangs = true;
-	private static Text tsql;
-	private static Combo clang;
-	private static QProxy proxy;
+	private Text tsql;
+	private Combo clang;
+	private QProxy proxy;
 
 	public QueryPageContent(ANode parent, AMResource resource, boolean showLangs) {
 		super(parent, resource);
@@ -66,8 +66,8 @@ public class QueryPageContent extends APageContent {
 		return createContentComposite;
 	}
 
-	public static Control createContentComposite(Composite parent, DataBindingContext bindingContext,
-			ResourceDescriptor r, AMResource res, boolean showLangs) {
+	public Control createContentComposite(Composite parent, DataBindingContext bindingContext, ResourceDescriptor r,
+			AMResource res, boolean showLangs) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 
@@ -105,12 +105,12 @@ public class QueryPageContent extends APageContent {
 
 	@Override
 	public boolean isPageComplete() {
-		if (tsql == null || tsql.getText() == null || Misc.isNullOrEmpty(tsql.getText().trim()))
+		if (tsql == null || tsql.isDisposed() || tsql.getText() == null || Misc.isNullOrEmpty(tsql.getText().trim()))
 			return false;
 		return super.isPageComplete();
 	}
 
-	private static QProxy getProxy(ResourceDescriptor rd) {
+	private QProxy getProxy(ResourceDescriptor rd) {
 		if (proxy == null)
 			proxy = new QProxy();
 		proxy.setResourceDescriptor(rd);
