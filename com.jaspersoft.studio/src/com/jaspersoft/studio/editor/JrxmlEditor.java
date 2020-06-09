@@ -78,9 +78,9 @@ public class JrxmlEditor extends AbstractJRXMLEditor implements IJROBjectEditor,
 	}
 
 	/**
-	 * Gets the current active inner editor. The {@link ReportContainer} is itself a
-	 * {@link MultiPageEditorPart}, so it can contains different opened editors
-	 * (i.e. lists, tables, cross-tabs).
+	 * Gets the current active inner editor. The {@link ReportContainer} is
+	 * itself a {@link MultiPageEditorPart}, so it can contains different opened
+	 * editors (i.e. lists, tables, cross-tabs).
 	 * 
 	 * @return the second level active editor
 	 */
@@ -133,8 +133,8 @@ public class JrxmlEditor extends AbstractJRXMLEditor implements IJROBjectEditor,
 	}
 
 	/**
-	 * Opens an editor (even an internal one), using the specified object and Anode
-	 * information.
+	 * Opens an editor (even an internal one), using the specified object and
+	 * Anode information.
 	 */
 	public void openEditor(Object obj, ANode node) {
 		reportContainer.openEditor(obj, node);
@@ -147,16 +147,17 @@ public class JrxmlEditor extends AbstractJRXMLEditor implements IJROBjectEditor,
 	public void refreshExternalStyles(Set<String> removedStyles) {
 		// Very very heavy method, leave commented for future improovments
 		/*
-		 * JasperDesign jrDesign = getMReport().getJasperDesign(); for(JRDesignElement
-		 * element : ModelUtils.getAllElements(jrDesign)){ if
-		 * (element.getStyleNameReference() != null &&
-		 * removedStyles.contains(element.getStyleNameReference())){ String styleName =
-		 * element.getStyleNameReference(); element.setStyleNameReference(null);
-		 * element.setStyleNameReference(styleName); } } StyleHandlingReportConverter
-		 * reportConverter =
-		 * ((AEditPartFactory)reportContainer.getMainEditor().getGraphicalViewer().
-		 * getEditPartFactory()).getReportConverter (); if (reportConverter != null)
-		 * reportConverter.resetStyles(jrDesign);
+		 * JasperDesign jrDesign = getMReport().getJasperDesign();
+		 * for(JRDesignElement element : ModelUtils.getAllElements(jrDesign)){
+		 * if (element.getStyleNameReference() != null &&
+		 * removedStyles.contains(element.getStyleNameReference())){ String
+		 * styleName = element.getStyleNameReference();
+		 * element.setStyleNameReference(null);
+		 * element.setStyleNameReference(styleName); } }
+		 * StyleHandlingReportConverter reportConverter =
+		 * ((AEditPartFactory)reportContainer.getMainEditor().getGraphicalViewer
+		 * (). getEditPartFactory()).getReportConverter (); if (reportConverter
+		 * != null) reportConverter.resetStyles(jrDesign);
 		 */
 	}
 
@@ -220,15 +221,14 @@ public class JrxmlEditor extends AbstractJRXMLEditor implements IJROBjectEditor,
 		super.resourceChanged(event);
 		if (isRefreshing)
 			return;
-		UIUtils.getDisplay().syncExec(() -> {
-			if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
+		if (event.getType() == IResourceChangeEvent.POST_CHANGE)
+			UIUtils.getDisplay().syncExec(() -> {
 				try {
 					TemplateStyleVisitor visitor = new TemplateStyleVisitor(JrxmlEditor.this);
 					event.getDelta().accept(visitor);
 				} catch (CoreException e) {
 					UIUtils.showError(e);
 				}
-			}
-		});
+			});
 	}
 }

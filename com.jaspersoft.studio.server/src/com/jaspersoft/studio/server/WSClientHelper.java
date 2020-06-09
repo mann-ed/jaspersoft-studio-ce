@@ -237,7 +237,9 @@ public class WSClientHelper {
 	public static ResourceDescriptor getResource(IProgressMonitor monitor, ANode res, ResourceDescriptor rd, File f)
 			throws Exception {
 		MServerProfile sp = (MServerProfile) res.getRoot();
-		return sp.getWsClient(monitor).get(monitor, rd, f);
+		if (sp != null)
+			return sp.getWsClient(monitor).get(monitor, rd, f);
+		return null;
 	}
 
 	public static ResourceDescriptor getResource(IProgressMonitor monitor, IConnection cl, ResourceDescriptor rd,

@@ -6,6 +6,7 @@ package com.jaspersoft.studio.server.action.resource;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -192,17 +193,21 @@ public class OpenInEditorAction extends Action {
 		}
 		if (res.getParent() instanceof MReportUnit) {
 			MReportUnit runit = (MReportUnit) res.getParent();
-			for (INode n : runit.getChildren()) {
+			List<INode> children = runit.getChildren();
+			for (int i = 0; i < children.size(); i++) {
+				INode n = children.get(i);
 				if (n == res)
 					continue;
 				if (n instanceof AFileResource) {
 					AFileResource mfile = (AFileResource) n;
 					fkeyname = ServerManager.getKey(mfile);
 					rd = WSClientHelper.getResource(new NullProgressMonitor(), mfile, mfile.getValue());
-					String pfolder = path != null ? path.toFile().getParentFile().getAbsolutePath() : "";
+					if (rd != null) {
+						String pfolder = path != null ? path.toFile().getParentFile().getAbsolutePath() : "";
 
-					IPath p = Path.fromOSString(pfolder + File.separator + rd.getName());
-					exportFile(rd, fkeyname, monitor, f, runit, mfile, p);
+						IPath p = Path.fromOSString(pfolder + File.separator + rd.getName());
+						exportFile(rd, fkeyname, monitor, f, runit, mfile, p);
+					}
 				}
 			}
 		}
