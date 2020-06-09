@@ -4,6 +4,8 @@
  ******************************************************************************/
 package com.jaspersoft.studio.utils;
 
+import java.io.File;
+
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.log.NullLogChute;
@@ -44,9 +46,13 @@ public class VelocityUtils {
 	 */
 	public static VelocityEngine getConfiguredVelocityEngine(){
 		VelocityEngine ve = getSimpleVelocityEngine();
+		File sysTempDir = new File(System.getProperty("java.io.tmpdir"), "velocity.log");
 		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
 		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-		ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogChute");
+		ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
+		ve.setProperty("runtime.log", sysTempDir.getAbsolutePath());
+		ve.setProperty("runtime.log.logsystem.log4j.category", "velocity");
+		ve.setProperty("runtime.log.logsystem.log4j.logger", "velocity");
 		ve.init();
 		return ve;
 	}
