@@ -20,7 +20,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -334,7 +333,6 @@ public class CustomVisualizationComponentWizard extends JSSWizard implements INe
 		functionContext.put("scriptname", scriptName); //$NON-NLS-1$
 		functionContext.put("cssname", cssName); //$NON-NLS-1$
 		functionContext.put("modulename", moduleName); //$NON-NLS-1$
-
 		Template functionTemplate = ve.getTemplate(jrxmlPath);
 		StringWriter fsw = new StringWriter();
 		functionTemplate.merge(functionContext, fsw);
@@ -459,27 +457,26 @@ public class CustomVisualizationComponentWizard extends JSSWizard implements INe
 	 *            the module selected by the user in the wizard page
 	 */
 	private String generateRender(IProject container, IProgressMonitor monitor, ModuleDefinition library) {
-		String renderContent = library.getRenderResource();
-		if (renderContent != null) {
+		String renderContentPath = library.getRenderResourcePath();
+		if (renderContentPath != null) {
+			String mergedTemplate = generateJsResource(renderContentPath, library.getModuleName());
 			String renderFileName = container.getName() + ".js";
-			createFile(renderFileName, container, generateJsResource(renderContent, library.getModuleName()), monitor); // $NON-NLS-1$
+			createFile(renderFileName, container, mergedTemplate, monitor); // $NON-NLS-1$
 			return renderFileName;
 		}
 		return null;
 	}
-
-	private String generateJsResource(String content, String moduleName) {
+	
+	private String generateJsResource(String contentPath, String moduleName) {
 		VelocityContext functionContext = new VelocityContext();
-		functionContext.put("modulename", moduleName); //$NON-NLS-1$
-
-		// Template functionTemplate = ve.getTemplate(jrxmlPath);
+		functionContext.put("modulename", moduleName); //$NON-NLS-1$            
 		StringWriter fsw = new StringWriter();
-		Velocity.evaluate(functionContext, fsw, "", content);
-
-		// functionTemplate.merge(functionContext, fsw);
+		VelocityEngine ve = VelocityUtils.getConfiguredVelocityEngine();
+		Template t = ve.getTemplate(contentPath);
+		t.merge( functionContext, fsw );
 		return fsw.toString();
 	}
-
+	
 	/**
 	 * Generate the build.js file using the template mixed with the data
 	 * provided during the wizard

@@ -199,6 +199,15 @@ public class ModuleDefinition {
 	public void setRenderResource(String renderResource) {
 		this.renderResource = renderResource;
 	}
+	
+	/**
+	 * Read the path the render resource as string
+	 * 
+	 * @return the path, could be null
+	 */
+	public String getRenderResourcePath() {
+		return this.renderResource;
+	}
 
 	/**
 	 * Read the content of the render resource as string
