@@ -411,9 +411,10 @@ public class PasteResourceAction extends Action {
 		}
 		if (confirmNames) {
 			UIUtils.getDisplay().syncExec(() -> {
-				ResourceNameDialog d = new ResourceNameDialog(UIUtils.getShell(), name, sname + copyName + ext, parent);
-				if (d.open() == Dialog.OK)
-					copyName = d.getValue();
+				ResourceNameDialog d1 = new ResourceNameDialog(UIUtils.getShell(), name, sname + copyName + ext,
+						parent);
+				if (d1.open() == Dialog.OK)
+					copyName = d1.getValue();
 				else
 					monitor.setCanceled(true);
 			});
@@ -431,10 +432,14 @@ public class PasteResourceAction extends Action {
 		public ResourceNameDialog(Shell shell, String name, String value, ANode p) {
 			super(shell);
 			setTitle(Messages.PasteResourceAction_12);
-			setDefaultSize(500, 200);
 			this.name = name;
 			this.value = value;
 			this.p = p;
+		}
+
+		@Override
+		protected boolean isResizable() {
+			return false;
 		}
 
 		private String value;
