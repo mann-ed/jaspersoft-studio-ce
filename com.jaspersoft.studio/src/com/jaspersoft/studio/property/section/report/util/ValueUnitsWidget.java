@@ -34,7 +34,7 @@ public class ValueUnitsWidget {
 	private final class SpinerSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			unit.setValue(val.getValueAsFloat(), Unit.getUnits()[unitc.getSelectionIndex()]);
+			unit.setValue(val.getValueAsDouble(), Unit.getUnits()[unitc.getSelectionIndex()]);
 		}
 	}
 

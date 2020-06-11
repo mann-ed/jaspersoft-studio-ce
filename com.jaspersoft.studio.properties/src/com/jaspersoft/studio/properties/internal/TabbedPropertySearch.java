@@ -108,7 +108,7 @@ public class TabbedPropertySearch extends Composite {
 			Rectangle carea = parent.getClientArea();
 			
 			Control textControl = children[0];
-			Point textSize = textControl.computeSize(carea.width, SWT.DEFAULT);
+			Point textSize = textControl.computeSize(carea.width, (int)Math.round(carea.height * 0.7));
 			int textControl_y = (carea.height - textSize.y)/2; 
 			textControl.setBounds(0, textControl_y, carea.width - 15, textSize.y);
 			Control text = children[1];
