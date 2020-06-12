@@ -4,6 +4,8 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.designer;
 
+import java.util.regex.Matcher;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
@@ -69,6 +71,13 @@ public class QueryDesigner extends AQueryDesigner {
 		return tbCompo;
 	}
 
+	@Override
+	protected void parameterNameChanged(String oldValue, String newValue) {
+		String q = control.getText();
+		q = q.replaceAll("\\$P\\{" + oldValue + "\\}", Matcher.quoteReplacement("$P{" + newValue + "}"));
+		updateQueryText(q);
+	}
+
 	public Control createControl(Composite parent) {
 		control = new StyledText(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		control.addModifyListener(new QueryListener());
@@ -132,7 +141,8 @@ public class QueryDesigner extends AQueryDesigner {
 	}
 
 	public void setDataAdapter(DataAdapterDescriptor da) {
-		boolean enable = (da instanceof IFieldsProvider && ((IFieldsProvider) da).supportsGetFieldsOperation(container.getjConfig(), getjDataset()));
+		boolean enable = (da instanceof IFieldsProvider
+				&& ((IFieldsProvider) da).supportsGetFieldsOperation(container.getjConfig(), getjDataset()));
 		setFieldProviderEnabled(enable);
 	}
 

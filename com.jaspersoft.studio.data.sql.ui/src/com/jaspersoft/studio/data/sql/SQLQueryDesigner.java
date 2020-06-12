@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -77,6 +78,18 @@ public class SQLQueryDesigner extends SimpleSQLQueryDesigner {
 	@Override
 	public Control getControl() {
 		return sf;
+	}
+
+	@Override
+	protected void parameterNameChanged(String oldValue, String newValue) {
+		String q = source.getQuery();
+		q = q.replaceAll("\\$P\\{" + oldValue + "\\}", Matcher.quoteReplacement("$P{" + newValue + "}"));
+		source.setQuery(q);
+		if (getActiveEditor() != source) {
+			Text2Model.text2model(SQLQueryDesigner.this, source.getXTextDocument(), true);
+			outline.scheduleRefresh();
+			diagram.scheduleRefresh(false, true);
+		}
 	}
 
 	@Override
@@ -328,8 +341,8 @@ public class SQLQueryDesigner extends SimpleSQLQueryDesigner {
 	@Override
 	public void setQuery(JasperDesign jDesign, JRDataset jDataset, JasperReportsConfiguration jConfig) {
 		super.setQuery(jDesign, jDataset, jConfig);
-		JaspersoftStudioPlugin.getInstance()
-				.addPreferenceListener(preferenceListener, (IResource) jConfig.get(FileUtils.KEY_FILE));
+		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener,
+				(IResource) jConfig.get(FileUtils.KEY_FILE));
 		initSashForm(sf);
 		doRefreshRoots(false);
 	}

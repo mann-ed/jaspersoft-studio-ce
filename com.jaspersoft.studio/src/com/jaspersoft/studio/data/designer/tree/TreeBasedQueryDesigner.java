@@ -5,11 +5,7 @@
 package com.jaspersoft.studio.data.designer.tree;
 
 import java.util.List;
-
-import net.sf.jasperreports.engine.JRDataset;
-import net.sf.jasperreports.engine.design.JRDesignField;
-import net.sf.jasperreports.engine.design.JRDesignQuery;
-import net.sf.jasperreports.engine.design.JasperDesign;
+import java.util.regex.Matcher;
 
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -31,29 +27,44 @@ import com.jaspersoft.studio.preferences.fonts.utils.FontUtils;
 import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.engine.JRDataset;
+import net.sf.jasperreports.engine.design.JRDesignField;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+
 /**
- * A generic abstract query designer that allows to represent
- * data in a tree-form way.
+ * A generic abstract query designer that allows to represent data in a
+ * tree-form way.
  * <p>
  * 
- * Besides the common query text area, a tree viewer is shown in order
- * to visualize the data adapter information.
+ * Besides the common query text area, a tree viewer is shown in order to
+ * visualize the data adapter information.
  * 
  * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
  *
  */
 public abstract class TreeBasedQueryDesigner extends AQueryDesigner {
-	
+
 	/* Main control of the designer */
 	protected Composite control;
 	/* Text area where enter the query */
 	protected StyledText queryTextArea;
 	/* Tree viewer with the data representation */
 	protected TreeViewer treeViewer;
-	/* Flag that states if the designer is currently performing a refresh operation */
+	/*
+	 * Flag that states if the designer is currently performing a refresh
+	 * operation
+	 */
 	protected boolean isRefreshing;
-	
-	public TreeBasedQueryDesigner(){
+
+	public TreeBasedQueryDesigner() {
+	}
+
+	@Override
+	protected void parameterNameChanged(String oldValue, String newValue) {
+		String q = queryTextArea.getText();
+		q = q.replaceAll("\\$P\\{" + oldValue + "\\}", Matcher.quoteReplacement("$P{" + newValue + "}"));
+		queryTextArea.setText(q);
 	}
 
 	public Control getControl() {
@@ -61,26 +72,26 @@ public abstract class TreeBasedQueryDesigner extends AQueryDesigner {
 	}
 
 	public Control createControl(Composite parent) {
-		control=new Composite(parent, SWT.NONE);
-		GridLayout controlGl=new GridLayout(1,true);
-		controlGl.marginWidth=0;
-		controlGl.marginHeight=0;
+		control = new Composite(parent, SWT.NONE);
+		GridLayout controlGl = new GridLayout(1, true);
+		controlGl.marginWidth = 0;
+		controlGl.marginHeight = 0;
 		control.setLayout(controlGl);
-		
+
 		createTitleBar(control);
-		
+
 		SashForm sashForm = new SashForm(control, SWT.NONE);
-		sashForm.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
-		
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
 		createTreeViewer(sashForm);
-		
+
 		createQueryTextArea(sashForm);
-		
+
 		// Standard proportions
-		sashForm.setWeights(new int[] {30, 70});
+		sashForm.setWeights(new int[] { 30, 70 });
 		return control;
 	}
-	
+
 	/**
 	 * Creates the text area for the query in its text-form representation
 	 * 
@@ -95,17 +106,18 @@ public abstract class TreeBasedQueryDesigner extends AQueryDesigner {
 		});
 		queryTextArea.setFont(FontUtils.getEditorsFont(jConfig));
 	}
-	
+
 	/**
-	 * This method is invoked, via {@link ModifyListener}, when text area is modified
+	 * This method is invoked, via {@link ModifyListener}, when text area is
+	 * modified
 	 * <p>
 	 * 
-	 * Default implementation keep updated the text of the dataset {@link JRDesignQuery}.
-	 * Sub-classes can override this method, but they should always invoke the superclass
-	 * implementation.<br>
+	 * Default implementation keep updated the text of the dataset
+	 * {@link JRDesignQuery}. Sub-classes can override this method, but they
+	 * should always invoke the superclass implementation.<br>
 	 * 
 	 */
-	protected void queryTextAreaModified(){
+	protected void queryTextAreaModified() {
 		// keep the query info updated
 		((JRDesignQuery) jDataset.getQuery()).setText(queryTextArea.getText());
 		// invoke decoration if any
@@ -113,34 +125,34 @@ public abstract class TreeBasedQueryDesigner extends AQueryDesigner {
 	}
 
 	/**
-	 * This method in invoked every time the query text area is modified.
-	 * It should decorate the tree on the viewer based on the current query string.
+	 * This method in invoked every time the query text area is modified. It
+	 * should decorate the tree on the viewer based on the current query string.
 	 * <p>
 	 * 
 	 * Clients should override this default (empty) implementation, to provide
 	 * custom behavior like for example render in bold the tree nodes selected
-	 * by the specified query. 
+	 * by the specified query.
 	 * 
 	 * @see #queryTextAreaModified()
 	 */
-	protected void decorateTreeUsingQueryText(){
+	protected void decorateTreeUsingQueryText() {
 		// DO NOTHING
 	}
-	
+
 	/**
-	 * Creates a title bar for the main control.
-	 * It should be a short description, or some ready-to-use
-	 * instructions for the query designer user.
+	 * Creates a title bar for the main control. It should be a short
+	 * description, or some ready-to-use instructions for the query designer
+	 * user.
 	 * 
 	 * @param parent the parent composite for the title bar
 	 */
 	protected void createTitleBar(Composite parent) {
 		// Standard implementation: empty
 	}
-	
+
 	/**
 	 * Creates the tree viewer for the current designer.
-	 *  
+	 * 
 	 * @param parent the parent composite for the tree viewer
 	 */
 	protected void createTreeViewer(Composite parent) {
@@ -158,16 +170,16 @@ public abstract class TreeBasedQueryDesigner extends AQueryDesigner {
 	/**
 	 * @return the content provider for the tree viewer
 	 */
-	protected abstract IContentProvider getTreeContentProvider() ;
-	
+	protected abstract IContentProvider getTreeContentProvider();
+
 	/**
 	 * Refreshes the tree data using the dataAdapter information as input.
 	 * 
-	 * @param 
-	 * 		dataAdapter the data adapter with information on the data to be visualized
+	 * @param dataAdapter the data adapter with information on the data to be
+	 * visualized
 	 */
 	protected abstract void refreshTreeViewerContent(DataAdapterDescriptor dataAdapter);
-	
+
 	/**
 	 * Creates a new JRField and adds it the fields table.
 	 * 
@@ -175,7 +187,7 @@ public abstract class TreeBasedQueryDesigner extends AQueryDesigner {
 	 */
 	public void createField(ANode node) {
 		List<JRDesignField> currentFields = this.container.getCurrentFields();
-		JRDesignField field = (JRDesignField)node.getAdapter(JRDesignField.class);
+		JRDesignField field = (JRDesignField) node.getAdapter(JRDesignField.class);
 		field.setName(ModelUtils.getNameForField(currentFields, field.getName()));
 		currentFields.add(field);
 		this.container.setFields(currentFields);
@@ -186,7 +198,7 @@ public abstract class TreeBasedQueryDesigner extends AQueryDesigner {
 		super.setQuery(jDesign, jDataset, jConfig);
 		queryTextArea.setText(jDataset.getQuery().getText());
 	}
-	
+
 	public Control getToolbarControl() {
 		return null;
 	}
@@ -201,5 +213,5 @@ public abstract class TreeBasedQueryDesigner extends AQueryDesigner {
 	public void setDataAdapter(DataAdapterDescriptor da) {
 		refreshTreeViewerContent(da);
 	}
-	
+
 }
