@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -228,7 +229,10 @@ public class RFilesLocationPage extends AFilesLocationPage {
 		else
 			rd.setWsType(ResourceDescriptor.TYPE_CONTENT_RESOURCE);
 
-		return (AMResource) ResourceFactory.getResource(parent, rd, -1);
+		AMResource resource = (AMResource) ResourceFactory.getResource(parent, rd, -1);
+		if (r instanceof IFile && resource instanceof AFileResource)
+			((AFileResource) resource).setFile(((IFile) r).getRawLocation().toFile());
+		return resource;
 	}
 
 	protected void createFilesView(Composite composite) {
