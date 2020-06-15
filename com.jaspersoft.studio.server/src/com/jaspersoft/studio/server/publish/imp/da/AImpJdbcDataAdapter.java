@@ -4,7 +4,6 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.publish.imp.da;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,18 +78,19 @@ public abstract class AImpJdbcDataAdapter {
 			String prefix = getJdbcPrefix();
 			String url = da.getUrl().substring(prefix.length());
 			String[] props = url.split(";");
-			String newp = "";
+			StringBuilder newp = new StringBuilder(prefix);
 			String del = "";
 			for (String p : props) {
 				String[] kv = p.split("=");
-				if (kv.length != 2)
-					continue;
-				if (kv[0].equals(key))
-					kv[1] = fname;
-				newp += del + kv[0] + "=" + kv[1];
+				newp.append(del + kv[0]);
+				if (kv.length == 2) {
+					if (kv[0].equals(key))
+						kv[1] = fname;
+					newp.append(del + kv[0] + "=" + kv[1]);
+				}
 				del = ";";
 			}
-			da.setUrl(prefix + newp);
+			da.setUrl(newp.toString());
 			return true;
 		}
 		return false;
