@@ -178,7 +178,7 @@ public class Rest2Soap {
 
 	private static void getLOV(ARestV2Connection rc, ClientListOfValues cr, ResourceDescriptor rd)
 			throws ParseException {
-		List<ListItem> lovs = new ArrayList<ListItem>();
+		List<ListItem> lovs = new ArrayList<>();
 		if (cr.getItems() != null)
 			for (ClientListOfValuesItem sds : cr.getItems())
 				lovs.add(new ListItem(sds.getLabel(), sds.getValue()));
@@ -260,7 +260,7 @@ public class Rest2Soap {
 		rd.setServiceClass(cr.getServiceClass());
 		if (cr.getProperties() != null) {
 			ResourceProperty rp = new ResourceProperty(MRDatasourceCustom.PROP_DATASOURCE_CUSTOM_PROPERTY_MAP);
-			List<ResourceProperty> props = new ArrayList<ResourceProperty>();
+			List<ResourceProperty> props = new ArrayList<>();
 			for (ClientProperty cp : cr.getProperties())
 				props.add(new ResourceProperty(cp.getKey(), cp.getValue()));
 			rp.setProperties(props);

@@ -39,9 +39,11 @@ import com.jaspersoft.studio.server.model.MJar;
 import com.jaspersoft.studio.server.model.MJrxml;
 import com.jaspersoft.studio.server.model.MListOfValues;
 import com.jaspersoft.studio.server.model.MRAccessGrantSchema;
+import com.jaspersoft.studio.server.model.MRCSS;
 import com.jaspersoft.studio.server.model.MRDataAdapter;
 import com.jaspersoft.studio.server.model.MRFont;
 import com.jaspersoft.studio.server.model.MRImage;
+import com.jaspersoft.studio.server.model.MRJson;
 import com.jaspersoft.studio.server.model.MRQuery;
 import com.jaspersoft.studio.server.model.MRSecureFile;
 import com.jaspersoft.studio.server.model.MRStyleTemplate;
@@ -177,6 +179,9 @@ public class AddResourcePage extends JSSHelpWizardPage {
 			if (parent instanceof MFolder || parent instanceof MServerProfile) {
 				new MFolder(root, MFolder.createDescriptor(parent), -1);
 				createReportUnit(root);
+				new MJrxml(root, MJrxml.createDescriptor(parent), -1);
+				new MInputControl(root, MInputControl.createDescriptor(parent), -1);
+				new MListOfValues(root, MListOfValues.createDescriptor(parent), -1);
 
 				createDatasources(root);
 
@@ -215,18 +220,18 @@ public class AddResourcePage extends JSSHelpWizardPage {
 					new MROlapUnit(oroot, MROlapUnit.createDescriptor(parent), -1);
 				new MRAccessGrantSchema(root, MRAccessGrantSchema.createDescriptor(parent), -1);
 			}
-			new MJrxml(root, MJrxml.createDescriptor(parent), -1);
-			new MInputControl(root, MInputControl.createDescriptor(parent), -1);
-			new MListOfValues(root, MListOfValues.createDescriptor(parent), -1);
+
 			new MJar(root, MJar.createDescriptor(parent), -1);
 			// new MResource(root, MResource.createDescriptor(parent), -1);
 			new MResourceBundle(root, MResourceBundle.createDescriptor(parent), -1);
 			new MRFont(root, MRFont.createDescriptor(parent), -1);
 			new MRImage(root, MRImage.createDescriptor(parent), -1);
+			new MRCSS(root, MRCSS.createDescriptor(parent), -1);
 			new MRSecureFile(root, MRSecureFile.createDescriptor(parent), -1);
 			new MContentResource(root, MContentResource.createDescriptor(parent), -1);
 			new MRStyleTemplate(root, MRStyleTemplate.createDescriptor(parent), -1);
 			new MXmlFile(root, MXmlFile.createDescriptor(parent), -1);
+			new MRJson(root, MRJson.createDescriptor(parent), -1);
 			new MRDataAdapter(root, MRDataAdapter.createDescriptor(parent), -1);
 
 			if (parent instanceof MReportUnit) {

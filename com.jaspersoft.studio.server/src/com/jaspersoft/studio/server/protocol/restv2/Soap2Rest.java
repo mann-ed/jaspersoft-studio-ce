@@ -96,6 +96,7 @@ public class Soap2Rest {
 			getCustomDataSource(rc, (ClientCustomDataSource) cr, rd);
 		else if (rd.getWsType().equals(ResourceDescriptor.TYPE_DATASOURCE_AWS))
 			getAWSDataSource(rc, (ClientAwsDataSource) cr, rd);
+		
 		else if (rd.getWsType().equals(ResourceDescriptor.TYPE_DATASOURCE_VIRTUAL))
 			getVirtualDataSource(rc, (ClientVirtualDataSource) cr, rd);
 
@@ -137,7 +138,7 @@ public class Soap2Rest {
 	}
 
 	private static void getLOV(ARestV2Connection rc, ClientListOfValues cr, ResourceDescriptor rd) {
-		List<ClientListOfValuesItem> lovs = new ArrayList<ClientListOfValuesItem>();
+		List<ClientListOfValuesItem> lovs = new ArrayList<>();
 		if (rd.getListOfValues() != null)
 			for (ListItem l : (List<ListItem>) rd.getListOfValues())
 				lovs.add(new ClientListOfValuesItem(l.getLabel(), (String) l.getValue()));
@@ -201,7 +202,7 @@ public class Soap2Rest {
 	}
 
 	private static void getVirtualDataSource(ARestV2Connection rc, ClientVirtualDataSource cr, ResourceDescriptor rd) {
-		List<ClientSubDataSourceReference> ds = new ArrayList<ClientSubDataSourceReference>();
+		List<ClientSubDataSourceReference> ds = new ArrayList<>();
 		for (ResourceDescriptor r : (List<ResourceDescriptor>) rd.getChildren()) {
 			ClientSubDataSourceReference d = new ClientSubDataSourceReference();
 			d.setId(r.getResourcePropertyValue("PROP_DATASOURCE_SUB_DS_ID"));
@@ -227,7 +228,7 @@ public class Soap2Rest {
 		cr.setServiceClass(rd.getServiceClass());
 		cr.setDataSourceName(DiffFields.getSoapValue(rd, DiffFields.DATASOURCENAME));
 		Map<String, String> map = rd.getPropertyMap();
-		List<ClientProperty> props = new ArrayList<ClientProperty>();
+		List<ClientProperty> props = new ArrayList<>();
 		for (String key : map.keySet()) {
 			if (key.equals("password") && Misc.isNullOrEmpty(map.get(key)))
 				continue;

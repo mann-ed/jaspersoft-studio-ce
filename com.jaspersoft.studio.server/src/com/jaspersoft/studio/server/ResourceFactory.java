@@ -28,7 +28,9 @@ import com.jaspersoft.studio.server.model.MJar;
 import com.jaspersoft.studio.server.model.MJrxml;
 import com.jaspersoft.studio.server.model.MListOfValues;
 import com.jaspersoft.studio.server.model.MRAccessGrantSchema;
+import com.jaspersoft.studio.server.model.MRAzureCertificate;
 import com.jaspersoft.studio.server.model.MRCSS;
+import com.jaspersoft.studio.server.model.MRDashboardComponent;
 import com.jaspersoft.studio.server.model.MRDataAdapter;
 import com.jaspersoft.studio.server.model.MRFont;
 import com.jaspersoft.studio.server.model.MRImage;
@@ -74,6 +76,7 @@ import com.jaspersoft.studio.server.wizard.resource.page.QueryPageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.ReferencePageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.ResourceBundlePageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.ResourcePageContent;
+import com.jaspersoft.studio.server.wizard.resource.page.SecureFilePageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.StyleTemplatePageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.XmlPageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.datasource.DataAdapterPageContent;
@@ -117,7 +120,7 @@ public class ResourceFactory {
 							new CSSPageContent(parent, resource));
 				else if (resource instanceof MRSecureFile)
 					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
-							new FilePageContent(parent, resource));
+							new SecureFilePageContent(parent, resource));
 
 				else if (resource instanceof MRFont)
 					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
@@ -253,6 +256,10 @@ public class ResourceFactory {
 			return new MRImage(parent, resource, index);
 		if (wstype.equals(ResourceDescriptor.TYPE_SECURE_FILE))
 			return new MRSecureFile(parent, resource, index);
+		if (wstype.equals(ResourceDescriptor.TYPE_AZURE_CERTIFICATE))
+			return new MRAzureCertificate(parent, resource, index);
+		if (wstype.equals(ResourceDescriptor.TYPE_DASHBOARD_COMPONENT))
+			return new MRDashboardComponent(parent, resource, index);
 
 		if (wstype.equals(ResourceDescriptor.TYPE_REFERENCE))
 			return new MReference(parent, resource, index);
@@ -350,6 +357,7 @@ public class ResourceFactory {
 	static {
 		fileTypes.add(ResourceDescriptor.TYPE_IMAGE);
 		fileTypes.add(ResourceDescriptor.TYPE_SECURE_FILE);
+		fileTypes.add(ResourceDescriptor.TYPE_AZURE_CERTIFICATE);
 		fileTypes.add(ResourceDescriptor.TYPE_FONT);
 		fileTypes.add(ResourceDescriptor.TYPE_JRXML);
 		fileTypes.add(ResourceDescriptor.TYPE_CLASS_JAR);

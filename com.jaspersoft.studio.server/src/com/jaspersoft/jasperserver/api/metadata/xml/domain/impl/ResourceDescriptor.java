@@ -46,6 +46,7 @@ public class ResourceDescriptor implements Serializable {
 	/* PRO OBJECTS */
 	public static final String TYPE_DASHBOARD_STATE = "dashboardState";
 	public static final String TYPE_DASHBOARD = "dashboard";
+	public static final String TYPE_DASHBOARD_COMPONENT = "dashboardComponent";
 	public static final String TYPE_REPORT_OPTIONS = "reportOptions";
 	public static final String TYPE_DATASOURCE_DOMAIN = "domain";
 	public static final String TYPE_DATASOURCE_DOMAIN1 = "Domain";
@@ -60,6 +61,7 @@ public class ResourceDescriptor implements Serializable {
 	public static final String TYPE_DATASOURCE_VIRTUAL = "virtual";
 	public static final String TYPE_DATASOURCE_CUSTOM = "custom";
 	public static final String TYPE_DATASOURCE_AWS = "aws";
+	public static final String TYPE_DATASOURCE_AZURE = "azuresql";
 
 	public static final String TYPE_IMAGE = FileResource.TYPE_IMAGE;
 	public static final String TYPE_FONT = FileResource.TYPE_FONT;
@@ -84,6 +86,7 @@ public class ResourceDescriptor implements Serializable {
 	public static final String TYPE_CSS_FILE = FileResource.TYPE_CSS;
 	public static final String TYPE_JSON_FILE = FileResource.TYPE_JSON;
 	public static final String TYPE_SECURE_FILE = "secure";
+	public static final String TYPE_AZURE_CERTIFICATE = "cer";
 
 	public static final String XML_ATT_NAME = "name";
 	public static final String XML_ATT_WSTYPE = "wsType";

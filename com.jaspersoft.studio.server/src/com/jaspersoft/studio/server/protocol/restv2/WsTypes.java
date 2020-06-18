@@ -101,6 +101,7 @@ public class WsTypes {
 		setSoapType(ResourceDescriptor.TYPE_CLASS_JAR, ResourceMediaType.FILE_CLIENT_TYPE);
 		setSoapType(ResourceDescriptor.TYPE_CONTENT_RESOURCE, ResourceMediaType.FILE_CLIENT_TYPE);
 		setSoapType(ResourceDescriptor.TYPE_DASHBOARD_STATE, ResourceMediaType.FILE_CLIENT_TYPE);
+		setSoapType(ResourceDescriptor.TYPE_DASHBOARD_COMPONENT, ResourceMediaType.FILE_CLIENT_TYPE);
 		setSoapType(ResourceDescriptor.TYPE_DATA_TYPE, ResourceMediaType.DATA_TYPE_CLIENT_TYPE);
 		setSoapType(ResourceDescriptor.TYPE_DATASOURCE, null);// should be?
 		setSoapType(ResourceDescriptor.TYPE_DATASOURCE_AWS, ResourceMediaType.AWS_DATA_SOURCE_CLIENT_TYPE);
@@ -134,6 +135,8 @@ public class WsTypes {
 		setSoapType(ResourceDescriptor.TYPE_JSON_FILE, ResourceMediaType.FILE_CLIENT_TYPE);
 		setSoapType(ResourceDescriptor.TYPE_CSS_FILE, ResourceMediaType.FILE_CLIENT_TYPE);
 		setSoapType(ResourceDescriptor.TYPE_SECURE_FILE, ResourceMediaType.FILE_CLIENT_TYPE);
+		setSoapType(ResourceDescriptor.TYPE_AZURE_CERTIFICATE, ResourceMediaType.FILE_CLIENT_TYPE);
+		setSoapType(ResourceDescriptor.TYPE_DASHBOARD_COMPONENT, ResourceMediaType.FILE_CLIENT_TYPE);
 
 		setSoapFileType(ResourceDescriptor.TYPE_ACCESS_GRANT_SCHEMA, FileType.accessGrantSchema);
 		setSoapFileType(ResourceDescriptor.TYPE_CLASS_JAR, FileType.jar);
@@ -148,10 +151,13 @@ public class WsTypes {
 		setSoapFileType(ResourceDescriptor.TYPE_CSS_FILE, FileType.css);
 		setSoapFileType(ResourceDescriptor.TYPE_JSON_FILE, FileType.json);
 		setSoapFileType(ResourceDescriptor.TYPE_SECURE_FILE, FileType.secureFile);
+		setSoapFileType(ResourceDescriptor.TYPE_AZURE_CERTIFICATE, FileType.secureFile);
+		setSoapFileType(ResourceDescriptor.TYPE_DASHBOARD_COMPONENT, FileType.dashboardComponent);
 
 		setRestFileType(FileType.accessGrantSchema, ResourceDescriptor.TYPE_ACCESS_GRANT_SCHEMA);
 		setRestFileType(FileType.css, ResourceDescriptor.TYPE_CSS_FILE);
 		setRestFileType(FileType.csv, ResourceDescriptor.TYPE_CONTENT_RESOURCE);
+		setRestFileType(FileType.dashboardComponent, ResourceDescriptor.TYPE_DASHBOARD_COMPONENT);
 		setRestFileType(FileType.docx, ResourceDescriptor.TYPE_CONTENT_RESOURCE);
 		setRestFileType(FileType.font, ResourceDescriptor.TYPE_FONT);
 		setRestFileType(FileType.html, ResourceDescriptor.TYPE_CONTENT_RESOURCE);
@@ -163,6 +169,7 @@ public class WsTypes {
 		setRestFileType(FileType.odt, ResourceDescriptor.TYPE_CONTENT_RESOURCE);
 		setRestFileType(FileType.olapMondrianSchema, ResourceDescriptor.TYPE_MONDRIAN_SCHEMA);
 		setRestFileType(FileType.pdf, ResourceDescriptor.TYPE_CONTENT_RESOURCE);
+		setRestFileType(FileType.pptx, ResourceDescriptor.TYPE_CONTENT_RESOURCE);
 		setRestFileType(FileType.prop, ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
 		setRestFileType(FileType.rtf, ResourceDescriptor.TYPE_CONTENT_RESOURCE);
 		setRestFileType(FileType.txt, ResourceDescriptor.TYPE_CONTENT_RESOURCE);
@@ -172,6 +179,7 @@ public class WsTypes {
 		setRestFileType(FileType.xml, ResourceDescriptor.TYPE_XML_FILE);
 		setRestFileType(FileType.json, ResourceDescriptor.TYPE_JSON_FILE);
 		setRestFileType(FileType.secureFile, ResourceDescriptor.TYPE_SECURE_FILE);
+//		setRestFileType(FileType.unspecified, ResourceDescriptor.TYPE_AZURE_CERTIFICATE);
 
 		Activator.getExtManager().initWsTypes(this);
 	}

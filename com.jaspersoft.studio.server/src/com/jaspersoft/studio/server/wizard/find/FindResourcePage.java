@@ -27,7 +27,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -240,6 +239,7 @@ public class FindResourcePage extends WizardPage {
 					if (!sel)
 						ball.setSelection(false);
 					finderUI.getTypes().clear();
+					setTypes();
 				}
 			});
 			Label lbl = new Label(dsCmp, SWT.SEPARATOR | SWT.HORIZONTAL);
