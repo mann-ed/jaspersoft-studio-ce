@@ -85,11 +85,10 @@ public class SQLQueryDesigner extends SimpleSQLQueryDesigner {
 		String q = source.getQuery();
 		q = q.replaceAll("\\$P\\{" + oldValue + "\\}", Matcher.quoteReplacement("$P{" + newValue + "}"));
 		source.setQuery(q);
-		if (getActiveEditor() != source) {
-			Text2Model.text2model(SQLQueryDesigner.this, source.getXTextDocument(), true);
-			outline.scheduleRefresh();
-			diagram.scheduleRefresh(false, true);
-		}
+
+		Text2Model.text2model(SQLQueryDesigner.this, source.getXTextDocument(), true);
+		outline.scheduleRefresh();
+		diagram.scheduleRefresh(false, true);
 	}
 
 	@Override
