@@ -8,25 +8,6 @@ import java.beans.PropertyChangeEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.util.KeyValue;
-import net.sf.jasperreports.engine.JRElement;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRImage;
-import net.sf.jasperreports.engine.JRPrintElement;
-import net.sf.jasperreports.engine.JRPrintImage;
-import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.renderers.Renderable;
-import net.sf.jasperreports.renderers.util.RendererUtil;
-import net.sf.jasperreports.engine.base.JRBasePrintImage;
-import net.sf.jasperreports.engine.convert.ElementConverter;
-import net.sf.jasperreports.engine.convert.ReportConverter;
-import net.sf.jasperreports.engine.design.JRDesignImage;
-import net.sf.jasperreports.engine.type.OnErrorTypeEnum;
-import net.sf.jasperreports.engine.type.ScaleImageEnum;
-import net.sf.jasperreports.engine.util.JRExpressionUtil;
-import net.sf.jasperreports.engine.util.JRImageLoader;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -39,6 +20,25 @@ import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.CacheMap;
 import com.jaspersoft.studio.utils.ExpressionUtil;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.KeyValue;
+import net.sf.jasperreports.engine.JRElement;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRImage;
+import net.sf.jasperreports.engine.JRPrintElement;
+import net.sf.jasperreports.engine.JRPrintImage;
+import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.engine.base.JRBasePrintImage;
+import net.sf.jasperreports.engine.convert.ElementConverter;
+import net.sf.jasperreports.engine.convert.ReportConverter;
+import net.sf.jasperreports.engine.design.JRDesignImage;
+import net.sf.jasperreports.engine.type.OnErrorTypeEnum;
+import net.sf.jasperreports.engine.type.ScaleImageEnum;
+import net.sf.jasperreports.engine.util.JRExpressionUtil;
+import net.sf.jasperreports.engine.util.JRImageLoader;
+import net.sf.jasperreports.renderers.Renderable;
+import net.sf.jasperreports.renderers.util.RendererUtil;
 
 /**
  * @author Teodor Danciu (teodord@users.sourceforge.net)
@@ -83,7 +83,8 @@ public final class ImageConverter extends ElementConverter {
 		printImage.copyBox(image.getLineBox());
 
 		printImage.setAnchorName(JRExpressionUtil.getExpressionText(image.getAnchorNameExpression()));
-		printImage.setBookmarkLevel(image.getBookmarkLevel());
+		String ble = JRExpressionUtil.getExpressionText(image.getBookmarkLevelExpression());
+		printImage.setBookmarkLevel(ble != null ? Integer.valueOf(ble) : image.getBookmarkLevel());
 		printImage.setHorizontalImageAlign(image.getOwnHorizontalImageAlign());
 		printImage.setLinkType(image.getLinkType());
 		printImage.setOnErrorType(OnErrorTypeEnum.ICON);
@@ -130,8 +131,8 @@ public final class ImageConverter extends ElementConverter {
 		return cacheRenderer;
 	}
 
-	protected Renderable doFindImage(final ReportConverter reportConverter, final JRElement element, final JRImage image,
-			final JRBasePrintImage printImage, final String expr, Renderable cacheRenderer) {
+	protected Renderable doFindImage(final ReportConverter reportConverter, final JRElement element,
+			final JRImage image, final JRBasePrintImage printImage, final String expr, Renderable cacheRenderer) {
 		final JasperReportsContext jrContext = reportConverter.getJasperReportsContext();
 		final KeyValue<JasperReportsContext, String> key = new KeyValue<JasperReportsContext, String>(jrContext, expr);
 		Renderable r = imgCache.get(key);
@@ -153,7 +154,8 @@ public final class ImageConverter extends ElementConverter {
 						public void run() {
 							cache.put(element, r);
 							kv.value = System.currentTimeMillis();
-							PropertyChangeEvent event = new PropertyChangeEvent(image, JRDesignImage.PROPERTY_EXPRESSION, null, expr);
+							PropertyChangeEvent event = new PropertyChangeEvent(image,
+									JRDesignImage.PROPERTY_EXPRESSION, null, expr);
 							AMultiEditor.refreshElement(jrContext, event);
 						}
 
@@ -186,7 +188,8 @@ public final class ImageConverter extends ElementConverter {
 		// long etime = System.currentTimeMillis();
 		if (location != null) {
 			try {
-				r = RendererUtil.getInstance(jasperReportsContext).getNonLazyRenderable(location, OnErrorTypeEnum.ERROR);
+				r = RendererUtil.getInstance(jasperReportsContext).getNonLazyRenderable(location,
+						OnErrorTypeEnum.ERROR);
 				imgCache.put(key, r);
 			} catch (JRException e) {
 				if (log.isDebugEnabled())
@@ -196,7 +199,8 @@ public final class ImageConverter extends ElementConverter {
 		if (r == null)
 			r = getRenderableNoImage(jasperReportsContext, imageElement, printImage);
 		// long ftime = System.currentTimeMillis();
-		// System.out.println("GetRenderable: " + (ftime - ctime) + " : " + (ftime - etime) + " " + location);
+		// System.out.println("GetRenderable: " + (ftime - ctime) + " : " +
+		// (ftime - etime) + " " + location);
 		return r;
 	}
 
@@ -207,8 +211,8 @@ public final class ImageConverter extends ElementConverter {
 		try {
 			printImage.setScaleImage(ScaleImageEnum.CLIP);
 			if (noImage == null)
-				noImage = RendererUtil.getInstance(jasperReportsContext).getNonLazyRenderable(JRImageLoader.NO_IMAGE_RESOURCE,
-						imageElement.getOnErrorTypeValue());
+				noImage = RendererUtil.getInstance(jasperReportsContext)
+						.getNonLazyRenderable(JRImageLoader.NO_IMAGE_RESOURCE, imageElement.getOnErrorTypeValue());
 		} catch (Exception e) {
 			if (log.isDebugEnabled())
 				log.debug(Messages.ImageConverter_1, e);

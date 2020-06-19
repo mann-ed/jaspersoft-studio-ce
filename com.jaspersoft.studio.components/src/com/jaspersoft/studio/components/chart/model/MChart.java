@@ -110,6 +110,8 @@ import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JRDesignElementGroup;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignHyperlink;
+import net.sf.jasperreports.engine.design.JRDesignImage;
+import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.design.events.CollectionElementAddedEvent;
 import net.sf.jasperreports.engine.type.EvaluationTimeEnum;
@@ -174,12 +176,9 @@ public class MChart extends MGraphicElementLineBox
 	/**
 	 * Instantiates a new m chart.
 	 * 
-	 * @param parent
-	 *            the parent
-	 * @param jrChart
-	 *            the jr chart
-	 * @param newIndex
-	 *            the new index
+	 * @param parent   the parent
+	 * @param jrChart  the jr chart
+	 * @param newIndex the new index
 	 */
 	public MChart(ANode parent, JRChart jrChart, int newIndex) {
 		super(parent, newIndex);
@@ -204,8 +203,7 @@ public class MChart extends MGraphicElementLineBox
 	/**
 	 * Creates the property descriptors.
 	 * 
-	 * @param desc
-	 *            the desc
+	 * @param desc the desc
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
@@ -337,6 +335,13 @@ public class MChart extends MGraphicElementLineBox
 		anchorNameExp.setDescription(com.jaspersoft.studio.messages.Messages.MTextField_anchorNameDescription);
 		desc.add(anchorNameExp);
 
+		JRExpressionPropertyDescriptor bookmarkLevelExp = new JRExpressionPropertyDescriptor(
+				JRDesignImage.PROPERTY_BOOKMARK_LEVEL_EXPRESSION,
+				com.jaspersoft.studio.messages.Messages.MTextField_bookmarkLevelExpression);
+		bookmarkLevelExp
+				.setDescription(com.jaspersoft.studio.messages.Messages.MTextField_bookmarkLevelExpressionDescription);
+		desc.add(bookmarkLevelExp);
+
 		SpinnerPropertyDescriptor bookmarkLevel = new SpinnerPropertyDescriptor(JRDesignChart.PROPERTY_BOOKMARK_LEVEL,
 				com.jaspersoft.studio.messages.Messages.MTextField_bookmarkLevelLabel);
 		bookmarkLevel.setDescription(com.jaspersoft.studio.messages.Messages.MTextField_bookmarkLevelDescription);
@@ -408,7 +413,7 @@ public class MChart extends MGraphicElementLineBox
 	@Override
 	public Object getPropertyActualValue(Object id) {
 		JSSStyleResolver sr = getStyleResolver();
-		JRDesignChart jrElement = (JRDesignChart) getValue();
+		JRDesignChart jrElement = getValue();
 		if (id.equals(JRBaseChart.PROPERTY_TITLE_POSITION)) {
 			EdgeEnum position = jrElement.getTitlePositionValue();
 			return titlePositionD.getIntValue(position != null ? position : EdgeEnum.TOP);
@@ -436,7 +441,7 @@ public class MChart extends MGraphicElementLineBox
 
 	@Override
 	public Object getPropertyValue(Object id) {
-		JRDesignChart jrElement = (JRDesignChart) getValue();
+		JRDesignChart jrElement = getValue();
 		if (id.equals(CHART_PROPERTY_CUSTOMIZER)) {
 			PropertyExpressionsDTO dto = (PropertyExpressionsDTO) super.getPropertyValue(
 					JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS);
@@ -490,12 +495,12 @@ public class MChart extends MGraphicElementLineBox
 		if (id.equals(JRDesignHyperlink.PROPERTY_HYPERLINK_WHEN_EXPRESSION)) {
 			return ExprUtil.getExpression(jrElement.getHyperlinkWhenExpression());
 		}
-		if (id.equals(JRDesignChart.PROPERTY_ANCHOR_NAME_EXPRESSION)) {
+		if (id.equals(JRDesignChart.PROPERTY_ANCHOR_NAME_EXPRESSION))
 			return ExprUtil.getExpression(jrElement.getAnchorNameExpression());
-		}
-		if (id.equals(JRDesignChart.PROPERTY_BOOKMARK_LEVEL)) {
+		if (id.equals(JRDesignTextField.PROPERTY_BOOKMARK_LEVEL_EXPRESSION))
+			return ExprUtil.getExpression(jrElement.getBookmarkLevelExpression());
+		if (id.equals(JRDesignChart.PROPERTY_BOOKMARK_LEVEL))
 			return jrElement.getBookmarkLevel();
-		}
 
 		if (id.equals(PLOTPROPERTY)) { // $NON-NLS-1$
 			if (mChartPlot == null) {
@@ -589,6 +594,8 @@ public class MChart extends MGraphicElementLineBox
 			jrElement.setSubtitleExpression(ExprUtil.setValues(jrElement.getSubtitleExpression(), value));
 		} else if (id.equals(JRDesignChart.PROPERTY_ANCHOR_NAME_EXPRESSION))
 			jrElement.setAnchorNameExpression(ExprUtil.setValues(jrElement.getAnchorNameExpression(), value));
+		else if (id.equals(JRDesignTextField.PROPERTY_BOOKMARK_LEVEL_EXPRESSION))
+			jrElement.setBookmarkLevelExpression(ExprUtil.setValues(jrElement.getBookmarkLevelExpression(), value));
 		else if (id.equals(JRDesignChart.PROPERTY_BOOKMARK_LEVEL))
 			jrElement.setBookmarkLevel(value != null ? Integer.parseInt(value.toString()) : 0);
 		else if (id.equals(JRDesignHyperlink.PROPERTY_LINK_TARGET))

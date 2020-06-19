@@ -1613,6 +1613,8 @@ public class Messages extends NLS {
 	public static String MTextField_anchorNameLabel;
 	public static String MTextField_blank_when_null_description;
 	public static String MTextField_bookmarkLevelDescription;
+	public static String MTextField_bookmarkLevelExpression;
+	public static String MTextField_bookmarkLevelExpressionDescription;
 	public static String MTextField_bookmarkLevelLabel;
 	public static String MTextField_common_text_field;
 	public static String MTextField_evaluation_group;

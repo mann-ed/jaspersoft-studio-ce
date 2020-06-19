@@ -109,7 +109,8 @@ public final class ChartConverter extends ElementConverter {
 		printImage.copyBox(chart.getLineBox());
 
 		printImage.setAnchorName(JRExpressionUtil.getExpressionText(chart.getAnchorNameExpression()));
-		printImage.setBookmarkLevel(chart.getBookmarkLevel());
+		String ble = JRExpressionUtil.getExpressionText(chart.getBookmarkLevelExpression());
+		printImage.setBookmarkLevel(ble != null ? Integer.valueOf(ble) : chart.getBookmarkLevel());
 		printImage.setLinkType(chart.getLinkType());
 		printImage.setOnErrorType(OnErrorTypeEnum.ICON);
 		printImage.setRenderer(getRenderer(reportConverter, chart));
@@ -146,7 +147,8 @@ public final class ChartConverter extends ElementConverter {
 			if (dataset != null && jfreeChart != null)
 				dataset.removeChangeListener(jfreeChart.getPlot());
 
-			renderType = chart.getRenderType();// FIXMETHEME try reuse this sequence
+			renderType = chart.getRenderType();// FIXMETHEME try reuse this
+												// sequence
 			if (renderType == null) {
 				renderType = JRPropertiesUtil.getInstance(jContext).getProperty(reportConverter.getReport(),
 						JRChart.PROPERTY_CHART_RENDER_TYPE);
@@ -160,8 +162,10 @@ public final class ChartConverter extends ElementConverter {
 			ChartTheme theme = ChartUtil.getInstance(jContext).getTheme(themeName);
 			if (theme instanceof SimpleChartTheme) {
 				SimpleChartTheme sct = (SimpleChartTheme) theme;
-				sct.getChartSettings().setBackgroundImage(getCachedImageProvider(sct.getChartSettings().getBackgroundImage()));
-				sct.getPlotSettings().setBackgroundImage(getCachedImageProvider(sct.getPlotSettings().getBackgroundImage()));
+				sct.getChartSettings()
+						.setBackgroundImage(getCachedImageProvider(sct.getChartSettings().getBackgroundImage()));
+				sct.getPlotSettings()
+						.setBackgroundImage(getCachedImageProvider(sct.getPlotSettings().getBackgroundImage()));
 			}
 			ChartContext chartContext = null;
 			// Object cc = jContext.getMap().get(chart);
@@ -193,12 +197,14 @@ public final class ChartConverter extends ElementConverter {
 								if (!(axisChart.getPlot() instanceof CategoryPlot))
 									continue;
 
-								// Get the axis and add it to the multi axis chart plot
+								// Get the axis and add it to the multi axis
+								// chart plot
 								CategoryPlot axisPlot = (CategoryPlot) axisChart.getPlot();
 								mainCatPlot.setRangeAxis(axisNumber, axisPlot.getRangeAxis());
 								mainCatPlot.setRangeAxisLocation(axisNumber, getChartAxisLocation(ax));
 
-								// Add the data set and map it to the recently added axis
+								// Add the data set and map it to the recently
+								// added axis
 								mainCatPlot.setDataset(axisNumber, axisPlot.getDataset());
 								mainCatPlot.mapDatasetToRangeAxis(axisNumber, axisNumber);
 
@@ -212,12 +218,14 @@ public final class ChartConverter extends ElementConverter {
 								if (!(axisChart.getPlot() instanceof XYPlot))
 									continue;
 
-								// Get the axis and add it to the multi axis chart plot
+								// Get the axis and add it to the multi axis
+								// chart plot
 								XYPlot axisPlot = (XYPlot) axisChart.getPlot();
 								mainXyPlot.setRangeAxis(axisNumber, axisPlot.getRangeAxis());
 								mainXyPlot.setRangeAxisLocation(axisNumber, getChartAxisLocation(ax));
 
-								// Add the data set and map it to the recently added axis
+								// Add the data set and map it to the recently
+								// added axis
 								mainXyPlot.setDataset(axisNumber, axisPlot.getDataset());
 								mainXyPlot.mapDatasetToRangeAxis(axisNumber, axisNumber);
 

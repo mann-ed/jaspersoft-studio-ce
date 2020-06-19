@@ -224,8 +224,8 @@ public class MImage extends MGraphicElementLineBox {
 		evaluationTimeD.setDescription(Messages.MImage_evaluation_type_description);
 		desc.add(evaluationTimeD);
 
-		rotateD = new NamedEnumPropertyDescriptor<>(JRBaseStyle.PROPERTY_ROTATION, Messages.common_rotation, RotationEnum.NONE,
-				NullEnum.NOTNULL);
+		rotateD = new NamedEnumPropertyDescriptor<>(JRBaseStyle.PROPERTY_ROTATION, Messages.common_rotation,
+				RotationEnum.NONE, NullEnum.NOTNULL);
 		rotateD.setDescription(Messages.MImage_on_error_type_description);
 		desc.add(rotateD);
 
@@ -250,6 +250,11 @@ public class MImage extends MGraphicElementLineBox {
 				JRDesignImage.PROPERTY_ANCHOR_NAME_EXPRESSION, Messages.MTextField_anchorNameLabel);
 		anchorNameExp.setDescription(Messages.MTextField_anchorNameDescription);
 		desc.add(anchorNameExp);
+
+		JRExpressionPropertyDescriptor bookmarkLevelExp = new JRExpressionPropertyDescriptor(
+				JRDesignImage.PROPERTY_BOOKMARK_LEVEL_EXPRESSION, Messages.MTextField_bookmarkLevelExpression);
+		bookmarkLevelExp.setDescription(Messages.MTextField_bookmarkLevelExpressionDescription);
+		desc.add(bookmarkLevelExp);
 
 		SpinnerPropertyDescriptor bookmarkLevel = new SpinnerPropertyDescriptor(JRDesignImage.PROPERTY_BOOKMARK_LEVEL,
 				Messages.MTextField_bookmarkLevelLabel);
@@ -580,7 +585,7 @@ public class MImage extends MGraphicElementLineBox {
 	public void trasnferProperties(JRElement target) {
 		super.trasnferProperties(target);
 
-		JRDesignImage jrSource =  getValue();
+		JRDesignImage jrSource = getValue();
 		if (jrSource != null) {
 			JRDesignImage jrTarget = (JRDesignImage) target;
 			jrTarget.setFill(jrSource.getOwnFillValue());

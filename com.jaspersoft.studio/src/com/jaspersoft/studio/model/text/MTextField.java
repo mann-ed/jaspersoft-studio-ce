@@ -50,6 +50,7 @@ import net.sf.jasperreports.engine.design.JRDesignDatasetRun;
 import net.sf.jasperreports.engine.design.JRDesignElementDataset;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignHyperlink;
+import net.sf.jasperreports.engine.design.JRDesignImage;
 import net.sf.jasperreports.engine.design.JRDesignStyle;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -195,6 +196,11 @@ public class MTextField extends MTextElement {
 		anchorNameExp.setDescription(Messages.MTextField_anchorNameDescription);
 		desc.add(anchorNameExp);
 
+		JRExpressionPropertyDescriptor bookmarkLevelExp = new JRExpressionPropertyDescriptor(
+				JRDesignImage.PROPERTY_BOOKMARK_LEVEL_EXPRESSION, Messages.MTextField_bookmarkLevelExpression);
+		bookmarkLevelExp.setDescription(Messages.MTextField_bookmarkLevelExpressionDescription);
+		desc.add(bookmarkLevelExp);
+
 		SpinnerPropertyDescriptor bookmarkLevel = new SpinnerPropertyDescriptor(
 				JRDesignTextField.PROPERTY_BOOKMARK_LEVEL, Messages.MTextField_bookmarkLevelLabel);
 		bookmarkLevel.setDescription(Messages.MTextField_bookmarkLevelDescription);
@@ -305,12 +311,12 @@ public class MTextField extends MTextElement {
 		if (id.equals(JRDesignHyperlink.PROPERTY_HYPERLINK_WHEN_EXPRESSION)) {
 			return ExprUtil.getExpression(jrElement.getHyperlinkWhenExpression());
 		}
-		if (id.equals(JRDesignTextField.PROPERTY_ANCHOR_NAME_EXPRESSION)) {
+		if (id.equals(JRDesignTextField.PROPERTY_ANCHOR_NAME_EXPRESSION))
 			return ExprUtil.getExpression(jrElement.getAnchorNameExpression());
-		}
-		if (id.equals(JRDesignTextField.PROPERTY_BOOKMARK_LEVEL)) {
+		if (id.equals(JRDesignTextField.PROPERTY_BOOKMARK_LEVEL_EXPRESSION))
+			return ExprUtil.getExpression(jrElement.getBookmarkLevelExpression());
+		if (id.equals(JRDesignTextField.PROPERTY_BOOKMARK_LEVEL))
 			return jrElement.getBookmarkLevel();
-		}
 		return super.getPropertyValue(id);
 	}
 
@@ -362,6 +368,8 @@ public class MTextField extends MTextElement {
 					ExprUtil.setValues(jrElement.getHyperlinkTooltipExpression(), value));
 		else if (id.equals(JRDesignTextField.PROPERTY_ANCHOR_NAME_EXPRESSION))
 			jrElement.setAnchorNameExpression(ExprUtil.setValues(jrElement.getAnchorNameExpression(), value));
+		else if (id.equals(JRDesignTextField.PROPERTY_BOOKMARK_LEVEL_EXPRESSION))
+			jrElement.setBookmarkLevelExpression(ExprUtil.setValues(jrElement.getBookmarkLevelExpression(), value));
 		else if (id.equals(JRDesignTextField.PROPERTY_BOOKMARK_LEVEL))
 			jrElement.setBookmarkLevel(value != null ? Integer.parseInt(value.toString()) : 0);
 		else if (id.equals(JRDesignHyperlink.PROPERTY_HYPERLINK_PARAMETERS)) {
