@@ -7797,17 +7797,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 *
-Eclipse ECJ - org.eclipse.jdt.core.compiler:ecj:        4.4.2
-
-This product includes software licensed under the Eclipse Public License (EPL), v.1.0. The source code for such software component licensed under the EPL v.1.0 is available upon request to TIBCO at support@tibco.com.
-
-Except as expressly set forth in the EPL v.1.0, the component is provided on an "as is" basis, without warranties or conditions of any kind, either express or implied including, without limitation, any warranties or conditions of title, non-infringement, merchantability or fitness for a particular purpose. 
-
-Except as expressly set forth in the EPL v.1.0, neither TIBCO nor any contributors shall have any liability for any direct, indirect, incidental, special, exemplary, or consequential damages (including without limitation lost profits), however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use or distribution of the component or the exercise of any rights granted under the EPL v.1.0, even if advised of the possibility of such damages.
-
-Any provisions under which TIBCO makes the component available which differ from the EPL v.1.0 are offered by TIBCO alone and not by any other party.
-
-*
 Jetty :: Schemas:       3.1
 
 Apache License
@@ -8086,6 +8075,14 @@ javax.security.auth.message 1.0.0.v201108011116
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+%%
+
+Java Authentication SPI for Containers
+Copyright 2003-2009 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
 
 *
 PostgreSQL JDBC Driver 9.4.1210
@@ -18481,6 +18478,30 @@ Copyright (C) 2010 ZXing authors
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+*
+Eclipse Compiler for Java(TM):  3.21.0
+
+This product includes software licensed under the Eclipse Public License (EPL), v.2.0. The source code for such software component licensed under the EPL v.2.0 is available upon request to TIBCO at support@tibco.com.
+
+Except as expressly set forth in the EPL v.2.0, the component is provided on an "as is" basis, without warranties or conditions of any kind, either express or implied including, without limitation, any warranties or conditions of title, non-infringement, merchantability or fitness for a particular purpose. 
+
+Except as expressly set forth in the EPL v.2.0, neither TIBCO nor any contributors shall have any liability for any direct, indirect, incidental, special, exemplary, or consequential damages (including without limitation lost profits), however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use or distribution of the component or the exercise of any rights granted under the EPL v.2.0, even if advised of the possibility of such damages.
+
+Any provisions under which TIBCO makes the component available which differ from the EPL v.2.0 are offered by TIBCO alone and not by any other party.
+
+*
+Groovy Sandbox: 1.26
+
+The MIT License (MIT)
+
+Copyright (c) 2012-2014 Kohsuke Kawaguchi, CloudBees, Inc., other contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 *
 Jakarta Commons-Logging 1.1.1
@@ -31666,6 +31687,17 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+*
+Eclipse ECJ - org.eclipse.jdt.core.compiler:ecj:        4.4.2
+
+This product includes software licensed under the Eclipse Public License (EPL), v.1.0. The source code for such software component licensed under the EPL v.1.0 is available upon request to TIBCO at support@tibco.com.
+
+Except as expressly set forth in the EPL v.1.0, the component is provided on an "as is" basis, without warranties or conditions of any kind, either express or implied including, without limitation, any warranties or conditions of title, non-infringement, merchantability or fitness for a particular purpose. 
+
+Except as expressly set forth in the EPL v.1.0, neither TIBCO nor any contributors shall have any liability for any direct, indirect, incidental, special, exemplary, or consequential damages (including without limitation lost profits), however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use or distribution of the component or the exercise of any rights granted under the EPL v.1.0, even if advised of the possibility of such damages.
+
+Any provisions under which TIBCO makes the component available which differ from the EPL v.1.0 are offered by TIBCO alone and not by any other party.
 
 *
 zookeeper:      3.4.10
