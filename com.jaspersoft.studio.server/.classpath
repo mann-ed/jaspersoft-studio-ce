@@ -4,6 +4,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jasperserver-dto-develop-20200615.164406-14.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="lib" path="lib/validation-api-1.1.0.Final.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jersey/net.java.html.json-0.7.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jersey213/mimepull-1.9.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jersey213/jersey-media-multipart-2.13.jar"/>
