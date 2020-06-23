@@ -38,7 +38,7 @@ import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 public class ProxyConnection implements IConnection {
 	
-	public static final String ONYX1 = "7.5";
+	public static final String ONYX1 = "7.8";
 	public Format getDateFormat() {
 		return c.getDateFormat();
 	}
