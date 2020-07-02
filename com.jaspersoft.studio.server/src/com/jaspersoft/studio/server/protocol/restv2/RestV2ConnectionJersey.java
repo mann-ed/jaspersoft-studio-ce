@@ -71,6 +71,7 @@ import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ListItem;
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceProperty;
 import com.jaspersoft.jasperserver.dto.authority.ClientUser;
+import com.jaspersoft.jasperserver.dto.common.ErrorDescriptor;
 import com.jaspersoft.jasperserver.dto.jdbcdrivers.JdbcDriverInfo;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermission;
 import com.jaspersoft.jasperserver.dto.permissions.RepositoryPermissionListWrapper;
@@ -869,16 +870,23 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 						or.setFileName(fname); // $NON-NLS-1$
 						ee.setOutputResource(or);
 					}
-					byte[] d = readFile(r, monitor);
-					addFileContent(d, map, ee.getOutputResource(), "attachment-" + i++, "report"); //$NON-NLS-1$ //$NON-NLS-2$
-					if (ee.getAttachments() != null)
-						for (AttachmentDescriptor ror : ee.getAttachments()) {
-							tgt = target.path("reportExecutions/" + res.getRequestId() + "/exports/" + ee.getId() //$NON-NLS-1$ //$NON-NLS-2$
-									+ "/attachments/" + ror.getFileName()); //$NON-NLS-1$
-							req = HttpUtils.getRequest(tgt, ror.getContentType());
-							d = readFile(connector.get(req, monitor), monitor);
-							addFileContent(d, map, ror, "attachment-" + i++, ror.getFileName()); //$NON-NLS-1$
-						}
+					try {
+						byte[] d = readFile(r, monitor);
+						addFileContent(d, map, ee.getOutputResource(), "attachment-" + i++, "report"); //$NON-NLS-1$ //$NON-NLS-2$
+						if (ee.getAttachments() != null)
+							for (AttachmentDescriptor ror : ee.getAttachments()) {
+								tgt = target.path("reportExecutions/" + res.getRequestId() + "/exports/" + ee.getId() //$NON-NLS-1$ //$NON-NLS-2$
+										+ "/attachments/" + ror.getFileName()); //$NON-NLS-1$
+								req = HttpUtils.getRequest(tgt, ror.getContentType());
+								d = readFile(connector.get(req, monitor), monitor);
+								addFileContent(d, map, ror, "attachment-" + i++, ror.getFileName()); //$NON-NLS-1$
+							}
+					} catch (HttpResponseException e) {
+						repExec.setErrorDescriptor(new ErrorDescriptor());
+						repExec.getErrorDescriptor().setMessage(e.getMessage());
+						repExec.getErrorDescriptor().setException(e);
+						throw e;
+					}
 				}
 			} else {
 				tgt = target.path("reportExecutions/" + res.getRequestId() + "/exports/" //$NON-NLS-1$ //$NON-NLS-2$

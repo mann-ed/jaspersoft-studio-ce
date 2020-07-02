@@ -140,17 +140,19 @@ public class RESTv2ExceptionHandler {
 	public String buildMessage(IProgressMonitor monitor, String msg, ErrorDescriptor ed) {
 		if (!msg.isEmpty())
 			msg += "\n";
-		if (ed.getMessage() != null) {
-			if (ed.getParameters() != null)
-				msg += MessageFormat.format(ed.getMessage(), (Object[]) ed.getParameters());
-			else
-				msg += ed.getMessage();
-		} else {
-			String m = getMap(monitor).get(ed.getErrorCode());
-			if (Misc.isNullOrEmpty(m))
-				msg += ed.getErrorCode();
-			else
-				msg += MessageFormat.format(m, (Object[]) ed.getParameters());
+		if (ed != null) {
+			if (ed.getMessage() != null) {
+				if (ed.getParameters() != null)
+					msg += MessageFormat.format(ed.getMessage(), (Object[]) ed.getParameters());
+				else
+					msg += ed.getMessage();
+			} else {
+				String m = getMap(monitor).get(ed.getErrorCode());
+				if (Misc.isNullOrEmpty(m))
+					msg += ed.getErrorCode();
+				else
+					msg += MessageFormat.format(m, (Object[]) ed.getParameters());
+			}
 		}
 		return msg;
 	}
