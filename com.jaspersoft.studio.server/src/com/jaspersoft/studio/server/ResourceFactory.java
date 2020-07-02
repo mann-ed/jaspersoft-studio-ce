@@ -384,13 +384,20 @@ public class ResourceFactory {
 	private static Map<String, ImageDescriptor> tIcons = new HashMap<>();
 	private static Map<String, String> tName = new HashMap<>();
 
-	public static Image getIcon(String rtype) {
+	public static ImageDescriptor getIconImageDescriptor(String rtype) {
 		ImageDescriptor id = tIcons.get(rtype);
 		if (id == null) {
 			initType(rtype);
 			id = tIcons.get(rtype);
 		}
-		return Activator.getDefault().getImage(id);
+		return id;
+	}
+
+	public static Image getIcon(String rtype) {
+		ImageDescriptor id = getIconImageDescriptor(rtype);
+		if (id != null)
+			return Activator.getDefault().getImage(id);
+		return null;
 	}
 
 	protected static void initType(String rtype) {

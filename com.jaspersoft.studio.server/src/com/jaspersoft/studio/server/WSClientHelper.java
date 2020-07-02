@@ -28,6 +28,7 @@ import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.server.model.AFileResource;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.IInputControlsContainer;
+import com.jaspersoft.studio.server.model.IResourceContainer;
 import com.jaspersoft.studio.server.model.MFolder;
 import com.jaspersoft.studio.server.model.MRDataAdapter;
 import com.jaspersoft.studio.server.model.MReportUnit;
@@ -399,6 +400,10 @@ public class WSClientHelper {
 					res.removeChildren();
 
 					listFolder(res, -1, res.getWsClient(), monitor, newrd, 0);
+				} else if (res instanceof IResourceContainer) {
+					res.removeChildren();
+					for (ResourceDescriptor rcd : newrd.getChildren())
+						ResourceFactory.getResource(res, rcd, -1);
 				}
 			} else
 				connectGetData((MServerProfile) res.getRoot(), monitor);
@@ -415,6 +420,11 @@ public class WSClientHelper {
 
 			ResourceDescriptor rd = res.getValue();
 			listFolder(res, -1, res.getWsClient(), monitor, rd, 0);
+			fireResourceChanged(res);
+		} else if (res instanceof IResourceContainer) {
+			res.removeChildren();
+			for (ResourceDescriptor rcd : res.getValue().getChildren())
+				ResourceFactory.getResource(res, rcd, -1);
 			fireResourceChanged(res);
 		}
 	}

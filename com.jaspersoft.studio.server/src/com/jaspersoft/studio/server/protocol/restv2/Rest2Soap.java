@@ -35,6 +35,7 @@ import com.jaspersoft.jasperserver.dto.resources.ClientOlapUnit;
 import com.jaspersoft.jasperserver.dto.resources.ClientProperty;
 import com.jaspersoft.jasperserver.dto.resources.ClientQuery;
 import com.jaspersoft.jasperserver.dto.resources.ClientReference;
+import com.jaspersoft.jasperserver.dto.resources.ClientReferenceable;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableDataSource;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableFile;
 import com.jaspersoft.jasperserver.dto.resources.ClientReferenceableInputControl;
@@ -58,6 +59,8 @@ public class Rest2Soap {
 		// rd.setWsType(WsTypes.INST().toSoapType(cr.getResourceType()));
 		return rd;
 	}
+	
+	
 
 	public static ResourceDescriptor getRD(ARestV2Connection rc, ClientResource<?> cr) throws ParseException {
 		ResourceDescriptor rd = new ResourceDescriptor();
@@ -87,6 +90,14 @@ public class Rest2Soap {
 		return getRDContainer(rc, (ClientResource<?>) crds);
 	}
 
+	public static ResourceDescriptor getReferenceable(ClientReferenceable crds) {
+		ResourceDescriptor rd = new ResourceDescriptor();
+		rd.setReferenceUri(crds.getUri());
+		rd.setIsReference(true);
+		rd.setWsType(ResourceDescriptor.TYPE_REFERENCE);
+		return rd;
+	}
+
 	public static ResourceDescriptor getRD(ARestV2Connection rc, ClientResource<?> cr, ResourceDescriptor rd)
 			throws ParseException {
 		rd.getChildren().clear();
@@ -106,23 +117,23 @@ public class Rest2Soap {
 
 		// look recursively
 		if (cr instanceof ClientDataType)
-			getDataType(rc, (ClientDataType) cr, rd);
+			getDataType((ClientDataType) cr, rd);
 
 		else if (cr instanceof ClientAdhocDataView)
 			getAdhocDataView(rc, (ClientAdhocDataView) cr, rd);
 
 		else if (cr instanceof ClientJdbcDataSource)
-			getJdbcDataSource(rc, (ClientJdbcDataSource) cr, rd);
+			getJdbcDataSource((ClientJdbcDataSource) cr, rd);
 		else if (cr instanceof ClientJndiJdbcDataSource)
-			getJndiDataSource(rc, (ClientJndiJdbcDataSource) cr, rd);
+			getJndiDataSource((ClientJndiJdbcDataSource) cr, rd);
 		else if (cr instanceof ClientAwsDataSource)
-			getAWSDataSource(rc, (ClientAwsDataSource) cr, rd);
+			getAWSDataSource((ClientAwsDataSource) cr, rd);
 		else if (cr instanceof ClientVirtualDataSource)
-			getVirtualDataSource(rc, (ClientVirtualDataSource) cr, rd);
+			getVirtualDataSource((ClientVirtualDataSource) cr, rd);
 		else if (cr instanceof ClientCustomDataSource)
-			getCustomDataSource(rc, (ClientCustomDataSource) cr, rd);
+			getCustomDataSource((ClientCustomDataSource) cr, rd);
 		else if (cr instanceof ClientBeanDataSource)
-			getBeanDataSource(rc, (ClientBeanDataSource) cr, rd);
+			getBeanDataSource((ClientBeanDataSource) cr, rd);
 		else if (cr instanceof ClientOlapUnit)
 			getOlapUnit(rc, (ClientOlapUnit) cr, rd);
 
@@ -130,7 +141,7 @@ public class Rest2Soap {
 			getQuery(rc, (ClientQuery) cr, rd);
 
 		else if (cr instanceof ClientXmlaConnection)
-			getXmlaConnection(rc, (ClientXmlaConnection) cr, rd);
+			getXmlaConnection((ClientXmlaConnection) cr, rd);
 		else if (cr instanceof ClientMondrianConnection)
 			getMondrianConnection(rc, (ClientMondrianConnection) cr, rd);
 		else if (cr instanceof ClientSecureMondrianConnection)
@@ -139,13 +150,13 @@ public class Rest2Soap {
 			getMondrianXmlaDefinition(rc, (ClientMondrianXmlaDefinition) cr, rd);
 
 		else if (cr instanceof ClientListOfValues)
-			getLOV(rc, (ClientListOfValues) cr, rd);
+			getLOV((ClientListOfValues) cr, rd);
 		else if (cr instanceof AbstractClientReportUnit)
 			getReportUnit(rc, (AbstractClientReportUnit<?>) cr, rd);
 		else if (cr instanceof ClientInputControl)
 			getInputControl(rc, (ClientInputControl) cr, rd);
 		else if (cr instanceof ClientFile)
-			getFile(rc, (ClientFile) cr, rd);
+			getFile((ClientFile) cr, rd);
 		else
 			rd = Misc.nvl(Activator.getExtManager().getRD(rc, cr, rd), rd);
 
@@ -171,13 +182,12 @@ public class Rest2Soap {
 		}
 	}
 
-	private static void getFile(ARestV2Connection rc, ClientFile cr, ResourceDescriptor rd) throws ParseException {
+	private static void getFile(ClientFile cr, ResourceDescriptor rd) {
 		// if (cr.getContent() != null)
 		// rd.setData(cr.getContent().getBytes());
 	}
 
-	private static void getLOV(ARestV2Connection rc, ClientListOfValues cr, ResourceDescriptor rd)
-			throws ParseException {
+	private static void getLOV(ClientListOfValues cr, ResourceDescriptor rd) {
 		List<ListItem> lovs = new ArrayList<>();
 		if (cr.getItems() != null)
 			for (ClientListOfValuesItem sds : cr.getItems())
@@ -229,8 +239,7 @@ public class Rest2Soap {
 		}
 	}
 
-	private static void getXmlaConnection(ARestV2Connection rc, ClientXmlaConnection cr, ResourceDescriptor rd)
-			throws ParseException {
+	private static void getXmlaConnection(ClientXmlaConnection cr, ResourceDescriptor rd) {
 		rd.setResourceProperty(ResourceDescriptor.PROP_XMLA_URI, Misc.nvl(cr.getUrl()));
 		rd.setResourceProperty(ResourceDescriptor.PROP_XMLA_DATASOURCE, Misc.nvl(cr.getDataSource()));
 		rd.setResourceProperty(ResourceDescriptor.PROP_XMLA_CATALOG, Misc.nvl(cr.getCatalog()));
@@ -238,8 +247,7 @@ public class Rest2Soap {
 		rd.setResourceProperty(ResourceDescriptor.PROP_XMLA_PASSWORD, Misc.nvl(cr.getPassword()));
 	}
 
-	private static void getBeanDataSource(ARestV2Connection rc, ClientBeanDataSource cr, ResourceDescriptor rd)
-			throws ParseException {
+	private static void getBeanDataSource(ClientBeanDataSource cr, ResourceDescriptor rd) {
 		rd.setBeanName(cr.getBeanName());
 		rd.setBeanMethod(cr.getBeanMethod());
 	}
@@ -255,8 +263,7 @@ public class Rest2Soap {
 		}
 	}
 
-	private static void getCustomDataSource(ARestV2Connection rc, ClientCustomDataSource cr, ResourceDescriptor rd)
-			throws ParseException {
+	private static void getCustomDataSource(ClientCustomDataSource cr, ResourceDescriptor rd) {
 		rd.setServiceClass(cr.getServiceClass());
 		if (cr.getProperties() != null) {
 			ResourceProperty rp = new ResourceProperty(MRDatasourceCustom.PROP_DATASOURCE_CUSTOM_PROPERTY_MAP);
@@ -269,8 +276,7 @@ public class Rest2Soap {
 		DiffFields.setSoapValue(rd, DiffFields.DATASOURCENAME, cr.getDataSourceName());
 	}
 
-	public static void getJdbcDataSource(ARestV2Connection rc, AbstractClientJdbcDataSource<?> cr,
-			ResourceDescriptor rd) throws ParseException {
+	public static void getJdbcDataSource(AbstractClientJdbcDataSource<?> cr, ResourceDescriptor rd) {
 		rd.setDriverClass(cr.getDriverClass());
 		rd.setPassword(cr.getPassword());
 		rd.setUsername(cr.getUsername());
@@ -278,15 +284,13 @@ public class Rest2Soap {
 		DiffFields.setSoapValue(rd, DiffFields.TIMEZONE, cr.getTimezone());
 	}
 
-	private static void getJndiDataSource(ARestV2Connection rc, ClientJndiJdbcDataSource cr, ResourceDescriptor rd)
-			throws ParseException {
+	private static void getJndiDataSource(ClientJndiJdbcDataSource cr, ResourceDescriptor rd) {
 		rd.setJndiName(cr.getJndiName());
 		DiffFields.setSoapValue(rd, DiffFields.TIMEZONE, cr.getTimezone());
 	}
 
-	private static void getAWSDataSource(ARestV2Connection rc, ClientAwsDataSource cr, ResourceDescriptor rd)
-			throws ParseException {
-		getJdbcDataSource(rc, cr, rd);
+	private static void getAWSDataSource(ClientAwsDataSource cr, ResourceDescriptor rd) {
+		getJdbcDataSource(cr, rd);
 		DiffFields.setSoapValue(rd, DiffFields.ACCESSKEY, cr.getAccessKey());
 		DiffFields.setSoapValue(rd, DiffFields.SECRETKEY, cr.getSecretKey());
 		DiffFields.setSoapValue(rd, DiffFields.ROLEARN, cr.getRoleArn());
@@ -297,8 +301,7 @@ public class Rest2Soap {
 		DiffFields.setSoapValue(rd, DiffFields.TIMEZONE, cr.getTimezone());
 	}
 
-	private static void getVirtualDataSource(ARestV2Connection rc, ClientVirtualDataSource cr, ResourceDescriptor rd)
-			throws ParseException {
+	private static void getVirtualDataSource(ClientVirtualDataSource cr, ResourceDescriptor rd) {
 		if (cr.getSubDataSources() != null)
 			for (ClientSubDataSourceReference sds : cr.getSubDataSources()) {
 				ResourceDescriptor r = new ResourceDescriptor();
@@ -315,8 +318,7 @@ public class Rest2Soap {
 			}
 	}
 
-	private static void getDataType(ARestV2Connection rc, ClientDataType cr, ResourceDescriptor rd)
-			throws ParseException {
+	private static void getDataType(ClientDataType cr, ResourceDescriptor rd) {
 		if (cr.getType().equals(TypeOfDataType.text))
 			rd.setDataType(ResourceDescriptor.DT_TYPE_TEXT);
 		else if (cr.getType().equals(TypeOfDataType.number))
@@ -434,11 +436,10 @@ public class Rest2Soap {
 		});
 	}
 
-	private static void setupReference(ResourceDescriptor parent, ResourceDescriptor rd) {
-		if (rd != null && rd.getParentFolder() != null) {
-			if (!rd.getParentFolder().equals(parent.getUriString() + "_files"))
-				rd.setIsReference(true);
-		}
+	public static void setupReference(ResourceDescriptor parent, ResourceDescriptor rd) {
+		if (rd != null && rd.getParentFolder() != null
+				&& !rd.getParentFolder().equals(parent.getUriString() + "_files"))
+			rd.setIsReference(true);
 	}
 
 	private static void getInputControl(ARestV2Connection rc, ClientInputControl cr, ResourceDescriptor rd)
@@ -468,8 +469,7 @@ public class Rest2Soap {
 			rd.setQueryVisibleColumns(cr.getVisibleColumns().toArray(new String[cr.getVisibleColumns().size()]));
 	}
 
-	public static ResourceDescriptor getInputControl(ARestV2Connection rc, ReportInputControl cr, ResourceDescriptor rd)
-			throws ParseException {
+	public static ResourceDescriptor getInputControl(ReportInputControl cr, ResourceDescriptor rd) {
 		rd.setName(cr.getId());
 		rd.setUriString(cr.getUri().replaceFirst("repo:", ""));
 		rd.setLabel(cr.getLabel());

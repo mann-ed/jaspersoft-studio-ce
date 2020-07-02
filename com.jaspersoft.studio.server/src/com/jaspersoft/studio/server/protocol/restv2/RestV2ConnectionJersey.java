@@ -242,6 +242,8 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			if (!doConnectLogin(monitor, sp, url, pass))
 				return false;
 		} catch (Exception e) {
+			if (e instanceof HttpResponseException && ((HttpResponseException) e).getStatusCode() == 401)
+				throw e;
 			try {
 				if (!doConnectOld(monitor, sp, url, pass))
 					return false;
@@ -430,6 +432,13 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 
 	@Override
 	public ResourceDescriptor get(IProgressMonitor monitor, ResourceDescriptor rd, File f) throws Exception {
+		if (rd.getUriString() == null && rd.getIsReference() && rd.getReferenceUri() != null) {
+			ResourceDescriptor nrd = new ResourceDescriptor();
+			nrd.setUriString(rd.getReferenceUri());
+			nrd.setWsType(rd.getReferenceType());
+			rd = nrd;
+		}
+
 		if (rd.getUriString() == null || rd.getUriString().contains("<")) //$NON-NLS-1$
 			throw new Exception("wrong url"); //$NON-NLS-1$
 		String uri = rd.getUriString();
@@ -1004,7 +1013,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 					monitor);
 			if (m != null) {
 				for (ReportInputControl ric : m.getInputParameters())
-					rds.add(Rest2Soap.getInputControl(this, ric, new ResourceDescriptor()));
+					rds.add(Rest2Soap.getInputControl(ric, new ResourceDescriptor()));
 			}
 		} catch (IOException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
@@ -1045,7 +1054,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 		ReportInputControlsListWrapper crl = toObj(r, ReportInputControlsListWrapper.class, monitor);
 		if (crl != null) {
 			for (ReportInputControl ric : crl.getInputParameters())
-				rdunit.getChildren().add(Rest2Soap.getInputControl(this, ric, new ResourceDescriptor()));
+				rdunit.getChildren().add(Rest2Soap.getInputControl(ric, new ResourceDescriptor()));
 			for (ResourceDescriptor rd : rdunit.getChildren()) {
 				if (rd.getWsType().equals(ResourceDescriptor.TYPE_INPUT_CONTROL))
 					for (ReportInputControl ric : crl.getInputParameters()) {

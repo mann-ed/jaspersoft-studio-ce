@@ -37,8 +37,9 @@ import com.jaspersoft.studio.server.wizard.permission.PermissionOptions;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 public class ProxyConnection implements IConnection {
-	
+
 	public static final String ONYX1 = "7.8";
+
 	public Format getDateFormat() {
 		return c.getDateFormat();
 	}
@@ -133,6 +134,9 @@ public class ProxyConnection implements IConnection {
 					return connect(monitor, sp);
 				throw e;
 			} catch (Exception e) {
+				Activator.getDefault().logError(e);
+				if (e instanceof HttpResponseException && ((HttpResponseException) e).getStatusCode() == 401)
+					throw e;
 				Throwable cause = e.getCause();
 				while (cause != null) {
 					if (cause instanceof CertificateException)
@@ -141,7 +145,6 @@ public class ProxyConnection implements IConnection {
 						return connect(monitor, sp);
 					cause = cause.getCause();
 				}
-				Activator.getDefault().logError(e);
 				if (e.getMessage() != null
 						&& (e.getMessage().contains("connect timed out") || e.getMessage().contains("authentication")
 								|| e.getMessage().contains("Access") || e.getMessage().contains("Forbidden")))

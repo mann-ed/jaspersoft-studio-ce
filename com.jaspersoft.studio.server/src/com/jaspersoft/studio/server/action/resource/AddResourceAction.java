@@ -59,7 +59,7 @@ public class AddResourceAction extends Action {
 	}
 
 	public static boolean isOrganizations(AMResource mres) {
-		if (mres.getValue().getUriString().equals("/organizations"))
+		if (mres.getValue().getUriString() != null && mres.getValue().getUriString().equals("/organizations"))
 			return true;
 		return false;
 	}

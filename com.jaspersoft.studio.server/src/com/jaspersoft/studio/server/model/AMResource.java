@@ -83,22 +83,27 @@ public abstract class AMResource extends APropertyNode implements ICopyable {
 
 	@Override
 	public String getToolTip() {
-		if (getValue() != null) {
-			String tip = "name: " + getValue().getName();
-			tip += "\nuri: " + getValue().getUriString();
-			tip += "\ntype: " + getValue().getWsType();
+		ResourceDescriptor rd = getValue();
+		if (rd != null) {
+			String tip = "name: " + rd.getName();
+			tip += "\nuri: " + rd.getUriString();
+			if (rd.getIsReference()) {
+				tip += "\nReference Uri:" + rd.getReferenceUri();
+				tip += "\nReference Type:" + rd.getReferenceType();
+			}
+			tip += "\ntype: " + rd.getWsType();
 			if (getParent() instanceof MReportUnit) {
 				MReportUnit mrunit = (MReportUnit) getParent();
-				if (mrunit.getValue() != null && getValue() != null) {
+				if (mrunit.getValue() != null && rd != null) {
 					String par = mrunit.getValue().getUriString() + "_files";
-					if (!par.equals(getValue().getParentFolder()))
+					if (!par.equals(rd.getParentFolder()))
 						tip += " - Referenced";
 				}
 			}
-			if (getValue().isMainReport())
+			if (rd.isMainReport())
 				tip += "\nIs Main Report";
-			tip += "\ndescription: " + Misc.nvl(getValue().getDescription());
-			tip += "\nPermission: " + getValue().getPermissionMask(getWsClient());
+			tip += "\nDescription: " + Misc.nvl(rd.getDescription());
+			tip += "\nPermission: " + rd.getPermissionMask(getWsClient());
 			return tip;
 		}
 		return getThisIconDescriptor().getToolTip();
@@ -111,8 +116,8 @@ public abstract class AMResource extends APropertyNode implements ICopyable {
 	 */
 	public ImageDescriptor getImagePath() {
 		ImageDescriptor icon16 = getThisIconDescriptor().getIcon16();
-		if (getParent() instanceof MReportUnit) {
-			MReportUnit mrunit = (MReportUnit) getParent();
+		if (getParent() instanceof MReportUnit || getParent() instanceof IResourceContainer) {
+			AMResource mrunit = (AMResource) getParent();
 			if (mrunit.getValue() != null && getValue() != null) {
 				String par = mrunit.getValue().getUriString() + "_files";
 				if (!par.equals(getValue().getParentFolder()))
