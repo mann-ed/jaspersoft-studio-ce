@@ -100,8 +100,7 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 						field.setName(StringUtils.xmlEncode(name, null));
 
 						String jdbcTypeClass = getJdbcTypeClass(metaData, i);
-						boolean isSlowMetadataDB = !(driverName.contains("simba") || driverName.contains("impala")
-								|| driverName.contains("oracle"));
+						boolean isSlowMetadataDB = !(driverName.contains("simba") || driverName.contains("impala"));
 						if (Misc.isNullOrEmpty(jdbcTypeClass) || isSlowMetadataDB)
 							try {
 								String catalog = metaData.getCatalogName(i);
