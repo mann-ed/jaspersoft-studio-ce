@@ -32,7 +32,7 @@ import net.sf.jasperreports.eclipse.util.Misc;
 public class MetaDataUtil {
 	public synchronized static List<MSqlSchema> readSchemas(IProgressMonitor monitor, MRoot root, DatabaseMetaData meta,
 			String[] cschemas) throws SQLException {
-		List<MSqlSchema> mcurrent = new ArrayList<MSqlSchema>();
+		List<MSqlSchema> mcurrent = new ArrayList<>();
 
 		boolean isSchema = meta.supportsSchemasInTableDefinitions();
 		boolean isCatalog = meta.supportsCatalogsInTableDefinitions();
@@ -176,7 +176,7 @@ public class MetaDataUtil {
 		MTables tables = (MTables) mt.getParent();
 		ResultSet rs = meta.getPrimaryKeys(tables.getTableCatalog(), tables.getTableSchema(), mt.getValue());
 		PrimaryKey pk = null;
-		List<MSQLColumn> cols = new ArrayList<MSQLColumn>();
+		List<MSQLColumn> cols = new ArrayList<>();
 		try {
 			while (rs.next()) {
 				if (pk == null)
@@ -205,9 +205,9 @@ public class MetaDataUtil {
 		MTables tables = (MTables) mt.getParent();
 		ResultSet rs = meta.getImportedKeys(tables.getTableCatalog(), tables.getTableSchema(), mt.getValue());
 		ForeignKey fk = null;
-		List<MSQLColumn> srcCols = new ArrayList<MSQLColumn>();
-		List<MSQLColumn> dstCols = new ArrayList<MSQLColumn>();
-		List<String[]> fks = new ArrayList<String[]>();
+		List<MSQLColumn> srcCols = new ArrayList<>();
+		List<MSQLColumn> dstCols = new ArrayList<>();
+		List<String[]> fks = new ArrayList<>();
 		try {
 			while (rs.next()) {
 				fks.add(new String[] { rs.getString("PKTABLE_CAT"), rs.getString("PKTABLE_SCHEM"),

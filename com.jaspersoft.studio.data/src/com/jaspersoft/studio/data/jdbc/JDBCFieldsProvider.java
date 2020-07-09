@@ -4,10 +4,24 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.jdbc;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.NClob;
+import java.sql.Ref;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.RowId;
 import java.sql.SQLException;
+import java.sql.SQLXML;
+import java.sql.Struct;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,15 +85,13 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 				if (rs != null) {
 					ResultSetMetaData metaData = rs.getMetaData();
 					int cc = metaData.getColumnCount();
-					Set<String> colset = new HashSet<String>();
-					columns = new ArrayList<JRDesignField>(cc);
+					Set<String> colset = new HashSet<>();
+					columns = new ArrayList<>(cc);
+					String driverName = c.getMetaData().getDriverName().toLowerCase();
 					for (int i = 1; i <= cc; i++) {
 						JRDesignField field = new JRDesignField();
 						String name = metaData.getColumnLabel(i);
-						// System.out.println("name: " +
-						// metaData.getColumnName(i) +
-						// " Label: " + name);
-
+						field.getPropertiesMap().setProperty(DataQueryAdapters.FIELD_NAME, metaData.getColumnName(i));
 						field.getPropertiesMap().setProperty(DataQueryAdapters.FIELD_LABEL, name);
 						if (colset.contains(name))
 							name = JRResultSetDataSource.INDEXED_COLUMN_PREFIX + i;
@@ -87,27 +99,32 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 
 						field.setName(StringUtils.xmlEncode(name, null));
 
-						field.setValueClassName(getJdbcTypeClass(metaData, i));
-						// FIXME - Temporary commented for performance issues
-						// with Simba JDBC driver for Impala
-						// try {
-						// String catalog = metaData.getCatalogName(i);
-						// String schema = metaData.getSchemaName(i);
-						// String table = metaData.getTableName(i);
-						// if (!(Misc.isNullOrEmpty(catalog)
-						// && Misc.isNullOrEmpty(schema) && Misc
-						// .isNullOrEmpty(table))) {
-						// ResultSet rsmc = c.getMetaData().getColumns(
-						// catalog, schema, table, name);
-						// while (rsmc.next()) {
-						// field.setDescription(StringUtils.xmlEncode(
-						// rsmc.getString("REMARKS"), null));
-						// break;
-						// }
-						// }
-						// } catch (SQLException se) {
-						// se.printStackTrace();
-						// }
+						String jdbcTypeClass = getJdbcTypeClass(metaData, i);
+						boolean isSlowMetadataDB = !(driverName.contains("simba") || driverName.contains("impala")
+								|| driverName.contains("oracle"));
+						if (Misc.isNullOrEmpty(jdbcTypeClass) || isSlowMetadataDB)
+							try {
+								String catalog = metaData.getCatalogName(i);
+								String schema = metaData.getSchemaName(i);
+								String table = metaData.getTableName(i);
+								if (!(Misc.isNullOrEmpty(catalog) && Misc.isNullOrEmpty(schema)
+										&& Misc.isNullOrEmpty(table))) {
+									ResultSet rsmc = c.getMetaData().getColumns(catalog, schema, table, name);
+									while (rsmc.next()) {
+										if (Misc.isNullOrEmpty(jdbcTypeClass))
+											jdbcTypeClass = getColumnType(rsmc.getInt("SQL_DATA_TYPE"));
+										if (isSlowMetadataDB)
+											field.setDescription(
+													StringUtils.xmlEncode(rsmc.getString("REMARKS"), null));
+										break;
+									}
+								}
+							} catch (SQLException se) {
+								se.printStackTrace();
+							}
+						if (Misc.isNullOrEmpty(jdbcTypeClass))
+							jdbcTypeClass = Object.class.getCanonicalName();
+						field.setValueClassName(jdbcTypeClass);
 
 						String tbl = metaData.getTableName(i);
 						if (!Misc.isNullOrEmpty(tbl))
@@ -116,7 +133,9 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 					}
 				}
 			}
-		} catch (SQLException e) {
+		} catch (
+
+		SQLException e) {
 			throw new JRException(e);
 		} finally {
 			if (c != null)
@@ -135,60 +154,78 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 		} catch (SQLException ex) {
 			// if getColumnClassName is not supported...
 			try {
-				int type = rsmd.getColumnType(t);
-				switch (type) {
-				case Types.CHAR:
-				case Types.VARCHAR:
-				case Types.NVARCHAR:
-				case Types.LONGVARCHAR:
-					return "java.lang.String";
-				case Types.NUMERIC:
-				case Types.DECIMAL:
-					return "java.math.BigDecimal";
-				case Types.BIT:
-				case Types.BOOLEAN:
-					return "java.lang.Boolean";
-				case Types.TINYINT:
-					return "java.lang.Byte";
-				case Types.SMALLINT:
-					return "java.lang.Short";
-				case Types.INTEGER:
-					return "java.lang.Integer";
-				case Types.BIGINT:
-					return "java.lang.Long";
-				case Types.REAL:
-					return "java.lang.Float";
-				case Types.FLOAT:
-				case Types.DOUBLE:
-					return "java.lang.Double";
-				case Types.BINARY:
-				case Types.VARBINARY:
-				case Types.LONGVARBINARY:
-					return "byte[]";
-				case Types.DATE:
-					return "java.sql.Date";
-				case Types.TIME:
-					return "java.sql.Time";
-				case Types.TIMESTAMP:
-					return "java.sql.Timestamp";
-				case Types.CLOB:
-					return "java.sql.Clob";
-				case Types.BLOB:
-					return "java.sql.Blob";
-				case Types.ARRAY:
-					return "java.sql.Array";
-				case Types.STRUCT:
-					return "java.sql.Struct";
-				case Types.REF:
-					return "java.sql.Ref";
-				case Types.DATALINK:
-					return "java.net.URL";
-				}
+				return getColumnType(rsmd.getColumnType(t));
 			} catch (SQLException ex2) {
 				ex2.printStackTrace();
 			}
 		}
 		return Object.class.getName();
+	}
+
+	protected static String getColumnType(int type) {
+		switch (type) {
+		case Types.CHAR:
+		case Types.VARCHAR:
+		case Types.NVARCHAR:
+		case Types.LONGVARCHAR:
+			return String.class.getCanonicalName();
+		case Types.NUMERIC:
+			return Number.class.getCanonicalName();
+		case Types.DECIMAL:
+			return BigDecimal.class.getCanonicalName();
+		case Types.BIT:
+		case Types.BOOLEAN:
+			return Boolean.class.getCanonicalName();
+		case Types.TINYINT:
+			return Byte.class.getCanonicalName();
+		case Types.SMALLINT:
+			return Short.class.getCanonicalName();
+		case Types.INTEGER:
+			return Integer.class.getCanonicalName();
+		case Types.BIGINT:
+			return BigInteger.class.getCanonicalName();
+		case Types.REAL:
+			return Float.class.getCanonicalName();
+		case Types.FLOAT:
+		case Types.DOUBLE:
+			return Double.class.getCanonicalName();
+		case Types.BINARY:
+		case Types.VARBINARY:
+		case Types.LONGVARBINARY:
+			return byte[].class.getCanonicalName();
+		case Types.DATE:
+			return Date.class.getCanonicalName();
+		case Types.TIME:
+		case Types.TIME_WITH_TIMEZONE:
+			return Time.class.getCanonicalName();
+		case Types.TIMESTAMP:
+		case Types.TIMESTAMP_WITH_TIMEZONE:
+			return Timestamp.class.getCanonicalName();
+		case Types.CLOB:
+			return Clob.class.getCanonicalName();
+		case Types.NCLOB:
+			return NClob.class.getCanonicalName();
+		case Types.BLOB:
+			return Blob.class.getCanonicalName();
+		case Types.ARRAY:
+			return Array.class.getCanonicalName();
+		case Types.STRUCT:
+			return Struct.class.getCanonicalName();
+		case Types.ROWID:
+			return RowId.class.getCanonicalName();
+		case Types.REF:
+			return Ref.class.getCanonicalName();
+		case Types.DATALINK:
+			return URL.class.getCanonicalName();
+		case Types.SQLXML:
+			return SQLXML.class.getCanonicalName();
+		case Types.REF_CURSOR:
+			return ResultSet.class.getCanonicalName();
+		case Types.JAVA_OBJECT:
+		case Types.OTHER:
+		default:
+			return Object.class.getCanonicalName();
+		}
 	}
 
 	public static String getJRFieldType(String type) {
@@ -215,34 +252,42 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 
 	private static Map<String, String> types = new HashMap<>();
 	static {
-		types.put("CHAR", "java.lang.String");
-		types.put("VARCHAR", "java.lang.String");
-		types.put("NVARCHAR", "java.lang.String");
-		types.put("LONGVARCHAR", "java.lang.String");
-		types.put("NUMERIC", "java.math.BigDecimal");
-		types.put("DECIMAL", "java.math.BigDecimal");
-		types.put("NUMERIC", "java.math.BigDecimal");
-		types.put("BIT", "java.lang.Boolean");
-		types.put("TINYINT", "java.lang.Byte");
-		types.put("SMALLINT", "java.lang.Short");
-		types.put("INTEGER", "java.lang.Integer");
-		types.put("BIGINT", "java.lang.Long");
-		types.put("REAL", "java.lang.Float");
-		types.put("FLOAT", "java.lang.Double");
-		types.put("DOUBLE", "java.lang.Double");
-		types.put("BINARY", "java.lang.Byte[]");
-		types.put("VARBINARY", "java.lang.Byte[]");
-		types.put("LONGVARBINARY", "java.lang.Byte[]");
-		types.put("DATE", "java.sql.Date");
-		types.put("TIME", "java.sql.Time");
-		types.put("TIMESTAMP", "java.sql.Timestamp");
-		types.put("CLOB", "java.sql.Clob");
-		types.put("BLOB", "java.sql.Blob");
-		types.put("ARRAY", "java.sql.Array");
+		types.put("CHAR", String.class.getCanonicalName());
+		types.put("VARCHAR", String.class.getCanonicalName());
+		types.put("NVARCHAR", String.class.getCanonicalName());
+		types.put("LONGVARCHAR", String.class.getCanonicalName());
+		types.put("DECIMAL", BigDecimal.class.getCanonicalName());
+		types.put("NUMERIC", Number.class.getCanonicalName());
+		types.put("BIT", Boolean.class.getCanonicalName());
+		types.put("BOOLEAN", Boolean.class.getCanonicalName());
+		types.put("TINYINT", Byte.class.getCanonicalName());
+		types.put("SMALLINT", Short.class.getCanonicalName());
+		types.put("INTEGER", Integer.class.getCanonicalName());
+		types.put("BIGINT", BigInteger.class.getCanonicalName());
+		types.put("REAL", Float.class.getCanonicalName());
+		types.put("FLOAT", Double.class.getCanonicalName());
+		types.put("DOUBLE", Double.class.getCanonicalName());
+		types.put("BINARY", byte[].class.getCanonicalName());
+		types.put("VARBINARY", byte[].class.getCanonicalName());
+		types.put("LONGVARBINARY", byte[].class.getCanonicalName());
+		types.put("DATE", Date.class.getCanonicalName());
+		types.put("TIME", Time.class.getCanonicalName());
+		types.put("TIME_WITH_TIMEZONE", Time.class.getCanonicalName());
+		types.put("TIMESTAMP", Timestamp.class.getCanonicalName());
+		types.put("TIMESTAMP_WITH_TIMEZONE", Timestamp.class.getCanonicalName());
+		types.put("CLOB", Clob.class.getCanonicalName());
+		types.put("NCLOB", Clob.class.getCanonicalName());
+		types.put("BLOB", Blob.class.getCanonicalName());
+		types.put("ARRAY", Array.class.getCanonicalName());
 		types.put("DISTINCT", "Mapping of underlying type");
-		types.put("STRUCT", "java.sql.Struct");
-		types.put("REF", "java.sql.Ref");
+		types.put("ROWID", RowId.class.getCanonicalName());
+		types.put("DATALINK", URL.class.getCanonicalName());
+		types.put("STRUCT", Struct.class.getCanonicalName());
+		types.put("REF", Ref.class.getCanonicalName());
 		types.put("JAVA_OBJECT", "Underlying Java class");
+		types.put("SQLXML", SQLXML.class.getCanonicalName());
+		types.put("REF_CURSOR", ResultSet.class.getCanonicalName());
+		types.put("OTHER", Object.class.getCanonicalName());
 	}
 
 	public static String getJavaType4SQL(String type) {

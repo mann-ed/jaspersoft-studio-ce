@@ -24,7 +24,6 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -82,6 +81,7 @@ public abstract class DataQueryAdapters extends AQueryDesignerContainer {
 	public static final String DEFAULT_DATAADAPTER = "com.jaspersoft.studio.data.defaultdataadapter"; //$NON-NLS-1$
 	public static final String FIELD_PATH = "com.jaspersoft.studio.field.tree.path";
 	public static final String FIELD_LABEL = "com.jaspersoft.studio.field.label";
+	public static final String FIELD_NAME = "com.jaspersoft.studio.field.name";
 	private JRDesignDataset newdataset;
 
 	private JasperDesign jDesign;
@@ -137,6 +137,17 @@ public abstract class DataQueryAdapters extends AQueryDesignerContainer {
 		spm.setCategory("net.sf.jasperreports.metadata.property.category:field"); //$NON-NLS-1$
 		pm.add(spm);
 
+		spm = new StandardPropertyMetadata();
+		spm.setName(FIELD_NAME);
+		spm.setLabel("Field Name");
+		spm.setDescription("Field name.");
+		spm.setValueType(String.class.getName());
+		scopes = new ArrayList<>();
+		scopes.add(PropertyScope.FIELD);
+		spm.setScopes(scopes);
+		spm.setCategory("net.sf.jasperreports.metadata.property.category:field"); //$NON-NLS-1$
+		pm.add(spm);
+		
 		PropertyMetadataRegistry.addMetadata(pm);
 	}
 
