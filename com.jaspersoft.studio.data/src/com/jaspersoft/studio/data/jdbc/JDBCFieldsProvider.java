@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import com.jaspersoft.studio.data.fields.IFieldsProvider;
 import com.jaspersoft.studio.property.dataset.dialog.DataQueryAdapters;
@@ -147,18 +148,27 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 		return columns;
 	}
 
+	private static String JAVA_PATTERN = "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
+	private static Pattern PATTERN = Pattern.compile(JAVA_PATTERN + "(\\." + JAVA_PATTERN + ")*");
+
 	public static String getJdbcTypeClass(java.sql.ResultSetMetaData rsmd, int t) {
 		try {
-			return getJRFieldType(rsmd.getColumnClassName(t));
+			String cl = rsmd.getColumnClassName(t);
+			if (Misc.isNullOrEmpty(cl) || !PATTERN.matcher(cl).matches())
+				return getColumnType(rsmd, t);
+			return getJRFieldType(cl);
 		} catch (SQLException ex) {
-			// if getColumnClassName is not supported...
-			try {
-				return getColumnType(rsmd.getColumnType(t));
-			} catch (SQLException ex2) {
-				ex2.printStackTrace();
-			}
+			return getColumnType(rsmd, t);
 		}
-		return Object.class.getName();
+	}
+
+	protected static String getColumnType(java.sql.ResultSetMetaData rsmd, int ind) {
+		try {
+			return getColumnType(rsmd.getColumnType(ind));
+		} catch (SQLException ex2) {
+			ex2.printStackTrace();
+		}
+		return null;
 	}
 
 	protected static String getColumnType(int type) {

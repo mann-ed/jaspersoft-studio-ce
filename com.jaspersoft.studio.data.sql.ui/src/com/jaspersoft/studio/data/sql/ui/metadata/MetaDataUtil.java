@@ -169,6 +169,31 @@ public class MetaDataUtil {
 		MetaDataUtil.readPrimaryKeys(meta, mtable, monitor);
 		if (!monitor.isCanceled())
 			MetaDataUtil.readForeignKeys(meta, mtable, monitor);
+		if (!monitor.isCanceled())
+			MetaDataUtil.readRemarks(meta, mtable, monitor);
+	}
+
+	private static void readRemarks(DatabaseMetaData meta, MSqlTable mt, IProgressMonitor monitor) throws SQLException {
+		MTables tables = (MTables) mt.getParent();
+		ResultSet rs = meta.getColumns(tables.getTableCatalog(), tables.getTableSchema(), mt.getValue(),
+				SchemaUtil.getMetadataAllSymbol(meta));
+		try {
+			while (rs.next()) {
+				String cname = rs.getString("COLUMN_NAME");
+				String remark = rs.getString("REMARKS");
+				if (!Misc.isNullOrEmpty(remark))
+					for (INode n : mt.getChildren()) {
+						if (n.getValue().equals(cname)) {
+							((MSQLColumn) n).setRemarks(remark);
+							break;
+						}
+					}
+				if (monitor.isCanceled())
+					break;
+			}
+		} finally {
+			SchemaUtil.close(rs);
+		}
 	}
 
 	private static void readPrimaryKeys(DatabaseMetaData meta, MSqlTable mt, IProgressMonitor monitor)

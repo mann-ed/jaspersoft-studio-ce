@@ -57,6 +57,10 @@ public class MSQLColumn extends AMSQLObject implements IDragable {
 		return remarks;
 	}
 
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
 	@Override
 	public String getToolTip() {
 		String tt = ConvertUtil.cleanDbNameFull(super.getToolTip());
