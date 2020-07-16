@@ -64,6 +64,7 @@ public class ImpInputControls {
 			rd.setResourceProperty(ResourceDescriptor.PROP_INPUTCONTROL_TYPE, ResourceDescriptor.IC_TYPE_SINGLE_VALUE);
 			rd.setParentFolder(runit.getUriString() + MReportUnit.RU_SUFFIX);
 			rd.setUriString(runit.getUriString() + MReportUnit.RU_SUFFIX + "/" + rd.getName());
+			rd.setControlType(ResourceDescriptor.IC_TYPE_SINGLE_VALUE);
 
 			MInputControl mres = (MInputControl) ResourceFactory.getResource(mrunit, rd, -1);
 			String v = p.getPropertiesMap().getProperty(ICParameterContributor.PROPERTY_JS_INPUTCONTROL_TYPE);

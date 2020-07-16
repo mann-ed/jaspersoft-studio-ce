@@ -607,7 +607,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			tgt = tgt.queryParam("label", rd.getLabel()); //$NON-NLS-1$
 			tgt = tgt.queryParam("overwrite", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 
-			ReportParameters rprms = new ReportParameters(new ArrayList<ReportParameter>());
+			ReportParameters rprms = new ReportParameters(new ArrayList<>());
 
 			Builder req = HttpUtils.getRequest(tgt);
 
@@ -628,7 +628,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 		tgt = tgt.queryParam("createFolders", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 		tgt = tgt.queryParam("overwrite", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		Builder req = HttpUtils.getRequest(tgt);
+		Builder req = HttpUtils.getRequest(tgt, MediaType.APPLICATION_JSON);
 		r = connector.put(req, Entity.entity(cr, "application/repository." + rtype + "+" + FORMAT), monitor); //$NON-NLS-1$ //$NON-NLS-2$
 
 		ClientResource<?> crl = null;
