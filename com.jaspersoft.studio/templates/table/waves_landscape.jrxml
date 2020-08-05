@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.qualifier using JasperReports Library version 6.0.4  -->
 <!-- 2015-03-30T15:35:58 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Silhouette Landscape" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Waves Landscape" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="cd3df208-1f01-461e-9efe-3ee6c21a9dcb">
 	<property name="template.engine" value="tabular_template"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true"/>
@@ -19,30 +19,33 @@
 	</style>
 	<style name="Table_TH" mode="Transparent" backcolor="#FFFFFF">
 		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<leftPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-			<rightPen lineWidth="0.5" lineColor="#000000"/>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+			<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.0" lineColor="#CCCCCC"/>
 		</box>
 	</style>
 	<style name="Table_CH" mode="Transparent" forecolor="#B89F7D" backcolor="#70A9C6">
 		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<leftPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-			<rightPen lineWidth="0.5" lineColor="#000000"/>
+			<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+			<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 		</box>
 	</style>
 	<style name="Table_TD" mode="Transparent" backcolor="#FFFFFF">
 		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<leftPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-			<rightPen lineWidth="0.5" lineColor="#000000"/>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 		</box>
+	</style>
+	<style name="Table_CH_Label" style="SubTitle" mode="Opaque" forecolor="#FFFFFF" backcolor="#666666" fontSize="16" isBold="true">
+		<box leftPadding="2"/>
 	</style>
 	<subDataset name="tableDataset" uuid="f13e6d36-5148-4ecc-bbe3-3035def80980">
 		<queryString>
@@ -52,18 +55,9 @@
 	<background>
 		<band height="575" splitType="Stretch">
 			<image vAlign="Bottom">
-				<reportElement mode="Opaque" x="0" y="234" width="85" height="241" backcolor="#000000" uuid="d34670d6-8fa8-40e1-9520-125b22c8dbd8"/>
-				<imageExpression><![CDATA["silhouette2.jpg"]]></imageExpression>
+				<reportElement positionType="Float" x="-20" y="66" width="105" height="409" uuid="64ca4020-b604-4de9-9ed1-921b74cfd593"/>
+				<imageExpression><![CDATA["waves.jpg"]]></imageExpression>
 			</image>
-			<rectangle>
-				<reportElement x="-20" y="104" width="20" height="371" backcolor="#000000" uuid="3b696a03-5a10-497a-9c08-8df089ca667b">
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<graphicElement>
-					<pen lineWidth="0.0"/>
-				</graphicElement>
-			</rectangle>
 			<frame>
 				<reportElement mode="Opaque" x="-20" y="475" width="105" height="100" backcolor="#666666" uuid="c43bcaab-2004-4343-bc81-ffa62c8e2de6"/>
 				<textField>
@@ -85,15 +79,6 @@
 					<reportElement mode="Transparent" x="42" y="73" width="20" height="1" backcolor="#FFFFFF" uuid="1022d58b-595a-4931-810c-2820c25386ac"/>
 				</line>
 			</frame>
-			<rectangle>
-				<reportElement x="0" y="104" width="85" height="130" backcolor="#000000" uuid="a4c7af64-6373-44b3-8150-f93a3ff637fd">
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<graphicElement>
-					<pen lineWidth="0.0"/>
-				</graphicElement>
-			</rectangle>
 		</band>
 	</background>
 	<title>
@@ -103,14 +88,14 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="54" isBold="false"/>
 				</textElement>
-				<text><![CDATA[SILHOUETTE TITLE]]></text>
+				<text><![CDATA[WAVES TITLE]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="SubTitle" x="232" y="67" width="568" height="37" uuid="8a2c39c1-4f53-44ef-be46-14e63a90b2f0"/>
 				<textElement textAlignment="Right">
 					<font size="26"/>
 				</textElement>
-				<text><![CDATA[Silhouette SubTitle]]></text>
+				<text><![CDATA[Waves SubTitle]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -128,7 +113,7 @@
 				<textElement>
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Silhouette Title Report]]></text>
+				<text><![CDATA[Waves Title Report]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
@@ -142,19 +127,10 @@
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="90" uuid="53e5b0a2-d912-43df-aae9-9343cd965ede">
-						<jr:tableHeader style="Table_TH" height="30">
-							<textField>
-								<reportElement style="SubTitle" x="0" y="0" width="90" height="30" forecolor="#000000" uuid="1bcad98c-0c8a-4e4b-bf57-7ced6e3ae44e"/>
-								<textElement>
-									<font isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA["Header"]]></textFieldExpression>
-							</textField>
-						</jr:tableHeader>
 						<jr:tableFooter style="Table_TH" height="30"/>
-						<jr:columnHeader style="Table_CH" height="30">
+						<jr:columnHeader style="Table_CH" height="25">
 							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="90" height="30" forecolor="#727272" uuid="9e39e25e-43cd-41c6-8e33-e114f30d8cea"/>
+								<reportElement key="" style="Table_CH_Label" x="0" y="0" width="90" height="25" uuid="9e39e25e-43cd-41c6-8e33-e114f30d8cea"/>
 								<box leftPadding="2"/>
 								<textElement>
 									<font fontName="Arial" size="16" isBold="true"/>
@@ -163,9 +139,9 @@
 							</staticText>
 						</jr:columnHeader>
 						<jr:columnFooter style="Table_CH" height="30"/>
-						<jr:detailCell style="Table_TD" height="30">
+						<jr:detailCell style="Table_TD" height="25">
 							<textField>
-								<reportElement style="Detail" x="0" y="0" width="90" height="30" uuid="06c05819-1f4b-4857-add9-21b867cd92a2"/>
+								<reportElement style="Detail" x="0" y="0" width="90" height="25" uuid="06c05819-1f4b-4857-add9-21b867cd92a2"/>
 								<box leftPadding="2"/>
 								<textElement>
 									<font fontName="Arial" size="12"/>

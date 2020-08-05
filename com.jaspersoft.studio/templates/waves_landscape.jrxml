@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.qualifier using JasperReports Library version 6.0.4  -->
 <!-- 2015-03-30T13:40:04 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Silhouette Landscape" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="e115bc59-fd0f-446b-a585-04725e27d7f0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Waves Landscape" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="e115bc59-fd0f-446b-a585-04725e27d7f0">
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -47,15 +47,9 @@
 	<background>
 		<band height="575" splitType="Stretch">
 			<image vAlign="Bottom">
-				<reportElement mode="Opaque" x="0" y="234" width="85" height="241" backcolor="#000000" uuid="e2092645-6d95-4aee-9959-6ac3866b392b"/>
-				<imageExpression><![CDATA["silhouette2.jpg"]]></imageExpression>
+				<reportElement positionType="Float" x="-20" y="66" width="105" height="409" uuid="64ca4020-b604-4de9-9ed1-921b74cfd593"/>
+				<imageExpression><![CDATA["waves.jpg"]]></imageExpression>
 			</image>
-			<rectangle>
-				<reportElement x="-20" y="234" width="20" height="241" backcolor="#000000" uuid="15a8ce9a-88f8-4109-86c3-2d1466393615"/>
-				<graphicElement>
-					<pen lineWidth="0.0"/>
-				</graphicElement>
-			</rectangle>
 			<frame>
 				<reportElement mode="Opaque" x="-20" y="475" width="105" height="100" backcolor="#666666" uuid="6eb7cb61-0dd7-47a8-8475-5fa6c3a348dc"/>
 				<textField>
@@ -86,14 +80,14 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="54" isBold="false"/>
 				</textElement>
-				<text><![CDATA[SILHOUETTE TITLE]]></text>
+				<text><![CDATA[WAVES TITLE]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="SubTitle" x="232" y="67" width="568" height="37" uuid="862cb50c-5a5e-4906-a495-226e25115fb6"/>
 				<textElement textAlignment="Right">
 					<font size="26"/>
 				</textElement>
-				<text><![CDATA[Silhouette SubTitle]]></text>
+				<text><![CDATA[Waves SubTitle]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -145,7 +139,7 @@
 				<textElement>
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Silhouette Title Report]]></text>
+				<text><![CDATA[Waves Title Report]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
