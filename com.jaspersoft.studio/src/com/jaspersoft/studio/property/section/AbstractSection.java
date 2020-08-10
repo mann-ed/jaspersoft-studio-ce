@@ -63,14 +63,14 @@ public abstract class AbstractSection extends AbstractPropertySection
 	/**
 	 * @see org.eclipse.ui.views.properties.tabbed.view.ITabbedPropertySection#refresh()
 	 */
+	@Override
 	public void refresh() {
 		setRefreshing(true);
-		APropertyNode element = getElement();
-		if (element != null) {
-			element.getPropertyDescriptors();
-			for (Object key : widgets.keySet()) {
-				widgets.get(key).setData(element, element.getPropertyValue(key));
-			}
+		APropertyNode el = getElement();
+		if (el != null) {
+			el.getPropertyDescriptors();
+			for (Object key : widgets.keySet())
+				widgets.get(key).setData(el, el.getPropertyValue(key));
 		}
 		setRefreshing(false);
 	}
@@ -168,6 +168,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 	 * @see org.eclipse.ui.views.properties.tabbed.ITabbedPropertySection#setInput(org.eclipse.ui.IWorkbenchPart,
 	 * org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void setInput(IWorkbenchPart part, ISelection selection) {
 		super.setInput(part, selection);
 		setInputC(part, selection);
@@ -184,19 +185,19 @@ public abstract class AbstractSection extends AbstractPropertySection
 					if (model != null) {
 						jasperReportsContext = model.getJasperConfiguration();
 						if (element == null) {
-							EditorContributor provider = (EditorContributor) part.getAdapter(EditorContributor.class);
+							EditorContributor provider = part.getAdapter(EditorContributor.class);
 							if (provider != null)
 								setEditDomain(provider.getEditDomain());
 							if (getElement() != model) {
 								if (getElement() != null)
 									getElement().getPropertyChangeSupport().removePropertyChangeListener(this);
-								setElement((APropertyNode) model);
+								setElement(model);
 								getElement().getPropertyChangeSupport().removePropertyChangeListener(this);
 								getElement().getPropertyChangeSupport().addPropertyChangeListener(this);
 							}
 						}
 
-						elements.add((APropertyNode) model);
+						elements.add(model);
 					}
 				}
 			}
@@ -212,6 +213,8 @@ public abstract class AbstractSection extends AbstractPropertySection
 
 	public void setElement(APropertyNode element) {
 		this.element = element;
+		if (element != null && element.getJasperConfiguration() != null)
+			jasperReportsContext = element.getJasperConfiguration();
 	}
 
 	public EditDomain getEditDomain() {
@@ -225,6 +228,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 	/**
 	 * @see org.eclipse.ui.views.properties.tabbed.view.ITabbedPropertySection#aboutToBeShown()
 	 */
+	@Override
 	public void aboutToBeShown() {
 		if (getElement() != null) {
 			getElement().getPropertyChangeSupport().removePropertyChangeListener(this);
@@ -235,6 +239,7 @@ public abstract class AbstractSection extends AbstractPropertySection
 	/**
 	 * @see org.eclipse.ui.views.properties.tabbed.view.ITabbedPropertySection#aboutToBeHidden()
 	 */
+	@Override
 	public void aboutToBeHidden() {
 		if (getElement() != null)
 			getElement().getPropertyChangeSupport().removePropertyChangeListener(this);
@@ -277,21 +282,15 @@ public abstract class AbstractSection extends AbstractPropertySection
 		if (!isDisposed()) {
 			String n = evt.getPropertyName();
 			setRefreshing(true);
-			APropertyNode element = getElement();
-			if (element != null) {
-				element.getPropertyDescriptors();
+			APropertyNode el = getElement();
+			if (el != null) {
+				el.getPropertyDescriptors();
 				for (Object key : widgets.keySet()) {
 					if (n.equals(key))
-						widgets.get(key).setData(element, element.getPropertyValue(key));
+						widgets.get(key).setData(el, el.getPropertyValue(key));
 				}
 			}
-			UIUtils.getDisplay().syncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					getTabbedPropertySheetPage().showErrors();
-				}
-			});
+			UIUtils.getDisplay().syncExec(() -> getTabbedPropertySheetPage().showErrors());
 
 			setRefreshing(false);
 		}

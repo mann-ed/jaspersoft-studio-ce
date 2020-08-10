@@ -23,8 +23,8 @@ import com.jaspersoft.studio.properties.view.validation.ValidationError;
 public abstract class AbstractPropertySection implements ISection {
 
 	/**
-	 * The standard label width when labels for sections line up on the left
-	 * hand side of the composite.
+	 * The standard label width when labels for sections line up on the left hand
+	 * side of the composite.
 	 */
 	public static final int STANDARD_LABEL_WIDTH = 85;
 
@@ -84,7 +84,7 @@ public abstract class AbstractPropertySection implements ISection {
 		this.selection = selection;
 		this.part = part;
 		element = null;
-		if (selection != null && selection instanceof IStructuredSelection)
+		if (selection instanceof IStructuredSelection)
 			element = ((IStructuredSelection) selection).getFirstElement();
 	}
 
@@ -150,9 +150,9 @@ public abstract class AbstractPropertySection implements ISection {
 	}
 
 	/**
-	 * Return if the current section provide dynamic content. This will disable
-	 * some optimization since even if the showed section is the same, since the
-	 * content is dynamic the size of the page must be recalculated
+	 * Return if the current section provide dynamic content. This will disable some
+	 * optimization since even if the showed section is the same, since the content
+	 * is dynamic the size of the page must be recalculated
 	 * 
 	 * @return true if the content shown in the section can change after its
 	 *         creation false otherwise

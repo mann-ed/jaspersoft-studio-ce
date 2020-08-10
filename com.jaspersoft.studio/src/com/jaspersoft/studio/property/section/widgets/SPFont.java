@@ -158,8 +158,8 @@ public class SPFont extends ASPropertyWidget<IPropertyDescriptor> {
 	public SPFont(Composite parent, AbstractSection section, IPropertyDescriptor pDescriptor) {
 		super(parent, section, pDescriptor);
 		preferenceListener = new PreferenceListener();
-		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener,
-				(IResource) section.getJasperReportsContext().get(FileUtils.KEY_FILE));
+		IResource f = (IResource) section.getJasperReportsContext().get(FileUtils.KEY_FILE);
+		JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener, f);
 		itemsSetted = false;
 	}
 
