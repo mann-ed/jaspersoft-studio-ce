@@ -33,6 +33,7 @@ import net.sf.jasperreports.repo.ReportResource;
 import net.sf.jasperreports.repo.RepositoryContext;
 import net.sf.jasperreports.repo.RepositoryService;
 import net.sf.jasperreports.repo.Resource;
+import net.sf.jasperreports.repo.ResourceInfo;
 import net.sf.jasperreports.repo.SimpleRepositoryContext;
 
 public class JSSFileRepositoryService implements RepositoryService {
@@ -63,9 +64,8 @@ public class JSSFileRepositoryService implements RepositoryService {
 		for (RepositoryService rs : list)
 			rs.saveResource(uri, resource);
 	}
-	
-	public <K extends Resource> K getResource(String uri, Class<K> resourceType)
-	{
+
+	public <K extends Resource> K getResource(String uri, Class<K> resourceType) {
 		return getResource(SimpleRepositoryContext.of(jConfig), uri, resourceType);
 	}
 
@@ -79,7 +79,8 @@ public class JSSFileRepositoryService implements RepositoryService {
 		return null;
 	}
 
-	public <K extends Resource> K doGetResource(RepositoryContext context, String uri, Class<K> resourceType, RepositoryService rs) {
+	public <K extends Resource> K doGetResource(RepositoryContext context, String uri, Class<K> resourceType,
+			RepositoryService rs) {
 		try {
 			K r = rs.getResource(context, uri, resourceType);
 			if (r != null)
@@ -89,8 +90,7 @@ public class JSSFileRepositoryService implements RepositoryService {
 		}
 		try {
 			if (ReportResource.class.equals(resourceType) && uri.endsWith(FileExtension.PointJRXML)) {
-				return doGetResource(
-						context,
+				return doGetResource(context,
 						StringUtils.replaceAllIns(uri, FileExtension.PointJRXML + "$", FileExtension.PointJASPER),
 						resourceType, rs);
 			} else if (ReportResource.class.equals(resourceType) && uri.endsWith(FileExtension.PointJASPER)) {
@@ -140,6 +140,16 @@ public class JSSFileRepositoryService implements RepositoryService {
 			e1.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public ResourceInfo getResourceInfo(RepositoryContext context, String location) {
+		for (RepositoryService rs : new ArrayList<RepositoryService>(list)) {
+			ResourceInfo r = rs.getResourceInfo(context, location);
+			if (r != null)
+				return r;
+		}
+		return RepositoryService.super.getResourceInfo(context, location);
 	}
 
 	private void refreshFile(final RepositoryService rs, final String uri) {

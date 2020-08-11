@@ -238,8 +238,8 @@ public class ReportController {
 				|| name.startsWith("XLSX_") || name.startsWith("XLS_") //$NON-NLS-1$
 				|| name.startsWith("JSON_") || name.startsWith("HIBERNATE_") //$NON-NLS-1$
 				|| name.startsWith("JPA_") || name.startsWith("CSV_") //$NON-NLS-1$
-				|| name.startsWith(JRParameter.REPORT_CONTEXT)
-				|| name.contains("csv.source") || name.startsWith("XMLA_")); //$NON-NLS-1$ //$NON-NLS-2$
+				|| name.startsWith(JRParameter.REPORT_CONTEXT) || name.contains("csv.source") //$NON-NLS-1$
+				|| name.startsWith("XMLA_")); //$NON-NLS-1$
 	}
 
 	private static void setDefaultParameterValues(Map<String, Object> jasperParameters,
@@ -436,10 +436,10 @@ public class ReportController {
 							String projectPath = file.getProject().getLocation().toFile().getAbsolutePath();
 							String reportPath = file.getParent().getLocation().toFile().getAbsolutePath();
 							SimpleRepositoryResourceContext context = SimpleRepositoryResourceContext.of(reportPath);
-							JasperReportSource jrSource = SimpleJasperReportSource.from(jasperReport, projectPath,
+							JasperReportSource jrSource = SimpleJasperReportSource.from(jasperReport, reportPath,
 									context);
 							AsynchronousFillHandle fh = AsynchronousFillHandle.createHandle(jrContext, jrSource,
-									new HashMap<String, Object>(jasperParameters));
+									new HashMap<>(jasperParameters));
 
 							if (fillReport(fh, monitor, pcontainer) == Status.CANCEL_STATUS) {
 								cancelMessage();
