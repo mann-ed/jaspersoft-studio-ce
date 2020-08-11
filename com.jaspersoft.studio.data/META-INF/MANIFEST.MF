@@ -8,7 +8,7 @@ Bundle-Activator: com.jaspersoft.studio.data.Activator
 Bundle-Vendor: TIBCO Software Inc.
 Require-Bundle: com.jaspersoft.studio;bundle-version="7.9.0";visibility:=reexport,
  org.apache.commons.pool;bundle-version="1.6.0";visibility:=reexport,
- org.apache.commons.lang;bundle-version="2.6.0";visibility:=reexport,
+ org.apache.commons.lang3;bundle-version="3.8.1";visibility:=reexport,
  org.slf4j.api;bundle-version="1.6.4";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
