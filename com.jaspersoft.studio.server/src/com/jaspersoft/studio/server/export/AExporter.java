@@ -126,7 +126,7 @@ public class AExporter {
 			throws Exception {
 		IFile f = getTempFile(res, rd, fkeyname, getExtension(res), monitor);
 		if (!f.exists()) {
-			File file = f.getFullPath().toFile();
+			File file = f.getRawLocation().toFile();
 			file.getParentFile().mkdirs();
 			file.createNewFile();
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(file.toURI());
