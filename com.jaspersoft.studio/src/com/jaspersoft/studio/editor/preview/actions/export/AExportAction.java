@@ -148,8 +148,8 @@ public abstract class AExportAction extends AReportViewerAction {
 	}
 
 	/**
-	 * Method called to execute the export operation. Typically this is called by
-	 * the run method since it is executing the action
+	 * Method called to execute the export operation. Typically this is called
+	 * by the run method since it is executing the action
 	 */
 	protected void export(final File file, final Callback<File> callback) throws Exception {
 		final JasperPrint jrPrint = getReportViewer().getReport();
@@ -175,12 +175,12 @@ public abstract class AExportAction extends AReportViewerAction {
 	}
 
 	/**
-	 * Method called to preview the report, this is a utility method provided from
-	 * the action and can be called outside. Essentially a preview and an export
-	 * operation are really similar since the preview export into a temp file and
-	 * show it. But for this reason it need to do less checks (for file existing for
-	 * example) and for this reason there are two separate methods to export or
-	 * preview the report
+	 * Method called to preview the report, this is a utility method provided
+	 * from the action and can be called outside. Essentially a preview and an
+	 * export operation are really similar since the preview export into a temp
+	 * file and show it. But for this reason it need to do less checks (for file
+	 * existing for example) and for this reason there are two separate methods
+	 * to export or preview the report
 	 */
 	public void preview(final File file, final JasperPrint jrPrint, final Callback<File> callback) throws Exception {
 		if (jrPrint == null || jrPrint.getPages() == null)
@@ -188,14 +188,14 @@ public abstract class AExportAction extends AReportViewerAction {
 		Job job = new Job(Messages.AExportAction_exportreport) {
 			@Override
 			protected IStatus run(final IProgressMonitor monitor) {
-				doPreview(file, jrPrint, monitor);
-				UIUtils.getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						callback.completed(file);
-					}
-				});
+				ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+				try {
+					Thread.currentThread().setContextClassLoader(jContext.getClassLoader());
+					doPreview(file, jrPrint, monitor);
+				} finally {
+					Thread.currentThread().setContextClassLoader(oldLoader);
+				}
+				UIUtils.getDisplay().syncExec(() -> callback.completed(file));
 				return Status.OK_STATUS;
 			}
 		};
@@ -244,12 +244,12 @@ public abstract class AExportAction extends AReportViewerAction {
 			JRExportProgressMonitor monitor, File file);
 
 	/**
-	 * Called when the destination file already exist, check what to do using the
-	 * preferences and it can use a static value chosen by the user before or prompt
-	 * a question
+	 * Called when the destination file already exist, check what to do using
+	 * the preferences and it can use a static value chosen by the user before
+	 * or prompt a question
 	 * 
 	 * @return true if the export operation should continue and the target file
-	 *         overwritten, false if the operation should be aborted
+	 * overwritten, false if the operation should be aborted
 	 */
 	protected boolean continueIfFileExist() {
 		boolean result = true;
@@ -264,7 +264,8 @@ public abstract class AExportAction extends AReportViewerAction {
 			// Prompt the question to the user
 			Boolean[] answers = UIUtils.showConfirmation(Messages.AExportAction_overwriteTitle,
 					Messages.AExportAction_overwriteMessage, Messages.AExportAction_overwriteCheckbox);
-			// the first element of the array is the decision made on the dialog, the second
+			// the first element of the array is the decision made on the
+			// dialog, the second
 			// is the value of the checkbox
 			result = answers[0];
 			if (answers[1]) {
@@ -278,21 +279,20 @@ public abstract class AExportAction extends AReportViewerAction {
 		} else if (exporterValue.equals(JRExporterPreferencePage.OVERWRITE_STATE.STOP_OPERATION)) {
 			result = false;
 		}
-		// the case to continue is already cover by the initialization value of result
+		// the case to continue is already cover by the initialization value of
+		// result
 		return result;
 	}
 
 	/**
-	 * Called to proceed to the export of the report. It does some additional check
-	 * than doPreview, since the export many times need also to check if or not to
-	 * overwrite an existing file, instead in the preview it used a temp.
+	 * Called to proceed to the export of the report. It does some additional
+	 * check than doPreview, since the export many times need also to check if
+	 * or not to overwrite an existing file, instead in the preview it used a
+	 * temp.
 	 * 
-	 * @param file
-	 *            the destination file
-	 * @param jrPrint
-	 *            the jrprint to export
-	 * @param monitor
-	 *            monitor for the operation
+	 * @param file the destination file
+	 * @param jrPrint the jrprint to export
+	 * @param monitor monitor for the operation
 	 */
 	protected void doExport(File file, JasperPrint jrPrint, final IProgressMonitor monitor) {
 		try {
@@ -301,7 +301,8 @@ public abstract class AExportAction extends AReportViewerAction {
 				monitor.beginTask(Messages.AExportAction_exportreport, size);
 				boolean continueOperation = true;
 				if (file.exists()) {
-					// If the file already exist read the preference option to handle the situation
+					// If the file already exist read the preference option to
+					// handle the situation
 					continueOperation = continueIfFileExist();
 				}
 				if (continueOperation) {
@@ -328,16 +329,14 @@ public abstract class AExportAction extends AReportViewerAction {
 	}
 
 	/**
-	 * Called to proceed to the preview of the report. It does some additional check
-	 * than doPreview, since the export many times need also to check if or not to
-	 * overwrite an existing file, instead in the preview it used a temp.
+	 * Called to proceed to the preview of the report. It does some additional
+	 * check than doPreview, since the export many times need also to check if
+	 * or not to overwrite an existing file, instead in the preview it used a
+	 * temp.
 	 * 
-	 * @param file
-	 *            the destination temp file
-	 * @param jrPrint
-	 *            the jrprint to export
-	 * @param monitor
-	 *            monitor for the operation
+	 * @param file the destination temp file
+	 * @param jrPrint the jrprint to export
+	 * @param monitor monitor for the operation
 	 */
 	public void doPreview(File file, JasperPrint jrPrint, final IProgressMonitor monitor) {
 		try {

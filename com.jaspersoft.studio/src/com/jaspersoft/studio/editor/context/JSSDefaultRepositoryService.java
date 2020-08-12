@@ -23,6 +23,7 @@ import net.sf.jasperreports.engine.JRRuntimeException;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.util.JRResourcesUtil;
 import net.sf.jasperreports.repo.DefaultRepositoryService;
+import net.sf.jasperreports.repo.RepositoryContext;
 import net.sf.jasperreports.repo.SimpleRepositoryContext;
 
 public class JSSDefaultRepositoryService extends DefaultRepositoryService {
@@ -34,7 +35,7 @@ public class JSSDefaultRepositoryService extends DefaultRepositoryService {
 	}
 
 	@Override
-	public InputStream getInputStream(String uri) {
+	public InputStream getInputStream(RepositoryContext context, String uri) {
 		if (Misc.isNullOrEmpty(uri) || uri.startsWith("repo:"))
 			return null;
 		try {
@@ -67,6 +68,7 @@ public class JSSDefaultRepositoryService extends DefaultRepositoryService {
 		} catch (JRException e) {
 			throw new JRRuntimeException(e);
 		}
-		return null;
+		return super.getInputStream(context, uri);
 	}
+	 
 }
