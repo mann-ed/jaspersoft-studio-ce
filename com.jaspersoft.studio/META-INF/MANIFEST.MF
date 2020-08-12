@@ -896,6 +896,7 @@ Export-Package: com.jaspersoft.studio;
  com.jaspersoft.studio.wizards.obj2text,
  com.jaspersoft.templates,
  org.apache.commons.lang,
+ org.apache.commons.lang.time,
  org.apache.commons.validator,
  org.apache.commons.validator.routines,
  org.apache.velocity,
