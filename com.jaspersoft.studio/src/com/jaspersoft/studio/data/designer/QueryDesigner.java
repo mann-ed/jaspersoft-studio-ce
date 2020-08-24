@@ -78,8 +78,20 @@ public class QueryDesigner extends AQueryDesigner {
 		updateQueryText(q);
 	}
 
+	private final static String LineDelimiter = System.getProperty("line.separator");
+
+	protected String getNewLineDelimiter() {
+		return LineDelimiter;
+	}
+
 	public Control createControl(Composite parent) {
-		control = new StyledText(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+		control = new StyledText(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER) {
+			@Override
+			public String getLineDelimiter() {
+				return getNewLineDelimiter();
+			}
+		};
+
 		control.addModifyListener(new QueryListener());
 		setupSourceEditorFont();
 		undoHandlrer = new UndoRedoImpl(control);
