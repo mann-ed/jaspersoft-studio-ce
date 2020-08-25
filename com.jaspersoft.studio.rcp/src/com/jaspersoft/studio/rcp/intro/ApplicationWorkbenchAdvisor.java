@@ -6,7 +6,9 @@ package com.jaspersoft.studio.rcp.intro;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IWorkspace;
@@ -358,9 +360,18 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 			InputStream propsIS = siteEntry.openStream();
 			Properties props = new Properties();
 			props.load(propsIS);
-			String urlString = props.getProperty("jaspersoftstudio.ce.updatesite"); //$NON-NLS-1$
-			if(urlString!=null){
-				P2Util.setRepositories(Arrays.asList(urlString));
+
+			String[] updateSiteItems=new String[] {
+					"jaspersoftstudio.ce.updatesite", "eclipse.project.updatesite.1", "eclipse.project.updatesite.2"};
+			List<String> updateSiteURLs=new ArrayList<>();		
+			for(String str : updateSiteItems) {
+				String urlString = props.getProperty(str);
+				if(urlString!=null && !urlString.trim().isEmpty()) {
+					updateSiteURLs.add(urlString);
+				}
+			}
+			if(!updateSiteURLs.isEmpty()){
+				P2Util.setRepositories(updateSiteURLs);
 			}
 		} catch (Exception e) {
 			BundleCommonUtils.logError(Activator.PLUGIN_ID, Messages.ApplicationWorkbenchAdvisor_RepositoryURLReadError, e);
