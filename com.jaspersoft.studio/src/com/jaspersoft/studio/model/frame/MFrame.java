@@ -32,6 +32,7 @@ import com.jaspersoft.studio.model.util.IIconDescriptor;
 import com.jaspersoft.studio.model.util.NodeIconDescriptor;
 import com.jaspersoft.studio.property.descriptor.checkbox.CheckBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.combo.RComboBoxPropertyDescriptor;
+import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JRConstants;
@@ -226,36 +227,46 @@ public class MFrame extends MGraphicElementLineBox implements IPastable, IPastab
 
 	public Integer getTopPadding() {
 		JRDesignFrame frame = (JRDesignFrame) getValue();
-		if (frame != null)
-			return frame.getLineBox().getTopPadding();
+		JasperReportsConfiguration jConfig = getJasperConfiguration();
+		if (frame != null && jConfig != null) {
+			return jConfig.getStyleResolver().getTopPadding(frame.getLineBox());
+		}
 		return 0;
 	}
 
 	public Integer getLeftPadding() {
 		JRDesignFrame frame = (JRDesignFrame) getValue();
-		if (frame != null)
-			return frame.getLineBox().getLeftPadding();
+		JasperReportsConfiguration jConfig = getJasperConfiguration();
+		if (frame != null && jConfig != null) {
+			return jConfig.getStyleResolver().getLeftPadding(frame.getLineBox());
+		}
 		return 0;
 	}
 
 	public Integer getBottomPadding() {
 		JRDesignFrame frame = (JRDesignFrame) getValue();
-		if (frame != null)
-			return frame.getLineBox().getBottomPadding();
+		JasperReportsConfiguration jConfig = getJasperConfiguration();
+		if (frame != null && jConfig != null) {
+			return jConfig.getStyleResolver().getBottomPadding(frame.getLineBox());
+		}
 		return 0;
 	}
 
 	public Integer getRightPadding() {
 		JRDesignFrame frame = (JRDesignFrame) getValue();
-		if (frame != null)
-			return frame.getLineBox().getRightPadding();
+		JasperReportsConfiguration jConfig = getJasperConfiguration();
+		if (frame != null && jConfig != null) {
+			return jConfig.getStyleResolver().getRightPadding(frame.getLineBox());
+		}
 		return 0;
 	}
 
 	public Integer getPadding() {
 		JRDesignFrame frame = (JRDesignFrame) getValue();
-		if (frame != null)
-			return frame.getLineBox().getPadding();
+		JasperReportsConfiguration jConfig = getJasperConfiguration();
+		if (frame != null && jConfig != null) {
+			return jConfig.getStyleResolver().getPadding(frame.getLineBox());
+		}
 		return 0;
 	}
 
