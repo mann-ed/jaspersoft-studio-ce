@@ -458,22 +458,26 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		MenuManager menu = new MenuManager(IDEWorkbenchMessages.Workbench_file,
 				IWorkbenchActionConstants.M_FILE);
 		menu.add(new GroupMarker(IWorkbenchActionConstants.FILE_START));
-		{
-			// create the New submenu, using the same id for it as the New
-			// action
-			String newText = IDEWorkbenchMessages.Workbench_new;
-			String newId = ActionFactory.NEW.getId();
-			MenuManager newMenu = new MenuManager(newText, newId);
-			newMenu.setActionDefinitionId("org.eclipse.ui.file.newQuickMenu"); //$NON-NLS-1$
-			newMenu.add(new Separator(newId));
+		// create the New submenu, using the same id for it as the New
+		// action
+		String newText = IDEWorkbenchMessages.Workbench_new;
+		String newId = ActionFactory.NEW.getId();
+		MenuManager newMenu = new MenuManager(newText, newId);
+		newMenu.setActionDefinitionId("org.eclipse.ui.file.newQuickMenu"); //$NON-NLS-1$
+		newMenu.add(new Separator(newId));
 
-			this.newWizardMenu = new NewWizardMenu(getWindow());
-			newMenu.add(this.newWizardMenu);
-			newMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-			menu.add(newMenu);
-		}
+		this.newWizardMenu = new NewWizardMenu(getWindow());
+		newMenu.add(this.newWizardMenu);
+		newMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		menu.add(newMenu);
 
 		menu.add(new GroupMarker(IWorkbenchActionConstants.NEW_EXT));
+		
+		MenuManager recent = new MenuManager(WorkbenchMessages.OpenRecentDocuments_text);
+		recent.add(ContributionItemFactory.REOPEN_EDITORS.create(getWindow()));
+		recent.add(new GroupMarker(IWorkbenchActionConstants.MRU));
+		menu.add(recent);
+
 		menu.add(new Separator());
 
 		menu.add(closeAction);
@@ -506,8 +510,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		menu.add(new Separator());
 		menu.add(getPropertiesItem());
 
-		menu.add(ContributionItemFactory.REOPEN_EDITORS.create(getWindow()));
-		menu.add(new GroupMarker(IWorkbenchActionConstants.MRU));
 		menu.add(new Separator());
 
 		// If we're on OS X we shouldn't show this command in the File menu. It
