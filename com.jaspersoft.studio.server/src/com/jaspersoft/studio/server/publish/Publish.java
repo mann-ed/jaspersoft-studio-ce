@@ -104,7 +104,7 @@ public class Publish {
 		MJrxml jrxml = null;
 		if (parent instanceof MReportUnit) {
 			mrunit = (MReportUnit) parent;
-			jrxml = new MJrxml(mrunit, PublishUtil.getMainReport(monitor, mrunit, jd), 0);
+			jrxml = new MJrxml(mrunit, PublishUtil.getMainReport(monitor, mrunit, jd, jrConfig), 0);
 		} else if (parent.getParent() instanceof MReportUnit) {
 			jrxml = (MJrxml) parent;
 			mrunit = (MReportUnit) parent.getParent();

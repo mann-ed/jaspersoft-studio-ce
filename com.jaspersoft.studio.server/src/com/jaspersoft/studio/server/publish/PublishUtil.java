@@ -21,13 +21,13 @@ import com.jaspersoft.studio.server.Activator;
 import com.jaspersoft.studio.server.WSClientHelper;
 import com.jaspersoft.studio.server.export.AExporter;
 import com.jaspersoft.studio.server.export.JrxmlExporter;
-import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMJrxmlContainer;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MInputControl;
 import com.jaspersoft.studio.server.model.MReportUnit;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.model.server.ServerProfile;
+import com.jaspersoft.studio.server.preferences.JRSPreferencesPage;
 import com.jaspersoft.studio.server.utils.RDUtil;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
@@ -48,7 +48,8 @@ public class PublishUtil {
 		return resources;
 	}
 
-	public static ResourceDescriptor getMainReport(IProgressMonitor monitor, MReportUnit mrunit, JasperDesign jd) {
+	public static ResourceDescriptor getMainReport(IProgressMonitor monitor, MReportUnit mrunit, JasperDesign jd,
+			JasperReportsConfiguration jConfig) {
 		String jrxmln = jd.getProperty(AExporter.PROP_REPORTRESOURCE);
 		String unit = mrunit.getValue().getUriString();
 		if (jrxmln != null && unit != null && jrxmln.startsWith(unit) && jrxmln.length() > unit.length()
@@ -79,8 +80,9 @@ public class PublishUtil {
 			}
 		}
 		ResourceDescriptor mainr = new ResourceDescriptor();
-		mainr.setName(Messages.JrxmlPublishAction_defaultresourcename);
-		mainr.setLabel(Messages.JrxmlPublishAction_defaultresourcelabel);
+
+		mainr.setName(JRSPreferencesPage.getDefaultMainReportName(jConfig));
+		mainr.setLabel(JRSPreferencesPage.getDefaultMainReportLabel(jConfig));
 		String d = jd.getProperty(PHolderUtil.COM_JASPERSOFT_STUDIO_REPORT_DESCRIPTION);
 		if (!Misc.isNullOrEmpty(d))
 			mainr.setDescription(d);
