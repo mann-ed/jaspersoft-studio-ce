@@ -32,11 +32,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.ide.IDE;
 import org.exolab.castor.mapping.Mapping;
 import org.xml.sax.InputSource;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
+import com.jaspersoft.studio.data.DataAdapterEditorPart;
 import com.jaspersoft.studio.data.DataAdapterFactory;
 import com.jaspersoft.studio.data.DataAdapterManager;
 import com.jaspersoft.studio.data.DefaultDataAdapterDescriptor;
@@ -254,7 +256,10 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 			final DataAdapterDescriptor das = readDataADapter(file.getContents(), file);
 			if (das != null) {
 				das.setName(file.getProjectRelativePath().toOSString());
-				UIUtils.getDisplay().asyncExec(() -> FileDataAdapterStorage.super.addDataAdapter(das));
+				UIUtils.getDisplay().asyncExec(() -> {
+					FileDataAdapterStorage.super.addDataAdapter(das);
+					IDE.setDefaultEditor(file, DataAdapterEditorPart.ID);
+				});
 			}
 		}
 	}

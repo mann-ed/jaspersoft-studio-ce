@@ -71,7 +71,7 @@ public class JrxmlExporter extends AExporter {
 					jrConfig.dispose();
 			}
 		}
-		if (f != null)
+		if (f != null && f.exists())
 			f.setPersistentProperty(KEY_REPORT_ISMAIN, Boolean.toString(res.getValue().isMainReport()));
 		return f;
 	}

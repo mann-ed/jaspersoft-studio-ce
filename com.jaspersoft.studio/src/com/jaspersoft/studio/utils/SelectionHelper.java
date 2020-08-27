@@ -97,10 +97,9 @@ public class SelectionHelper {
 	/**
 	 * Get the node of the passed element, searching it in the current editor
 	 * 
-	 * @param jrElement
-	 *            the element to search
-	 * @return the node of the passed element in the current editor, or null if it
-	 *         can't be found
+	 * @param jrElement the element to search
+	 * @return the node of the passed element in the current editor, or null if
+	 * it can't be found
 	 */
 	public static ANode getNode(Object jrElement) {
 		IEditorPart activeEditor = getActiveJRXMLEditor();
@@ -124,10 +123,11 @@ public class SelectionHelper {
 	}
 
 	/**
-	 * Extract from the current jrxml editor the background edit part and return it
+	 * Extract from the current jrxml editor the background edit part and return
+	 * it
 	 * 
-	 * @return a background edit part from the current editor if it was found, or
-	 *         null if the editor or the part are not found
+	 * @return a background edit part from the current editor if it was found,
+	 * or null if the editor or the part are not found
 	 */
 	public static EditPart getBackgroundEditPart() {
 		JrxmlEditor jrxmlEditor = (JrxmlEditor) getActiveJRXMLEditor();
@@ -221,13 +221,11 @@ public class SelectionHelper {
 	/**
 	 * Set the selection of the current editor.
 	 * 
-	 * @param jrElements
-	 *            list of the jrElements to select, must be not null
-	 * @param add
-	 *            true if the selection should be added to the existing one or false
-	 *            otherwise
-	 * @return the previous selection, in a pair where the key is the selection and
-	 *         the value is the viewer where it was set
+	 * @param jrElements list of the jrElements to select, must be not null
+	 * @param add true if the selection should be added to the existing one or
+	 * false otherwise
+	 * @return the previous selection, in a pair where the key is the selection
+	 * and the value is the viewer where it was set
 	 */
 	public static Pair<ISelection, EditPartViewer> setSelection(List<JRChild> jrElements, boolean add) {
 		ArrayList<EditPart> editParts = new ArrayList<>();
@@ -305,8 +303,8 @@ public class SelectionHelper {
 	}
 
 	/**
-	 * Select the background edit part, if available, otherwise it dosen't nothing.
-	 * The background must be visible otherwise it dosen't do nothing
+	 * Select the background edit part, if available, otherwise it dosen't
+	 * nothing. The background must be visible otherwise it dosen't do nothing
 	 */
 	public static void setBackgroundSelected() {
 		EditPart ep = getBackgroundEditPart();
@@ -332,8 +330,7 @@ public class SelectionHelper {
 	 * Check if the background in the current editor is in edit mode
 	 * 
 	 * @return true if the background in the current editor is editable, false
-	 *         otherwise. If the background or the editor are not found it return
-	 *         false
+	 * otherwise. If the background or the editor are not found it return false
 	 */
 	public static boolean isBackgroundEditable() {
 		IEditorPart currentEditor = getActiveJRXMLEditor();
@@ -397,6 +394,7 @@ public class SelectionHelper {
 	public static final boolean openEditorType(IFile file, String editorID) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		try {
+			IDE.setDefaultEditor(file, editorID);
 			IDE.openEditor(page, file, editorID);
 		} catch (PartInitException e) {
 			UIUtils.showError(e);
@@ -489,7 +487,7 @@ public class SelectionHelper {
 	 * resource.
 	 * 
 	 * @return <code>true</code> if selection is a virtual resource,
-	 *         <code>false</code> otherwise
+	 * <code>false</code> otherwise
 	 * @see IResource#isVirtual()
 	 */
 	public static boolean isCurrentSelectionVirtualResource() {
@@ -505,8 +503,8 @@ public class SelectionHelper {
 	}
 
 	/**
-	 * Return a list of all the editors currently opened. The editor must had been
-	 * in foreground at least once during the session to consider it opened
+	 * Return a list of all the editors currently opened. The editor must had
+	 * been in foreground at least once during the session to consider it opened
 	 * 
 	 * @return a not null list of jrxml editor
 	 */
@@ -527,8 +525,8 @@ public class SelectionHelper {
 	}
 
 	/**
-	 * Return the main part of the current editor. Typically this is a PageEditPart.
-	 * This is the part that has every other element as child
+	 * Return the main part of the current editor. Typically this is a
+	 * PageEditPart. This is the part that has every other element as child
 	 * 
 	 * @return a PageEditPart or null if it can't be found
 	 */
@@ -549,12 +547,12 @@ public class SelectionHelper {
 	}
 
 	/**
-	 * Return the mouse position in the current editor, the position is relative to
-	 * the current ReportPageEditPart or a PageEditPart of a subeditor if it is
-	 * opened
+	 * Return the mouse position in the current editor, the position is relative
+	 * to the current ReportPageEditPart or a PageEditPart of a subeditor if it
+	 * is opened
 	 * 
-	 * @return the position of the pointer in the current page or null if it can't
-	 *         be found
+	 * @return the position of the pointer in the current page or null if it
+	 * can't be found
 	 */
 	public static Point getCursorCurrentRelativePosition() {
 		GraphicalEditPart part = (GraphicalEditPart) getMainEditPart();
@@ -576,10 +574,9 @@ public class SelectionHelper {
 	 * mouse button was pressed. The position is relative to the current
 	 * ReportPageEditPart or a PageEditPart of a subeditor if it is opened
 	 * 
-	 * @param mouseButton
-	 *            the index of the mouse button
-	 * @return the position of the pointer in the current page when the button was
-	 *         pressed or null if it can't be found
+	 * @param mouseButton the index of the mouse button
+	 * @return the position of the pointer in the current page when the button
+	 * was pressed or null if it can't be found
 	 */
 	public static Point getCursorRelativePositionOnClick(int mouseButton) {
 		Point cursorPosition = JasperReportsPlugin.getLastClickLocation(mouseButton);

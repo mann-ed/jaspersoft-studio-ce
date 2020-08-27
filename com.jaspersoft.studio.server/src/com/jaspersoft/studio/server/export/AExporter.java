@@ -125,17 +125,19 @@ public class AExporter {
 	public IFile exportToIFile(AMResource res, ResourceDescriptor rd, String fkeyname, IProgressMonitor monitor)
 			throws Exception {
 		IFile f = getTempFile(res, rd, fkeyname, getExtension(res), monitor);
-		if (!f.exists()) {
-			File file = f.getRawLocation().toFile();
-			file.getParentFile().mkdirs();
-			file.createNewFile();
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(file.toURI());
-			if (files.length > 0) {
-				f = files[0];
-				f.getParent().refreshLocal(1, monitor);
+		if (f != null) {
+			if (!f.exists()) {
+				File file = f.getRawLocation().toFile();
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+				IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(file.toURI());
+				if (files.length > 0) {
+					f = files[0];
+					f.getParent().refreshLocal(1, monitor);
+				}
 			}
+			setServerLocation(res, f);
 		}
-		setServerLocation(res, f);
 		return f;
 	}
 
@@ -179,7 +181,7 @@ public class AExporter {
 		}
 		INode root = res.getRoot();
 		IFolder ttroot = null;
-		if (root != null && root instanceof MServerProfile)
+		if (root instanceof MServerProfile)
 			ttroot = ((MServerProfile) root).getTmpDir(monitor);
 		else
 			ttroot = FileUtils.getInProjectFolder(FileUtils.createTempDir().toURI(), monitor);
@@ -187,7 +189,7 @@ public class AExporter {
 		if (pfolder.endsWith("_files"))
 			pfolder = pfolder.substring(0, pfolder.lastIndexOf("_files"));
 		IResource r = ttroot.findMember(pfolder);
-		if (r != null && r instanceof IFile) {
+		if (r instanceof IFile) {
 			r.delete(true, monitor);
 			r = null;
 		}
@@ -196,7 +198,7 @@ public class AExporter {
 		IFolder troot = (IFolder) r;
 		String newpath = getNewFileName(rd, dextention);
 		r = troot.findMember(newpath);
-		if (r != null && r instanceof IFolder) {
+		if (r instanceof IFolder) {
 			r.delete(true, monitor);
 			r = null;
 		}

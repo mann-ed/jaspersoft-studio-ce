@@ -338,44 +338,51 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	public void resourceChanged(final IResourceChangeEvent event) {
 		if (isRefreshing)
 			return;
-		UIUtils.getDisplay().syncExec(() -> {
-			switch (event.getType()) {
-			case IResourceChangeEvent.PRE_CLOSE:
-				Display.getDefault().asyncExec(() -> {
-					IWorkbenchPage[] pages = getSite().getWorkbenchWindow().getPages();
-					for (int i = 0; i < pages.length; i++) {
-						if (((FileEditorInput) xmlEditor.getEditorInput()).getFile().getProject()
-								.equals(event.getResource())) {
-							IEditorPart editorPart = pages[i].findEditor(xmlEditor.getEditorInput());
-							pages[i].closeEditor(editorPart, true);
+		Job job = new Job("Post file change") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				switch (event.getType()) {
+				case IResourceChangeEvent.PRE_CLOSE:
+					Display.getDefault().asyncExec(() -> {
+						IWorkbenchPage[] pages = getSite().getWorkbenchWindow().getPages();
+						for (int i = 0; i < pages.length; i++) {
+							if (((FileEditorInput) xmlEditor.getEditorInput()).getFile().getProject()
+									.equals(event.getResource())) {
+								IEditorPart editorPart = pages[i].findEditor(xmlEditor.getEditorInput());
+								pages[i].closeEditor(editorPart, true);
+							}
 						}
-					}
-				});
-				break;
-			case IResourceChangeEvent.PRE_DELETE:
-				break;
-			case IResourceChangeEvent.POST_CHANGE:
-				try {
-					DeltaVisitor visitor = new DeltaVisitor(AbstractJRXMLEditor.this);
-					event.getDelta().accept(visitor);
-					if (jrContext != null && getEditorInput() != null) {
-						IFile old = jrContext.getAssociatedReportFile();
-						IFile newf = ((IFileEditorInput) getEditorInput()).getFile();
-						if (!old.equals(newf)) {
-							jrContext.init(newf);
-							JaspersoftStudioPlugin.getExtensionManager().onRename(old, newf, jrContext,
-									new NullProgressMonitor());
+					});
+					break;
+				case IResourceChangeEvent.PRE_DELETE:
+					break;
+				case IResourceChangeEvent.POST_CHANGE:
+					try {
+						DeltaVisitor visitor = new DeltaVisitor(AbstractJRXMLEditor.this);
+						event.getDelta().accept(visitor);
+						if (jrContext != null && getEditorInput() != null) {
+							IFile old = jrContext.getAssociatedReportFile();
+							IFile newf = ((IFileEditorInput) getEditorInput()).getFile();
+							if (!old.equals(newf)) {
+								jrContext.init(newf);
+								JaspersoftStudioPlugin.getExtensionManager().onRename(old, newf, jrContext,
+										new NullProgressMonitor());
+							}
 						}
+					} catch (CoreException e) {
+						UIUtils.showError(e);
 					}
-				} catch (CoreException e) {
-					UIUtils.showError(e);
+					break;
+				case IResourceChangeEvent.PRE_BUILD:
+				case IResourceChangeEvent.POST_BUILD:
+					break;
 				}
-				break;
-			case IResourceChangeEvent.PRE_BUILD:
-			case IResourceChangeEvent.POST_BUILD:
-				break;
+
+				return Status.OK_STATUS;
 			}
-		});
+		};
+		job.setPriority(Job.LONG);
+		job.schedule();
 	}
 
 	/*
@@ -809,7 +816,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 				}
 			}
 			String ver = JRXmlWriterHelper.getVersion(getCurrentFile(), jrContext, false);
-			IContextService service = (IContextService)PlatformUI.getWorkbench().getService(IContextService.class);
+			IContextService service = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 			switch (newPageIndex) {
 			case PAGE_DESIGNER:
 				if (activePage == PAGE_SOURCEEDITOR && !xmlFresh) {
@@ -935,7 +942,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 	protected void updateContentOutline(int page) {
 		if (outlinePage == null)
 			return;
-		IContentOutlinePage outline = (IContentOutlinePage)getEditor(page).getAdapter(IContentOutlinePage.class);
+		IContentOutlinePage outline = (IContentOutlinePage) getEditor(page).getAdapter(IContentOutlinePage.class);
 		if (outline == null)
 			outline = new EmptyOutlinePage();
 		outlinePage.setPageActive(outline);
@@ -1120,7 +1127,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 			jrContext.dispose();
 		super.dispose();
 		if (context != null) {
-			IContextService service = (IContextService)getSite().getService(IContextService.class);
+			IContextService service = (IContextService) getSite().getService(IContextService.class);
 			service.deactivateContext(context);
 		}
 	}

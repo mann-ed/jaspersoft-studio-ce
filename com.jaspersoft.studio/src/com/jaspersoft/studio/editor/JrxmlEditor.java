@@ -9,6 +9,10 @@ import java.util.Set;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
@@ -221,14 +225,21 @@ public class JrxmlEditor extends AbstractJRXMLEditor implements IJROBjectEditor,
 		super.resourceChanged(event);
 		if (isRefreshing)
 			return;
-		if (event.getType() == IResourceChangeEvent.POST_CHANGE)
-			UIUtils.getDisplay().syncExec(() -> {
-				try {
-					TemplateStyleVisitor visitor = new TemplateStyleVisitor(JrxmlEditor.this);
-					event.getDelta().accept(visitor);
-				} catch (CoreException e) {
-					UIUtils.showError(e);
+		if (getModel() != null && event.getType() == IResourceChangeEvent.POST_CHANGE) {
+			Job job = new Job("Verify Styles") {
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					try {
+						TemplateStyleVisitor visitor = new TemplateStyleVisitor(JrxmlEditor.this);
+						event.getDelta().accept(visitor);
+					} catch (CoreException e) {
+						UIUtils.showError(e);
+					}
+					return Status.OK_STATUS;
 				}
-			});
+			};
+			job.setPriority(Job.LONG);
+			job.schedule();
+		}
 	}
 }

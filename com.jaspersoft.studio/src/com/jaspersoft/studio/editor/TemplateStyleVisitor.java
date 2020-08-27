@@ -16,34 +16,37 @@ import com.jaspersoft.studio.utils.jasper.ResourceChangeEvent;
 import com.jaspersoft.studio.utils.jasper.ResourceChangeEvent.RESOURCE_TYPE;
 
 /**
- * Check if a changed resource is a tamplate style and in case fire on the {@link JasperReportsConfiguration} the
- * event to refresh the template styles of the report
+ * Check if a changed resource is a tamplate style and in case fire on the
+ * {@link JasperReportsConfiguration} the event to refresh the template styles
+ * of the report
  */
 public class TemplateStyleVisitor implements IResourceDeltaVisitor {
 
-	private JrxmlEditor editor;
-	
+	private JasperReportsConfiguration jConfig;
+
 	public TemplateStyleVisitor(JrxmlEditor editor) {
-		this.editor = editor;
+		MReportRoot model = (MReportRoot) editor.getModel();
+		if (model != null)
+			jConfig = model.getJasperConfiguration();
 	}
-	
+
 	@Override
 	public boolean visit(IResourceDelta delta) throws CoreException {
+		if (jConfig == null)
+			return false;
 		if (delta.getResource() instanceof IFile) {
-			IFile resource = (IFile)delta.getResource();
+			IFile resource = (IFile) delta.getResource();
 			String extension = resource.getFileExtension();
-			if (editor.getModel() != null && extension != null && extension.toLowerCase().equals("jrtx")) {
+			if (extension != null && extension.equalsIgnoreCase("jrtx")) {
 				try {
-					JasperReportsConfiguration jConfig = ((MReportRoot)editor.getModel()).getJasperConfiguration();
-					ResourceChangeEvent resourceChangeEvent = new ResourceChangeEvent(jConfig, resource, RESOURCE_TYPE.TEMPLATE_STYLE);
-					jConfig.getPropertyChangeSupport().firePropertyChange(resourceChangeEvent);
+					jConfig.getPropertyChangeSupport().firePropertyChange(
+							new ResourceChangeEvent(jConfig, resource, RESOURCE_TYPE.TEMPLATE_STYLE));
 				} catch (Exception ex) {
 					JaspersoftStudioPlugin.getInstance().logError(ex);
 					ex.printStackTrace();
 				}
 			}
-			
-		} 
+		}
 		return true;
 	}
 
