@@ -6,9 +6,6 @@ package com.jaspersoft.studio.editor.preview.view.report.system;
 
 import java.io.File;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.engine.JasperPrint;
-
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 
@@ -16,8 +13,13 @@ import com.jaspersoft.studio.editor.preview.actions.export.AExportAction;
 import com.jaspersoft.studio.editor.preview.stats.Statistics;
 import com.jaspersoft.studio.editor.preview.view.control.ReportController;
 import com.jaspersoft.studio.editor.preview.view.report.swt.SWTViewer;
-import com.jaspersoft.studio.utils.Callback;
+import com.jaspersoft.studio.messages.Messages;
+import com.jaspersoft.studio.property.dataset.dialog.DataQueryAdapters;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.Misc;
+import net.sf.jasperreports.engine.JasperPrint;
 
 public abstract class ASystemViewer extends SWTViewer {
 
@@ -34,34 +36,30 @@ public abstract class ASystemViewer extends SWTViewer {
 			try {
 				final String ext = getExtension(jrprint);
 				final AExportAction exp = createExporterAction(rptviewer);
-				final File tmpFile = File.createTempFile("report", ext);
+
+				String fname = jrprint.getProperty(DataQueryAdapters.EXPORTER_FILENAME);
+				if (Misc.isNullOrEmpty(fname))
+					fname = "report";
+				final File tmpFile = File.createTempFile(fname, ext); // $NON-NLS-1$
 				stats.startCount(ReportController.ST_EXPORTTIME);
-				UIUtils.getDisplay().asyncExec(new Runnable() {
+				UIUtils.getDisplay().asyncExec(() -> {
+					try {
+						exp.preview(tmpFile, jrprint, value -> {
+							stats.endCount(ReportController.ST_EXPORTTIME);
+							stats.setValue(ReportController.ST_REPORTSIZE, tmpFile.length());
 
-					@Override
-					public void run() {
-						try {
-							exp.preview(tmpFile, jrprint, new Callback<File>() {
-
-								@Override
-								public void completed(File value) {
-									stats.endCount(ReportController.ST_EXPORTTIME);
-									stats.setValue(ReportController.ST_REPORTSIZE, tmpFile.length());
-
-									Program p = Program.findProgram(ext);
-									if (p != null)
-										p.execute(tmpFile.getAbsolutePath());
-									else
-										// TODO here we can propose a better dialog, like open with...(create association, etc.)
-										UIUtils.showWarning(String
-												.format(
-														"No file association defined in your sistem for: %s\nFile is located at: \n\n%s\n\nPlease open it manually or fix file association and retry.",
-														ext, tmpFile.getAbsolutePath()));
-								}
-							});
-						} catch (Exception e) {
-							UIUtils.showError(e);
-						}
+							Program p = Program.findProgram(ext);
+							if (p != null)
+								p.execute(tmpFile.getAbsolutePath());
+							else
+								// here we can propose a better dialog,
+								// like open with...(create association,
+								// etc.)
+								UIUtils.showWarning(
+										String.format(Messages.ASystemViewer_1, ext, tmpFile.getAbsolutePath()));
+						});
+					} catch (Exception e) {
+						UIUtils.showError(e);
 					}
 				});
 			} catch (Exception e) {
