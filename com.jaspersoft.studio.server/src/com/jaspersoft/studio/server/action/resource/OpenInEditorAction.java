@@ -6,6 +6,7 @@ package com.jaspersoft.studio.server.action.resource;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -194,9 +195,12 @@ public class OpenInEditorAction extends Action {
 				jrconf.dispose();
 			}
 		}
+
+		String prjPath = f.getRawLocation().removeLastSegments(1).toOSString();
 		if (res.getParent() instanceof MReportUnit) {
 			MReportUnit runit = (MReportUnit) res.getParent();
 			List<INode> children = runit.getChildren();
+			String pfolder = path != null ? path.toFile().getParentFile().getAbsolutePath() : "";
 			for (int i = 0; i < children.size(); i++) {
 				INode n = children.get(i);
 				if (n == res)
@@ -204,12 +208,11 @@ public class OpenInEditorAction extends Action {
 				if (n instanceof AFileResource) {
 					AFileResource mfile = (AFileResource) n;
 					fkeyname = ServerManager.getKey(mfile);
-					rd = WSClientHelper.getResource(new NullProgressMonitor(), mfile, mfile.getValue());
-					if (rd != null) {
-						String pfolder = path != null ? path.toFile().getParentFile().getAbsolutePath() : "";
-
-						IPath p = Path.fromOSString(pfolder + File.separator + rd.getName());
-						exportFile(rd, fkeyname, monitor, f, runit, mfile, p);
+					IPath p = Path.fromOSString(pfolder + File.separator + mfile.getValue().getName());
+					if (!Paths.get(prjPath, mfile.getValue().getName()).toFile().exists()) {
+						rd = WSClientHelper.getResource(new NullProgressMonitor(), mfile, mfile.getValue());
+						if (rd != null)
+							exportFile(rd, fkeyname, monitor, f, runit, mfile, p);
 					}
 				}
 			}
