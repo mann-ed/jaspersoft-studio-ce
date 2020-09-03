@@ -66,7 +66,8 @@ public class InferringNamespaceContext implements NamespaceContext {
 		return null;
 	}
 
-	public Iterator<?> getPrefixes(String namespaceURI) {
+	public Iterator<String> getPrefixes(String namespaceURI) {
 		return null;
 	}
+
 }
