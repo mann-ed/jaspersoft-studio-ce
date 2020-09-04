@@ -14,6 +14,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
@@ -67,7 +68,8 @@ public abstract class ABasicEditor extends EditorPart {
 	}
 
 	class ResourcePartListener implements IPartListener {
-		// If an open, unsaved file was deleted, query the user to either do a "Save As"
+		// If an open, unsaved file was deleted, query the user to either do a
+		// "Save As"
 		// or close the editor.
 		public void partActivated(IWorkbenchPart part) {
 			if (part != ABasicEditor.this)
@@ -103,16 +105,20 @@ public abstract class ABasicEditor extends EditorPart {
 			getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
 		partListener = null;
 		if (resourceListener != null)
-			((IFileEditorInput) getEditorInput()).getFile().getWorkspace().removeResourceChangeListener(resourceListener);
+			((IFileEditorInput) getEditorInput()).getFile().getWorkspace()
+					.removeResourceChangeListener(resourceListener);
 		disposeContext();
 		super.dispose();
 	}
 
 	@Override
 	protected void setInput(IEditorInput input) {
-		// The workspace never changes for an editor. So, removing and re-adding the
-		// resourceListener is not necessary. But it is being done here for the sake
-		// of proper implementation. Plus, the resourceListener needs to be added
+		// The workspace never changes for an editor. So, removing and re-adding
+		// the
+		// resourceListener is not necessary. But it is being done here for the
+		// sake
+		// of proper implementation. Plus, the resourceListener needs to be
+		// added
 		// to the workspace the first time around.
 		if (resourceListener != null && getEditorInput() != null) {
 			IFile file = ((IFileEditorInput) getEditorInput()).getFile();
@@ -124,8 +130,8 @@ public abstract class ABasicEditor extends EditorPart {
 		if (resourceListener != null && getEditorInput() != null) {
 			if (getEditorInput() instanceof IFileEditorInput) {
 				IFile file = ((IFileEditorInput) getEditorInput()).getFile();
-				file.getWorkspace().addResourceChangeListener(resourceListener,
-						IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.POST_CHANGE);
+				file.getWorkspace().addResourceChangeListener(resourceListener, IResourceChangeEvent.PRE_CLOSE
+						| IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.POST_CHANGE);
 				setPartName(file.getName());
 			} else if (getEditorInput() instanceof FileStoreEditorInput) {
 			}
@@ -166,8 +172,10 @@ public abstract class ABasicEditor extends EditorPart {
 	}
 
 	/**
-	 * If the jrContext was not set yet it create a new one basing on the passed file. The jrContext created this way will
-	 * be disposed at the end. It it safe to dispose a JRConfig created this way, since it is a not shared instance
+	 * If the jrContext was not set yet it create a new one basing on the passed
+	 * file. The jrContext created this way will be disposed at the end. It it
+	 * safe to dispose a JRConfig created this way, since it is a not shared
+	 * instance
 	 */
 	protected void initJRContext(IFile file) throws CoreException, JavaModelException {
 		if (jrContext == null)
@@ -175,7 +183,8 @@ public abstract class ABasicEditor extends EditorPart {
 	}
 
 	/**
-	 * Method called to dispose the current context, can be overridden to provide a different behavior
+	 * Method called to dispose the current context, can be overridden to
+	 * provide a different behavior
 	 */
 	protected void disposeContext() {
 		if (jrContext != null)
@@ -209,5 +218,12 @@ public abstract class ABasicEditor extends EditorPart {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		isDirty = false;
+	}
+
+	protected void handleValueChanged() {
+		getSite().getWorkbenchWindow().getShell().getDisplay().asyncExec(() -> {
+			isDirty = true;
+			firePropertyChange(ISaveablePart.PROP_DIRTY);
+		});
 	}
 }

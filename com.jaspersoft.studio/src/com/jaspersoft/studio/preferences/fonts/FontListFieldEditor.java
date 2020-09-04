@@ -7,17 +7,8 @@ package com.jaspersoft.studio.preferences.fonts;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.commands.operations.OperationStatus;
 import org.eclipse.core.resources.IFile;
@@ -50,26 +41,22 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Widget;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
+import com.jaspersoft.studio.font.FontEditor;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.preferences.editor.table.TreeFieldEditor;
-import com.jaspersoft.studio.preferences.fonts.wizard.FontConfigWizard;
-import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
-import net.sf.jasperreports.eclipse.util.StringUtils;
 import net.sf.jasperreports.engine.JRCloneable;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.fonts.FontExtensionsCollector;
-import net.sf.jasperreports.engine.fonts.FontFace;
 import net.sf.jasperreports.engine.fonts.FontFamily;
 import net.sf.jasperreports.engine.fonts.FontSet;
 import net.sf.jasperreports.engine.fonts.FontSetFamily;
 import net.sf.jasperreports.engine.fonts.SimpleFontExtensionHelper;
 import net.sf.jasperreports.engine.fonts.SimpleFontExtensionsContainer;
-import net.sf.jasperreports.engine.fonts.SimpleFontFace;
 import net.sf.jasperreports.engine.fonts.SimpleFontFamily;
 import net.sf.jasperreports.engine.fonts.SimpleFontSet;
 import net.sf.jasperreports.engine.fonts.SimpleFontSetFamily;
@@ -79,7 +66,6 @@ public class FontListFieldEditor extends TreeFieldEditor {
 	private Button editButton;
 	private Button exportButton;
 	private FontExtensionsCollector fontFamilies;
-	private static String lastLocation;
 	private Button addURLButton;
 	private Button addPathButton;
 	private Button addSetButton;
@@ -108,7 +94,7 @@ public class FontListFieldEditor extends TreeFieldEditor {
 			@Override
 			public Object[] getElements(Object inputElement) {
 				if (inputElement instanceof FontExtensionsCollector) {
-					List<Object> lst = new ArrayList<Object>();
+					List<Object> lst = new ArrayList<>();
 					lst.addAll(((FontExtensionsCollector) inputElement).getFontFamilies());
 					lst.addAll(((FontExtensionsCollector) inputElement).getFontSets());
 					return lst.toArray();
@@ -228,7 +214,7 @@ public class FontListFieldEditor extends TreeFieldEditor {
 		setPresentsDefaultValue(false);
 		SimpleFontFamily ff = new SimpleFontFamily();
 		ff.setName(Messages.FontListFieldEditor_newFontSuggestedName);
-		FontFamily font = runDialog(ff);
+		FontFamily font = FontEditor.runDialog(ff);
 		if (font != null) {
 			fontFamilies.getFontFamilies().add(ff);
 			tree.refresh(true);
@@ -313,7 +299,7 @@ public class FontListFieldEditor extends TreeFieldEditor {
 		if (sel.getFirstElement() instanceof SimpleFontFamily) {
 			FontFamily font = (SimpleFontFamily) sel.getFirstElement();
 			int index = fontFamilies.getFontFamilies().indexOf(font);
-			font = runDialog((FontFamily) ((SimpleFontFamily) font).clone());
+			font = FontEditor.runDialog((FontFamily) ((SimpleFontFamily) font).clone());
 			if (font != null) {
 				fontFamilies.getFontFamilies().set(index, font);
 				tree.refresh(true);
@@ -394,20 +380,6 @@ public class FontListFieldEditor extends TreeFieldEditor {
 		}
 	}
 
-	public static String setupLastLocation(FileDialog dialog) {
-		if (lastLocation == null)
-			lastLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
-		dialog.setFilterPath(lastLocation);
-		return lastLocation;
-	}
-
-	public static void setLastLocation(FileDialog dialog, String selected) {
-		if (!Misc.isNullOrEmpty(selected))
-			lastLocation = selected.substring(0, selected.lastIndexOf(File.separatorChar));
-		else if (!Misc.isNullOrEmpty(dialog.getFileName()))
-			lastLocation = dialog.getFileName();
-	}
-
 	protected void exportPressed() {
 		StructuredSelection sel = (StructuredSelection) tree.getSelection();
 		if (sel.isEmpty())
@@ -446,17 +418,17 @@ public class FontListFieldEditor extends TreeFieldEditor {
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
 		fd.setText(Messages.FontListFieldEditor_exportToJar);
-		setupLastLocation(fd);
+		FontEditor.setupLastLocation(fd);
 		fd.setFilterExtensions(new String[] { "*.jar", "*.zip" }); //$NON-NLS-1$ //$NON-NLS-2$
 		final String selected = fd.open();
-		setLastLocation(fd, selected);
+		FontEditor.setLastLocation(fd, selected);
 		if (selected != null) {
 			Job job = new Job(Messages.FontListFieldEditor_exportToJar) {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask(Messages.FontListFieldEditor_exportToJar, IProgressMonitor.UNKNOWN);
 					try {
-						exportJAR(c, selected);
+						FontEditor.exportJAR(c, selected);
 
 						IFile[] resource = root.findFilesForLocationURI(new File(selected).toURI());
 						if (resource != null) {
@@ -465,14 +437,12 @@ public class FontListFieldEditor extends TreeFieldEditor {
 						}
 					} catch (final Exception e) {
 						e.printStackTrace();
-						UIUtils.getDisplay().asyncExec(new Runnable() {
-							public void run() {
-								IStatus status = new OperationStatus(IStatus.ERROR,
-										JaspersoftStudioPlugin.getUniqueIdentifier(), 1, "Error saving file.", //$NON-NLS-1$
-										e.getCause());
-								ErrorDialog.openError(Display.getDefault().getActiveShell(),
-										Messages.FontListFieldEditor_errorSave, null, status);
-							}
+						UIUtils.getDisplay().asyncExec(() -> {
+							IStatus status = new OperationStatus(IStatus.ERROR,
+									JaspersoftStudioPlugin.getUniqueIdentifier(), 1, "Error saving file.", //$NON-NLS-1$
+									e.getCause());
+							ErrorDialog.openError(Display.getDefault().getActiveShell(),
+									Messages.FontListFieldEditor_errorSave, null, status);
 						});
 					} finally {
 						monitor.done();
@@ -483,104 +453,6 @@ public class FontListFieldEditor extends TreeFieldEditor {
 			job.setPriority(Job.LONG);
 			job.schedule();
 		}
-	}
-
-	private void exportJAR(SimpleFontExtensionsContainer c, String selected) throws IOException, JRException {
-		FileOutputStream fos = new FileOutputStream(selected);
-		try {
-			ZipOutputStream zipos = new java.util.zip.ZipOutputStream(fos);
-			zipos.setMethod(ZipOutputStream.DEFLATED);
-
-			String prefix = "family" + (new Date()).getTime(); //$NON-NLS-1$
-			String fontXmlFile = "fonts" + prefix + ".xml"; //$NON-NLS-1$ //$NON-NLS-2$
-
-			ZipEntry propsEntry = new ZipEntry("jasperreports_extension.properties"); //$NON-NLS-1$
-			zipos.putNextEntry(propsEntry);
-
-			PrintWriter pw = new PrintWriter(zipos);
-
-			pw.println(
-					"net.sf.jasperreports.extension.registry.factory.fonts=net.sf.jasperreports.engine.fonts.SimpleFontExtensionsRegistryFactory"); //$NON-NLS-1$
-			pw.println(
-					"net.sf.jasperreports.extension.simple.font.families.ireport" + prefix + "=fonts/" + fontXmlFile); //$NON-NLS-1$ //$NON-NLS-2$
-
-			pw.flush();
-			Set<String> names = new HashSet<>();
-			for (FontFamily f : c.getFontFamilies()) {
-				writeFont2zip(names, zipos, f, (SimpleFontFace) f.getNormalFace());
-				writeFont2zip(names, zipos, f, (SimpleFontFace) f.getBoldFace());
-				writeFont2zip(names, zipos, f, (SimpleFontFace) f.getItalicFace());
-				writeFont2zip(names, zipos, f, (SimpleFontFace) f.getBoldItalicFace());
-
-				String pdfenc = f.getPdfEncoding();
-				if (ModelUtils.getKey4PDFEncoding(pdfenc) == null) {
-					pdfenc = ModelUtils.getPDFEncoding2key(pdfenc);
-					((SimpleFontFamily) f).setPdfEncoding(pdfenc);
-				}
-			}
-
-			ZipEntry fontsXmlEntry = new ZipEntry("fonts/" + fontXmlFile); //$NON-NLS-1$
-			zipos.putNextEntry(fontsXmlEntry);
-
-			SimpleFontExtensionHelper.writeFontExtensionsXml(zipos, c);
-
-			zipos.finish();
-		} finally {
-			FileUtils.closeStream(fos);
-		}
-	}
-
-	private void writeFont2zip(Set<String> names, ZipOutputStream zipos, FontFamily fontFamily, SimpleFontFace font)
-			throws IOException {
-		if (font == null)
-			return;
-		try {
-			font.setTtf(writeFont(names, zipos, fontFamily, font, font.getTtf()), false);
-		} catch (Exception r) {
-		}
-		font.setPdf(writeFont(names, zipos, fontFamily, font, font.getPdf()));
-		font.setEot(writeFont(names, zipos, fontFamily, font, font.getEot()));
-		font.setSvg(writeFont(names, zipos, fontFamily, font, font.getSvg()));
-		font.setWoff(writeFont(names, zipos, fontFamily, font, font.getWoff()));
-	}
-
-	private static String writeFont(Set<String> names, ZipOutputStream zipos, FontFamily fontFamily, FontFace font,
-			String fontname) throws IOException {
-		if (Misc.isNullOrEmpty(fontname))
-			return fontname;
-		File file = new File(fontname);
-		if (file.exists()) {
-			String name = "fonts/" + StringUtils.toPackageName(fontFamily.getName()) + "/" + file.getName(); //$NON-NLS-1$ //$NON-NLS-2$
-			if (!names.contains(name)) {
-				ZipEntry ttfZipEntry = new ZipEntry(name);
-				zipos.putNextEntry(ttfZipEntry);
-
-				FileInputStream in = new FileInputStream(fontname); // Stream to
-																	// read file
-				try {
-					byte[] buffer = new byte[4096]; // Create a buffer for
-													// copying
-					int bytesRead;
-					while ((bytesRead = in.read(buffer)) != -1)
-						zipos.write(buffer, 0, bytesRead);
-				} finally {
-					FileUtils.closeStream(in);
-				}
-				names.add(name);
-			}
-			fontname = name;
-		}
-		return fontname;
-	}
-
-	private FontFamily runDialog(FontFamily font) {
-		FontConfigWizard wizard = new FontConfigWizard();
-		WizardDialog dialog = new WizardDialog(UIUtils.getShell(), wizard);
-		wizard.setFont(font);
-		dialog.create();
-		if (dialog.open() == Dialog.OK)
-			return wizard.getFont();
-		return null;
 	}
 
 	@Override
@@ -611,6 +483,7 @@ public class FontListFieldEditor extends TreeFieldEditor {
 
 	public void createSelectionListener() {
 		selectionListener = new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				Widget widget = event.widget;
 				if (widget == addButton)
@@ -642,7 +515,7 @@ public class FontListFieldEditor extends TreeFieldEditor {
 	}
 
 	protected void addURLPressed() {
-		FontURLWizard wiz = new FontURLWizard(new ArrayList<FontFamily>(fontFamilies.getFontFamilies()));
+		FontURLWizard wiz = new FontURLWizard(new ArrayList<>(fontFamilies.getFontFamilies()));
 		WizardDialog d = new WizardDialog(UIUtils.getShell(), wiz);
 		d.setPageSize(800, 50);
 		if (d.open() == Dialog.OK) {

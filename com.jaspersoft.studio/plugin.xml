@@ -137,6 +137,14 @@
             id="com.jaspersoft.studio.editor.SimpleJRXMLEditor"
             name="JasperReports Tool Designer">
       </editor>
+      <editor
+            class="com.jaspersoft.studio.font.FontEditor"
+            default="false"
+            extensions="xml"
+            icon="icons/fontextension.png"
+            id="com.jaspersoft.studio.fontextension.editor"
+            name="Font Extension Editor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
@@ -1524,6 +1532,13 @@
       <description>
          Create a new data adapter skeleton
       </description>
+   </wizard>
+   <wizard
+         category="com.jaspersoft.studio"
+         class="com.jaspersoft.studio.font.FontExtensionNewWizard"
+         icon="icons/fontextension.png"
+         id="com.jaspersoft.studio.font.fontextension.newwizard"
+         name="JasperReports Fonts Extension">
    </wizard>
    </extension>
     <extension

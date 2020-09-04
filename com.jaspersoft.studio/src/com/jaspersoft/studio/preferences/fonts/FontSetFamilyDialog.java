@@ -34,7 +34,7 @@ public class FontSetFamilyDialog extends ATitledDialog {
 	private SimpleFontSetFamily fsf;
 	private SimpleFontSet fs;
 
-	protected FontSetFamilyDialog(Shell parentShell, SimpleFontSet fs, SimpleFontSetFamily fsf) {
+	public FontSetFamilyDialog(Shell parentShell, SimpleFontSet fs, SimpleFontSetFamily fsf) {
 		super(parentShell);
 		setTitle(Messages.FontSetFamilyDialog_0);
 		setDefaultSize(400, 400);
