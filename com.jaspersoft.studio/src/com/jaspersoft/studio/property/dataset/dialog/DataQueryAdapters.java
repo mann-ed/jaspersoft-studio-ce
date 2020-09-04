@@ -163,7 +163,7 @@ public abstract class DataQueryAdapters extends AQueryDesignerContainer {
 		spm = new StandardPropertyMetadata();
 		spm.setName(EXPORTER_FILENAME);
 		spm.setLabel("Exported Filename");
-		spm.setDescription("The name of the exported file.");
+		spm.setDescription("The prefix of the exported file name. Minimum 3 chars long. Will be created by OS as a temporary file.");
 		spm.setValueType(String.class.getName());
 		scopes = new ArrayList<>();
 		scopes.add(PropertyScope.REPORT);
