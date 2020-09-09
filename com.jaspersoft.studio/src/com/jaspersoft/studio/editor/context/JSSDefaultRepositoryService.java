@@ -47,7 +47,7 @@ public class JSSDefaultRepositoryService extends DefaultRepositoryService {
 						Executor exec = Executor.newInstance();
 						HttpUtils.setupProxy(exec, uuri);
 
-						Request req = Request.Get("http://somehost/");
+						Request req = Request.Get(uuri);
 						HttpUtils.setupProxy(exec, uuri, req);
 						return exec.execute(req).returnContent().asStream();
 					} catch (URISyntaxException e) {
