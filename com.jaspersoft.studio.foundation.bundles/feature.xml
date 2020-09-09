@@ -2,7 +2,7 @@
 <feature
       id="com.jaspersoft.studio.foundation.bundles"
       label="Jaspersoft Studio Required Bundles Feature"
-      version="1.0.16"
+      version="1.0.17"
       provider-name="TIBCO Software Inc.">
 
    <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
@@ -30,6 +30,7 @@
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.logging" version="1.2.0" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.7.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.osgi"/>
    </requires>
 
    <plugin
@@ -168,7 +169,7 @@
          id="com.jaspersoft.studio.bundles.jackson"
          download-size="0"
          install-size="0"
-         version="2.10.0.b01"
+         version="2.10.0.b02"
          unpack="false"/>
 
    <plugin
@@ -231,5 +232,56 @@
          install-size="0"
          version="3.4.0"
          unpack="false"/>
+
+   <plugin
+         id="jakarta.xml.soap-api"
+         download-size="0"
+         install-size="0"
+         version="1.4.2"
+         unpack="false"/>
+
+   <plugin
+         id="com.sun.activation.javax.activation"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.transaction"
+         download-size="0"
+         install-size="0"
+         version="1.1.1.v201105210645"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="com.sun.xml.bind.jaxb-osgi"
+         download-size="0"
+         install-size="0"
+         version="2.4.0.b180830_0438"
+         unpack="false"/>
+
+   <plugin
+         id="jaxb-api"
+         download-size="0"
+         install-size="0"
+         version="2.4.0.b1808300359"
+         unpack="false"/>
+
+   <plugin
+         id="jaxb-api-import-fragment"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.b01"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.osgi.framework.system.packages.extra"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.b01"
+         fragment="true"/>
 
 </feature>
