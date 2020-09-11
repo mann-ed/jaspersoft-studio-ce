@@ -6,7 +6,7 @@
 	<property name="dist" value="${basedir}/../product/dist"/>
 	<property name="productRootFolder" value="jaspersoftstudio" />
 	<property name="productVersionFile" value="buildversion.properties" />
-	<property name="jre.location.linux64" value="features/jre.linux.gtk.x86_64.feature_1.8.0.u151/jre/bin" />
+	<property name="jre.location.linux64" value="features/jre.linux.gtk.x86_64.feature_11.0.8/adoptopenjdk_jre/bin" />
 	<!-- import properties for mac machine producing the DMG -->
 	<property file="authenticationInfo.properties"/>
 
@@ -77,13 +77,13 @@
 		<!-- <tar destfile="${dist}/${jss.linux.x86_64.tgz}" basedir="${dirlocation.linux.x86_64}/" compression="gzip" longfile="gnu" /> -->
 		<tar destfile="${dist}/${jss.linux.x86_64.tgz}" longfile="gnu" compression="gzip">
 			<tarfileset dir="${dirlocation.linux.x86_64}/" filemode="755">
-				<include name="**/features/jre.linux.gtk.x86_64.feature_*/jre/bin/*" />
+				<include name="**/features/jre.linux.gtk.x86_64.feature_*/adoptopenjdk_jre/bin/*" />
 				<include name="**/Jaspersoft Studio" />
 				<include name="**/runjss.sh"/>
 			</tarfileset>
 			<tarfileset dir="${dirlocation.linux.x86_64}/">
 				<include name="**/*" />
-				<exclude name="**/features/jre.linux.gtk.x86_64.feature_*/jre/bin/*"/>
+				<exclude name="**/features/jre.linux.gtk.x86_64.feature_*/adoptopenjdk_jre/bin/*"/>
 				<exclude name="**/Jaspersoft Studio" />
 				<exclude name="**/runjss.sh"/>
 			</tarfileset>
