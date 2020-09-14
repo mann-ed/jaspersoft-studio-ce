@@ -25,9 +25,12 @@
 						<id>unpack-jre</id>
 						<phase>generate-resources</phase>
 						<configuration>
-							<target>
-								<unzip src="${jre.packages.location}/jre-11.0.8-linux-x64.zip" dest="${project.build.directory}/../"/>
-							</target>
+							<tasks>
+								<exec executable="tar">
+									<arg
+										line="-xzf ${jre.packages.location}/jre-11.0.8-linux-x64.tar.gz -C ${project.build.directory}/../" />
+								</exec>
+							</tasks>						
 						</configuration>
 						<goals>
 							<goal>run</goal>
