@@ -1,5 +1,9 @@
 <project default="packageDistributions">
 	<!-- generic properties -->
+	<!-- 
+		jre.packages.location => location where the tar.gz files of the JRE are 
+		temp.mac.dir => temporary location used to create the DMG artifact
+	-->
 	<property name="jssRcpPluginName" value="com.jaspersoft.studio.rcp" />
 	<property name="jssRcpProductFolderName" value="com.jaspersoft.studio.rcp.product" />
 	<property name="jssRcpProductFolderPath" value="${basedir}/../../${jssRcpProductFolderName}" />
@@ -45,7 +49,7 @@
 		<!-- create zip file -->
 		<zip destfile="${dist}/${jss.win32.x86_64.zipfile}">
 			<fileset dir="${dirlocation.win32.x86_64}" excludes="**/_MACOSX, **/.DS_Store"/>
-		</zip>		
+		</zip>
 
 		<taskdef name="nsisant" classname="net.sf.nsisant.Task" classpath="${jssRcpProductFolderPath}/lib/nsisant-1.1.jar" />
 		<nsisant script="${jssRcpProductFolderPath}/resources/JaspersoftStudioInstaller64.nsi">
@@ -107,10 +111,15 @@
 
 		<!-- copy additional licensing files -->
 		<copy file="${basedir}/rootfiles/license/license.txt" tofile="${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/${jss.distro.prefix}_${jss.version}_license.txt" />
-		
-		<zip destfile="${mac.x86_64.zipfile}">
-			<fileset dir="${dirlocation.mac.x86_64}"/>
-		</zip>
+		<!-- remove "broken" jre dir -->
+		<delete dir="${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_11.0.8/adoptopenjdk_jre" />
+		<!-- extract correct jre dir  with symbolic links -->
+	    <exec executable="tar">
+	       <arg line="-xzf ${jre.packages.location }/jre-11.0.8-macosx-x64.tar.gz -C ${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_11.0.8/" />
+	    </exec>
+		<exec executable="zip" dir="${dirlocation.mac.x86_64}">
+			<arg line="-r -X --symlinks ${mac.x86_64.zipfile} ${productRootFolder}.app"/>
+		</exec>
 
 		<sshexec host="${dmg.sshhost}" username="${dmg.sshuser}" password="${dmg.sshpass}" command="rm -Rf ${dmg.sshroot}/tmp-jssbuild" trust="true"/>
 		<sshexec host="${dmg.sshhost}" username="${dmg.sshuser}" password="${dmg.sshpass}" command="mkdir ${dmg.sshroot}/tmp-jssbuild" trust="true"/>
