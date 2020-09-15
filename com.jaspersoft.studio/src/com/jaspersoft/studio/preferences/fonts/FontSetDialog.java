@@ -24,7 +24,7 @@ import net.sf.jasperreports.engine.fonts.SimpleFontSet;
 public class FontSetDialog extends ATitledDialog {
 	private SimpleFontSet fs;
 
-	protected FontSetDialog(Shell parentShell, SimpleFontSet fs) {
+	public FontSetDialog(Shell parentShell, SimpleFontSet fs) {
 		super(parentShell);
 		setTitle(Messages.FontSetDialog_0);
 		setDefaultSize(400, 140);

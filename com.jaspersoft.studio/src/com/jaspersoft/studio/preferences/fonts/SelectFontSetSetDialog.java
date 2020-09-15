@@ -24,7 +24,7 @@ public class SelectFontSetSetDialog extends ATitledDialog {
 	private List<FontSet> sets;
 	private FontSet value;
 
-	protected SelectFontSetSetDialog(Shell parentShell, List<FontSet> sets) {
+	public SelectFontSetSetDialog(Shell parentShell, List<FontSet> sets) {
 		super(parentShell);
 		setTitle(Messages.SelectFontSetSetDialog_0);
 		setDefaultSize(300, 400);
