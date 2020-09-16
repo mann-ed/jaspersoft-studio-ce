@@ -113,7 +113,7 @@
 		<delete dir="${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_11.0.8/adoptopenjdk_jre" />
 		<!-- extract correct jre dir  with symbolic links -->
 	    <exec executable="tar">
-	       <arg line="-xzf ${jre.packages.location }/jre-11.0.8-macosx-x64.tar.gz -C ${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_11.0.8/" />
+	       <arg line="-xzf ${jre.packages.location}/jre-11.0.8-macosx-x64.tar.gz -C ${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_11.0.8/" />
 	    </exec>
 		<exec executable="zip" dir="${dirlocation.mac.x86_64}">
 			<arg line="-r -X --symlinks ${mac.x86_64.zipfile} ${productRootFolder}.app"/>
