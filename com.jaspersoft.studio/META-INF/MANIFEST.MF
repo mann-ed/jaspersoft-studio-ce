@@ -24,7 +24,6 @@ Require-Bundle: org.eclipse.ui.cheatsheets;bundle-version="3.4.0";visibility:=re
  net.sf.jasperreports.samples;bundle-version="7.9.0",
  com.jaspersoft.studio.bundles.bouncycastle;bundle-version="1.64.0";visibility:=reexport,
  org.eclipse.swt,
- org.eclipse.pde.ui,
  org.eclipse.jetty.util,
  org.eclipse.jetty.server,
  org.eclipse.jetty.servlet,
