@@ -24,7 +24,7 @@ import com.jaspersoft.studio.messages.Messages;
 
 public class DataAdapterWizardDialog extends WizardDialog {
 
-	List<SelectionListener> listeners = new ArrayList<SelectionListener>();
+	List<SelectionListener> listeners = new ArrayList<>();
 	Button testButton = null;
 
 	public DataAdapterWizardDialog(Shell parentShell, IWizard newWizard) {
@@ -66,6 +66,7 @@ public class DataAdapterWizardDialog extends WizardDialog {
 		testButton.setEnabled(false);
 		testButton.setVisible(false);
 		testButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				fireTestPressed(event);
 			}

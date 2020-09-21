@@ -60,7 +60,7 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 
 	public List<JRDesignField> getFields(DataAdapterService con, JasperReportsConfiguration jConfig, JRDataset jDataset)
 			throws JRException, UnsupportedOperationException {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters = new HashMap<>();
 		con.contributeParameters(parameters);
 
 		ParameterUtil.setParameters(jConfig, jDataset, parameters);

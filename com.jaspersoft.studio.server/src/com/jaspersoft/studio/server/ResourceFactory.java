@@ -65,7 +65,6 @@ import com.jaspersoft.studio.server.utils.ResourceDescriptorUtil;
 import com.jaspersoft.studio.server.wizard.resource.APageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.CSSPageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.DataTypePageContent;
-import com.jaspersoft.studio.server.wizard.resource.page.FilePageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.FontPageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.ImagePageContent;
 import com.jaspersoft.studio.server.wizard.resource.page.InputControlPageContent;
@@ -119,6 +118,9 @@ public class ResourceFactory {
 					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
 							new CSSPageContent(parent, resource));
 				else if (resource instanceof MRSecureFile)
+					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
+							new SecureFilePageContent(parent, resource));
+				else if (resource instanceof MRAzureCertificate)
 					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
 							new SecureFilePageContent(parent, resource));
 
@@ -191,7 +193,7 @@ public class ResourceFactory {
 					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource));
 				else if (resource instanceof MContentResource)
 					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
-							new FilePageContent(parent, resource));
+							new SecureFilePageContent(parent, resource));
 				else if (resource instanceof MRStyleTemplate)
 					page = APageContent.getPages(resource, new ResourcePageContent(parent, resource),
 							new StyleTemplatePageContent(parent, resource));

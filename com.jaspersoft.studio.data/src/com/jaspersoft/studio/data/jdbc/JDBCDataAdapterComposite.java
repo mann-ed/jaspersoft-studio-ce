@@ -4,11 +4,21 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.jdbc;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Driver;
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.swt.SWT;
@@ -36,13 +46,19 @@ import com.jaspersoft.studio.swt.widgets.ClasspathComponent;
 import com.jaspersoft.studio.swt.widgets.PropertiesComponent;
 import com.jaspersoft.studio.swt.widgets.WSecretText;
 import com.jaspersoft.studio.utils.UIUtil;
+import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.data.AbstractClasspathAwareDataAdapterService;
 import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.DataAdapterServiceUtil;
 import net.sf.jasperreports.data.jdbc.JdbcDataAdapter;
 import net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl;
+import net.sf.jasperreports.data.jdbc.JdbcDataAdapterService;
 import net.sf.jasperreports.data.jdbc.TransactionIsolation;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.engine.ParameterContributorContext;
+import net.sf.jasperreports.engine.util.JRClassLoader;
 
 public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 
@@ -333,7 +349,54 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 			// && textServerAddress != null && textDatabase != null) {
 			textJDBCUrl.setText(currentdriver.getUrl("localhost", "database"));
 			// textServerAddress.getText(), textDatabase.getText()));
+			getDriverProperties();
 		}
+	}
+
+	protected void getDriverProperties() {
+		JdbcDataAdapter da = (JdbcDataAdapter) getDataAdapter().getDataAdapter();
+		Job job = new Job("Testing driver") {
+			protected IStatus run(IProgressMonitor monitor) {
+				JasperReportsConfiguration jConf = (JasperReportsConfiguration) jrContext;
+
+				JdbcDataAdapterService ds = (JdbcDataAdapterService) DataAdapterServiceUtil
+						.getInstance(new ParameterContributorContext(jConf, null, jConf.getJRParameters()))
+						.getService(da);
+
+				ClassLoader oldThreadClassLoader = Thread.currentThread().getContextClassLoader();
+
+				try {
+					Method m = AbstractClasspathAwareDataAdapterService.class.getDeclaredMethod("getClassLoader",
+							ClassLoader.class);
+					if (m != null) {
+						m.setAccessible(true);
+						Thread.currentThread().setContextClassLoader((ClassLoader) m.invoke(ds, oldThreadClassLoader));
+
+						Class<?> clazz = JRClassLoader.loadClassForRealName(da.getDriver());
+						Driver driver = (Driver) clazz.getDeclaredConstructor().newInstance();
+						if (driver != null) {
+							DriverPropertyInfo[] dpis = driver.getPropertyInfo(da.getUrl(), new Properties());
+							if (dpis != null) {
+								for (DriverPropertyInfo dpi : dpis) {
+									System.out.println(dpi.name + " " + dpi.value + " " + dpi.description);
+								}
+							}
+						}
+					}
+				} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+						| InvocationTargetException | ClassNotFoundException | SQLException
+						| InstantiationException e) {
+
+					e.printStackTrace();
+				} finally {
+					Thread.currentThread().setContextClassLoader(oldThreadClassLoader);
+				}
+
+				return Status.OK_STATUS;
+			}
+		};
+		job.setPriority(Job.SHORT);
+		job.schedule(); // start as soon as possible
 	}
 
 	/**
@@ -349,9 +412,10 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 		if (jdbcDataAdapter.getDriver() == null)
 			btnWizardActionPerformed();
 
-		if (!textPassword.isWidgetConfigured()) {
+		if (!textPassword.isWidgetConfigured())
 			textPassword.loadSecret(DataAdaptersSecretsProvider.SECRET_NODE_ID, textPassword.getText());
-		}
+
+		getDriverProperties();
 	}
 
 	@Override
