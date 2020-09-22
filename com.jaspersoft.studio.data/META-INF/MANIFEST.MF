@@ -9,8 +9,7 @@ Bundle-Vendor: TIBCO Software Inc.
 Require-Bundle: com.jaspersoft.studio;bundle-version="7.9.0";visibility:=reexport,
  org.apache.commons.pool;bundle-version="1.6.0";visibility:=reexport,
  org.apache.commons.lang3;bundle-version="3.8.1";visibility:=reexport,
- org.slf4j.api;bundle-version="1.6.4";visibility:=reexport,
- jakarta.xml.soap-api;bundle-version="1.4.2"
+ org.slf4j.api;bundle-version="1.6.4";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: com.jaspersoft.studio
@@ -35,3 +34,4 @@ Export-Package: com.jaspersoft.studio.data.bean,
  com.jaspersoft.studio.data.querydesigner.sql.text,
  com.jaspersoft.studio.data.querydesigner.xpath,
  com.jaspersoft.studio.data.secret
+Import-Package: javax.xml.soap
