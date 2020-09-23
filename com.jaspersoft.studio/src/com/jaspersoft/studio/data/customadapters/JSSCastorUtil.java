@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.ReferenceMap;
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.mapping.Mapping;
@@ -132,8 +132,9 @@ public class JSSCastorUtil {
 		Map<Object, XMLContext> xmlContextCache = (Map<Object, XMLContext>) jasperReportsContext
 				.getOwnValue(contextCacheKey);
 		if (xmlContextCache == null) {
-			// TODO lucianc prevent double cache creation?
-			xmlContextCache = Collections.synchronizedMap(new ReferenceMap(ReferenceMap.WEAK, ReferenceMap.SOFT));
+			//TODO lucianc prevent double cache creation?
+			xmlContextCache = Collections.synchronizedMap(
+					new ReferenceMap<Object, XMLContext>(ReferenceMap.ReferenceStrength.WEAK, ReferenceMap.ReferenceStrength.SOFT));//using soft values is safer
 			jasperReportsContext.setValue(contextCacheKey, xmlContextCache);
 		}
 		return xmlContextCache;
