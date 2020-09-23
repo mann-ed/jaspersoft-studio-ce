@@ -6,9 +6,12 @@ package com.jaspersoft.studio.widgets.map.support;
 
 import java.net.URLEncoder;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
@@ -102,40 +105,40 @@ public class GMapUtils {
 	 */
 	public static LatLng getAddressCoordinates(String addressText) {
 		LatLng coordinates = null;
-		GetMethod locateAddressGET = null;
-		HttpClient client = null;
+		HttpGet locateAddressGET = null;
+		
 		try {
 			String addressUrlEncoded = URLEncoder.encode(addressText, "UTF-8");
-			String locationFindURL = "http://maps.google.com/maps/api/geocode/json?address="
-					+ addressUrlEncoded;
-			client = new HttpClient();
-			locateAddressGET = new GetMethod(locationFindURL);
-			int httpRetCode = client.executeMethod(locateAddressGET);
-			if (httpRetCode == HttpStatus.SC_OK) {
-				String responseBodyAsString = locateAddressGET.getResponseBodyAsString();
-				System.out.println(responseBodyAsString);
-				ObjectMapper mapper = new ObjectMapper();
-				mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-				mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-				mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-				JsonNode jsonRoot = mapper.readTree(responseBodyAsString);
-				if (jsonRoot != null && jsonRoot.path("results") != null && jsonRoot.path("results").has(0)
-						&& jsonRoot.path("results").get(0).path("geometry") != null) {
-					JsonNode location = jsonRoot.path("results").get(0).path("geometry").path("location");
-					if (location != null) {
-						JsonNode lat = location.get("lat");
-						JsonNode lng = location.get("lng");
-						coordinates = new LatLng(lat.asDouble(), lng.asDouble());
+			locateAddressGET = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" + addressUrlEncoded);
+			
+			try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+				CloseableHttpResponse response = httpclient.execute(locateAddressGET);
+				int httpRetCode = response.getStatusLine().getStatusCode();
+				if (httpRetCode == HttpStatus.SC_OK) {
+					String responseBodyAsString = EntityUtils.toString(response.getEntity());
+					System.out.println(responseBodyAsString);
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+					mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+					mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+					JsonNode jsonRoot = mapper.readTree(responseBodyAsString);
+					if (jsonRoot != null && jsonRoot.path("results") != null && jsonRoot.path("results").has(0)
+							&& jsonRoot.path("results").get(0).path("geometry") != null) {
+						JsonNode location = jsonRoot.path("results").get(0).path("geometry").path("location");
+						if (location != null) {
+							JsonNode lat = location.get("lat");
+							JsonNode lng = location.get("lng");
+							coordinates = new LatLng(lat.asDouble(), lng.asDouble());
+						}
 					}
 				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
-			if (locateAddressGET != null)
+			if (locateAddressGET != null) {
 				locateAddressGET.releaseConnection();
-			if (client != null)
-				client.getState().clear();
+			}
 		}
 		return coordinates;
 	}
