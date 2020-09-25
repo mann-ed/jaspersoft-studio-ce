@@ -31,7 +31,8 @@ Export-Package: com.jaspersoft.translation.action,
  org.eclipse.babel.editor.widgets.suggestion.model,
  org.eclipse.babel.editor.widgets.suggestion.provider,
  org.eclipse.babel.editor.wizards
-Import-Package: org.eclipse.core.expressions,
+Import-Package: net.sf.jasperreports.utils.compatibility,
+ org.eclipse.core.expressions,
  org.eclipse.ui.forms,
  org.eclipse.ui.forms.widgets
 Bundle-ActivationPolicy: lazy

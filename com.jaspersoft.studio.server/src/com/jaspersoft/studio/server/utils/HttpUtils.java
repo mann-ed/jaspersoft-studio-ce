@@ -33,7 +33,6 @@ import org.eclipse.core.net.proxy.IProxyChangeEvent;
 import org.eclipse.core.net.proxy.IProxyChangeListener;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
-import org.eclipse.core.text.StringMatcher;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -48,6 +47,7 @@ import com.jaspersoft.studio.server.protocol.restv2.RestV2Connection;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
+import net.sf.jasperreports.utils.compatibility.StringMatcher;
 
 public class HttpUtils {
 	public static URI toSafeUri(final URL url) throws URISyntaxException {
