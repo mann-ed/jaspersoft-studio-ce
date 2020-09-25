@@ -61,6 +61,7 @@ import org.eclipse.ui.part.ResourceTransfer;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.editor.IGraphicalEditor;
+import com.jaspersoft.studio.editor.action.CustomDeleteAction;
 import com.jaspersoft.studio.editor.action.order.BringBackwardAction;
 import com.jaspersoft.studio.editor.action.order.BringForwardAction;
 import com.jaspersoft.studio.editor.dnd.ImageResourceDropTargetListener;
@@ -435,6 +436,12 @@ public class JDReportOutlineView extends ContentOutlinePage implements IAdaptabl
 						if (action.isEnabled()) {
 							action.run();
 						}
+					} else if (e.keyCode == SWT.BS) {
+						CustomDeleteAction action = new CustomDeleteAction((AbstractVisualEditor) getEditor());
+						action.setSelectionProvider(getViewer());
+						action.update();
+						if (action.isEnabled())
+							action.run();
 					}
 
 				}
