@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.babel.editor.util.UIUtils;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -66,6 +64,7 @@ import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.design.events.JRChangeEventsSupport;
 import net.sf.jasperreports.engine.design.events.JRPropertyChangeSupport;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 public class MColumn extends APropertyNode
 		implements IPastable, IContainer, IContainerLayout, IGraphicElement, IContainerEditPart {
@@ -218,7 +217,7 @@ public class MColumn extends APropertyNode
 
 	@Override
 	public Color getForeground() {
-		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 	}
 
 	/*

@@ -65,6 +65,7 @@ import jersey.repackaged.com.google.common.collect.BiMap;
 import jersey.repackaged.com.google.common.collect.HashBiMap;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 public class FindResourcePage extends WizardPage {
 	private FinderUI finderUI;
@@ -132,7 +133,7 @@ public class FindResourcePage extends WizardPage {
 		});
 		if (itypes == null && etypes == null) {
 			Section expcmp = new Section(cmp, ExpandableComposite.TREE_NODE);
-			expcmp.setTitleBarBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND));
+			expcmp.setTitleBarBackground(SWTResourceManager.getColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND));
 
 			expcmp.setText(Messages.FindResourcePage_5);
 			GridData gd = new GridData(GridData.FILL_BOTH);

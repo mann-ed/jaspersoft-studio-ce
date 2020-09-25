@@ -8,8 +8,6 @@ import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 import org.eclipse.babel.editor.util.UIUtils;
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -25,6 +23,7 @@ import net.sf.jasperreports.crosstabs.design.DesignCrosstabColumnCell;
 import net.sf.jasperreports.crosstabs.design.JRDesignCrosstabCell;
 import net.sf.jasperreports.crosstabs.type.CrosstabColumnPositionEnum;
 import net.sf.jasperreports.engine.JRConstants;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 public class MTitleCell extends MCell {
 	
@@ -53,7 +52,7 @@ public class MTitleCell extends MCell {
 	@Override
 	public Color getForeground() {
 		if (getValue() == null)
-			return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+			return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 		return null;
 	}
 

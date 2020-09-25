@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.babel.editor.util.UIUtils;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -39,6 +37,7 @@ import net.sf.jasperreports.engine.JRVariable;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 /*
  * The Class MVariableSystem.
@@ -95,7 +94,7 @@ public class MVariableSystem extends APropertyNode implements IDragable {
 
 	@Override
 	public Color getForeground() {
-		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 	}
 
 	/*

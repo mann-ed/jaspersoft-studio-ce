@@ -8,15 +8,8 @@ import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.jasperreports.engine.JRConstants;
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.design.JRDesignDataset;
-import net.sf.jasperreports.engine.design.JRDesignParameter;
-
 import org.eclipse.babel.editor.util.UIUtils;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -37,6 +30,12 @@ import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.property.section.widgets.ASPropertyWidget;
 import com.jaspersoft.studio.property.section.widgets.SPClassTypeCombo;
 import com.jaspersoft.studio.utils.ModelUtils;
+
+import net.sf.jasperreports.engine.JRConstants;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.design.JRDesignDataset;
+import net.sf.jasperreports.engine.design.JRDesignParameter;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 /*
  * The Class MParameterSystem.
@@ -94,7 +93,7 @@ public class MParameterSystem extends APropertyNode implements IDragable {
 
 	@Override
 	public Color getForeground() {
-		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 	}
 
 	/*

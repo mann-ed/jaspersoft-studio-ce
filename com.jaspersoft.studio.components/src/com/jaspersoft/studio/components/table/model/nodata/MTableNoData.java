@@ -12,12 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.babel.editor.util.UIUtils;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -60,6 +58,7 @@ import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 public class MTableNoData extends APropertyNode implements IGraphicElement, IPastableGraphic, IGraphicElementContainer,
 		IPastable, IGroupElement, IGraphicalPropertiesHandler, IContainer, IContainerLayout, IContainerEditPart {
@@ -365,7 +364,7 @@ public class MTableNoData extends APropertyNode implements IGraphicElement, IPas
 	@Override
 	public Color getForeground() {
 		if (getValue() == null)
-			return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+			return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 		return null;
 	}
 

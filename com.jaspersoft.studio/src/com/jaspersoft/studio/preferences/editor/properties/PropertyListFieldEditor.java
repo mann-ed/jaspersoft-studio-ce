@@ -70,6 +70,7 @@ import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.JRPropertiesUtil;
 import net.sf.jasperreports.properties.PropertyMetadata;
 import net.sf.jasperreports.properties.StandardPropertyMetadata;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 /**
  * List field editor to edit the JSS properties. The properties are shown as key
@@ -781,11 +782,11 @@ public class PropertyListFieldEditor extends FieldEditor {
 			if (p.getValue() == null) {
 				PropertyMetadata pm = pmMap.get(p.getKey());
 				if (pm.isDeprecated() && index == 0)
-					return SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+					return SWTResourceManager.getColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 				if (index == 1) {
 					String def = pm.getDefaultValue();
 					if (def != null)
-						return SWTResourceManager.getColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+						return SWTResourceManager.getColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 				}
 			}
 			return null;

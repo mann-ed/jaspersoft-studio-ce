@@ -6,14 +6,8 @@ package com.jaspersoft.studio.components.crosstab.model.columngroup;
 
 import java.beans.PropertyChangeEvent;
 
-import net.sf.jasperreports.crosstabs.JRCellContents;
-import net.sf.jasperreports.crosstabs.design.JRDesignCrosstabColumnGroup;
-import net.sf.jasperreports.engine.JRConstants;
-
 import org.eclipse.babel.editor.util.UIUtils;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -24,6 +18,11 @@ import com.jaspersoft.studio.components.crosstab.model.header.MCrosstabHeader;
 import com.jaspersoft.studio.model.ANode;
 import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.model.MRoot;
+
+import net.sf.jasperreports.crosstabs.JRCellContents;
+import net.sf.jasperreports.crosstabs.design.JRDesignCrosstabColumnGroup;
+import net.sf.jasperreports.engine.JRConstants;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 public class MColumnCrosstabHeaderCell extends MCell {
 	public static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
@@ -39,7 +38,7 @@ public class MColumnCrosstabHeaderCell extends MCell {
 	@Override
 	public Color getForeground() {
 		if (getValue() == null)
-			return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+			return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 		return null;
 	}
 	

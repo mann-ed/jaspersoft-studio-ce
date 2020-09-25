@@ -61,6 +61,7 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.BandTypeEnum;
 import net.sf.jasperreports.engine.type.SplitTypeEnum;
 import net.sf.jasperreports.engine.util.JRCloneUtils;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 /*
  * The Class MBand.
@@ -301,7 +302,7 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	@Override
 	public Color getForeground() {
 		if (getValue() == null)
-			return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+			return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 		return null;
 	}
 

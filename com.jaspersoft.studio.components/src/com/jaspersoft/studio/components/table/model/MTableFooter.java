@@ -5,9 +5,7 @@
 package com.jaspersoft.studio.components.table.model;
 
 import org.eclipse.babel.editor.util.UIUtils;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -23,6 +21,7 @@ import net.sf.jasperreports.components.table.StandardRow;
 import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 public class MTableFooter extends AMFooterHeaderCollection {
 	public static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
@@ -81,7 +80,7 @@ public class MTableFooter extends AMFooterHeaderCollection {
 			if (child.getValue() != null && ((StandardBaseColumn) child.getValue()).getTableFooter() != null)
 				return null;
 		}
-		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 	}
 
 	@Override

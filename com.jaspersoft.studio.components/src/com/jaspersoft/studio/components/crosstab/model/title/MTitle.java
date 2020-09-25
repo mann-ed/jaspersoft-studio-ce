@@ -4,16 +4,9 @@
  ******************************************************************************/
 package com.jaspersoft.studio.components.crosstab.model.title;
 
-import net.sf.jasperreports.crosstabs.design.JRCrosstabOrigin;
-import net.sf.jasperreports.engine.JRConstants;
-import net.sf.jasperreports.engine.design.JRDesignElement;
-import net.sf.jasperreports.engine.design.JasperDesign;
-
 import org.eclipse.babel.editor.util.UIUtils;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 
 import com.jaspersoft.studio.components.crosstab.CrosstabCell;
@@ -25,6 +18,12 @@ import com.jaspersoft.studio.model.IContainerEditPart;
 import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.model.MRoot;
 import com.jaspersoft.studio.model.util.IIconDescriptor;
+
+import net.sf.jasperreports.crosstabs.design.JRCrosstabOrigin;
+import net.sf.jasperreports.engine.JRConstants;
+import net.sf.jasperreports.engine.design.JRDesignElement;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 public class MTitle extends ANode implements IContainerEditPart {
 	public static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
@@ -75,7 +74,7 @@ public class MTitle extends ANode implements IContainerEditPart {
 
 	@Override
 	public Color getForeground() {
-		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 	}
 
 	/*

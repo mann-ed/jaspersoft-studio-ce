@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.babel.editor.util.UIUtils;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -27,6 +25,7 @@ import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.JRDefaultScriptlet;
 import net.sf.jasperreports.engine.JRScriptlet;
 import net.sf.jasperreports.engine.design.JRDesignScriptlet;
+import net.sf.jasperreports.utils.compatibility.CompatibilityConstants;
 
 /*
  * The Class MScriptlet.
@@ -86,7 +85,7 @@ public class MSystemScriptlet extends APropertyNode {
 
 	@Override
 	public Color getForeground() {
-		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_DISABLED_FOREGROUND);
+		return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 	}
 
 	/*
