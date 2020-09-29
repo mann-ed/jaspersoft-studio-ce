@@ -277,4 +277,11 @@
          version="1.0.0.b01"
          fragment="true"/>
 
+   <plugin
+         id="org.apache.commons.collections"
+         download-size="0"
+         install-size="0"
+         version="3.2.2.v201511171945"
+         unpack="false"/>
+
 </feature>
