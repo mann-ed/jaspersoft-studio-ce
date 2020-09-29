@@ -459,7 +459,18 @@ public class PropertyListFieldEditor extends FieldEditor {
 		Properties props = FileUtils.load(store.getString(FilePrefUtil.NET_SF_JASPERREPORTS_JRPROPERTIES));
 		List<Pair> input = new ArrayList<>();
 		for (String key : getPropertyKeys())
-			input.add(new Pair((String) key, props.getProperty(key)));
+			input.add(new Pair(key, props.getProperty(key)));
+		for (String key : props.stringPropertyNames()) {
+			boolean found = false;
+			for (Pair pair : input)
+				if (pair.key.equals(key)) {
+					found = true;
+					break;
+				}
+			if (!found)
+				input.add(new Pair(key, props.getProperty(key)));
+		}
+
 		return input;
 	}
 
@@ -476,7 +487,7 @@ public class PropertyListFieldEditor extends FieldEditor {
 				input = new ArrayList<>();
 				for (String key : getPropertyKeys()) {
 					String value = props.getProperty(key);
-					input.add(new Pair((String) key, value));
+					input.add(new Pair(key, value));
 				}
 				viewer.setInput(input);
 			} catch (IOException e) {

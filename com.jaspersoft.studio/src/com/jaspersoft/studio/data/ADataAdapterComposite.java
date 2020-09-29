@@ -23,7 +23,7 @@ public abstract class ADataAdapterComposite extends Composite {
 	
 	protected DataAdapterDescriptor dataAdapterDesc;
 	
-	private JasperReportsContext jrContext;
+	protected JasperReportsContext jrContext;
 	
 	protected DataBindingContext bindingContext;
 

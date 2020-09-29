@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.swt.widgets.table.DeleteButton;
-import com.jaspersoft.studio.swt.widgets.table.INewElement;
 import com.jaspersoft.studio.swt.widgets.table.ListContentProvider;
 import com.jaspersoft.studio.swt.widgets.table.NewButton;
 
@@ -39,7 +38,6 @@ public class PropertiesComponent {
 	private Map<String, String> properties;
 	private Control control;
 	private TableViewer tviewer;
-	private Table wtable;
 
 	class Property {
 		public String key;
@@ -55,12 +53,9 @@ public class PropertiesComponent {
 
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof Property) {
-				switch (columnIndex) {
-				case 0:
+				if (columnIndex == 0)
 					return ((Property) element).key;
-				case 1:
-					return ((Property) element).value;
-				}
+				return ((Property) element).value;
 			}
 			return ""; //$NON-NLS-1$
 		}
@@ -73,7 +68,7 @@ public class PropertiesComponent {
 	public Map<String, String> getProperties() {
 		List<Property> list = (List<Property>) tviewer.getInput();
 		if (list == null) {
-			list = new ArrayList<Property>();
+			list = new ArrayList<>();
 		}
 		properties.clear();
 		for (Property prop : list) {
@@ -106,7 +101,7 @@ public class PropertiesComponent {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 
-		wtable = new Table(composite, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
+		Table wtable = new Table(composite, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.widthHint = 100;
 		gd.heightHint = 250;
@@ -141,14 +136,11 @@ public class PropertiesComponent {
 			protected void afterElementAdded(Object selement) {
 				handlePropertiesChanged();
 			}
-		}.createNewButtons(bGroup, tviewer, new INewElement() {
-
-			public Object newElement(List<?> input, int pos) {
-				return new Property("property", "value"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
+		}.createNewButtons(bGroup, tviewer, (input, pos) -> {
+			return new Property("property", "value"); //$NON-NLS-1$ //$NON-NLS-2$
 		});
 		new DeleteButton() {
+			@Override
 			protected void afterElementDeleted(Object element) {
 				handlePropertiesChanged();
 			}
@@ -197,5 +189,6 @@ public class PropertiesComponent {
 	}
 
 	protected void handlePropertiesChanged() {
+		// nothing to implement
 	}
 }

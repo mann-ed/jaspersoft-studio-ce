@@ -151,6 +151,13 @@ public class DataAdapterAction extends Action implements IMenuCreator, PropertyC
 					return;
 				}
 			}
+			if (defaultDA == null) {
+				AEditorContext cntx = editor.getConfiguration().getEditorContext();
+				if (!cntx.hasNoDataAdapter()) {
+					setSelected(Messages.DataAdapterManager_oneemptyrecord);
+					return;
+				}
+			}
 		}
 		setSelected(defaultDA);
 	}

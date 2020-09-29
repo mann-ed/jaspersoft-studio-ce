@@ -151,7 +151,7 @@ public class WsTypes {
 		setSoapFileType(ResourceDescriptor.TYPE_CSS_FILE, FileType.css);
 		setSoapFileType(ResourceDescriptor.TYPE_JSON_FILE, FileType.json);
 		setSoapFileType(ResourceDescriptor.TYPE_SECURE_FILE, FileType.secureFile);
-		setSoapFileType(ResourceDescriptor.TYPE_AZURE_CERTIFICATE, FileType.secureFile);
+		setSoapFileType(ResourceDescriptor.TYPE_AZURE_CERTIFICATE, FileType.cer);
 		setSoapFileType(ResourceDescriptor.TYPE_DASHBOARD_COMPONENT, FileType.dashboardComponent);
 
 		setRestFileType(FileType.accessGrantSchema, ResourceDescriptor.TYPE_ACCESS_GRANT_SCHEMA);
@@ -179,6 +179,7 @@ public class WsTypes {
 		setRestFileType(FileType.xml, ResourceDescriptor.TYPE_XML_FILE);
 		setRestFileType(FileType.json, ResourceDescriptor.TYPE_JSON_FILE);
 		setRestFileType(FileType.secureFile, ResourceDescriptor.TYPE_SECURE_FILE);
+		setRestFileType(FileType.cer, ResourceDescriptor.TYPE_AZURE_CERTIFICATE);
 //		setRestFileType(FileType.unspecified, ResourceDescriptor.TYPE_AZURE_CERTIFICATE);
 
 		Activator.getExtManager().initWsTypes(this);

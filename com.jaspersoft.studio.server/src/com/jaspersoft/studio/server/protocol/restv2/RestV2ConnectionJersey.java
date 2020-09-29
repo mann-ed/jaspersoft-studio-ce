@@ -413,6 +413,10 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 							nrd.setWsType(ResourceDescriptor.TYPE_CONTENT_RESOURCE);
 						else if (name.endsWith(".properties")) //$NON-NLS-1$
 							nrd.setWsType(ResourceDescriptor.TYPE_RESOURCE_BUNDLE);
+						else if (name.endsWith(".pfx")) //$NON-NLS-1$
+							nrd.setWsType(ResourceDescriptor.TYPE_AZURE_CERTIFICATE);
+						else if (name.endsWith(".p12")) //$NON-NLS-1$
+							nrd.setWsType(ResourceDescriptor.TYPE_AZURE_CERTIFICATE);
 					}
 				}
 				// workaround
