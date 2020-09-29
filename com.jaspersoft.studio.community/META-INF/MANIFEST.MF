@@ -9,7 +9,7 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.jaspersoft.studio;bundle-version="7.9.0",
- org.apache.commons.codec;bundle-version="1.6.0",
+ org.apache.commons.codec;bundle-version="1.14.0",
  org.apache.httpcomponents.httpcore;bundle-version="4.3.2",
  org.apache.httpcomponents.httpclient;bundle-version="4.3.4"
 Bundle-ClassPath: patch-library.jar,
