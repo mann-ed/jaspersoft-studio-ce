@@ -29,8 +29,20 @@
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.logging" version="1.2.0" match="greaterOrEqual"/>
-      <import plugin="org.slf4j.api" version="1.7.2" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
+      <import plugin="javax.xml"/>
+      <import plugin="jaxb-api"/>
+      <import plugin="org.apache.xml.security"/>
+      <import plugin="com.jaspersoft.studio.bundles.batik"/>
+      <import plugin="org.apache.commons.codec"/>
+      <import plugin="org.apache.commons.commons-collections4"/>
+      <import plugin="org.apache.commons.compress"/>
+      <import plugin="org.apache.commons.math3"/>
+      <import plugin="com.jaspersoft.studio.bundles.xmlbeans"/>
+      <import plugin="org.bouncycastle.bcprov"/>
+      <import plugin="org.bouncycastle.bcpkix"/>
+      <import plugin="org.w3c.dom.events"/>
+      <import plugin="org.slf4j.api" version="1.7.2" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -180,13 +192,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.commons.commons-codec"
-         download-size="0"
-         install-size="0"
-         version="1.13.0"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.commons.commons-collections4"
          download-size="0"
          install-size="0"
@@ -282,6 +287,13 @@
          download-size="0"
          install-size="0"
          version="3.2.2.v201511171945"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.codec"
+         download-size="0"
+         install-size="0"
+         version="1.14.0.v20200818-1422"
          unpack="false"/>
 
 </feature>
