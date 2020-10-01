@@ -8,4 +8,6 @@
       <category name="com.jaspersoft.studio.category"/>
    </feature>
    <category-def name="com.jaspersoft.studio.category" label="Business Intelligence, Reporting Tools"/>
+   <repository-reference location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/" enabled="true" />
+   <repository-reference location="http://https://download.eclipse.org/tools/orbit/downloads/drops/R20200831200620/repository" enabled="true" />
 </site>
