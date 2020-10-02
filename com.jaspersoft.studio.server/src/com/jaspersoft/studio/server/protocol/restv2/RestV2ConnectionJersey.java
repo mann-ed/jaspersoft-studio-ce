@@ -310,13 +310,15 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			String token = CASUtil.getToken(sp, monitor);
 			formData.add("ticket", token); //$NON-NLS-1$
 		} else {
-			formData.add("j_username", sp.getUser()); //$NON-NLS-1$
+			String usr = sp.getUser();
+			if (!Misc.isNullOrEmpty(sp.getOrganisation()))
+				usr += "|" + sp.getOrganisation(); //$NON-NLS-1$
+			formData.add("j_username", usr); //$NON-NLS-1$
 			if (pwd != null)
 				formData.add("j_password", URLEncoder.encode(pwd, "UTF-8")); //$NON-NLS-1$
 			if (monitor.isCanceled())
 				return false;
 		}
-		formData.add("orgId", sp.getOrganisation()); //$NON-NLS-1$
 		if (!Misc.isNullOrEmpty(sp.getLocale()))
 			formData.add("userLocale", Locale.getDefault().toString()); //$NON-NLS-1$ //$NON-NLS-2$
 		if (!Misc.isNullOrEmpty(sp.getTimeZone()))
