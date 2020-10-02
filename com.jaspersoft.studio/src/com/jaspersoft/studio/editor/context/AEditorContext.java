@@ -195,9 +195,10 @@ public class AEditorContext {
 	public void setClassLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
 		List<RepositoryService> rs = jConf.getExtensions(RepositoryService.class);
-		for (RepositoryService r : rs)
-			if (r instanceof DefaultRepositoryService)
-				((DefaultRepositoryService) r).setClassLoader(classLoader);
+		if (rs != null)
+			for (RepositoryService r : rs)
+				if (r instanceof DefaultRepositoryService)
+					((DefaultRepositoryService) r).setClassLoader(classLoader);
 		jConf.put(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER, classLoader);
 	}
 
