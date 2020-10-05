@@ -11,9 +11,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.WordUtils;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -27,6 +30,7 @@ import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
+import org.eclipse.jdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.jdt.ui.wizards.NewContainerWizardPage;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
@@ -47,6 +51,8 @@ import org.eclipse.ui.PlatformUI;
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.swt.widgets.AutoCompletionHelper;
 import com.jaspersoft.studio.wizards.ContextHelpIDs;
+
+import net.sf.jasperreports.eclipse.util.StringUtils;
 
 /**
  * 
@@ -93,9 +99,9 @@ public class FunctionsLibraryInformationPage extends NewTypeWizardPage {
 	@Override
 	public boolean isPageComplete() {
 		return 
-				isMandatoryInfoOK() &&
-				!getPackageFragmentRootText().isEmpty() &&
-				!categoryLabel.getText().isEmpty(); 
+				isMandatoryInfoOK() && 
+				isSourceFolderInfoGood() && 
+				!categoryLabel.getText().isEmpty() && super.isPageComplete();
 	}
 	
 	/*
@@ -285,6 +291,32 @@ public class FunctionsLibraryInformationPage extends NewTypeWizardPage {
 			newMessage = getDescription();
 		}
 		super.setMessage(newMessage, newType);
+	}
+	
+	private boolean isSourceFolderInfoGood() {
+		String str = getPackageFragmentRootText();
+		if(StringUtils.isNullOrEmpty(str)) {
+			return false;
+		}
+		IPath path= new Path(str);
+		IResource res= getWorkspaceRoot().findMember(path);
+		if(selectedJavaProject!=null && 
+				selectedJavaProject.getResource().equals(res)) {
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	protected IStatus containerChanged() {
+		if(!isSourceFolderInfoGood()) {
+			StatusInfo err = new StatusInfo();
+			err.setError("Please check the source folder information. It must exists and be set on classpath.");
+			return err;
+		}
+		else {
+			return super.containerChanged();
+		}
 	}
 	
 	// Utility methods
