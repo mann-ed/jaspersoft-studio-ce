@@ -46,6 +46,7 @@ import com.jaspersoft.studio.model.util.NodeIconDescriptor;
 import com.jaspersoft.studio.property.descriptor.ButtonsPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.checkbox.CheckBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
+import com.jaspersoft.studio.property.descriptor.expression.JRSubreportExpressionPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.properties.JPropertiesPropertyDescriptor;
 
 /**
@@ -359,7 +360,7 @@ public class MReportPart extends APropertyNode {
 		evaluationTimeD.setDescription(Messages.MReportPart_evaluationTimeTooltip);
 		desc.add(evaluationTimeD);
 
-		JRExpressionPropertyDescriptor componentExpression = new JRExpressionPropertyDescriptor(COMPONENT_EXPRESSION,
+		JRSubreportExpressionPropertyDescriptor componentExpression = new JRSubreportExpressionPropertyDescriptor(COMPONENT_EXPRESSION,
 				Messages.MReportPart_componentExpression);
 		componentExpression.setDescription(Messages.MReportPart_componentExpressionTooltip);
 		componentExpression.setHelpRefBuilder(new HelpReferenceBuilder(

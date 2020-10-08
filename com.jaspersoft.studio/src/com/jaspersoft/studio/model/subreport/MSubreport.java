@@ -21,6 +21,7 @@ import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptor.checkbox.CheckBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
 import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
+import com.jaspersoft.studio.property.descriptor.expression.JRSubreportExpressionPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.returnvalue.RVPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.subreport.parameter.SubreportPropertiesPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
@@ -115,7 +116,7 @@ public class MSubreport extends MGraphicElement {
 		useCacheD.setDescription(Messages.MSubreport_using_cache_description);
 		desc.add(useCacheD);
 
-		JRExpressionPropertyDescriptor exprD = new JRExpressionPropertyDescriptor(JRDesignSubreport.PROPERTY_EXPRESSION,
+		JRSubreportExpressionPropertyDescriptor exprD = new JRSubreportExpressionPropertyDescriptor(JRDesignSubreport.PROPERTY_EXPRESSION,
 				Messages.common_expression);
 		exprD.setDescription(Messages.MSubreport_expression_description);
 		desc.add(exprD);
