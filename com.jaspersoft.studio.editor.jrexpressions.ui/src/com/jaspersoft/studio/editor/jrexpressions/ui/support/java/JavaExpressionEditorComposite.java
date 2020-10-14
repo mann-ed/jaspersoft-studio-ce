@@ -354,7 +354,6 @@ public class JavaExpressionEditorComposite extends ExpressionEditorComposite {
 	 */
 	private void createObjectsNavigator(Composite parent) {
 		objectsNavigator = new TreeViewer(parent, SWT.BORDER);
-		Tree tree = objectsNavigator.getTree();
 		objectsNavigator.setContentProvider(new ObjectsNavigatorContentProvider());
 		objectsNavigator.setLabelProvider(new ObjectsNavigatorLabelProvider());
 
