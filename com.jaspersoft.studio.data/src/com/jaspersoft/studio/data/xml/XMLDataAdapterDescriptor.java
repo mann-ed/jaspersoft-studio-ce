@@ -12,7 +12,6 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.xerces.util.DOMUtil;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.graphics.Image;
@@ -137,12 +136,9 @@ public class XMLDataAdapterDescriptor extends DataAdapterDescriptor
 	/**
 	 * Returns the list of fields provided by an XML document and the related query.
 	 * 
-	 * @param doc
-	 *            the W3C XML document
-	 * @param jConfig
-	 *            the JasperReports configuration instance
-	 * @param jDataset
-	 *            the current dataset
+	 * @param doc      the W3C XML document
+	 * @param jConfig  the JasperReports configuration instance
+	 * @param jDataset the current dataset
 	 * @return the list of fields
 	 * @throws JRException
 	 */
@@ -154,7 +150,7 @@ public class XMLDataAdapterDescriptor extends DataAdapterDescriptor
 		LinkedHashMap<String, JRDesignField> fieldsMap = new LinkedHashMap<>();
 		for (int nIdx = 0; nIdx < nodes.getLength(); nIdx++) {
 			Node currNode = nodes.item(nIdx);
-			if (considerEmptyNodes || StringUtils.isNotBlank(DOMUtil.getChildText(currNode))) {
+			if (considerEmptyNodes || StringUtils.isNotBlank(XMLUtils.getChildText(currNode))) {
 				addMainNodeField(fieldsMap, currNode);
 			}
 			findDirectChildrenAttributes(currNode, fieldsMap, "");
@@ -201,7 +197,7 @@ public class XMLDataAdapterDescriptor extends DataAdapterDescriptor
 					if (recursiveFind) {
 						findDirectChildrenAttributes(item, fieldsMap, prefix + nodeName + "/");
 					}
-					if (considerEmptyNodes || StringUtils.isNotBlank(DOMUtil.getChildText(item))) {
+					if (considerEmptyNodes || StringUtils.isNotBlank(XMLUtils.getChildText(item))) {
 						addNewField(nodeName, fieldsMap, item, prefix);
 					}
 					if (recursiveFind && item.hasChildNodes()) {
@@ -216,8 +212,7 @@ public class XMLDataAdapterDescriptor extends DataAdapterDescriptor
 	 * Verifies if the recursive retrieval of fields is expected and sets the proper
 	 * flag for it.
 	 * 
-	 * @param jconfig
-	 *            the JasperReports context
+	 * @param jconfig the JasperReports context
 	 */
 	protected void setRecursiveRetrieval(JasperReportsConfiguration jconfig) {
 		recursiveFind = jconfig.getPropertyBoolean(XMLQueryEditorPreferencePage.P_USE_RECURSIVE_RETRIEVAL, false);
@@ -227,8 +222,7 @@ public class XMLDataAdapterDescriptor extends DataAdapterDescriptor
 	 * Verifies if the empty nodes should be considered during the retrieval of
 	 * fields and sets the proper flag for it.
 	 * 
-	 * @param jconfig
-	 *            the JasperReports context
+	 * @param jconfig the JasperReports context
 	 */
 	protected void setConsiderEmptyNodes(JasperReportsConfiguration jConfig) {
 		considerEmptyNodes = jConfig.getPropertyBoolean(XMLQueryEditorPreferencePage.P_CONSIDER_EMPTY_NODES, false);
@@ -254,8 +248,8 @@ public class XMLDataAdapterDescriptor extends DataAdapterDescriptor
 		f.getPropertiesMap().setProperty("net.sf.jasperreports.xpath.field.expression", description);
 		// Let's consider the description indicating the XPath query
 		// as unique and therefore as map key.
-		if(!fieldsMap.containsKey(description)){
-			fieldsMap.put(description, f);			
+		if (!fieldsMap.containsKey(description)) {
+			fieldsMap.put(description, f);
 		}
 	}
 

@@ -237,6 +237,7 @@ public class AddResourcePage extends JSSHelpWizardPage {
 			new MRDataAdapter(root, MRDataAdapter.createDescriptor(parent), -1);
 
 			if (parent instanceof MReportUnit) {
+				new MInputControl(root, MInputControl.createDescriptor(parent), -1);
 				new MReference(root, MReference.createDescriptor(parent), -1);
 				boolean dsexists = false;
 				for (INode n : parent.getChildren()) {
