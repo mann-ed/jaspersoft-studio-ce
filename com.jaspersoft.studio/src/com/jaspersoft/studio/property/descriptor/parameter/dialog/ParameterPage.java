@@ -162,7 +162,7 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				InputParameterDialog inputDialog = getEditDialog(new GenericJSSParameter());
+				InputParameterDialog inputDialog = getEditDialog(new GenericJSSParameter(), values);
 				inputDialog.setExpressionContext(expContext);
 				if (inputDialog.open() == Dialog.OK) {
 					values.add(inputDialog.getValue());
@@ -220,7 +220,7 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 	 */
 	private void editElement(GenericJSSParameter edited) {
 		GenericJSSParameter result = edited.clone();
-		InputParameterDialog inputDialog = getEditDialog(result);
+		InputParameterDialog inputDialog = getEditDialog(result, values);
 		inputDialog.setExpressionContext(expContext);
 		if (inputDialog.open() == Dialog.OK) {
 			int index = values.indexOf(edited);
@@ -341,7 +341,8 @@ public class ParameterPage extends WizardPage implements IExpressionContextSette
 	 * 
 	 * @return A dialog to edit the passed parameter
 	 */
-	protected InputParameterDialog getEditDialog(GenericJSSParameter editedParameter) {
-		return new InputParameterDialog(getShell(), editedParameter, values);
+	protected InputParameterDialog getEditDialog(GenericJSSParameter editedParameter,
+			List<GenericJSSParameter> prevParams) {
+		return new InputParameterDialog(getShell(), editedParameter, prevParams);
 	}
 }
