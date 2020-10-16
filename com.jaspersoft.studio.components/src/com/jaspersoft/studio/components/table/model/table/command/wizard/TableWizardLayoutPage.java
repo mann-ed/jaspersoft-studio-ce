@@ -164,6 +164,24 @@ public class TableWizardLayoutPage extends JSSHelpWizardPage {
 			notifyChange();
 		}
 	};
+	
+	private SelectionAdapter colorSelectionListener = new SelectionAdapter() {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			if (altDetailButton.equals(e.widget.getData("id"))){
+				//if the color changed is the detail button force the alt detail
+				AlfaRGB detail = selectionWidget.getButtonData(detailButton);
+				AlfaRGB altDetail = selectionWidget.getButtonData(altDetailButton);
+				if (!alternateColor.getSelection() && !altDetail.equals(detail)) {
+					alternateColor.setSelection(true);
+				}
+				notifyChange();
+			} else {
+				notifyChange();	
+			}
+		}
+	};
 
 	protected TableWizardLayoutPage(boolean createTitle) {
 		super("tablepage"); //$NON-NLS-1$
@@ -240,7 +258,7 @@ public class TableWizardLayoutPage extends JSSHelpWizardPage {
 				notifyChange();
 			}
 		};
-		selectionWidget = new ColorSelectionWidget(parent, selectionListener,
+		selectionWidget = new ColorSelectionWidget(parent, colorSelectionListener,
 				schemaSelectionAdapter, ColorSelectionWidget.STYLE.BOTTOM);
 		TableStyle temp = getDefaultStyle();
 		selectionWidget.addButton(tableHeadrButton,

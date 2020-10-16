@@ -263,7 +263,7 @@ public class ColorSelectionWidget {
 	private void createManual(Composite manualComposite){
 		//Used the color from a default style to initialize the toolitems colors values
 		for(ButtonDescriptor desc : buttonToAdd){
-			ToolItem item = createSingleColors(desc.text, manualComposite, desc.color);
+			ToolItem item = createSingleColors(desc.id, desc.text, manualComposite, desc.color);
 			buttonsMap.put(desc.id, item);
 		}
 	}
@@ -410,7 +410,7 @@ public class ColorSelectionWidget {
 	 * @param color the color used to initialize the control
 	 * @return the created toolitem
 	 */
-	private ToolItem createSingleColors(String text, Composite parent, AlfaRGB color){		
+	private ToolItem createSingleColors(String id, String text, Composite parent, AlfaRGB color){		
 		new Label(parent, SWT.NONE).setText(text);
 		final ToolBar toolBar = new ToolBar(parent, SWT.FLAT | SWT.WRAP | SWT.LEFT);
 		//for some reasons in ubuntu 16 a not-set background is always return a black color instead of system default
@@ -419,7 +419,7 @@ public class ColorSelectionWidget {
 		}
 
 		final ToolItem foreButton = new ToolItem(toolBar, SWT.PUSH);
-		setButtonColor(color, foreButton);
+		setButtonColor(id, color, foreButton);
 		foreButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				ColorDialog cd = new ColorDialog(toolBar.getShell());
@@ -427,7 +427,7 @@ public class ColorSelectionWidget {
 				if (foreButton.getData() instanceof AlfaRGB) cd.setRGB((AlfaRGB)foreButton.getData());
 				AlfaRGB newColor = cd.openAlfaRGB();
 				if (newColor != null) {
-					setButtonColor(newColor,foreButton);
+					setButtonColor(id, newColor,foreButton);
 					selectionChangeButton.widgetSelected(e);
 				}
 			}
@@ -461,9 +461,10 @@ public class ColorSelectionWidget {
 	 * @param newColor color to show
 	 * @param button button where the color will be shown
 	 */
-	private void setButtonColor(AlfaRGB newColor, ToolItem button){
+	private void setButtonColor(String id, AlfaRGB newColor, ToolItem button){
 		button.setImage(colorLabelProvider.getImage(newColor));
 		button.setData(newColor);
+		button.setData("id", id);
 	}
 	
 	/**

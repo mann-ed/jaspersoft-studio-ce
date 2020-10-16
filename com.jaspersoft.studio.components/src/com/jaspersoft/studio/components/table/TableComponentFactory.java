@@ -64,6 +64,7 @@ import com.jaspersoft.studio.components.table.model.column.action.DeleteColumnCe
 import com.jaspersoft.studio.components.table.model.column.action.DeleteRowAction;
 import com.jaspersoft.studio.components.table.model.column.command.CreateColumnCommand;
 import com.jaspersoft.studio.components.table.model.column.command.CreateColumnFromGroupCommand;
+import com.jaspersoft.studio.components.table.model.column.command.CreateColumnWithContentCommand;
 import com.jaspersoft.studio.components.table.model.column.command.DeleteColumnCellCommand;
 import com.jaspersoft.studio.components.table.model.column.command.DeleteColumnCommand;
 import com.jaspersoft.studio.components.table.model.column.command.DeleteColumnFromGroupCommand;
@@ -143,13 +144,16 @@ import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.components.table.util.TableUtil;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.Pair;
+import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.component.Component;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignDatasetRun;
 import net.sf.jasperreports.engine.design.JRDesignElement;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
+import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.design.JasperDesign;
 
 public class TableComponentFactory implements IComponentFactory {
@@ -488,6 +492,16 @@ public class TableComponentFactory implements IComponentFactory {
 			JRStyle style = (JRStyle) child.getValue();
 			cmd.setPropertyValue(style.getName());
 			return cmd;
+		}
+		if (child instanceof MField && (child.getValue() != null && parent instanceof MTable)) {
+			JSSCompoundTableCommand tableCommand = new JSSCompoundTableCommand((MTable) parent);
+			JRDesignTextField textField = new JRDesignTextField();
+			JRField field = ((MField)child).getValue();
+			textField.setExpression((new JRDesignExpression("${" + field.getName() + "}")));
+			tableCommand.add(new RefreshColumnNamesCommand((MTable) parent, false, true));
+			tableCommand.add(new CreateColumnWithContentCommand((MTable) parent, textField));
+			tableCommand.add(new RefreshColumnNamesCommand((MTable) parent, true, false));
+			return tableCommand;
 		}
 
 		// Avoid to move element from an existing section to another
