@@ -18,6 +18,8 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.CalculationEnum;
 import net.sf.jasperreports.engine.type.ResetTypeEnum;
 
+import java.util.regex.Matcher;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
@@ -184,5 +186,9 @@ public class Tag {
 				throw new CancelledOperationException();
 		}
 		return jrVariable;
+	}
+	
+	public String getExpressionText() {
+		return txt.replaceAll("%", Matcher.quoteReplacement(name));
 	}
 }

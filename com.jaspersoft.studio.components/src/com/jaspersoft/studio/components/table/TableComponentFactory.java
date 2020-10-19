@@ -115,6 +115,7 @@ import com.jaspersoft.studio.model.MPage;
 import com.jaspersoft.studio.model.MReport;
 import com.jaspersoft.studio.model.MRoot;
 import com.jaspersoft.studio.model.band.MBand;
+import com.jaspersoft.studio.model.command.Tag;
 import com.jaspersoft.studio.model.dataset.MDataset;
 import com.jaspersoft.studio.model.field.MField;
 import com.jaspersoft.studio.model.frame.MFrame;
@@ -144,16 +145,13 @@ import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.components.table.util.TableUtil;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.Pair;
-import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.component.Component;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignDatasetRun;
 import net.sf.jasperreports.engine.design.JRDesignElement;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
-import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.design.JasperDesign;
 
 public class TableComponentFactory implements IComponentFactory {
@@ -493,13 +491,11 @@ public class TableComponentFactory implements IComponentFactory {
 			cmd.setPropertyValue(style.getName());
 			return cmd;
 		}
-		if (child instanceof MField && (child.getValue() != null && parent instanceof MTable)) {
+		if ((child.getValue() != null && parent instanceof MTable) && (child instanceof MField || child instanceof MParameterSystem || child instanceof MVariableSystem)) {
 			JSSCompoundTableCommand tableCommand = new JSSCompoundTableCommand((MTable) parent);
-			JRDesignTextField textField = new JRDesignTextField();
-			JRField field = ((MField)child).getValue();
-			textField.setExpression((new JRDesignExpression("${" + field.getName() + "}")));
+			Tag tag = Tag.getExpression(child);
 			tableCommand.add(new RefreshColumnNamesCommand((MTable) parent, false, true));
-			tableCommand.add(new CreateColumnWithContentCommand((MTable) parent, textField));
+			tableCommand.add(new CreateColumnWithContentCommand((MTable) parent, tag));
 			tableCommand.add(new RefreshColumnNamesCommand((MTable) parent, true, false));
 			return tableCommand;
 		}
