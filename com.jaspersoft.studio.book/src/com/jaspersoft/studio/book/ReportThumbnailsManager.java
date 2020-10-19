@@ -37,6 +37,7 @@ import com.jaspersoft.studio.utils.jasper.ExtensionLoader;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileExtension;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRException;
@@ -343,7 +344,6 @@ public class ReportThumbnailsManager {
 					// Here is where the magic happens... JasperReports will
 					// fill our image...
 					try {
-
 						JasperPrint jasperPrint = new JSSReportConverter(previewContext, report, false)
 								.getJasperPrint();
 
@@ -408,7 +408,7 @@ public class ReportThumbnailsManager {
 	private static JRReport getReport(File file) throws JRException {
 		// by default we assume we are loading a jrxml until the file
 		// name ends with .jasper
-		if (!file.getName().toLowerCase().endsWith(".jasper"))
+		if (!file.getName().toLowerCase().endsWith(FileExtension.PointJASPER))
 			return JRXmlLoader.load(file);
 		return (JRReport) JRLoader.loadObject(file);
 	}
@@ -619,9 +619,10 @@ public class ReportThumbnailsManager {
 		// If the file does not have a proper extension, jrxml is assumed.
 		String location = (String) reportFileName;
 		File f = findFile(location, context);
-		if ((f == null || !f.exists()) && location.toLowerCase().endsWith(".jasper")) {
+		if ((f == null || !f.exists()) && location.toLowerCase().endsWith(FileExtension.PointJASPER)) {
 			// check for a jrxml...
-			location = location.substring(0, location.length() - ".jasper".length()) + ".jrxml";
+			location = location.substring(0, location.length() - FileExtension.PointJASPER.length())
+					+ FileExtension.PointJRXML;
 		}
 		return location;
 	}
