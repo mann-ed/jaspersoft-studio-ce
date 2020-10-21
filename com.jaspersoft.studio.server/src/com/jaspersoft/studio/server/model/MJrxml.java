@@ -4,13 +4,16 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.model;
 
-import net.sf.jasperreports.engine.JRConstants;
-import net.sf.jasperreports.engine.design.JasperDesign;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
 import com.jaspersoft.studio.model.ANode;
 import com.jaspersoft.studio.model.util.IIconDescriptor;
+import com.jaspersoft.studio.server.Activator;
 import com.jaspersoft.studio.server.ServerIconDescriptor;
+
+import net.sf.jasperreports.engine.JRConstants;
+import net.sf.jasperreports.engine.design.JasperDesign;
 
 public class MJrxml extends AMJrxmlContainer {
 	public static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
@@ -36,6 +39,14 @@ public class MJrxml extends AMJrxmlContainer {
 		ResourceDescriptor rd = AMResource.createDescriptor(parent);
 		rd.setWsType(ResourceDescriptor.TYPE_JRXML);
 		return rd;
+	}
+
+	@Override
+	public ImageDescriptor getImagePath() {
+		ResourceDescriptor rd = getValue();
+		if (rd != null && rd.isMainReport())
+			return Activator.getDefault().getImageDescriptor("icons/jrxml_file_main.png");
+		return super.getImagePath();
 	}
 
 	@Override

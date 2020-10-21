@@ -141,7 +141,7 @@ public abstract class ADSComponent implements IExpressionContextSetter {
 									JRChartDataset jrded = (JRChartDataset) newselclass
 											.getConstructor(JRChartDataset.class).newInstance(jrDChart.getDataset());
 									jrDChart.setDataset(jrded);
-									dsWidget.setDataset(null, jrElement, eDataset);
+									dsWidget.setDataset(null, jrElement, (JRDesignElementDataset)jrded);
 								} catch (Exception e1) {
 									UIUtils.showError(e1);
 								}
