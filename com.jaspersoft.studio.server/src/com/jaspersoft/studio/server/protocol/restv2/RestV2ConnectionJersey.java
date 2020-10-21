@@ -311,7 +311,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			formData.add("ticket", token); //$NON-NLS-1$
 		} else {
 			String usr = sp.getUser();
-			if (!Misc.isNullOrEmpty(sp.getOrganisation().trim()))
+			if (sp.getOrganisation() != null && !Misc.isNullOrEmpty(sp.getOrganisation().trim()))
 				usr += "|" + sp.getOrganisation(); //$NON-NLS-1$
 			formData.add("j_username", usr); //$NON-NLS-1$
 			if (pwd != null)
