@@ -11,7 +11,6 @@
  * http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 
-
 package com.jaspersoft.jasperserver.api.metadata.xml.domain.impl;
 
 import java.io.Serializable;
@@ -30,7 +29,7 @@ public class InputControlQueryDataRow implements Serializable {
 
 	/** Creates a new instance of InputControlQueryDataRow */
 	public InputControlQueryDataRow() {
-		columnValues = new java.util.ArrayList<String>();
+		columnValues = new java.util.ArrayList<>();
 	}
 
 	public java.util.List<String> getColumnValues() {
