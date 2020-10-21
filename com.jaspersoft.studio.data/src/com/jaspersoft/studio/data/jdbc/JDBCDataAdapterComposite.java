@@ -352,51 +352,52 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 			getDriverProperties();
 		}
 	}
-
+	// FIXME - Uncomment and improved this debug method when the JIRA #JS-60045 is fixed.
+	// SIMBA Impala driver is causing an NPE when trying to get the DriverPropertyInfo items
 	protected void getDriverProperties() {
-		JdbcDataAdapter da = (JdbcDataAdapter) getDataAdapter().getDataAdapter();
-		Job job = new Job("Testing driver") {
-			protected IStatus run(IProgressMonitor monitor) {
-				JasperReportsConfiguration jConf = (JasperReportsConfiguration) jrContext;
-
-				JdbcDataAdapterService ds = (JdbcDataAdapterService) DataAdapterServiceUtil
-						.getInstance(new ParameterContributorContext(jConf, null, jConf.getJRParameters()))
-						.getService(da);
-
-				ClassLoader oldThreadClassLoader = Thread.currentThread().getContextClassLoader();
-
-				try {
-					Method m = AbstractClasspathAwareDataAdapterService.class.getDeclaredMethod("getClassLoader",
-							ClassLoader.class);
-					if (m != null) {
-						m.setAccessible(true);
-						Thread.currentThread().setContextClassLoader((ClassLoader) m.invoke(ds, oldThreadClassLoader));
-
-						Class<?> clazz = JRClassLoader.loadClassForRealName(da.getDriver());
-						Driver driver = (Driver) clazz.getDeclaredConstructor().newInstance();
-						if (driver != null) {
-							DriverPropertyInfo[] dpis = driver.getPropertyInfo(da.getUrl(), new Properties());
-							if (dpis != null) {
-								for (DriverPropertyInfo dpi : dpis) {
-									System.out.println(dpi.name + " " + dpi.value + " " + dpi.description);
-								}
-							}
-						}
-					}
-				} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | ClassNotFoundException | SQLException
-						| InstantiationException e) {
-
-					e.printStackTrace();
-				} finally {
-					Thread.currentThread().setContextClassLoader(oldThreadClassLoader);
-				}
-
-				return Status.OK_STATUS;
-			}
-		};
-		job.setPriority(Job.SHORT);
-		job.schedule(); // start as soon as possible
+//		JdbcDataAdapter da = (JdbcDataAdapter) getDataAdapter().getDataAdapter();
+//		Job job = new Job("Testing driver") {
+//			protected IStatus run(IProgressMonitor monitor) {
+//				JasperReportsConfiguration jConf = (JasperReportsConfiguration) jrContext;
+//
+//				JdbcDataAdapterService ds = (JdbcDataAdapterService) DataAdapterServiceUtil
+//						.getInstance(new ParameterContributorContext(jConf, null, jConf.getJRParameters()))
+//						.getService(da);
+//
+//				ClassLoader oldThreadClassLoader = Thread.currentThread().getContextClassLoader();
+//
+//				try {
+//					Method m = AbstractClasspathAwareDataAdapterService.class.getDeclaredMethod("getClassLoader",
+//							ClassLoader.class);
+//					if (m != null) {
+//						m.setAccessible(true);
+//						Thread.currentThread().setContextClassLoader((ClassLoader) m.invoke(ds, oldThreadClassLoader));
+//
+//						Class<?> clazz = JRClassLoader.loadClassForRealName(da.getDriver());
+//						Driver driver = (Driver) clazz.getDeclaredConstructor().newInstance();
+//						if (driver != null) {
+//							DriverPropertyInfo[] dpis = driver.getPropertyInfo(da.getUrl(), new Properties());
+//							if (dpis != null) {
+//								for (DriverPropertyInfo dpi : dpis) {
+//									System.out.println(dpi.name + " " + dpi.value + " " + dpi.description);
+//								}
+//							}
+//						}
+//					}
+//				} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+//						| InvocationTargetException | ClassNotFoundException | SQLException
+//						| InstantiationException e) {
+//
+//					e.printStackTrace();
+//				} finally {
+//					Thread.currentThread().setContextClassLoader(oldThreadClassLoader);
+//				}
+//
+//				return Status.OK_STATUS;
+//			}
+//		};
+//		job.setPriority(Job.SHORT);
+//		job.schedule(); // start as soon as possible
 	}
 
 	/**
