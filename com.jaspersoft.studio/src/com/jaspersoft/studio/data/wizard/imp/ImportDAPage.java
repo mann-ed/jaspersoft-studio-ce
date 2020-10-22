@@ -28,6 +28,7 @@ import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.DataAdapterManager;
 import com.jaspersoft.studio.data.storage.ADataAdapterStorage;
 import com.jaspersoft.studio.messages.Messages;
+import com.jaspersoft.studio.wizards.ContextHelpIDs;
 import com.jaspersoft.studio.wizards.JSSHelpWizardPage;
 
 public class ImportDAPage extends JSSHelpWizardPage {
@@ -38,6 +39,12 @@ public class ImportDAPage extends JSSHelpWizardPage {
 		super("importda"); //$NON-NLS-1$
 		setTitle(Messages.ImportDAPage_1);
 		setDescription(Messages.ImportDAPage_2);
+
+	}
+
+	@Override
+	protected String getContextName() {
+		return ContextHelpIDs.WIZARD_IMPORT_SELECT_ADAPTERS;
 	}
 
 	private List<DataAdapterDescriptor> selection;
@@ -92,11 +99,6 @@ public class ImportDAPage extends JSSHelpWizardPage {
 		List<ADataAdapterStorage> das = DataAdapterManager.getProjectStorages();
 		viewer.setInput(das);
 		viewer.expandAll();
-	}
-
-	@Override
-	protected String getContextName() {
-		return null;
 	}
 
 	class ViewContentProvider implements ITreeContentProvider {
