@@ -315,7 +315,7 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 				usr += "|" + sp.getOrganisation(); //$NON-NLS-1$
 			formData.add("j_username", usr); //$NON-NLS-1$
 			if (pwd != null)
-				formData.add("j_password", URLEncoder.encode(pwd, "UTF-8")); //$NON-NLS-1$
+				formData.add("j_password", pwd); //$NON-NLS-1$
 			if (monitor.isCanceled())
 				return false;
 		}
