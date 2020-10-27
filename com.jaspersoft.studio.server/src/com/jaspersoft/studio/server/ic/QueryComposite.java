@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jaspersoft.studio.data.designer.ICQuery;
 import com.jaspersoft.studio.data.designer.IFilterQuery;
 import com.jaspersoft.studio.messages.Messages;
+import com.jaspersoft.studio.server.protocol.ProxyConnection;
 import com.jaspersoft.studio.server.wizard.resource.StringValueDialog;
 import com.jaspersoft.studio.server.wizard.resource.page.QueryPageContent;
 import com.jaspersoft.studio.swt.widgets.table.DeleteButton;
@@ -65,6 +66,7 @@ public class QueryComposite {
 		if (fq == null) {
 			cLang = new Combo(composite, SWT.READ_ONLY);
 			cLang.setItems(QueryPageContent.LANGUAGES);
+			cLang.add("jasperQL");
 			cLang.addModifyListener(e -> value.language = cLang.getText());
 
 		}

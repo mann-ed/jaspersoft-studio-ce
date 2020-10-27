@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import net.sf.jasperreports.data.xml.XmlDataAdapter;
@@ -21,16 +22,17 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 
 public class XMLUtils {
 	private static DocumentBuilder db;
-	
+
 	private XMLUtils() {
 	}
 
-	public static Document parseNoValidation(InputStream io) throws ParserConfigurationException, SAXException,
-			IOException {
+	public static Document parseNoValidation(InputStream io)
+			throws ParserConfigurationException, SAXException, IOException {
 		return getDocumentBuilder().parse(io);
 	}
 
-	public static Document parseNoValidation(String xml) throws ParserConfigurationException, SAXException, IOException {
+	public static Document parseNoValidation(String xml)
+			throws ParserConfigurationException, SAXException, IOException {
 		Document doc = null;
 		try (ByteArrayInputStream is = new ByteArrayInputStream(xml.getBytes(FileUtils.UTF8_ENCODING));) {
 			doc = getDocumentBuilder().parse(is);
@@ -62,5 +64,30 @@ public class XMLUtils {
 			return (detectNamespaces != null && "true".equals(detectNamespaces));
 		}
 		return false;
+	}
+
+	public static String getChildText(Node node) {
+
+		// is there anything to do?
+		if (node == null) {
+			return null;
+		}
+
+		// concatenate children text
+		StringBuffer str = new StringBuffer();
+		Node child = node.getFirstChild();
+		while (child != null) {
+			short type = child.getNodeType();
+			if (type == Node.TEXT_NODE) {
+				str.append(child.getNodeValue());
+			} else if (type == Node.CDATA_SECTION_NODE) {
+				str.append(getChildText(child));
+			}
+			child = child.getNextSibling();
+		}
+
+		// return text value
+		return str.toString();
+
 	}
 }

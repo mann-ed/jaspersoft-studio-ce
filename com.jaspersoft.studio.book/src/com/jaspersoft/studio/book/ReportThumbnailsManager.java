@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,6 +37,7 @@ import com.jaspersoft.studio.utils.jasper.ExtensionLoader;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileExtension;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRException;
@@ -82,28 +84,49 @@ public class ReportThumbnailsManager {
 
 	public static final int SHADOW_SIZE = 4;
 
+	static class DatedItem<T> {
+		Date timestamp = new Date();
+		T value;
+
+		public DatedItem(T value) {
+			this.value = value;
+		}
+
+		/**
+		 * if item is older then new date
+		 * 
+		 * @param newt
+		 * @return
+		 */
+		public boolean isOlder(long newt) {
+			return timestamp.getTime() < newt;
+		}
+
+	}
+
 	/**
 	 * The cache for the preview (AWT) images...
 	 */
-	private static Map<String, ThumbnailCacheItem> cachedItems = new HashMap<String, ThumbnailCacheItem>();
+	private static Map<String, ThumbnailCacheItem> cachedItems = new HashMap<>();
+	private static Map<String, DatedItem<JRReport>> cachedReports = new HashMap<>();
 
 	/**
-	 * Map where are listed the currently loading cache items, the key is the
-	 * same of the map cachedItems and if an element is inside this set it means
-	 * that it is currently loading and will be saved inside cachedItems
+	 * Map where are listed the currently loading cache items, the key is the same
+	 * of the map cachedItems and if an element is inside this set it means that it
+	 * is currently loading and will be saved inside cachedItems
 	 */
-	private static HashSet<String> loadingItems = new HashSet<String>();
+	private static HashSet<String> loadingItems = new HashSet<>();
 
 	private static java.awt.Image ERROR_IMAGE = null;
 
 	private static String ERROR_IMAGE_LOCATION = "/icons/report_no_preview.png";
 
 	/**
-	 * This is a temporary map to help transition of figure images to new
-	 * figures referencing the same jasperReport object (JRDesignPart). As key
-	 * is used the uuid of the element to avoid object hard links.
+	 * This is a temporary map to help transition of figure images to new figures
+	 * referencing the same jasperReport object (JRDesignPart). As key is used the
+	 * uuid of the element to avoid object hard links.
 	 */
-	private static Map<String, Image> temporarySwap = new HashMap<String, Image>();
+	private static Map<String, Image> temporarySwap = new HashMap<>();
 
 	private static java.awt.Image getErrorImage() {
 		if (ERROR_IMAGE == null) {
@@ -124,13 +147,12 @@ public class ReportThumbnailsManager {
 	 * approach.... Attention... this could be slow in very very large
 	 * environments.. Search is performed in the following way:
 	 * 
-	 * 1. Check if location can be found on the file system (assuming location
-	 * an absolute path) 2. Check if the location can be loaded from the
-	 * classpath (assuming a file in a folder present in the classpath of the
-	 * report) 3. Check if the file can be found relatively to the current
-	 * report file (pointed by this context) 4. Check if the file can be found
-	 * relatively to the current project (to which the file at point 3 belongs
-	 * to)
+	 * 1. Check if location can be found on the file system (assuming location an
+	 * absolute path) 2. Check if the location can be loaded from the classpath
+	 * (assuming a file in a folder present in the classpath of the report) 3. Check
+	 * if the file can be found relatively to the current report file (pointed by
+	 * this context) 4. Check if the file can be found relatively to the current
+	 * project (to which the file at point 3 belongs to)
 	 * 
 	 * @param location
 	 * @param context
@@ -144,23 +166,15 @@ public class ReportThumbnailsManager {
 			SimpleRepositoryResourceContext resContext = SimpleRepositoryResourceContext.of(parentPath);
 			RepositoryContext repoContext = SimpleRepositoryContext.of(context, resContext);
 			in = RepositoryUtil.getInstance(repoContext).getInputStreamFromLocation(location);
-			if (in != null && in instanceof FileInputStream) {
+			if (in instanceof FileInputStream) {
 				Field pathField = FileInputStream.class.getDeclaredField("path");
 				pathField.setAccessible(true);
 				String path = (String) pathField.get(in);
 				if (path != null)
 					return new File(path);
 			}
-		} catch (JRException e2) {
+		} catch (JRException | NoSuchFieldException | SecurityException | IllegalAccessException e2) {
 			e2.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
 		} finally {
 			FileUtils.closeStream(in);
 		}
@@ -218,21 +232,19 @@ public class ReportThumbnailsManager {
 	}
 
 	/**
-	 * Given a report (jasper or jrxml), the file is loaded (if exists, and an
-	 * SWT image is provided). This image is not cached or managed in any way!
-	 * You are responsible to dispose it!
+	 * Given a report (jasper or jrxml), the file is loaded (if exists, and an SWT
+	 * image is provided). This image is not cached or managed in any way! You are
+	 * responsible to dispose it!
 	 * 
-	 * The size of the image is ReportThumbnailsManager.THUMBNAIL_SIZE (120x120)
-	 * The image includes a 3 pixel border to simulate a shadow.
+	 * The size of the image is ReportThumbnailsManager.THUMBNAIL_SIZE (120x120) The
+	 * image includes a 3 pixel border to simulate a shadow.
 	 * 
 	 * This method is a shortcut of produceImage(file, context,
 	 * ReportThumbnailsManager.THUMBNAIL_SIZE, true, false)
 	 * 
-	 * @param location
-	 *            - A file location.
-	 * @param context
-	 *            - Can be null, but in this case don't expect images to be
-	 *            resolved...or properly previewed.
+	 * @param location - A file location.
+	 * @param context  - Can be null, but in this case don't expect images to be
+	 *                 resolved...or properly previewed.
 	 * @return Image
 	 * 
 	 * @see ReportThumbnailsManager.produceImage(File file, JasperReportsContext
@@ -246,27 +258,23 @@ public class ReportThumbnailsManager {
 	 * In case of error, a simple error image is provided.
 	 * 
 	 * 
-	 * @param file
-	 *            - A file location.
-	 * @param context
-	 *            - A context to be used when rendering the preview and to
-	 *            locate the file
-	 * @param thumbnailSize
-	 *            - If 0 it defaults to ReportThumbnailsManager.THUMBNAIL_SIZE,
-	 *            but the maximum precision used is still THUMBNAIL_SIZE which
-	 *            means that this preview will cached at THUMBNAIL_SIZE, even if
-	 *            the final image could be at any size. Clearly, requesting a
-	 *            bigger size will result in an up-scaled poor image.
-	 * @param drawShadow
-	 *            - If the shadow is shown, the report preview will be a little
-	 *            bit smaller to leave room for the shadow. The size of the
-	 *            shadow (ReportThumbnailsManager.SHADOW_SIZE) is by default 4
-	 *            pixels.
-	 * @param cropImage
-	 *            - By default the thumbnail image is square, to accommodate any
-	 *            size. But in some cases, a proper image cropped to the
-	 *            document is preferred, so this is what crop does. If true, the
-	 *            shadow will ignored.
+	 * @param file          - A file location.
+	 * @param context       - A context to be used when rendering the preview and to
+	 *                      locate the file
+	 * @param thumbnailSize - If 0 it defaults to
+	 *                      ReportThumbnailsManager.THUMBNAIL_SIZE, but the maximum
+	 *                      precision used is still THUMBNAIL_SIZE which means that
+	 *                      this preview will cached at THUMBNAIL_SIZE, even if the
+	 *                      final image could be at any size. Clearly, requesting a
+	 *                      bigger size will result in an up-scaled poor image.
+	 * @param drawShadow    - If the shadow is shown, the report preview will be a
+	 *                      little bit smaller to leave room for the shadow. The
+	 *                      size of the shadow (ReportThumbnailsManager.SHADOW_SIZE)
+	 *                      is by default 4 pixels.
+	 * @param cropImage     - By default the thumbnail image is square, to
+	 *                      accommodate any size. But in some cases, a proper image
+	 *                      cropped to the document is preferred, so this is what
+	 *                      crop does. If true, the shadow will ignored.
 	 * @return
 	 */
 	public static Image produceImage(String location, JasperReportsConfiguration context, int thumbnailSize,
@@ -282,7 +290,7 @@ public class ReportThumbnailsManager {
 			previewImage = getErrorImage();
 		} else {
 			ThumbnailCacheItem cachedItem = null;
-			//use name and size as cache key
+			// use name and size as cache key
 			String cacheKey = location + thumbnailSize;
 			// Check if we have a cached image, in that case we can get it ...
 			if (cachedItems.containsKey(cacheKey)) {
@@ -290,6 +298,7 @@ public class ReportThumbnailsManager {
 				if (cachedItem != null && file.lastModified() > cachedItem.getTimestamp().getTime()) {
 					// This cache item is old, we can delete it...
 					cachedItems.remove(cacheKey);
+					cachedReports.remove(file.toString());
 					cachedItem = null;
 				}
 			}
@@ -304,29 +313,15 @@ public class ReportThumbnailsManager {
 				setLoadingItem(location);
 				ExtensionLoader.waitIfLoading();
 				JRReport report = null;
-				// by default we assume we are loading a jrxml until the file
-				// name ends with .jasper
-				if (!file.getName().toLowerCase().endsWith(".jasper")) {
-					try {
-						report = (JRReport) JRXmlLoader.load(file);
-					} catch (JRException e) {
-						// Problem loading the file for preview...
-						previewImage = getErrorImage();
-					}
-				} else // it is a jasper file
-				{
-					try {
-						report = (JRReport) JRLoader.loadObject(file);
-					} catch (JRException e) {
-						e.printStackTrace();
-						// Problem loading the file for preview...
-						previewImage = getErrorImage();
-					}
+				try {
+					report = getReport(file);
+				} catch (JRException e1) {
+					e1.printStackTrace();
+					previewImage = getErrorImage();
 				}
 				// If there was an error, previewImage is now pointing to a
 				// default error image...
-				if (previewImage == null) {
-
+				if (previewImage == null && report != null) {
 					float previewZoom = (float) thumbnailSize
 							/ (Math.max(report.getPageHeight(), report.getPageWidth()));
 
@@ -349,7 +344,6 @@ public class ReportThumbnailsManager {
 					// Here is where the magic happens... JasperReports will
 					// fill our image...
 					try {
-
 						JasperPrint jasperPrint = new JSSReportConverter(previewContext, report, false)
 								.getJasperPrint();
 
@@ -376,7 +370,8 @@ public class ReportThumbnailsManager {
 													// happens...
 
 						// Let's cache this result!
-						cachedItem = new ThumbnailCacheItem(file.toString(), previewImage, report);
+						cachedItem = new ThumbnailCacheItem(previewImage);
+						cachedReports.put(file.toString(), new DatedItem<>(report));
 						cachedItems.put(cacheKey, cachedItem);
 
 					} catch (Exception ex) {
@@ -410,26 +405,32 @@ public class ReportThumbnailsManager {
 		return generateImage(previewImage, thumbnailSize, drawShadow, cropDocument);
 	}
 
+	private static JRReport getReport(File file) throws JRException {
+		// by default we assume we are loading a jrxml until the file
+		// name ends with .jasper
+		if (!file.getName().toLowerCase().endsWith(FileExtension.PointJASPER))
+			return JRXmlLoader.load(file);
+		return (JRReport) JRLoader.loadObject(file);
+	}
+
 	/**
 	 * Provides a no preview image with the requested properties.
 	 * 
 	 * 
-	 * @param thumbnailSize
-	 *            - If 0 it defaults to ReportThumbnailsManager.THUMBNAIL_SIZE,
-	 *            but the maximum precision used is still THUMBNAIL_SIZE which
-	 *            means that this preview will cached at THUMBNAIL_SIZE, even if
-	 *            the final image could be at any size. Clearly, requesting a
-	 *            bigger size will result in an up-scaled poor image.
-	 * @param drawShadow
-	 *            - If the shadow is shown, the report preview will be a little
-	 *            bit smaller to leave room for the shadow. The size of the
-	 *            shadow (ReportThumbnailsManager.SHADOW_SIZE) is by default 4
-	 *            pixels.
-	 * @param cropImage
-	 *            - By default the thumbnail image is square, to accommodate any
-	 *            size. But in some cases, a proper image cropped to the
-	 *            document is preferred, so this is what crop does. If true, the
-	 *            shadow will ignored.
+	 * @param thumbnailSize - If 0 it defaults to
+	 *                      ReportThumbnailsManager.THUMBNAIL_SIZE, but the maximum
+	 *                      precision used is still THUMBNAIL_SIZE which means that
+	 *                      this preview will cached at THUMBNAIL_SIZE, even if the
+	 *                      final image could be at any size. Clearly, requesting a
+	 *                      bigger size will result in an up-scaled poor image.
+	 * @param drawShadow    - If the shadow is shown, the report preview will be a
+	 *                      little bit smaller to leave room for the shadow. The
+	 *                      size of the shadow (ReportThumbnailsManager.SHADOW_SIZE)
+	 *                      is by default 4 pixels.
+	 * @param cropImage     - By default the thumbnail image is square, to
+	 *                      accommodate any size. But in some cases, a proper image
+	 *                      cropped to the document is preferred, so this is what
+	 *                      crop does. If true, the shadow will ignored.
 	 * @return
 	 */
 	public static final Image getNoPreviewImage(int thumbnailSize, boolean drawShadow, boolean cropDocument) {
@@ -439,26 +440,23 @@ public class ReportThumbnailsManager {
 	}
 
 	/**
-	 * Take the provided image and creates a thumbail with the requested
-	 * properties.
+	 * Take the provided image and creates a thumbail with the requested properties.
 	 * 
 	 * 
-	 * @param thumbnailSize
-	 *            - If 0 it defaults to ReportThumbnailsManager.THUMBNAIL_SIZE,
-	 *            but the maximum precision used is still THUMBNAIL_SIZE which
-	 *            means that this preview will cached at THUMBNAIL_SIZE, even if
-	 *            the final image could be at any size. Clearly, requesting a
-	 *            bigger size will result in an up-scaled poor image.
-	 * @param drawShadow
-	 *            - If the shadow is shown, the report preview will be a little
-	 *            bit smaller to leave room for the shadow. The size of the
-	 *            shadow (ReportThumbnailsManager.SHADOW_SIZE) is by default 4
-	 *            pixels.
-	 * @param cropImage
-	 *            - By default the thumbnail image is square, to accommodate any
-	 *            size. But in some cases, a proper image cropped to the
-	 *            document is preferred, so this is what crop does. If true, the
-	 *            shadow will ignored.
+	 * @param thumbnailSize - If 0 it defaults to
+	 *                      ReportThumbnailsManager.THUMBNAIL_SIZE, but the maximum
+	 *                      precision used is still THUMBNAIL_SIZE which means that
+	 *                      this preview will cached at THUMBNAIL_SIZE, even if the
+	 *                      final image could be at any size. Clearly, requesting a
+	 *                      bigger size will result in an up-scaled poor image.
+	 * @param drawShadow    - If the shadow is shown, the report preview will be a
+	 *                      little bit smaller to leave room for the shadow. The
+	 *                      size of the shadow (ReportThumbnailsManager.SHADOW_SIZE)
+	 *                      is by default 4 pixels.
+	 * @param cropImage     - By default the thumbnail image is square, to
+	 *                      accommodate any size. But in some cases, a proper image
+	 *                      cropped to the document is preferred, so this is what
+	 *                      crop does. If true, the shadow will ignored.
 	 * @return
 	 */
 	private static final Image generateImage(java.awt.Image previewImage, int thumbnailSize, boolean drawShadow,
@@ -549,8 +547,8 @@ public class ReportThumbnailsManager {
 			return;
 
 			/*
-			 * Image cachedImage = temporarySwap.get(uuid); if (cachedImage !=
-			 * null && !cachedImage.isDisposed()) { cachedImage.dispose(); }
+			 * Image cachedImage = temporarySwap.get(uuid); if (cachedImage != null &&
+			 * !cachedImage.isDisposed()) { cachedImage.dispose(); }
 			 */
 		}
 
@@ -582,8 +580,7 @@ public class ReportThumbnailsManager {
 	 * report is not found and the referenced one is a .jasper it's jrxml is
 	 * searched.
 	 * 
-	 * @param model
-	 *            the model used to reference the report
+	 * @param model the model used to reference the report
 	 * @return the path of the report or null if it can't be located
 	 */
 	public static String getLocation(MReportPart model) {
@@ -622,9 +619,10 @@ public class ReportThumbnailsManager {
 		// If the file does not have a proper extension, jrxml is assumed.
 		String location = (String) reportFileName;
 		File f = findFile(location, context);
-		if ((f == null || !f.exists()) && location.toLowerCase().endsWith(".jasper")) {
+		if ((f == null || !f.exists()) && location.toLowerCase().endsWith(FileExtension.PointJASPER)) {
 			// check for a jrxml...
-			location = location.substring(0, location.length() - ".jasper".length()) + ".jrxml";
+			location = location.substring(0, location.length() - FileExtension.PointJASPER.length())
+					+ FileExtension.PointJRXML;
 		}
 		return location;
 	}
@@ -632,8 +630,7 @@ public class ReportThumbnailsManager {
 	/**
 	 * Set a key as currently loading item
 	 * 
-	 * @param key
-	 *            key to set
+	 * @param key key to set
 	 */
 	private static void setLoadingItem(String key) {
 		synchronized (loadingItems) {
@@ -644,8 +641,7 @@ public class ReportThumbnailsManager {
 	/**
 	 * Set a key as currently loaded item
 	 * 
-	 * @param key
-	 *            key to set
+	 * @param key key to set
 	 */
 	private static void removeLoadingItem(String key) {
 		synchronized (loadingItems) {
@@ -656,8 +652,7 @@ public class ReportThumbnailsManager {
 	/**
 	 * Check if a key belong to a currently loading item
 	 * 
-	 * @param key
-	 *            key to check
+	 * @param key key to check
 	 * @return true if the key is of an item currently loading, false otherwise
 	 */
 	private static boolean isLoadingItem(String key) {
@@ -667,24 +662,39 @@ public class ReportThumbnailsManager {
 	}
 
 	/**
-	 * Return a loaded jasperdesign. If it is currently loading then it wait
-	 * until the load is complete
+	 * Return a loaded jasperdesign. If it is currently loading then it wait until
+	 * the load is complete
 	 * 
-	 * @param the
-	 *            location of the jasper or a jrxml file of a report part
+	 * @param the location of the jasper or a jrxml file of a report part
 	 * @return The jasperdesign or null if the jasper design can not be found
 	 */
-	public static JRReport getJasperDesign(String location) {
-		while (isLoadingItem(location)) {
+	public static JRReport getJasperDesign(String location, JasperReportsConfiguration jrConfig) {
+		while (isLoadingItem(location))
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		JRReport report = null;
+		File f = findFile(location, jrConfig);
+		if (f != null) {
+			String key = f.toString();
+			DatedItem<JRReport> item = cachedReports.get(key);
+			if (item != null && item.isOlder(f.lastModified())) {
+				cachedReports.remove(key);
+				item = null;
+			}
+			if (item != null)
+				report = item.value;
+			if (report == null) {
+				try {
+					report = getReport(f);
+					cachedReports.put(key, new DatedItem<>(report));
+				} catch (JRException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		ThumbnailCacheItem item = cachedItems.get(location);
-		if (item != null)
-			return item.getReport();
-		return null;
+		return report;
 	}
 }

@@ -227,7 +227,7 @@ public abstract class AExportAction extends AReportViewerAction {
 		conf.setProgressMonitor(monitor);
 
 		String indPage = jContext.getProperty(AExportAction.EXPPARAM_INDEX_PAGE);
-		if (Misc.isNullOrEmpty(indPage)) {
+		if (!Misc.isNullOrEmpty(indPage)) {
 			Pages p = new Pages().parseString(indPage);
 			if (p.getPage() != null)
 				conf.setPageIndex(p.getPage());

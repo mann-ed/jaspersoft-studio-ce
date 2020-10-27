@@ -13,32 +13,34 @@ import com.jaspersoft.studio.editor.expression.IExpressionContextSetter;
 import com.jaspersoft.studio.messages.Messages;
 
 /**
- * A wizard where the user can edit, add, sort or delete a list of generic parameters
+ * A wizard where the user can edit, add, sort or delete a list of generic
+ * parameters
  * 
  * @author Orlandin Marco
  *
  */
-public class ParameterEditor extends Wizard implements IExpressionContextSetter{
-	
+public class ParameterEditor extends Wizard implements IExpressionContextSetter {
+
 	/**
 	 * The edited parameter
 	 */
 	protected List<GenericJSSParameter> values;
-	
+
 	/**
-	 * The only page show in the wizard with the controls to handle the parameters
+	 * The only page show in the wizard with the controls to handle the
+	 * parameters
 	 */
 	protected ParameterPage page0;
-	
+
 	/**
-	 * The current expression context, used if the user want to provide an expression
-	 * for the parameter trough the expression editor
+	 * The current expression context, used if the user want to provide an
+	 * expression for the parameter trough the expression editor
 	 */
 	private ExpressionContext exprContext;
 
-	/* A possible custom title used in the inner wizard page */ 
+	/* A possible custom title used in the inner wizard page */
 	private String customTitle;
-	
+
 	/* A possible custom message used in the inner wizard page */
 	private String customMessage;
 
@@ -49,7 +51,7 @@ public class ParameterEditor extends Wizard implements IExpressionContextSetter{
 		super();
 		setNeedsProgressMonitor(false);
 	}
-	
+
 	public ParameterEditor(String windowTitle, String title, String message) {
 		super();
 		setNeedsProgressMonitor(false);
@@ -57,9 +59,9 @@ public class ParameterEditor extends Wizard implements IExpressionContextSetter{
 		this.customTitle = title;
 		this.customMessage = message;
 	}
-	
+
 	/**
-	 * Return the current list of parameter 
+	 * Return the current list of parameter
 	 * 
 	 * @return a not null list of generic parameters
 	 */
@@ -84,61 +86,61 @@ public class ParameterEditor extends Wizard implements IExpressionContextSetter{
 	public void addPages() {
 		page0 = getEditingPage();
 		page0.setValue(values);
-		if(exprContext!=null){
+		if (exprContext != null) {
 			page0.setExpressionContext(exprContext);
 		}
 		addPage(page0);
 	}
 
 	/**
-	 * Set the expression context for the current page. The current expression context, 
-	 * used if the user want to provide an expression for the parameter trough the 
-	 * expression editor
+	 * Set the expression context for the current page. The current expression
+	 * context, used if the user want to provide an expression for the parameter
+	 * trough the expression editor
 	 * 
 	 * @param exprContext a not null expression context
 	 */
-	public void setExpressionContext(ExpressionContext exprContext){
-		this.exprContext=exprContext;
-		if(page0!=null){
+	public void setExpressionContext(ExpressionContext exprContext) {
+		this.exprContext = exprContext;
+		if (page0 != null) {
 			page0.setExpressionContext(this.exprContext);
 		}
 	}
-	
+
 	/**
-	 * Return the title for the current windows, can be overridden to provide
-	 * a custom title since this is a generic page
+	 * Return the title for the current windows, can be overridden to provide a
+	 * custom title since this is a generic page
 	 * 
 	 * @return a not null window title
 	 */
-	public String getWindowTitle(){
-		if(customWindowTitle!=null) {
+	@Override
+	public String getWindowTitle() {
+		if (customWindowTitle != null) {
 			return customTitle;
-		}
-		else {
+		} else {
 			return Messages.common_properties;
 		}
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		return true;
 	}
-	
+
 	/**
-	 * Return the page used to edit the parameters, can be overridden to 
-	 * provide a customized page since the default one is generic one
+	 * Return the page used to edit the parameters, can be overridden to provide
+	 * a customized page since the default one is generic one
 	 * 
 	 * @return a not null ParameterPage
 	 */
-	protected ParameterPage getEditingPage(){
+	protected ParameterPage getEditingPage() {
 		ParameterPage parameterPage = new ParameterPage();
-		if(customTitle!=null){
+		if (customTitle != null) {
 			parameterPage.setTitle(customTitle);
 		}
-		if(customMessage!=null){
+		if (customMessage != null) {
 			parameterPage.setDescription(customMessage);
 		}
-		return parameterPage; 
+		return parameterPage;
 	}
-	
+
 }

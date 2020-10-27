@@ -519,14 +519,15 @@ public class WSClientHelper {
 			AMResource mr = (AMResource) list.get(pos);
 			ResourceDescriptor rd = mr.getValue();
 			String uri = rd.getUriString();
-			if (rd.getWsType() != null && !rd.getWsType().equals(ResourceDescriptor.TYPE_FOLDER))
+			if (rd.getWsType() != null)
 				if (rd.getWsType().equals(ResourceDescriptor.TYPE_REPORTUNIT)
 						|| rd.getWsType().equals(ResourceDescriptor.TYPE_DASHBOARD)
 						|| rd.getWsType().equals(ResourceDescriptor.TYPE_DOMAIN_TOPICS)
 						|| rd.getWsType().equals(ResourceDescriptor.TYPE_ADHOC_DATA_VIEW))
 					listFolder(mr, -1, cli, monitor, rd, 0);
-				else
+				else if (rd.getWsType().equals(ResourceDescriptor.TYPE_FOLDER))
 					listFolder(mr, cli, uri, monitor, 0);
+
 			return findSelected(mr.getChildren(), monitor, prunit, cli);
 		}
 		return null;

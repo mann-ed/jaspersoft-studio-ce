@@ -86,7 +86,7 @@ public abstract class AImpJdbcDataAdapter {
 				if (kv.length == 2) {
 					if (kv[0].equals(key))
 						kv[1] = fname;
-					newp.append(del + kv[0] + "=" + kv[1]);
+					newp.append("=" + kv[1]);
 				}
 				del = ";";
 			}

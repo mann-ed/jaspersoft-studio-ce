@@ -172,7 +172,9 @@ public class SubreportParameterPage extends ComboParametersPage {
 	}
 
 	@Override
-	protected InputParameterDialog getEditDialog(GenericJSSParameter editedParameter) {
-		return new ComboInputParameterDialog(getShell(), createNameComboInput(), editedParameter, SWT.DROP_DOWN);
+	protected InputParameterDialog getEditDialog(GenericJSSParameter editedParameter,
+			List<GenericJSSParameter> prevParams) {
+		return new ComboInputParameterDialog(getShell(), createNameComboInput(), editedParameter, SWT.DROP_DOWN,
+				prevParams);
 	}
 }

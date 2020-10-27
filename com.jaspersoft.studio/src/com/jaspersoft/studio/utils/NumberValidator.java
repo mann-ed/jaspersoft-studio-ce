@@ -56,7 +56,7 @@ public class NumberValidator implements VerifyListener {
 			oldText = oldText.substring(0, e.start) + oldText.substring(e.end);
 		number = oldText.substring(0, e.start) + e.text;
 		if (oldText.length() - 1 > e.start)
-			number += oldText.substring(e.start);
+			number += oldText.substring(e.end);
 
 		if (number.equals("-")) //$NON-NLS-1$
 			number = "-0";//$NON-NLS-1$
