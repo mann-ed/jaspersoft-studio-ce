@@ -306,7 +306,7 @@ public class WSClientHelper {
 						rd = cli.addOrModifyResource(monitor, rd, file);
 					else {
 						if (wsType.equals(ResourceDescriptor.TYPE_JRXML) && !rd.getIsNew()
-								&& rd.getName().equals("main_jrxml"))
+								&& (rd.getName().equals("main_jrxml") || rd.isMainReport()))
 							rd.setMainReport(true);
 						rd = cli.modifyReportUnitResource(monitor, mru.getValue(), rd, file);
 					}

@@ -9,6 +9,7 @@ import com.jaspersoft.jasperserver.dto.resources.ResourceMediaType;
 import com.jaspersoft.jasperserver.dto.resources.ClientFile.FileType;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MJrxml;
+import com.jaspersoft.studio.server.preferences.JRSPreferencesPage;
 
 public class SelectorJrxml2 extends ASelector {
 	@Override
@@ -22,8 +23,8 @@ public class SelectorJrxml2 extends ASelector {
 	@Override
 	protected void setupResource(ResourceDescriptor rd) {
 		rd.setMainReport(true);
-		rd.setName("main_jrxml");
-		rd.setLabel("Main Jrxml");
+		rd.setName(JRSPreferencesPage.getDefaultMainReportName(res.getJasperConfiguration()));
+		rd.setLabel(JRSPreferencesPage.getDefaultMainReportLabel(res.getJasperConfiguration()));
 	}
 
 	@Override
