@@ -68,7 +68,9 @@ public class XMLParser {
 	 */
 	public void doParse(InputSource inputSource) throws RuntimeException {
 		try {
-			XMLReader reader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+			saxParserFactory.setNamespaceAware(true);
+			XMLReader reader = saxParserFactory.newSAXParser().getXMLReader();
 			reader.setErrorHandler(errorHandler);
 			reader.setContentHandler(contentHandler);
 			reader.setFeature(VALIDATION_FEATURE, true);
