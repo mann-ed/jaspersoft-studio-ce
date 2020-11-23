@@ -285,6 +285,8 @@ public class DBMetadata {
 
 	public DatabaseMetaData checkClosed(DatabaseMetaData meta) throws SQLException {
 		try {
+			if (meta.getConnection() == null)
+				connection = getConnection(das, true);
 			if (meta.getConnection().isClosed()) {
 				connection = getConnection(das, true);
 				return connection.getMetaData();
