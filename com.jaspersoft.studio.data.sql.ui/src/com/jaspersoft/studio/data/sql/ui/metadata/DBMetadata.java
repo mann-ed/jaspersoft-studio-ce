@@ -15,12 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.jasperreports.data.DataAdapterService;
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.JRRuntimeException;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -65,6 +59,12 @@ import com.jaspersoft.studio.model.MRoot;
 import com.jaspersoft.studio.outline.ReportTreeContetProvider;
 import com.jaspersoft.studio.outline.ReportTreeLabelProvider;
 import com.jaspersoft.studio.utils.ModelUtils;
+
+import net.sf.jasperreports.data.DataAdapterService;
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JRRuntimeException;
 
 public class DBMetadata {
 	private TreeViewer treeViewer;
@@ -285,6 +285,8 @@ public class DBMetadata {
 
 	public DatabaseMetaData checkClosed(DatabaseMetaData meta) throws SQLException {
 		try {
+			if (meta.getConnection() == null)
+				connection = getConnection(das, true);
 			if (meta.getConnection().isClosed()) {
 				connection = getConnection(das, true);
 				return connection.getMetaData();
@@ -419,28 +421,42 @@ public class DBMetadata {
 			dbproduct = metaData.getDatabaseProductName();
 			identifierQuote = metaData.getIdentifierQuoteString();
 			designer.doRefreshRoots(false);
-			System.out.println("db product name: " + dbproduct);//$NON-NLS-1$
-			System.out.println("JDBC Quotes: " + metaData.getIdentifierQuoteString());//$NON-NLS-1$
-			System.out.println("getExtraNameCharacters: " //$NON-NLS-1$
-					+ metaData.getExtraNameCharacters());
-			System.out.println("storesLowerCaseIdentifiers: " //$NON-NLS-1$
-					+ metaData.storesLowerCaseIdentifiers());
-			System.out.println("storesLowerCaseQuotedIdentifiers: " //$NON-NLS-1$
-					+ metaData.storesLowerCaseQuotedIdentifiers());
-			System.out.println("storesMixedCaseIdentifiers: " //$NON-NLS-1$
-					+ metaData.storesMixedCaseIdentifiers());
-			System.out.println("storesMixedCaseQuotedIdentifiers: " //$NON-NLS-1$
-					+ metaData.storesMixedCaseQuotedIdentifiers());
-			System.out.println("storesUpperCaseIdentifiers: " //$NON-NLS-1$
-					+ metaData.storesUpperCaseIdentifiers());
-			System.out.println("storesUpperCaseQuotedIdentifiers: " //$NON-NLS-1$
-					+ metaData.storesUpperCaseQuotedIdentifiers());
-			System.out.println("supportsMixedCaseIdentifiers: " //$NON-NLS-1$
-					+ metaData.supportsMixedCaseIdentifiers());
-			System.out.println("supportsMixedCaseQuotedIdentifiers: " //$NON-NLS-1$
-					+ metaData.supportsMixedCaseQuotedIdentifiers());
-			System.out.println("catalogSeparator: " //$NON-NLS-1$
-					+ metaData.getCatalogSeparator());
+			try {
+				System.out.println("db product name: " + dbproduct);//$NON-NLS-1$
+				System.out.println("JDBC Quotes: " + metaData.getIdentifierQuoteString());//$NON-NLS-1$
+				System.out.println("getExtraNameCharacters: " //$NON-NLS-1$
+						+ metaData.getExtraNameCharacters());
+				System.out.println("storesLowerCaseIdentifiers: " //$NON-NLS-1$
+						+ metaData.storesLowerCaseIdentifiers());
+				System.out.println("storesLowerCaseQuotedIdentifiers: " //$NON-NLS-1$
+						+ metaData.storesLowerCaseQuotedIdentifiers());
+				System.out.println("storesMixedCaseIdentifiers: " //$NON-NLS-1$
+						+ metaData.storesMixedCaseIdentifiers());
+				System.out.println("storesMixedCaseQuotedIdentifiers: " //$NON-NLS-1$
+						+ metaData.storesMixedCaseQuotedIdentifiers());
+				System.out.println("storesUpperCaseIdentifiers: " //$NON-NLS-1$
+						+ metaData.storesUpperCaseIdentifiers());
+				System.out.println("storesUpperCaseQuotedIdentifiers: " //$NON-NLS-1$
+						+ metaData.storesUpperCaseQuotedIdentifiers());
+				System.out.println("supportsMixedCaseIdentifiers: " //$NON-NLS-1$
+						+ metaData.supportsMixedCaseIdentifiers());
+				System.out.println("supportsMixedCaseQuotedIdentifiers: " //$NON-NLS-1$
+						+ metaData.supportsMixedCaseQuotedIdentifiers());
+				System.out.println("catalogSeparator: " //$NON-NLS-1$
+						+ metaData.getCatalogSeparator());
+			} catch (Throwable e1) {
+				e1.printStackTrace();
+				if (connection.isClosed())
+					try {
+						if (das != null)
+							das.contributeParameters(parameters);
+						connection = (Connection) parameters.get(JRParameter.REPORT_CONNECTION);
+						if (connection == null)
+							return connection;
+					} catch (JRException e2) {
+						e2.printStackTrace();
+					}
+			}
 
 			schemaTableQuote = dbproduct.equalsIgnoreCase("GoogleBigQuery");
 		} catch (SQLException e) {

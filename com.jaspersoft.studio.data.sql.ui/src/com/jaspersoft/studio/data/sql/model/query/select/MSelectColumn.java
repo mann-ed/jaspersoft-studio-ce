@@ -6,6 +6,7 @@ package com.jaspersoft.studio.data.sql.model.query.select;
 
 import org.eclipse.jface.viewers.StyledString;
 
+import com.jaspersoft.studio.data.sql.Util;
 import com.jaspersoft.studio.data.sql.model.metadata.MSQLColumn;
 import com.jaspersoft.studio.data.sql.model.query.AMQueryAliased;
 import com.jaspersoft.studio.data.sql.model.query.from.MFromTable;
@@ -66,7 +67,10 @@ public class MSelectColumn extends AMQueryAliased<MSQLColumn> {
 		StringBuffer ss = new StringBuffer();
 		if (mfTable.getAlias() != null && !mfTable.getAlias().trim().isEmpty())
 			ss.append(mfTable.getAlias());
-		else
+		else if (Util.getFromTables(this).size() < 2) {
+			ss.append(Misc.quote(getValue().getDisplayText(), IQ, onlyException));
+			return isFirst() ? ss.toString() : ",\n\t" + ss.toString();
+		} else
 			ss.append(mfTable.getValue().toSQLString());
 		ss.append("." + Misc.quote(getValue().getDisplayText(), IQ, onlyException));
 		ss.append(addAlias());

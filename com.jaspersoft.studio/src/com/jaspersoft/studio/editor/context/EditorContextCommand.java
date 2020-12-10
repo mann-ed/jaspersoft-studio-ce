@@ -17,11 +17,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RadioState;
-
-import com.jaspersoft.studio.JaspersoftStudioPlugin;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
@@ -29,12 +28,12 @@ import net.sf.jasperreports.eclipse.util.Misc;
 public class EditorContextCommand extends AbstractHandler {
 
 	public EditorContextCommand() {
-		UIUtils.getDisplay().asyncExec(this::listenSelection);
+		UIUtils.getDisplay().syncExec(this::listenSelection);
 	}
 
 	private void listenSelection() {
-		IWorkbenchWindow w = JaspersoftStudioPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
-		ICommandService service = (ICommandService)w.getService(ICommandService.class);
+		IWorkbenchWindow w = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		ICommandService service = w.getService(ICommandService.class);
 		Command cmd = service.getCommand("com.jaspersoft.studio.editor.context.type");
 		ISelectionService ss = w.getSelectionService();
 		ss.addSelectionListener((part, selection) -> {

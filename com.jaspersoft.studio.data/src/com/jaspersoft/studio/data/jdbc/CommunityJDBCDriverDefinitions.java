@@ -81,9 +81,6 @@ public class CommunityJDBCDriverDefinitions implements JDBCDriverDefinitionsCont
 		driverDefinitions.add(new JDBCDriverDefinition("PostgreSQL", "org.postgresql.Driver", //$NON-NLS-1$ //$NON-NLS-2$
 						"jdbc:postgresql://{0}:5432/{1}")); //$NON-NLS-1$
 		driverDefinitions.add(new JDBCDriverDefinition("Sybase", //$NON-NLS-1$
-						"net.sourceforge.jtds.jdbc.Driver", //$NON-NLS-1$
-						"jdbc:jtds:sybase://{0}/{1}")); //$NON-NLS-1$		
-		driverDefinitions.add(new JDBCDriverDefinition("Sybase", //$NON-NLS-1$
 						"com.sybase.jdbc4.jdbc.SybDriver", //$NON-NLS-1$
 						"jdbc:sybase:Tds:{0}:2638/{1}")); //$NON-NLS-1$
 		driverDefinitions.add(new JDBCDriverDefinition("Hadoop Hive", "org.apache.hadoop.hive.jdbc.HiveDriver", //$NON-NLS-1$ //$NON-NLS-2$

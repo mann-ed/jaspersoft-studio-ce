@@ -56,8 +56,9 @@ public class SchemaUtil {
 				}
 				rs.close();
 				stmt.close();
-			} else if (dbproduct.equalsIgnoreCase("Apache Hive") || dbproduct.equalsIgnoreCase("Impala")
-					|| dbproduct.equalsIgnoreCase("ApacheHive") || dbproduct.equalsIgnoreCase("Spark SQL")) {
+			} else if (dbproduct.equalsIgnoreCase("Apache Hive") || dbproduct.equalsIgnoreCase("ApacheHive")) {
+				return runSchemaQuery(c, "SELECT current_database()");
+			} else if (dbproduct.equalsIgnoreCase("Impala") || dbproduct.equalsIgnoreCase("Spark SQL")) {
 				List<String> schemas = new ArrayList<>();
 				ResultSet rs = c.getMetaData().getSchemas();
 				try {

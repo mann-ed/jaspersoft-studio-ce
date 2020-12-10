@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿Copyright (c) 2020 TIBCO Software Inc.  All Rights Reserved.
+=======
+﻿﻿Copyright (c) 2020 TIBCO Software Inc.  All Rights Reserved.
+>>>>>>> refs/remotes/origin/master
 
 Eclipse Public License - v 1.0
 

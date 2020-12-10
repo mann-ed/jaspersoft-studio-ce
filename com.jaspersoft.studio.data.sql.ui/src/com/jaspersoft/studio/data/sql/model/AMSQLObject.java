@@ -42,12 +42,12 @@ public class AMSQLObject extends MDBObjects implements IQueryString {
 			while (p != null) {
 				if (p instanceof AMSQLObject) {
 					if (p instanceof MSqlSchema && (((MSqlSchema) p).isCurrent()))
-						return Misc.quote(getValue(), IQ, onlyException);
+						return Misc.quote(str, IQ, onlyException);
 					String s = ((AMSQLObject) p).toSQLString();
 					if (Misc.isNullOrEmpty(s))
-						return Misc.quote(getValue(), IQ, onlyException);
+						return Misc.quote(str, IQ, onlyException);
 					if (this instanceof MSqlTable && r.isSchemaTableQuote()) {
-						String t = s + "." + Misc.quote(getValue(), IQ, onlyException);
+						String t = s + "." + Misc.quote(str, IQ, onlyException);
 						t = t.replaceAll(IQ, "");
 						t = Misc.quote(t, IQ, onlyException);
 						return t;
@@ -57,9 +57,9 @@ public class AMSQLObject extends MDBObjects implements IQueryString {
 				p = p.getParent();
 			}
 			if (this instanceof MSqlSchema)
-				return Misc.quote(getValue(), IQ, onlyException);
+				return Misc.quote(str, IQ, onlyException);
 			else if (this instanceof MSqlTable)
-				return Misc.quote(getValue(), IQ, onlyException);
+				return Misc.quote(str, IQ, onlyException);
 		}
 		return str;
 	}

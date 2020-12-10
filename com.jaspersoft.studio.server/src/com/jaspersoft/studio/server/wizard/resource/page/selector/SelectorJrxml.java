@@ -34,6 +34,7 @@ import com.jaspersoft.studio.server.model.AFileResource;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MJrxml;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
+import com.jaspersoft.studio.server.preferences.JRSPreferencesPage;
 import com.jaspersoft.studio.server.properties.dialog.RepositoryDialog;
 import com.jaspersoft.studio.server.protocol.Feature;
 import com.jaspersoft.studio.server.wizard.find.FindResourceJob;
@@ -146,8 +147,10 @@ public class SelectorJrxml {
 				wizard.setInitialPattern("*.jrxml");//$NON-NLS-1$
 				if (wizard.open() == Dialog.OK) {
 					ResourceDescriptor jrxmlDescriptor = new ResourceDescriptor();
-					jrxmlDescriptor.setName("main_jrxml");
-					jrxmlDescriptor.setLabel("Main Jrxml");
+
+					jrxmlDescriptor.setName(JRSPreferencesPage.getDefaultMainReportName(res.getJasperConfiguration()));
+					jrxmlDescriptor
+							.setLabel(JRSPreferencesPage.getDefaultMainReportLabel(res.getJasperConfiguration()));
 					jrxmlDescriptor.setWsType(ResourceDescriptor.TYPE_JRXML);
 					jrxmlDescriptor.setIsNew(true);
 					jrxmlDescriptor.setMainReport(true);
