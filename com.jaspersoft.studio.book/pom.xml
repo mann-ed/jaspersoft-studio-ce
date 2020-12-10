@@ -5,20 +5,12 @@
 	<parent>
 		<groupId>com.jaspersoft.studio.community-edition</groupId>
 		<artifactId>plugins</artifactId>
-<<<<<<< HEAD
-		<version>6.16.0.final</version>
-=======
 		<version>7.10.0-SNAPSHOT</version>
->>>>>>> refs/remotes/origin/master
 		<relativePath>../aggregator/plugins</relativePath>
 	</parent>
 
 	<groupId>com.jaspersoft.studio.community-edition</groupId>
 	<artifactId>com.jaspersoft.studio.book</artifactId>
 	<packaging>eclipse-plugin</packaging>
-<<<<<<< HEAD
-	<version>6.16.0.final</version>
-=======
 	<version>7.10.0-SNAPSHOT</version>
->>>>>>> refs/remotes/origin/master
 </project> 
