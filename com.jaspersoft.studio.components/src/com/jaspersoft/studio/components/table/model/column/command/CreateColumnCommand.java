@@ -361,7 +361,7 @@ public class CreateColumnCommand extends Command {
 	 *            the sibling columns from where the styles are taken
 	 * @return the created columns
 	 */
-	private static StandardColumn addColWithSibling(JasperDesign jrDesign, StandardTable jrTable, boolean isTHead,
+	protected static StandardColumn addColWithSibling(JasperDesign jrDesign, StandardTable jrTable, boolean isTHead,
 			boolean isTFoot, boolean isCHead, boolean isCFoot, boolean isGHead, boolean isGFoot, BaseColumn sibling) {
 		StandardColumn col = new StandardColumn();
 		col.setWidth(40);
