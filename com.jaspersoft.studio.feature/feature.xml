@@ -114,6 +114,7 @@
       <import plugin="org.eclipse.jdt.core" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.discovery" version="0.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.eclipse.pde.ui"/>
    </requires>
 
    <plugin
