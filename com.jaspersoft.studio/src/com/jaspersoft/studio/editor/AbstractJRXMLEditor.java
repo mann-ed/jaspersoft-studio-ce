@@ -271,7 +271,7 @@ public abstract class AbstractJRXMLEditor extends MultiPageEditorPart
 		if (jrContext == null) {
 			jrContext = JasperReportsConfiguration.getDefaultJRConfig(file);
 			jrContext.put(AMultiEditor.THEEDITOR, this);
-			jrContext.setJRParameters(new HashMap<String, Object>());
+			jrContext.setJRParameters(new HashMap<>());
 		}
 		return jrContext;
 	}

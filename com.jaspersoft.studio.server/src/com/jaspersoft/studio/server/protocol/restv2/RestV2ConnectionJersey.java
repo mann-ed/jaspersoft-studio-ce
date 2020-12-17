@@ -305,11 +305,11 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			throws Exception {
 		target = client.target(url + SUFFIX + "login"); //$NON-NLS-1$
 		MultivaluedMap<String, String> formData = new MultivaluedStringMap();
-		formData.add("forceDefaultRedirect", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (sp.isUseSSO()) {
 			String token = CASUtil.getToken(sp, monitor);
 			formData.add("ticket", token); //$NON-NLS-1$
 		} else {
+			formData.add("forceDefaultRedirect", "false"); //$NON-NLS-1$ //$NON-NLS-2$
 			String usr = sp.getUser();
 			if (sp.getOrganisation() != null && !Misc.isNullOrEmpty(sp.getOrganisation().trim()))
 				usr += "|" + sp.getOrganisation(); //$NON-NLS-1$
