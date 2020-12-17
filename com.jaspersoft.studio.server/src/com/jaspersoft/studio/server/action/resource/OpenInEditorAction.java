@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -25,6 +26,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.ide.IDE;
 
 import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescriptor;
@@ -94,25 +96,29 @@ public class OpenInEditorAction extends Action {
 
 	protected boolean preDownload(AFileResource fres, IProgressMonitor monitor) {
 		INode root = fres.getRoot();
-		IFolder ttroot = null;
+		IContainer ttroot = null;
 		try {
-			if (root instanceof MServerProfile)
-				ttroot = ((MServerProfile) root).getTmpDir(monitor);
-			else
+			if (root instanceof MServerProfile) {
+				ttroot = ((MServerProfile) root).getTempWorkspaceLocation(monitor);
+			}				
+			else {
 				ttroot = FileUtils.getInProjectFolder(FileUtils.createTempDir().toURI(), monitor);
+			}
 			ResourceDescriptor rd = fres.getValue();
 			String f = rd.getParentFolder() + File.separator + rd.getName();
-			IFile file = ttroot.getFile(f);
-			if (!file.exists()) {
-				IPath p = file.getRawLocation();
-				if (p == null)
-					p = file.getFullPath();
-				File nf = p.toFile();
-				nf.getParentFile().mkdirs();
-				nf.createNewFile();
-				file.refreshLocal(1, monitor);
+			
+			IFile newFileRes = null;
+			if(ttroot instanceof IProject) {
+				newFileRes = ((IProject)ttroot).getFile(f);		
 			}
-			path = file.getFullPath();
+			else if(ttroot instanceof IFolder) {
+				newFileRes = ((IFolder)ttroot).getFile(f);
+			}
+			else {
+				throw new IOException(NLS.bind("{0} is not a valid location (i.e folder or project)", ttroot.toString()));
+			}
+			FileUtils.createResource(newFileRes, monitor);
+			path = newFileRes.getFullPath();
 		} catch (IOException | CoreException e) {
 			UIUtils.showError(e);
 		}

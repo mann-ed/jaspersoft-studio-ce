@@ -9,13 +9,14 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -240,76 +241,63 @@ public class MServerProfile extends ANode {
 	}
 
 	protected void resetTmpPaths() {
-		tmpDir = null;
+		tmpLocation = null;
 		AExporter.fileurimap.clear();
 	}
 
-	private transient IFolder tmpDir;
+	private transient IContainer tmpLocation;
 
 	public void setProjectPath(String projectPath) {
 		getValue().setProjectPath(projectPath);
 		resetTmpPaths();
 	}
 
-	public IFolder getTmpDir(IProgressMonitor monitor) throws IOException, CoreException {
-		if (tmpDir == null || !tmpDir.exists()) {
+	/**
+	 * Gets the workspace location where the server temporary files can be stored.
+	 * Pay attention that we need an {@link IContainer} instance because we allows both
+	 * project and sub-folders in it. 
+	 * 
+	 * <p>
+	 * NOTE: in the EFS (Eclipse FileSystem) an {@link IProject} can not be "converted"
+	 * to an {@link IFolder}.
+	 * 
+	 * @param monitor the progress monitor
+	 * @return the workspace location where to store the server files
+	 * @throws IOException
+	 * @throws CoreException
+	 */
+	public IContainer getTempWorkspaceLocation(IProgressMonitor monitor) throws IOException, CoreException {
+		if(tmpLocation == null || !tmpLocation.exists()) {
 			String prjpath = getValue().getProjectPath();
-			if (prjpath != null && !prjpath.trim().isEmpty()) {
-				String path = prjpath.trim();
-				if (path.startsWith("/"))
-					path = path.substring(1);
-				int indx = path.indexOf("/"); //$NON-NLS-1$
-				String ppath = indx >= 0 ? path.substring(0, indx) : path;
-				String fpath = indx >= 0 ? path.substring(indx) : ""; //$NON-NLS-1$
-				try {
-					IProject prj = ResourcesPlugin.getWorkspace().getRoot().getProject(ppath);
-					if (prj != null && prj.isOpen()) {
-						if (fpath.isEmpty()) {
-							if (prj.getLocation() != null)
-								tmpDir = ResourcesPlugin.getWorkspace().getRoot().getFolder(prj.getLocation());
-						} else
-							tmpDir = prj.getFolder(fpath);
-					} else
-						tmpDir = null;
-				} catch (Throwable ce) {
-					ce.printStackTrace();
-					tmpDir = null;
+			if(prjpath!=null && !prjpath.trim().isEmpty()) {
+				IResource relatedResource = ResourcesPlugin.getWorkspace().getRoot().findMember(prjpath);
+				if(relatedResource instanceof IContainer) {
+					tmpLocation = (IContainer) relatedResource;
 				}
 			}
-			if (tmpDir == null) {
-				// Need to enable or disable the linked resources support
-				// boolean isAllowdLinkedResource =
-				// JDTUtils.isAllowdLinkedResourcesSupport();
-				// if (!isAllowdLinkedResource)
-				// JDTUtils.setLinkedResourcesSupport(true);
-				// tmpDir = FileUtils.getInProjectFolder(
-				// FileUtils.createTempDir(getValue().getName().replace(" ", "")
-				// + "-").toURI(), monitor); //$NON-NLS-1$ //$NON-NLS-2$
-				// //$NON-NLS-3$
-				// if (!isAllowdLinkedResource)
-				// JDTUtils.setLinkedResourcesSupport(false);
-
+			if(tmpLocation == null) {
+				// Let's grab the first open project and prepare a temp folder there
 				IProject prj = FileUtils.getProject(monitor);
 				String sname = IDStringValidator.safeChar(getValue().getName());
 				String suffix = "";
 				int i = 1;
 				do {
-					tmpDir = prj.getFolder(sname + suffix);
+					tmpLocation = prj.getFolder(sname + suffix);
 					suffix = "_" + i;
 					i++;
-				} while (tmpDir.exists());
-				getValue().setProjectPath(tmpDir.getFullPath().toString());
+				} while (tmpLocation.exists());
+				getValue().setProjectPath(tmpLocation.getFullPath().toString());
 				ServerManager.saveServerProfile(this);
 			}
-			if (!tmpDir.getFullPath().toFile().exists()) {
-				if (!tmpDir.exists()) {
-					tmpDir.create(true, true, monitor);
-					tmpDir.setPersistentProperty(EditorContextUtil.EC_KEY, JRSEditorContext.JRS_ID);
+			if (!tmpLocation.getFullPath().toFile().exists()) {
+				if (!tmpLocation.exists() && tmpLocation instanceof IFolder) {
+					FileUtils.createResource(tmpLocation, monitor);
+					tmpLocation.setPersistentProperty(EditorContextUtil.EC_KEY, JRSEditorContext.JRS_ID);
 				}
 				ServerManager.saveServerProfile(this);
 			}
 		}
-		return tmpDir;
+		return tmpLocation;
 	}
 
 	public boolean isSupported(Feature f) {

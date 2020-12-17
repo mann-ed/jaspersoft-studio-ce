@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -150,7 +149,7 @@ public class JRSRepositoryService implements RepositoryService {
 	}
 
 	private void initRPath() throws IOException, CoreException {
-		IFolder tmpDir = msp.getTmpDir(new NullProgressMonitor());
+		IContainer tmpDir = msp.getTempWorkspaceLocation(new NullProgressMonitor());
 		if (tmpDir.getRawLocation() != null)
 			rpath = tmpDir.getRawLocation().toOSString();
 		else if (tmpDir.getFullPath() != null)
@@ -324,7 +323,7 @@ public class JRSRepositoryService implements RepositoryService {
 			protected IStatus run(IProgressMonitor monitor) {
 				needNewRefresh = false;
 				try {
-					IFolder tmpDir = msp.getTmpDir(monitor);
+					IContainer tmpDir = msp.getTempWorkspaceLocation(monitor);
 					if (tmpDir != null)
 						tmpDir.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 					jConfig.getPropertyChangeSupport().firePropertyChange(ResourceChangeEvent.RESOURCE_LOADED, true,
