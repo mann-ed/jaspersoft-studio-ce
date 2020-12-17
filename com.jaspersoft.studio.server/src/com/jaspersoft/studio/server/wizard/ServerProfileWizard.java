@@ -77,12 +77,9 @@ public class ServerProfileWizard extends Wizard {
 	}
 
 	private void connectionOK() {
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				MessageDialog.openInformation(getShell(), Messages.ServerProfileWizard_1,
-						Messages.ServerProfileWizard_2);
-				page0.connectionOK();
-			}
+		UIUtils.getDisplay().asyncExec(() -> {
+			MessageDialog.openInformation(getShell(), Messages.ServerProfileWizard_1, Messages.ServerProfileWizard_2);
+			page0.connectionOK();
 		});
 	}
 
@@ -95,11 +92,7 @@ public class ServerProfileWizard extends Wizard {
 					connectionOK();
 			} else
 				WSClientHelper.connectGetData(serverProfile, monitor);
-			UIUtils.getDisplay().syncExec(new Runnable() {
-				public void run() {
-					page0.showServerInfo();
-				}
-			});
+			UIUtils.getDisplay().syncExec(() -> page0.showServerInfo());
 		} catch (Throwable e) {
 			throw new InvocationTargetException(e);
 		} finally {

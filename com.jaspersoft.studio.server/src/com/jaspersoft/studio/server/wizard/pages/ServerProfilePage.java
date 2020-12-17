@@ -34,6 +34,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.internal.resources.Folder;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -80,8 +81,10 @@ import com.jaspersoft.jasperserver.dto.serverinfo.ServerInfo;
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.compatibility.JRXmlWriterHelper;
 import com.jaspersoft.studio.compatibility.dialog.VersionCombo;
+import com.jaspersoft.studio.editor.context.EditorContextUtil;
 import com.jaspersoft.studio.server.Activator;
 import com.jaspersoft.studio.server.ServerManager;
+import com.jaspersoft.studio.server.editor.JRSEditorContext;
 import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.model.server.ServerProfile;
@@ -588,7 +591,16 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 				if (csd.open() == Window.OK) {
 					Object[] selection = csd.getResult();
 					if (selection != null && selection.length > 0 && selection[0] instanceof Path) {
-						sprofile.setProjectPath(((Path) selection[0]).toPortableString());
+						Path path = (Path) selection[0];
+						String p = path.toPortableString();
+						sprofile.setProjectPath(p);
+						IResource r = ResourcesPlugin.getWorkspace().getRoot().findMember(p);
+						if (r instanceof Folder)
+							try {
+								((Folder) r).setPersistentProperty(EditorContextUtil.EC_KEY, JRSEditorContext.JRS_ID);
+							} catch (CoreException e1) {
+								e1.printStackTrace();
+							}
 						try {
 							refreshing = true;
 							dbc.updateTargets();
