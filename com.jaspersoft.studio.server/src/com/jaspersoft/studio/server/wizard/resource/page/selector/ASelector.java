@@ -92,47 +92,39 @@ public abstract class ASelector {
 
 		jsRefDS = new Text(prnt, SWT.BORDER);
 		jsRefDS.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		jsRefDS.addModifyListener(new ModifyListener() {
+		jsRefDS.addModifyListener(e -> {
+			if (!refresh) {
+				final String uri = jsRefDS.getText().trim();
+				Job job = new Job("Validating") {
+					private ResourceDescriptor newrd;
 
-			@Override
-			public void modifyText(ModifyEvent e) {
-				if (!refresh) {
-					final String uri = jsRefDS.getText().trim();
-					Job job = new Job("Validating") {
-						private ResourceDescriptor newrd;
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						IStatus status = Status.OK_STATUS;
+						try {
+							ResourceDescriptor rd = createLocal((AMResource) null);
+							rd.setUriString(uri);
+							newrd = WSClientHelper.getResource(monitor, res.getWsClient(), rd, null);
+							valid = newrd != null && isResCompatible(ResourceFactory.getResource(null, newrd, -1));
 
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
-							IStatus status = Status.OK_STATUS;
-							try {
-								ResourceDescriptor rd = createLocal((AMResource) null);
-								rd.setUriString(uri);
-								newrd = WSClientHelper.getResource(monitor, res.getWsClient(), rd, null);
-								valid = newrd != null && isResCompatible(ResourceFactory.getResource(null, newrd, -1));
-
-							} catch (Exception e) {
-								valid = false;
-								e.printStackTrace();
-							} finally {
-								monitor.done();
-							}
-							UIUtils.getDisplay().asyncExec(new Runnable() {
-
-								@Override
-								public void run() {
-									if (valid)
-										setRemoteResource(newrd, res, false);
-									firePageComplete();
-								}
-							});
-							return status;
+						} catch (Exception e) {
+							valid = false;
+							e.printStackTrace();
+						} finally {
+							monitor.done();
 						}
-					};
-					job.setPriority(Job.SHORT);
-					job.setSystem(false);
-					job.setUser(true);
-					job.schedule();
-				}
+						UIUtils.getDisplay().asyncExec(() -> {
+							if (valid)
+								setRemoteResource(newrd, res, false);
+							firePageComplete();
+						});
+						return status;
+					}
+				};
+				job.setPriority(Job.SHORT);
+				job.setSystem(false);
+				job.setUser(true);
+				job.schedule();
 			}
 		});
 		InputHistoryCache.bindText(jsRefDS, this.getClass().getName());
@@ -239,7 +231,6 @@ public abstract class ASelector {
 				ResourceDescriptor ref = getResourceDescriptor(runit);
 				if (isReference(ref))
 					ref = null;
-				// boolean newref = false;
 				AMResource r = null;
 				if (ref != null) {
 					ref = cloneResource(ref);
@@ -250,17 +241,11 @@ public abstract class ASelector {
 					r = getLocalResource(res, runit, parent);
 					if (r != null)
 						ref = r.getValue();
-					// newref = true;
 				}
 				if (r == null)
 					return;
 				ref.setUriString(ref.getParentFolder() + "/" + ref.getName()); //$NON-NLS-1$
-				// if (newref)
 				replaceChildren(ref);
-				// else
-				// ASelector.copyFields(getResourceDescriptor(runit),
-				// r.getValue());
-				// ASelector.copyFields(res.getValue(), ref);
 				jsLocDS.setText(Misc.nvl(ref.getName()));
 				firePageComplete();
 			}
@@ -309,7 +294,7 @@ public abstract class ASelector {
 		return val;
 	}
 
-	private List<IPageCompleteListener> listeners = new ArrayList<IPageCompleteListener>();
+	private List<IPageCompleteListener> listeners = new ArrayList<>();
 
 	public void firePageComplete() {
 		boolean completed = isPageComplete();
@@ -344,15 +329,6 @@ public abstract class ASelector {
 		jsLocDS.setText(""); //$NON-NLS-1$
 
 		ResourceDescriptor r = getResourceDescriptor(resRD);
-		// if (r == null && resRD != null) {
-		// for (ResourceDescriptor rd : resRD.getChildren()) {
-		// if (rd != null && rd.getWsType() != null &&
-		// rd.getWsType().equals(ResourceDescriptor.TYPE_REFERENCE)) {
-		// r = rd;
-		// pos = 0;
-		// }
-		// }
-		// }
 		switch (pos) {
 		case 0:
 			bRef.setEnabled(true);
@@ -364,7 +340,6 @@ public abstract class ASelector {
 		case 1:
 			brLocal.setSelection(true);
 			bLoc.setEnabled(true);
-			// jsLocDS.setEnabled(true);
 			if (r != null && !r.getIsReference() && !r.getWsType().equals(ResourceDescriptor.TYPE_REFERENCE))
 				jsLocDS.setText(Misc.nvl(r.getName()));
 			break;
