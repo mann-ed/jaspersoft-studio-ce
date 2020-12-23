@@ -35,13 +35,11 @@ public class ExportAsJasperReportsAction extends AExportAction {
 	protected void exportWithProgress(File file, JRExportProgressMonitor monitor) throws Throwable {
 		final java.io.File f = file.getAbsoluteFile();
 		final Throwable[] ex = new Throwable[1];
-		BusyIndicator.showWhile(null, new Runnable() {
-			public void run() {
-				try {
-					JRSaver.saveObject(getReportViewer().getReport(), f);
-				} catch (Throwable e) {
-					ex[0] = e;
-				}
+		BusyIndicator.showWhile(null, () -> {
+			try {
+				JRSaver.saveObject(getReportViewer().getReport(), f);
+			} catch (Throwable e) {
+				ex[0] = e;
 			}
 		});
 		if (ex[0] != null)

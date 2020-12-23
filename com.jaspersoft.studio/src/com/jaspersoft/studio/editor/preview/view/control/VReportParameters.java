@@ -43,9 +43,9 @@ public class VReportParameters extends VParameters {
 	private Spinner pageFrom;
 	private Spinner pageTo;
 	private Button btAll;
-	private Pages pages;
 
-	public VReportParameters(Composite parent, JasperReportsConfiguration jContext, PropertyChangeNotifier propertyChangeNotifier) {
+	public VReportParameters(Composite parent, JasperReportsConfiguration jContext,
+			PropertyChangeNotifier propertyChangeNotifier) {
 		super(parent, jContext, propertyChangeNotifier);
 		isSystem = true;
 	}
@@ -53,7 +53,8 @@ public class VReportParameters extends VParameters {
 	@Override
 	protected boolean isParameterToShow(JRParameter p) {
 		return p.isSystemDefined() && !p.getName().equals(JRParameter.REPORT_TEMPLATES)
-				&& !p.getName().equals(JRParameter.SORT_FIELDS) && !p.getName().equals(JRParameter.REPORT_PARAMETERS_MAP);
+				&& !p.getName().equals(JRParameter.SORT_FIELDS)
+				&& !p.getName().equals(JRParameter.REPORT_PARAMETERS_MAP);
 	}
 
 	@Override
@@ -111,7 +112,7 @@ public class VReportParameters extends VParameters {
 		createRange(container);
 
 		String ip = jContext.getProperty(AExportAction.EXPPARAM_INDEX_PAGE);
-		pages = new Pages();
+		Pages pages = new Pages();
 		pages.parseString(ip);
 		if (pages.getPage() != null) {
 			btPage.setSelection(true);
@@ -126,7 +127,7 @@ public class VReportParameters extends VParameters {
 			pageTo.setEnabled(true);
 		} else
 			btAll.setSelection(true);
-		
+
 		refreshControl();
 	}
 
@@ -140,13 +141,7 @@ public class VReportParameters extends VParameters {
 		page.setLayoutData(gd);
 		page.setEnabled(false);
 		page.setValues(0, 0, Integer.MAX_VALUE, 0, 1, 10);
-		page.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				handlePageChange();
-			}
-		});
+		page.addModifyListener(e -> handlePageChange());
 
 		btPage.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -163,13 +158,7 @@ public class VReportParameters extends VParameters {
 		pageFrom = new Spinner(container, SWT.BORDER);
 		pageFrom.setEnabled(false);
 		pageFrom.setValues(0, 0, Integer.MAX_VALUE, 0, 1, 10);
-		pageFrom.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				handlePageChange();
-			}
-		});
+		pageFrom.addModifyListener(e -> handlePageChange());
 
 		Label lbl = new Label(container, SWT.NONE);
 		lbl.setText(Messages.PagesFieldEditor_to);
@@ -177,13 +166,7 @@ public class VReportParameters extends VParameters {
 		pageTo = new Spinner(container, SWT.BORDER);
 		pageTo.setEnabled(false);
 		pageTo.setValues(0, 0, Integer.MAX_VALUE, 0, 1, 10);
-		pageTo.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				handlePageChange();
-			}
-		});
+		pageTo.addModifyListener(e -> handlePageChange());
 
 		btRange.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -199,9 +182,8 @@ public class VReportParameters extends VParameters {
 		ScopedPreferenceStore ps = jContext.getPrefStore();
 		String value = getProperty();
 		if (value.equals("all")) {
-			jContext.removeProperty(AExportAction.EXPPARAM_INDEX_PAGE);
-			ps.setValue(AExportAction.EXPPARAM_INDEX_PAGE,
-					ps.getDefaultInt(AExportAction.EXPPARAM_INDEX_PAGE));
+			jContext.setProperty(AExportAction.EXPPARAM_INDEX_PAGE, "");
+			ps.setValue(AExportAction.EXPPARAM_INDEX_PAGE, "");
 		} else {
 			jContext.setProperty(AExportAction.EXPPARAM_INDEX_PAGE, value);
 			ps.setValue(AExportAction.EXPPARAM_INDEX_PAGE, value);
@@ -224,7 +206,7 @@ public class VReportParameters extends VParameters {
 			to = from;
 		return Integer.toString(from) + ";" + Integer.toString(to); //$NON-NLS-1$
 	}
-	
+
 	class OffsetModifyListener implements ModifyListener {
 		private Text txt;
 		private String property;
