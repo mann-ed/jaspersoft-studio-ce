@@ -165,15 +165,11 @@ public class VParameters extends AVParameters {
 	}
 
 	private void updateControlInput(final Set<String> keys) {
-		UIUtils.getDisplay().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				for (String pname : keys) {
-					IDataInput di = incontrols.get(pname);
-					if (di != null)
-						di.updateInput();
-				}
+		UIUtils.getDisplay().syncExec(() -> {
+			for (String pname : keys) {
+				IDataInput di = incontrols.get(pname);
+				if (di != null)
+					di.updateInput();
 			}
 		});
 	}

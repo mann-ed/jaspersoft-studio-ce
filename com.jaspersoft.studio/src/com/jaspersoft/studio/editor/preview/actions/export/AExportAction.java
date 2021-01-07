@@ -159,13 +159,7 @@ public abstract class AExportAction extends AReportViewerAction {
 			@Override
 			protected IStatus run(final IProgressMonitor monitor) {
 				doExport(file, jrPrint, monitor);
-				UIUtils.getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						callback.completed(file);
-					}
-				});
+				UIUtils.getDisplay().syncExec(() -> callback.completed(file));
 				return Status.OK_STATUS;
 			}
 		};
@@ -314,8 +308,8 @@ public abstract class AExportAction extends AReportViewerAction {
 							if (monitor.isCanceled())
 								Thread.currentThread().interrupt();
 							monitor.worked(1);
-							monitor.subTask(MessageFormat.format(Messages.PageNumberContributionItem_page,
-									new Integer(current++), size));
+							monitor.subTask(
+									MessageFormat.format(Messages.PageNumberContributionItem_page, current++, size));
 						}
 
 					});
@@ -351,8 +345,8 @@ public abstract class AExportAction extends AReportViewerAction {
 						if (monitor.isCanceled())
 							Thread.currentThread().interrupt();
 						monitor.worked(1);
-						monitor.subTask(MessageFormat.format(Messages.PageNumberContributionItem_page,
-								new Integer(current++), size));
+						monitor.subTask(
+								MessageFormat.format(Messages.PageNumberContributionItem_page, current++, size));
 					}
 
 				});

@@ -49,6 +49,7 @@ import com.jaspersoft.studio.wizards.group.ReportWizardFieldsGroupByDynamicPage;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.FileUtils;
+import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.design.JRDesignField;
 import net.sf.jasperreports.engine.design.JRDesignParameter;
 
@@ -187,8 +188,8 @@ public class StaticWizardDataSourcePage extends JSSWizardRunnablePage {
 	}
 
 	/**
-	 * This procedure initialize the dialog page with the list of data adapters only
-	 * if this is for real just the first time the page is shown.
+	 * This procedure initialize the dialog page with the list of data adapters
+	 * only if this is for real just the first time the page is shown.
 	 * 
 	 */
 	public void loadSettings() {
@@ -200,7 +201,8 @@ public class StaticWizardDataSourcePage extends JSSWizardRunnablePage {
 		dataAdaptersCombo.removeAll();
 
 		// Look if there is a specific project in which we are working...
-		// In other words we assume that the user may have choose a project directory
+		// In other words we assume that the user may have choose a project
+		// directory
 		// in a previous step, and this directory has been stored in the
 		// settings with the key "new_file_path"...
 		IProject selectedProject = null;
@@ -220,9 +222,11 @@ public class StaticWizardDataSourcePage extends JSSWizardRunnablePage {
 
 		storages = new ArrayList<>();
 		// Load all the data adapters...
-		// Attention, we are not loading all the possible data storages, but only the
+		// Attention, we are not loading all the possible data storages, but
+		// only the
 		// ones we know
-		// which are preferences and project. In the future we may have other data
+		// which are preferences and project. In the future we may have other
+		// data
 		// storages
 		storages.add(DataAdapterManager.getPreferencesStorage());
 
@@ -243,7 +247,8 @@ public class StaticWizardDataSourcePage extends JSSWizardRunnablePage {
 				}
 			});
 			for (DataAdapterDescriptor d : das) {
-				// Since we are not showing icons, we append the data adapter type to the name
+				// Since we are not showing icons, we append the data adapter
+				// type to the name
 				dataAdaptersCombo.add(storage.getLabel(d));
 				dataAdapterDescriptors.add(d);
 			}
@@ -319,7 +324,8 @@ public class StaticWizardDataSourcePage extends JSSWizardRunnablePage {
 	}
 
 	/**
-	 * We use the setVisible(true) entry point to load the UI with loadSettings()...
+	 * We use the setVisible(true) entry point to load the UI with
+	 * loadSettings()...
 	 */
 	@Override
 	public void setVisible(boolean visible) {
@@ -331,9 +337,14 @@ public class StaticWizardDataSourcePage extends JSSWizardRunnablePage {
 	@Override
 	public void run(final IProgressMonitor monitor) throws Exception {
 		if (activeEditor != null) {
-
 			getSettings().remove(DISCOVERED_FIELDS);
-			getSettings().put(DATASET_QUERY_LANGUAGE, activeEditor.getQueryLanguage());
+			String lang = activeEditor.getQueryLanguage();
+			if (lang == null) {
+				String[] langs = selectedDataAdapterDescriptor.getLanguages();
+				if (!Misc.isNullOrEmpty(langs))
+					lang = langs[0];
+			}
+			getSettings().put(DATASET_QUERY_LANGUAGE, lang);
 			getSettings().put(DATASET_QUERY_TEXT, activeEditor.getQueryString());
 			if (activeEditor instanceof SimpleQueryWizardDataEditorComposite)
 				getSettings().put(DATASET_PROPERTIES,
@@ -370,8 +381,8 @@ public class StaticWizardDataSourcePage extends JSSWizardRunnablePage {
 	 * We don't want to start an elaboration if there is not a suitable editor
 	 * active...
 	 * 
-	 * @return boolean true if an elaboration is required, or false if the current
-	 *         status of the page does not require to trigger an elaboration
+	 * @return boolean true if an elaboration is required, or false if the
+	 * current status of the page does not require to trigger an elaboration
 	 */
 	@Override
 	public boolean requireElaboration() {
