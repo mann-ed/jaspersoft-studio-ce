@@ -132,7 +132,7 @@ public class CustomAutoCompleteField {
 		}
 		
 		@Override
-		protected void closeProposalPopup() {
+		public void closeProposalPopup() {
 			super.closeProposalPopup();
 		}
 	}
