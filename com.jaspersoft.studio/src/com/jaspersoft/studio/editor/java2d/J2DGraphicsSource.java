@@ -8,15 +8,16 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.GraphicsSource;
+import org.eclipse.jface.util.Util;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 /*
  * The Class J2DGraphicsSource.
@@ -122,8 +123,14 @@ public final class J2DGraphicsSource implements GraphicsSource {
 
 		J2DGraphics.flushImageCache();
 
-		if (this.c != null)
+		if (this.c != null) {
 			this.graphicsContext.dispose();
+			// JIRA TIBCO #JSS-3000: Fix helping on BigSur and 
+			// other Mac environments (i.e runtime development)
+			if(Util.isMac()) {
+				this.c.redraw();
+			}
+		}
 		this.graphics2d.dispose();
 	}
 
