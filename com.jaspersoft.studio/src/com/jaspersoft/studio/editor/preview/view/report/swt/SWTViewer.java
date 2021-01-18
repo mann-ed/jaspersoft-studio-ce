@@ -3,16 +3,6 @@
  ******************************************************************************/
 package com.jaspersoft.studio.editor.preview.view.report.swt;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.viewer.ReportViewer;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomActualSizeAction;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomComboContributionItem;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomFitPageAction;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomFitPageWidthAction;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomInAction;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomOutAction;
-import net.sf.jasperreports.engine.JasperPrint;
-
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.PreferencePage;
@@ -37,6 +27,16 @@ import com.jaspersoft.studio.editor.preview.view.report.swt.action.NextPageActio
 import com.jaspersoft.studio.editor.preview.view.report.swt.action.PageNumberContributionItem;
 import com.jaspersoft.studio.editor.preview.view.report.swt.action.PreviousPageAction;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.viewer.ReportViewer;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomActualSizeAction;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomComboContributionItem;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomFitPageAction;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomFitPageWidthAction;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomInAction;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomOutAction;
+import net.sf.jasperreports.engine.JasperPrint;
 
 public class SWTViewer extends APreview implements IJRPrintable, IPreferencePage {
 
@@ -139,27 +139,17 @@ public class SWTViewer extends APreview implements IJRPrintable, IPreferencePage
 		}
 		lastJR = null;
 		refresh = true;
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				rptviewer.setReport(arg0, page);
-				jrprint = arg0;
-				refresh = false;
-				if (lastJR != null)
-					doUpdatePage(lastJR, lastPage);
-			}
+		UIUtils.getDisplay().asyncExec(() -> {
+			rptviewer.setReport(arg0, page);
+			jrprint = arg0;
+			refresh = false;
+			if (lastJR != null)
+				doUpdatePage(lastJR, lastPage);
 		});
 	}
 
 	public void setPageNumber(final int page) {
-		UIUtils.getDisplay().asyncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				rptviewer.setPageIndex(page);
-			}
-		});
+		UIUtils.getDisplay().asyncExec(() -> rptviewer.setPageIndex(page));
 	}
 
 	@Override
