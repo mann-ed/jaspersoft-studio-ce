@@ -23,8 +23,10 @@ import com.jaspersoft.jasperserver.api.metadata.xml.domain.impl.ResourceDescript
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.server.ResourceFactory;
 import com.jaspersoft.studio.server.messages.Messages;
+import com.jaspersoft.studio.server.model.AFileResource;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MReference;
+import com.jaspersoft.studio.server.model.MResourceBundle;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.utils.ReferenceResolver;
 
@@ -45,7 +47,9 @@ public class OpenInBrowserAction extends Action {
 	public boolean isEnabled() {
 		TreeSelection treeSelection = (TreeSelection) treeViewer.getSelection();
 		Object firstElement = treeSelection.getFirstElement();
-		return treeSelection.size() == 1 && (firstElement instanceof AMResource || firstElement instanceof MServerProfile);
+		return treeSelection.size() == 1
+				&& ((firstElement instanceof AMResource || firstElement instanceof MServerProfile)
+						&& !(firstElement instanceof AFileResource));
 	}
 
 	@Override
@@ -91,7 +95,7 @@ public class OpenInBrowserAction extends Action {
 			}
 		} catch (MalformedURLException | URISyntaxException e) {
 			UIUtils.showError(e);
-		} 
+		}
 	}
 
 	private void openInBrowser(AMResource mr, String uri) throws UnsupportedEncodingException {
@@ -100,7 +104,7 @@ public class OpenInBrowserAction extends Action {
 			UIUtils.showInformation("This resource url can't be opened directly from here.");
 			return;
 		}
-		uri += jrsUrl; 
+		uri += jrsUrl;
 		BrowserUtils.openExternalBrowser(uri);
 	}
 
