@@ -26,7 +26,7 @@ import com.jaspersoft.studio.hibernate.HibernateActivator;
 
 public class HibernateClasspathContainer implements IClasspathContainer {
 
-	public static final IPath ID = new Path("com.jaspersoft.studio.data.hibernate.HIBERNATE_5_4_1_FINAL_CONTAINER"); //$NON-NLS-1$
+	public static final IPath ID = new Path("com.jaspersoft.studio.data.hibernate.HIBERNATE_5_4_24_FINAL_CONTAINER"); //$NON-NLS-1$
 	// path to the container
 	private IPath path;
 	
