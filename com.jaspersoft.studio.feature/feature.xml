@@ -52,6 +52,7 @@
       <import plugin="net.sf.jasperreports.samples" version="7.10.0" match="greaterOrEqual"/>
       <import plugin="com.jaspersoft.studio.bundles.bouncycastle" version="1.64.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.swt"/>
+      <import plugin="org.eclipse.pde.ui"/>
       <import plugin="org.eclipse.jetty.util"/>
       <import plugin="org.eclipse.jetty.server"/>
       <import plugin="org.eclipse.jetty.servlet"/>
@@ -64,7 +65,7 @@
       <import plugin="org.apache.commons.pool" version="1.6.0" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.lang3" version="3.8.1" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.6.4" match="greaterOrEqual"/>
-      <import plugin="jakarta.xml.soap-api"/>
+      <import plugin="com.jaspersoft.studio.bundles.soap" version="1.4.2" match="greaterOrEqual"/>
       <import plugin="com.jaspersoft.studio.widgets.map" version="7.10.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.net" version="1.2.100" match="greaterOrEqual"/>
       <import plugin="com.jaspersoft.studio.data" version="7.10.0" match="greaterOrEqual"/>
@@ -114,7 +115,6 @@
       <import plugin="org.eclipse.jdt.core" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.discovery" version="0.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.console"/>
-      <import plugin="org.eclipse.pde.ui"/>
    </requires>
 
    <plugin
