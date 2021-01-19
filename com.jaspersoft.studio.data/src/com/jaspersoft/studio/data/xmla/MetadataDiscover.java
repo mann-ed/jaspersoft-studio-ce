@@ -64,9 +64,6 @@ public class MetadataDiscover {
 			}
 		} catch (SOAPException ex) {
 		}
-
-		System.setProperty("javax.xml.soap.MessageFactory","org.apache.axis.soap.MessageFactoryImpl");
-		System.setProperty("javax.xml.soap.SOAPConnectionFactory","org.apache.axis.soap.SOAPConnectionFactoryImpl");
 	}
 
 	public static void restoreSOAPClientConfig()
