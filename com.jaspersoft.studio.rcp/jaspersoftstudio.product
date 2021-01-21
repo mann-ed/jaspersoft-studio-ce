@@ -29,7 +29,11 @@ Special thanks to all people who support this software.
 -Dfile.encoding=UTF-8
 -Djava.net.preferIPv4Stack=true
 -Ddeployment.security.TLSv1.1=true
--Ddeployment.security.TLSv1.2=true</vmArgs>
+-Ddeployment.security.TLSv1.2=true
+-Djavax.xml.soap.MessageFactory=com.sun.xml.messaging.saaj.soap.ver1_1.SOAPMessageFactory1_1Impl
+-Djavax.xml.soap.SOAPFactory=com.sun.xml.messaging.saaj.soap.ver1_1.SOAPFactory1_1Impl
+-Djavax.xml.soap.SAAJMetaFactory=com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl
+-Djavax.xml.soap.SOAPConnectionFactory=com.sun.xml.messaging.saaj.client.p2p.HttpSOAPConnectionFactory</vmArgs>
       <vmArgsMac>-XstartOnFirstThread</vmArgsMac>
    </launcherArgs>
 
