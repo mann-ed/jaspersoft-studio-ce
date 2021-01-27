@@ -20,14 +20,15 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import com.jaspersoft.studio.editor.action.xls.XLSAction;
 import com.jaspersoft.studio.editor.gef.decorator.IDecorator;
 import com.jaspersoft.studio.editor.gef.decorator.chainable.AbstractPainter;
-import com.jaspersoft.studio.editor.gef.decorator.chainable.IDecoratorInterface;
 import com.jaspersoft.studio.editor.gef.decorator.chainable.AbstractPainter.Location;
+import com.jaspersoft.studio.editor.gef.decorator.chainable.IDecoratorInterface;
 import com.jaspersoft.studio.editor.gef.decorator.text.TextLocation;
 import com.jaspersoft.studio.editor.gef.figures.ComponentFigure;
 import com.jaspersoft.studio.editor.java2d.J2DUtils;
 
 import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.design.JRDesignElement;
+import net.sf.jasperreports.engine.export.JRXlsAbstractMetadataExporter;
 
 /**
  * Decorator for the XSL action, it also provide an interface to became a text 
@@ -118,6 +119,10 @@ public class XLSDecorator implements IDecorator, IDecoratorInterface {
 						}
 					}
 
+				}
+				String metadataColumn = v.getProperty(JRXlsAbstractMetadataExporter.PROPERTY_COLUMN_NAME);
+				if (metadataColumn != null) {
+					endString += "isCol ".concat(metadataColumn); //$NON-NLS-1$
 				}
 				if (drawstart)
 					drawStart(g, r);
@@ -236,6 +241,10 @@ public class XLSDecorator implements IDecorator, IDecoratorInterface {
 				} 
 			}
 
+		}
+		String metadataColumn = mapProperties.getProperty(JRXlsAbstractMetadataExporter.PROPERTY_COLUMN_NAME);
+		if (metadataColumn != null) {
+			endString += "isCol ".concat(metadataColumn); //$NON-NLS-1$
 		}
 	
 		startString = startString.trim();

@@ -43,7 +43,7 @@ import com.jaspersoft.studio.model.MRoot;
 import com.jaspersoft.studio.model.util.IIconDescriptor;
 import com.jaspersoft.studio.property.ISetValueCommandProvider;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
-import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
+import com.jaspersoft.studio.property.descriptor.expression.JRPrintWhenExpressionPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.propexpr.JPropertyExpressionsDescriptor;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionDTO;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
@@ -284,7 +284,7 @@ public class MColumn extends APropertyNode
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
-		JRExpressionPropertyDescriptor printWhenExprD = new JRExpressionPropertyDescriptor(
+		JRPrintWhenExpressionPropertyDescriptor printWhenExprD = new JRPrintWhenExpressionPropertyDescriptor(
 				StandardBaseColumn.PROPERTY_PRINT_WHEN_EXPRESSION, Messages.MColumn_print_when_expression);
 		printWhenExprD.setDescription(Messages.MColumn_print_when_expression_description);
 		desc.add(printWhenExprD);

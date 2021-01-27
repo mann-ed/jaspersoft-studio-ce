@@ -23,6 +23,7 @@ import com.jaspersoft.studio.editor.preview.actions.export.ExportMenuAction;
 import com.jaspersoft.studio.editor.preview.actions.export.html.ExportAsLHtmlAction;
 import com.jaspersoft.studio.editor.preview.actions.export.xls.ExportAsOdsAction;
 import com.jaspersoft.studio.editor.preview.actions.export.xls.ExportAsXlsAction;
+import com.jaspersoft.studio.editor.preview.actions.export.xls.ExportAsXlsMetadataAction;
 import com.jaspersoft.studio.editor.preview.actions.export.xls.ExportAsXlsxAction;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
@@ -52,6 +53,7 @@ public class ExportMenu {
 		mm.add(new ExportAsXlsxAction(rptviewer, jContext, exportMenu));
 
 		mm.add(new ExportAsCsvAction(rptviewer, jContext, exportMenu));
+		mm.add(new ExportAsXlsMetadataAction(rptviewer, jContext, exportMenu));
 		mm.add(new ExportAsCsvMetadataAction(rptviewer, jContext, exportMenu));
 		mm.add(new ExportAsJsonMetadataAction(rptviewer, jContext, exportMenu));
 

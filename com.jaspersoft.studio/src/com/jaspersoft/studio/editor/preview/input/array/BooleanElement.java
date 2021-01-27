@@ -32,8 +32,11 @@ public class BooleanElement extends AWElement {
 				updateLabel();
 			}
 		});
-		if (getValue() != null && getValue() instanceof Boolean)
+		if (getValue() != null && getValue() instanceof Boolean) {
 			bbuton.setSelection((Boolean) Misc.nvl(getValue(), Boolean.FALSE));
+		} else {
+			setValue(false);
+		}
 		updateLabel();
 		return bbuton;
 	}

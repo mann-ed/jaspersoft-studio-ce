@@ -773,6 +773,8 @@ public class Messages extends NLS {
 	public static String ExportAsXlsAction_filternames;
 	public static String ExportAsXlsAction_title;
 	public static String ExportAsXlsAction_tooltip;
+	public static String ExportAsXlsMetadataAction_title;
+	public static String ExportAsXlsMetadataAction_tooltip;
 	public static String ExportAsXlsxAction_title;
 	public static String ExportAsXlsxAction_tooltip;
 	public static String ExportAsXmlAction_ext1;

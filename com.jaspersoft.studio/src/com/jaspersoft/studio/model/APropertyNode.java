@@ -166,6 +166,10 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 	 * @return the expression context for the node property specified
 	 */
 	public ExpressionContext getExpressionContext(String propertyID) {
+		if (propertyID == JRDesignElement.PROPERTY_PRINT_WHEN_EXPRESSION) {
+			//the print when expression always use the main dataset
+			return new ExpressionContext(getJasperDesign().getMainDesignDataset(), getJasperConfiguration());
+		}
 		return getExpressionContext();
 	}
 

@@ -11,9 +11,7 @@ import java.util.Map;
 import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
 import com.jaspersoft.studio.editor.layout.FreeLayout;
@@ -40,7 +38,7 @@ import com.jaspersoft.studio.model.util.IIconDescriptor;
 import com.jaspersoft.studio.model.util.NodeIconDescriptor;
 import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
-import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
+import com.jaspersoft.studio.property.descriptor.expression.JRPrintWhenExpressionPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.properties.JPropertiesPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptors.JSSPixelNotNullValidator;
 import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
@@ -377,7 +375,7 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 		splitStyleD.setHelpRefBuilder(
 				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#band_splitType")); //$NON-NLS-1$
 
-		JRExpressionPropertyDescriptor printWhenExpD = new JRExpressionPropertyDescriptor(
+		JRPrintWhenExpressionPropertyDescriptor printWhenExpD = new JRPrintWhenExpressionPropertyDescriptor(
 				JRDesignBand.PROPERTY_PRINT_WHEN_EXPRESSION, Messages.common_print_when_expression);
 		printWhenExpD.setDescription(Messages.MBand_print_when_expression_description);
 		desc.add(printWhenExpD);

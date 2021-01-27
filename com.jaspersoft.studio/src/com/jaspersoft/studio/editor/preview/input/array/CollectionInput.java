@@ -97,6 +97,9 @@ public class CollectionInput extends ADataInput {
 									o[i] = Double.parseDouble((String) s[i]);
 								else if (c.isAssignableFrom(BigDecimal.class))
 									o[i] = new BigDecimal((String) s[i]);
+								else if (c.isAssignableFrom(Boolean.class)) {
+									o[i] = new Boolean((String) s[i]);
+								}
 							} catch (NumberFormatException nfe) {
 								nulls++;
 							}

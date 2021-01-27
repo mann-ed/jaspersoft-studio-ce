@@ -34,7 +34,7 @@ import com.jaspersoft.studio.property.descriptor.color.ColorPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.combo.RComboBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.combo.RWStyleComboBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
-import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
+import com.jaspersoft.studio.property.descriptor.expression.JRPrintWhenExpressionPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.propexpr.JPropertyExpressionsDescriptor;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionDTO;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
@@ -515,7 +515,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		printWhenDetailOverflowsD.setCategory(Messages.MGraphicElement_print_when);
 		desc.add(printWhenDetailOverflowsD);
 
-		JRExpressionPropertyDescriptor printWhenExprD = new JRExpressionPropertyDescriptor(
+		JRPrintWhenExpressionPropertyDescriptor printWhenExprD = new JRPrintWhenExpressionPropertyDescriptor(
 				JRDesignElement.PROPERTY_PRINT_WHEN_EXPRESSION, Messages.common_print_when_expression);
 		printWhenExprD.setDescription(Messages.MGraphicElement_print_when_expression_description);
 		printWhenExprD.setCategory(Messages.MGraphicElement_print_when);
