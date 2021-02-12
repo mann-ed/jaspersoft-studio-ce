@@ -125,7 +125,7 @@
 		<copy file="${jssRcpProductFolderPath}/resources/mac_distro.sh" todir="${temp.mac.dir}"/>
 		<copy file="${mac.x86_64.zipfile}" todir="${temp.mac.dir}"/>
 		<chmod file="${temp.mac.dir}/mac_distro.sh" perm="ugo+x"/>
-		<exec command="${temp.mac.dir}/mac_distro.sh ${jss.version}" dir="${temp.mac.dir}"/>
+		<exec command="${temp.mac.dir}/mac_distro.sh ${jss.version}" dir="${temp.mac.dir}" failonerror="true"/>
 		<copy file="${temp.mac.dir}/jaspersoftstudio.dmg" tofile="${dist}/${jss.mac.x86_64}"/>
 		
 		<!-- remove the temporary zipped file -->

@@ -50,6 +50,13 @@ xattr -cr "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio $1.app"
 
 #Signing the application
 
+# Trigger error exit with tibsign failure
+if [ $? -ne 0 ]
+then
+  echo "ERROR: tibsign tool failed - INFRA intervention required"
+  exit 1
+fi
+
 # Fix icons position....
 echo '
    tell application "Finder"
