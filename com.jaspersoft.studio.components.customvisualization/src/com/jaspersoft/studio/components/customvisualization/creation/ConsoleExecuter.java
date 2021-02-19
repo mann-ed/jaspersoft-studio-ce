@@ -72,9 +72,9 @@ public class ConsoleExecuter {
 	private List<IFile> filesToCompile;
 
 	/**
-	 * Command to compile the build.js in the current working directory. The
-	 * command is the same for each file and so it is initialized in the
-	 * constructor and it is reused for each compilation.
+	 * Command to compile the build.js in the current working directory. The command
+	 * is the same for each file and so it is initialized in the constructor and it
+	 * is reused for each compilation.
 	 */
 	private String[] command;
 
@@ -89,15 +89,15 @@ public class ConsoleExecuter {
 	}
 
 	/**
-	 * Job to execute the compile command for each file and print the output
-	 * inside a console. The job can be cancelled but the current compilation
-	 * must be finished before it stops
+	 * Job to execute the compile command for each file and print the output inside
+	 * a console. The job can be cancelled but the current compilation must be
+	 * finished before it stops
 	 */
 	private Job readOutputJob = new Job("Compiling job") { //$NON-NLS-1$
 
 		private boolean checkJavaVersion(MessageConsoleStream outputStream, IProgressMonitor monitor) {
 			String javaCommand = getJavaCommand();
-			String[] checkVersionCommand = {javaCommand, "-version"}; //$NON-NLS-1$
+			String[] checkVersionCommand = { javaCommand, "-version" }; //$NON-NLS-1$
 			try {
 				Process process = Runtime.getRuntime().exec(checkVersionCommand);
 				outputStream.println(Messages.ConsoleExecuter_checkVersionStart);
@@ -109,10 +109,12 @@ public class ConsoleExecuter {
 
 				// read the output from the command
 				String s = null;
+				boolean versionFound = false;
 				try {
 					while ((s = stdError.readLine()) != null) {
 						String line = s.toLowerCase().trim();
-						if (line.startsWith("java version")) { //$NON-NLS-1$
+						if (line.startsWith("java version") || line.startsWith("openjdk version")) { //$NON-NLS-1$
+							versionFound = true;
 							int start = line.indexOf("\"") + 1; //$NON-NLS-1$
 							int end = line.lastIndexOf("\""); //$NON-NLS-1$
 							// Convert the last number into a version number
@@ -128,6 +130,9 @@ public class ConsoleExecuter {
 										new Object[] { CustomVisualizationActivator.JAVA_PATH_PROPERTY }));
 							}
 						}
+					}
+					if (!versionFound) {
+						outputStream.println("Unable to discover your java version");
 					}
 				} catch (Exception ex) {
 					outputStream.println(ex.getMessage());
@@ -147,10 +152,8 @@ public class ConsoleExecuter {
 		 * Pad the array passed as parameter to the length specified as second
 		 * parameter. The padding elements have the value zero
 		 * 
-		 * @param currentNumber
-		 *            a not null array with size lesser then newSize
-		 * @param newSize
-		 *            the new size of the array
+		 * @param currentNumber a not null array with size lesser then newSize
+		 * @param newSize       the new size of the array
 		 * @return a not null array with size new size
 		 */
 		private String[] versionPadding(String[] currentNumber, int newSize) {
@@ -169,21 +172,18 @@ public class ConsoleExecuter {
 		/**
 		 * Compares two version strings.
 		 * 
-		 * Use this instead of String.compareTo() for a non-lexicographical
-		 * comparison that works for version strings. e.g.
-		 * "1.10".compareTo("1.6"). The number of components of the two version
-		 * is uniformed to have an one to one comparison (this allow to
-		 * recognize that 10.0 and 10.0.0 are the same version)
+		 * Use this instead of String.compareTo() for a non-lexicographical comparison
+		 * that works for version strings. e.g. "1.10".compareTo("1.6"). The number of
+		 * components of the two version is uniformed to have an one to one comparison
+		 * (this allow to recognize that 10.0 and 10.0.0 are the same version)
 		 *
 		 * 
-		 * @param str1
-		 *            a string of ordinal numbers separated by decimal points.
-		 * @param str2
-		 *            a string of ordinal numbers separated by decimal points.
-		 * @return The result is a negative integer if str1 is _numerically_
-		 *         less than str2. The result is a positive integer if str1 is
-		 *         _numerically_ greater than str2. The result is zero if the
-		 *         strings are _numerically_ equal.
+		 * @param str1 a string of ordinal numbers separated by decimal points.
+		 * @param str2 a string of ordinal numbers separated by decimal points.
+		 * @return The result is a negative integer if str1 is _numerically_ less than
+		 *         str2. The result is a positive integer if str1 is _numerically_
+		 *         greater than str2. The result is zero if the strings are
+		 *         _numerically_ equal.
 		 */
 		public Integer versionCompare(String str1, String str2) {
 			String[] vals1 = str1.split("\\.");
@@ -295,8 +295,7 @@ public class ConsoleExecuter {
 	/**
 	 * Read the build.js to find the output file name inside the out section
 	 * 
-	 * @param projectFolder
-	 *            the folder where the build.js is contained
+	 * @param projectFolder the folder where the build.js is contained
 	 * @return the output filename if it can be found inside the build.js, if
 	 *         something goes wrong return null
 	 */
@@ -332,13 +331,11 @@ public class ConsoleExecuter {
 	}
 
 	/**
-	 * Return the string to execute a Java command. First the path is looked in
-	 * the property
-	 * com.jaspersoft.studio.components.customvisualization.javapath, if found
-	 * it is used. If not and the current version is an RCP it is used the java
-	 * version embedded with studio and used to run it. Otherwise will be
-	 * returned the standard Java command that relay on the environment
-	 * variables.
+	 * Return the string to execute a Java command. First the path is looked in the
+	 * property com.jaspersoft.studio.components.customvisualization.javapath, if
+	 * found it is used. If not and the current version is an RCP it is used the
+	 * java version embedded with studio and used to run it. Otherwise will be
+	 * returned the standard Java command that relay on the environment variables.
 	 * 
 	 * 
 	 * @return a not null string to call the JVM
@@ -363,11 +360,10 @@ public class ConsoleExecuter {
 	}
 
 	/**
-	 * Create the class and start the compilation process, showing the output
-	 * into a console view
+	 * Create the class and start the compilation process, showing the output into a
+	 * console view
 	 * 
-	 * @param filesToCompile
-	 *            the build.js files that need to be compiled
+	 * @param filesToCompile the build.js files that need to be compiled
 	 */
 	public ConsoleExecuter(List<IFile> filesToCompile) {
 		this.filesToCompile = filesToCompile;
@@ -420,11 +416,10 @@ public class ConsoleExecuter {
 	}
 
 	/**
-	 * Search an output console with a specific name. If the console can't be
-	 * found a new one is created.
+	 * Search an output console with a specific name. If the console can't be found
+	 * a new one is created.
 	 * 
-	 * @param name
-	 *            name of the console
+	 * @param name name of the console
 	 * @return A not null console with a specific name
 	 */
 	public static MessageConsole findConsole(String name) {
@@ -442,14 +437,12 @@ public class ConsoleExecuter {
 
 	/**
 	 * Read a resource from the current plugin and save it with a specific name
-	 * inside the temp folder. Then return a file reference to the new created
-	 * file. If a file was already define inside the temp folder with the same
-	 * name, then it is returned without recreate it
+	 * inside the temp folder. Then return a file reference to the new created file.
+	 * If a file was already define inside the temp folder with the same name, then
+	 * it is returned without recreate it
 	 * 
-	 * @param path
-	 *            the path of the resource inside the plugin
-	 * @param fileName
-	 *            the name of the file that will be created on the temp folder
+	 * @param path     the path of the resource inside the plugin
+	 * @param fileName the name of the file that will be created on the temp folder
 	 * @return a file reference to the resource or null if it can't be found
 	 */
 	private File fetchResource(String path, String fileName) {
@@ -481,31 +474,27 @@ public class ConsoleExecuter {
 	 * 
 	 * Generate the command to create the custom visualization component.
 	 * 
-	 * @param compiler
-	 *            path to the compiler jar
-	 * @param rhino
-	 *            path to the rhino jar
-	 * @param rJs
-	 *            path to the r.js script
-	 * @param buildFile
-	 *            path to the build.js script
+	 * @param compiler  path to the compiler jar
+	 * @param rhino     path to the rhino jar
+	 * @param rJs       path to the r.js script
+	 * @param buildFile path to the build.js script
 	 * @return a command to executed inside the runtime
 	 * 
-	 *         private String generateCommand(File compiler, File rhino, File
-	 *         rJs, File buildFile){
+	 *         private String generateCommand(File compiler, File rhino, File rJs,
+	 *         File buildFile){
 	 * 
 	 *         StringBuilder command = new StringBuilder();
 	 * 
 	 *         command.append("java -classpath "); //$NON-NLS-1$
-	 *         command.append("\"").append(rhino.getAbsolutePath());
-	 *         //$NON-NLS-1$ command.append(File.pathSeparator);
+	 *         command.append("\"").append(rhino.getAbsolutePath()); //$NON-NLS-1$
+	 *         command.append(File.pathSeparator);
 	 *         command.append(compiler.getAbsolutePath()); //$NON-NLS-1$
 	 *         command.append("\""); command.append(" "); //$NON-NLS-1$
 	 *         command.append("org.mozilla.javascript.tools.shell.Main");
 	 *         //$NON-NLS-1$ command.append(" "); //$NON-NLS-1$
 	 *         command.append("\"").append(rJs.getAbsolutePath()).append("\"");
-	 *         //$NON-NLS-1$ command.append(" -o "); //$NON-NLS-1$
-	 *         command.append(" "); //$NON-NLS-1$
+	 *         //$NON-NLS-1$ command.append(" -o "); //$NON-NLS-1$ command.append("
+	 *         "); //$NON-NLS-1$
 	 *         command.append("\"").append(buildFile.getAbsolutePath()).append(
 	 *         "\""); //$NON-NLS-1$
 	 * 
