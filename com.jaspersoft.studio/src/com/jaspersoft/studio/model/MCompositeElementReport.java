@@ -31,6 +31,7 @@ import com.jaspersoft.studio.property.descriptors.JSSTextPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptors.PixelPropertyDescriptor;
 import com.jaspersoft.studio.property.section.AbstractSection;
+import com.jaspersoft.studio.property.section.report.util.PHolderUtil;
 import com.jaspersoft.studio.property.section.widgets.ASPropertyWidget;
 import com.jaspersoft.studio.property.section.widgets.SPToolBarEnum;
 import com.jaspersoft.studio.utils.ModelUtils;
@@ -215,6 +216,12 @@ public class MCompositeElementReport extends MReport {
 				Messages.MReport_createBookmarksTitle);
 		titleNewPageD.setDescription(Messages.MReport_createBookmarksDescription);
 		desc.add(createBookmarks);
+		
+		JSSTextPropertyDescriptor descD = new JSSTextPropertyDescriptor(
+				PHolderUtil.COM_JASPERSOFT_STUDIO_REPORT_DESCRIPTION, Messages.common_description);
+		descD.setCategory(Messages.common_report);
+		descD.setDescription(Messages.common_description);
+		desc.add(descD);
 
 		titleNewPageD.setCategory(Messages.MReport_pagination);
 		ignorePaginationD.setCategory(Messages.MReport_pagination);
