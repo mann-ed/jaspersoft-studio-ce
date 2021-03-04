@@ -63,7 +63,9 @@ public class ExcelFieldsProvider implements IFieldsProvider {
 				field.setValueClass(String.class);
 				columns.add(field);
 			}
-			FieldTypeGuesser.guessTypes(ds, columns, hasNext, monitor);
+			if(hasNext) {
+				FieldTypeGuesser.guessTypes(ds, columns, monitor);
+			}
 			return columns;
 		}
 		return null;
