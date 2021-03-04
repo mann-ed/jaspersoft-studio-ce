@@ -11,8 +11,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.wizards.ContextHelpIDs;
@@ -60,11 +62,18 @@ public class StaticWizardFieldsGroupByPage extends StaticWizardFieldsPage {
 
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		Button buttonCreate = new Button(mainComposite, SWT.CHECK | SWT.WRAP);
-		buttonCreate.setText(Messages.WizardFieldsGroupByPage_createSortfields);
+		// JIRA TIBCO #JSS-3000: Fix helping on BigSur and 
+		// https://community.jaspersoft.com/jaspersoft-studio/issues/13296
+		// other Mac environments (i.e runtime development)
+		Composite checkContainer = new Composite(mainComposite, SWT.NONE);
+		checkContainer.setLayout(new GridLayout(2, false));
 		GridData data = new GridData(SWT.FILL, SWT.TOP, true, false, 4, 1);
-		data.widthHint = 600;
-		buttonCreate.setLayoutData(data);
+		checkContainer.setLayoutData(data);
+		Button buttonCreate = new Button(checkContainer, SWT.CHECK);
+		GridData labelData = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
+		Label buttonText = new Label(checkContainer, SWT.WRAP);
+		buttonText.setLayoutData(labelData);
+		buttonText.setText(Messages.WizardFieldsGroupByPage_createSortfields);
 		buttonCreate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
