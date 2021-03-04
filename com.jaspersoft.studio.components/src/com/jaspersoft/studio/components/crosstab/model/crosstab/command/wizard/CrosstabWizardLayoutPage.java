@@ -201,17 +201,17 @@ public class CrosstabWizardLayoutPage extends JSSHelpWizardPage {
 		Composite checkComposite = new Composite(parent, SWT.NONE);
 		checkComposite.setLayout(new GridLayout(2,false));
 		checkComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		whiteGrid = new Button(checkComposite, SWT.CHECK | SWT.WRAP);
-		whiteGrid.setText(Messages.CrosstabWizardLayoutPage_white_grid_check);
+		whiteGrid = new Button(checkComposite, SWT.CHECK);
+		Label whiteGridLabel = new Label(checkComposite, SWT.WRAP);
+		whiteGridLabel.setText(Messages.CrosstabWizardLayoutPage_white_grid_check);
 		GridData checkBoxData = new GridData(GridData.FILL_HORIZONTAL);
-		checkBoxData.horizontalSpan = 2;
-		whiteGrid.setLayoutData(checkBoxData);
+		whiteGridLabel.setLayoutData(checkBoxData);
 		
-		showGrid = new Button(checkComposite, SWT.CHECK | SWT.WRAP);
-		showGrid.setText(Messages.CrosstabWizardLayoutPage_noGrid_label);
+		showGrid = new Button(checkComposite, SWT.CHECK);
+		Label showGridLabel = new Label(checkComposite, SWT.WRAP);
+		showGridLabel.setText(Messages.CrosstabWizardLayoutPage_noGrid_label);
 		GridData showGridData = new GridData(GridData.FILL_HORIZONTAL);
-		showGridData.horizontalSpan = 2;
-		showGrid.setLayoutData(showGridData);
+		showGridLabel.setLayoutData(showGridData);
 		showGrid.setSelection(true);
 
 		whiteGrid.addSelectionListener(selectionListener);
