@@ -76,4 +76,9 @@ public class ExcelDataAdapterDescriptor extends DataAdapterDescriptor implements
 	public AWizardDataEditorComposite createDataEditorComposite(Composite parent, WizardPage page) {
 		return new EmptyWizardDataEditorComposite(parent, page, this);
 	}
+	
+	@Override
+	public String[] getLanguages() {
+		return new String[] { "xls" };
+	}
 }
