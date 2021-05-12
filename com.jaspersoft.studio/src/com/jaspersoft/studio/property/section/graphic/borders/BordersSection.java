@@ -247,10 +247,10 @@ public class BordersSection extends AbstractSection {
 			
 			@Override
 			public void borderSelected(BorderSelectionEvent event) {;
-				Float beforeSelectionWidth = getLineWidth(event.getClickedBorder());
+				/*Float beforeSelectionWidth = getLineWidth(event.getClickedBorder());
 				if (beforeSelectionWidth == null || beforeSelectionWidth.equals(0f)){
 					changeProperty(JRBasePen.PROPERTY_LINE_WIDTH, 1f);	
-				}
+				}*/
 				updateRightPanel();
 			}
 		});
