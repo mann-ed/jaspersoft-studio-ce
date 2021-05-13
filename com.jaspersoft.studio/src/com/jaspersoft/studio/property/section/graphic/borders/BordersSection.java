@@ -58,10 +58,12 @@ import com.jaspersoft.studio.utils.Colors;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.JRLineBox;
+import net.sf.jasperreports.engine.JRStyle;
 import net.sf.jasperreports.engine.base.JRBaseLineBox;
 import net.sf.jasperreports.engine.base.JRBasePen;
 import net.sf.jasperreports.engine.base.JRBoxPen;
 import net.sf.jasperreports.engine.type.LineStyleEnum;
+import net.sf.jasperreports.engine.util.StyleResolver;
 
 /**
  * The location section on the location tab.
@@ -247,10 +249,10 @@ public class BordersSection extends AbstractSection {
 			
 			@Override
 			public void borderSelected(BorderSelectionEvent event) {;
-				Float beforeSelectionWidth = getLineWidth(event.getClickedBorder());
+				/*Float beforeSelectionWidth = getLineWidth(event.getClickedBorder());
 				if (beforeSelectionWidth == null || beforeSelectionWidth.equals(0f)){
 					changeProperty(JRBasePen.PROPERTY_LINE_WIDTH, 1f);	
-				}
+				}*/
 				updateRightPanel();
 			}
 		});
@@ -674,11 +676,12 @@ public class BordersSection extends AbstractSection {
 				if (areAllUnselected){
 					MLinePen lp = (MLinePen) lb.getPropertyValue(MLineBox.LINE_PEN);
 					//Since the global LINE_PEN is overridden by the single segment, first I need to
-					//reset them
-					getLinePenClearCommand(cc, MLineBox.LINE_PEN_BOTTOM, lb);
-					getLinePenClearCommand(cc, MLineBox.LINE_PEN_TOP, lb);
-					getLinePenClearCommand(cc, MLineBox.LINE_PEN_LEFT, lb);
-					getLinePenClearCommand(cc, MLineBox.LINE_PEN_RIGHT, lb);
+					//reset them, NOTE: this behavior was disabled to make the widget compliant with JR
+					//if nothing is select only the general value is set
+					//getLinePenClearCommand(cc, MLineBox.LINE_PEN_BOTTOM, lb);
+					//getLinePenClearCommand(cc, MLineBox.LINE_PEN_TOP, lb);
+					//getLinePenClearCommand(cc, MLineBox.LINE_PEN_LEFT, lb);
+					//getLinePenClearCommand(cc, MLineBox.LINE_PEN_RIGHT, lb);
 					c = getChangePropertyCommand(property, newValue, lp);
 					if (c != null)
 						cc.add(c);
@@ -968,6 +971,64 @@ public class BordersSection extends AbstractSection {
 			paddingLabel.setForeground(ColorConstants.black);
 		}
 	}
+	
+	private LineStyleEnum getLineStyleValue(JRBoxPen boxPen, StyleResolver sr) {
+		LineStyleEnum ownLineStyle = boxPen.getOwnLineStyleValue();
+		if (ownLineStyle != null) {
+			return ownLineStyle;
+		}
+		LineStyleEnum penLineStyle = boxPen.getBox().getPen().getOwnLineStyleValue();
+		if (penLineStyle != null) {
+			return penLineStyle;
+		}
+		JRStyle baseStyle = sr.getBaseStyle(boxPen.getPenContainer());
+		if (baseStyle != null) {
+			LineStyleEnum lineStyle = boxPen.getPen(baseStyle.getLineBox()).getLineStyleValue();
+			if (lineStyle != null) {
+				return lineStyle;
+			}
+		}
+		return null;
+	}
+	
+	private Float getLineWidthValue(JRBoxPen boxPen, StyleResolver sr) {
+		Float ownLineWidth = boxPen.getOwnLineWidth();
+		if (ownLineWidth != null) {
+			return ownLineWidth;
+		}
+		Float penLineWidth = boxPen.getBox().getPen().getOwnLineWidth();
+		if (penLineWidth != null) {
+			return penLineWidth;
+		}
+		JRStyle baseStyle = sr.getBaseStyle(boxPen.getPenContainer());
+		if (baseStyle != null) {
+			Float lineWidth = boxPen.getPen(baseStyle.getLineBox()).getLineWidth();
+			if (lineWidth != null) {
+				return lineWidth;
+			}
+		}
+		return null;
+	}
+	
+	private Color getLineColorValue(JRBoxPen boxPen, StyleResolver sr) {
+		Color ownLineColor = boxPen.getOwnLineColor();
+		if (ownLineColor != null) {
+			return ownLineColor;
+		}
+		Color penLineColor = boxPen.getBox().getPen().getOwnLineColor();
+		if (penLineColor != null) {
+			return penLineColor;
+		}
+		JRStyle baseStyle = sr.getBaseStyle(boxPen.getPenContainer());
+		if (baseStyle != null) {
+			Color lineColor = boxPen.getPen(baseStyle.getLineBox()).getLineColor();
+			if (lineColor != null) {
+				return lineColor;
+			}
+		}
+		return null;
+	}
+
 
 	/**
 	 * Update the right panel with the value of a linepen, but only if it's visible
@@ -977,19 +1038,48 @@ public class BordersSection extends AbstractSection {
 	 */
 	public void refreshLinePen(MLineBox lb, String property) {
 		if (lb != null) {
+			StyleResolver sr = new StyleResolver(lb.getJasperConfiguration());
 			MLinePen lp = (MLinePen) lb.getPropertyActualValue(property);
 			JRBoxPen pen = (JRBoxPen) lp.getValue();
-			Float propertyValue = (Float) lp.getPropertyActualValue(JRBasePen.PROPERTY_LINE_WIDTH);
+			LineStyleEnum currentStyle = getLineStyleValue(pen, sr);
+			Color currentColor = getLineColorValue(pen, sr);
+			Float currentWidth = getLineWidthValue(pen, sr);
+			LineStyleEnum ownStyle = pen.getOwnLineStyleValue();
+			Color ownColor = pen.getOwnLineColor();
+			Float ownWidth = pen.getOwnLineWidth();
+			AlfaRGB backcolor = null;
+			/*MLinePen globalPen = null;
+			if (property != MLineBox.LINE_PEN) {
+				globalPen = (MLinePen)lb.getPropertyValue(MLineBox.LINE_PEN);
+				JRBoxPen globalPenValue = (JRBoxPen) globalPen.getValue();
+				if (currentStyle == null) {
+					//if the current style is not defined in the edge or a style check in the global box
+					currentStyle = getLineStyleValue(globalPenValue, sr);	
+				}
+			}*/
+			if (currentStyle == null) {
+				//the style is not in the global box or on the edge, get the default value
+				currentStyle = LineStyleEnum.values()[((Integer)lp.getPropertyActualValue(JRBasePen.PROPERTY_LINE_STYLE)) - 1];
+			}
+			if (currentWidth == null) {
+				currentWidth = (Float) lp.getPropertyActualValue(JRBasePen.PROPERTY_LINE_WIDTH);
+			}
+			if (currentColor == null) {
+				backcolor = (AlfaRGB) lp.getPropertyActualValue(JRBasePen.PROPERTY_LINE_COLOR);
+			} else {
+				backcolor = new AlfaRGB(new RGB(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue()), currentColor.getAlpha());
+			}
+			//Float inheritedPropertyValue = (Float) lp.getPropertyValue(JRBasePen.PROPERTY_LINE_WIDTH);
 			// Set the border data only if it is visible
 			if (lineWidth != null && !lineWidth.isDisposed()) {
-				lineWidth.setValue(propertyValue);
-				setControlTooltipInherithed(pen.getOwnLineWidth() == null, lineWidth, lineWidthLabel, Messages.BordersSection_width_tool_tip);
+				lineWidth.setValue(ownWidth);	
+				lineWidth.setDefaultValue(currentWidth);
+				setControlTooltipInherithed(ownWidth == null, lineWidth, lineWidthLabel, Messages.BordersSection_width_tool_tip);
 			}
 
 			if (lineStyle != null && !isDisposed()) {
-				int ls = ((Integer) lp.getPropertyActualValue(JRBasePen.PROPERTY_LINE_STYLE)).intValue();
-				boolean isInherited = pen.getOwnLineStyleValue() == null;
-				lineStyle.setData(ls, isInherited);
+				boolean isInherited = ownStyle == null;
+				lineStyle.setData(currentStyle, isInherited);
 				if (isInherited) {
 					lineStyle.setToolTipText(Messages.common_inherited_attribute + "Style");
 					lineStyleLabel.setToolTipText(Messages.common_inherited_attribute + "Style");
@@ -1001,11 +1091,10 @@ public class BordersSection extends AbstractSection {
 				}
 			}
 
-			AlfaRGB backcolor = (AlfaRGB) lp.getPropertyActualValue(JRBasePen.PROPERTY_LINE_COLOR);
 			if (lineColor != null) {
 				if (backcolor != null) lineColor.setColor(backcolor);
 				else lineColor.setColor(AlfaRGB.getFullyOpaque(ColorConstants.black.getRGB()));
-				boolean isInherited = pen.getOwnLineColor() == null;
+				boolean isInherited = ownColor == null;
 				lineColor.setInhterited(isInherited);
 				if (isInherited) {
 					lineColor.setToolTipText(Messages.common_inherited_attribute + "Color");
