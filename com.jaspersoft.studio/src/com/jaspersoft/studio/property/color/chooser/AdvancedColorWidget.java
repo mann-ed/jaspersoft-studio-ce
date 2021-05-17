@@ -305,13 +305,14 @@ public class AdvancedColorWidget extends Composite implements IColorProvider{
 		 }
 		 
 		 setLayout(new GridLayout(2,false));
-		 colorsSelector = new ColorsSelectorWidget(this, SWT.NONE, new HueBasedSelector());
+		 RGB initialColor;
+		 if (this.oldColor != null) initialColor = this.oldColor;
+		 else initialColor = new RGB(255,255,255);
+		 colorsSelector = new ColorsSelectorWidget(this, SWT.NONE, new HueBasedSelector(), initialColor);
 		 GridData rectangleData = new GridData(GridData.FILL_BOTH);
 		 rectangleData.widthHint = 250;
 		 rectangleData.heightHint = 150;
 		 colorsSelector.setLayoutData(rectangleData);
-		 if (this.oldColor != null) colorsSelector.setSelectedColor(this.oldColor,false);
-		 else colorsSelector.setSelectedColor(new RGB(255,255,255), false);
 		 
 		 colorsSelector.addSelectionListener(new SelectionAdapter() {
 			 	@Override
