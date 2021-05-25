@@ -36,6 +36,7 @@ public class ViewsFactory extends AViewsFactory {
 	public static final String EXCEL_API = "ExcelAPI"; //$NON-NLS-1$
 	public static final String XLS_METADATA = Messages.ViewsFactory_2;
 	public static final String HTML = "HTML"; //$NON-NLS-1$
+	public static final String HTML_NO_INTERACTIVITY = Messages.ViewsFactory_4; //$NON-NLS-1$
 	public static final String VIEWER_JAVA = "Java"; //$NON-NLS-1$
 	private static LinkedHashMap<String, Class<? extends APreview>> pcmap = new LinkedHashMap<String, Class<? extends APreview>>();
 	static {
