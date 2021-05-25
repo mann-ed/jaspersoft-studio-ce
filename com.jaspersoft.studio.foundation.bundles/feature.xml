@@ -187,13 +187,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.commons.commons-compress"
-         download-size="0"
-         install-size="0"
-         version="1.19.0"
-         unpack="false"/>
-
-   <plugin
          id="com.jaspersoft.studio.bundles.poi"
          download-size="0"
          install-size="0"
