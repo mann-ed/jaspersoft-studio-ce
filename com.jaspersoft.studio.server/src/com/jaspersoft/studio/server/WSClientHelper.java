@@ -150,7 +150,7 @@ public class WSClientHelper {
 		if (parent instanceof MServerProfile || (parent instanceof AMResource
 				&& ((AMResource) parent).getValue().getWsType().equals(ResourceDescriptor.TYPE_FOLDER))) {
 			Collections.sort(children, (arg0, arg1) -> {
-				if (arg0.getLabel() == arg1.getLabel())
+				if (arg0.getLabel().equals(arg1.getLabel()))
 					return 0;
 				if (arg0.getLabel() == null)
 					return -1;
