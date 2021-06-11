@@ -17,7 +17,6 @@ import com.jaspersoft.studio.editor.preview.view.report.file.JSONMetadataViewer;
 import com.jaspersoft.studio.editor.preview.view.report.file.TXTViewer;
 import com.jaspersoft.studio.editor.preview.view.report.file.XMLImagesViewer;
 import com.jaspersoft.studio.editor.preview.view.report.file.XMLViewer;
-import com.jaspersoft.studio.editor.preview.view.report.html.HTMLViewer;
 import com.jaspersoft.studio.editor.preview.view.report.html.LayeredHTMLViewer;
 import com.jaspersoft.studio.editor.preview.view.report.swt.SWTViewer;
 import com.jaspersoft.studio.editor.preview.view.report.system.AExporterFactory;
@@ -37,7 +36,7 @@ public class ViewsFactory extends AViewsFactory {
 	public static final String EXCEL_API = "ExcelAPI"; //$NON-NLS-1$
 	public static final String XLS_METADATA = Messages.ViewsFactory_2;
 	public static final String HTML = "HTML"; //$NON-NLS-1$
-	public static final String HTML_NO_INTERACTIVITY = Messages.ViewsFactory_4;
+	public static final String HTML_NO_INTERACTIVITY = Messages.ViewsFactory_4; //$NON-NLS-1$
 	public static final String VIEWER_JAVA = "Java"; //$NON-NLS-1$
 	private static LinkedHashMap<String, Class<? extends APreview>> pcmap = new LinkedHashMap<String, Class<? extends APreview>>();
 	static {
@@ -46,7 +45,6 @@ public class ViewsFactory extends AViewsFactory {
 		pcmap.put("SEPARATOR1", null); //$NON-NLS-1$
 
 		pcmap.put(HTML, LayeredHTMLViewer.class); // $NON-NLS-1$
-		pcmap.put(HTML_NO_INTERACTIVITY, HTMLViewer.class); // $NON-NLS-1$
 		pcmap.put("SEPARATOR1", null); //$NON-NLS-1$
 		pcmap.put("SEPARATOR1", null); //$NON-NLS-1$
 		pcmap.put("PDF", PdfViewer.class); //$NON-NLS-1$
