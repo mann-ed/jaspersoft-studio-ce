@@ -56,6 +56,7 @@ import net.sf.jasperreports.components.table.DesignCell;
 import net.sf.jasperreports.components.table.StandardBaseColumn;
 import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.components.table.WhenNoDataTypeTableEnum;
+import net.sf.jasperreports.crosstabs.design.JRDesignCellContents;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.JRDatasetRun;
@@ -458,7 +459,10 @@ public class MTable extends MGraphicElement
 		}
 
 		if (getTableManager() != null) {
-			getTableManager().update();
+			if ((evt.getSource() instanceof JRDesignComponentElement) || (evt.getSource() instanceof StandardBaseColumn)
+					|| (evt.getSource() instanceof JRDesignCellContents)) {
+				getTableManager().update();
+			}
 		}
 
 		if (!(evt.getPropertyName().equals(StandardBaseColumn.PROPERTY_TABLE_FOOTER)

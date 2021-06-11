@@ -124,6 +124,9 @@ public class J2DGraphics extends Graphics {
 
 	/** The value of the screen DPI, used to compute the actual font size. */
 	private double _dpi = 0;
+	
+	/** temporary fonts cache: org.eclipse.swt.graphics.Font#getFontData is an expensive operation */ 
+	private Map<Font, java.awt.Font> fontsCache = new HashMap<Font, java.awt.Font>();
 
 	/*
 	 * (non-Javadoc)
@@ -318,19 +321,21 @@ public class J2DGraphics extends Graphics {
 	protected void updateFont() {
 		if (_font == null)
 			return;
-		FontData fd = _font.getFontData()[0];
-		int style = fd.getStyle();
-		int awtStyle = java.awt.Font.PLAIN;
-		if ((style & SWT.BOLD) == SWT.BOLD) {
-			awtStyle = java.awt.Font.BOLD;
+		java.awt.Font cachedAWTFont = fontsCache.get(_font);
+		if(cachedAWTFont==null) {
+			FontData fd = _font.getFontData()[0];
+			int style = fd.getStyle();
+			int awtStyle = java.awt.Font.PLAIN;
+			if ((style & SWT.BOLD) == SWT.BOLD) {
+				awtStyle = java.awt.Font.BOLD;
+			}
+			if ((style & SWT.ITALIC) == SWT.ITALIC) {
+				awtStyle |= java.awt.Font.ITALIC;
+			}
+			cachedAWTFont = new java.awt.Font(fd.getName(), awtStyle, (int) Math.round(fd.getHeight() * _dpi));
+			fontsCache.put(_font, cachedAWTFont);
 		}
-		if ((style & SWT.ITALIC) == SWT.ITALIC) {
-			awtStyle |= java.awt.Font.ITALIC;
-		}
-		// System.err.println("SWT Font = " + fd);
-		java.awt.Font awtFont = new java.awt.Font(fd.getName(), awtStyle, (int) Math.round(fd.getHeight() * _dpi));
-		_g2d.setFont(awtFont);
-		// System.err.println("AWT Font = " + awtFont);
+		_g2d.setFont(cachedAWTFont);
 	}
 
 	/**
@@ -404,6 +409,7 @@ public class J2DGraphics extends Graphics {
 	 */
 	public void dispose() {
 		colorManager.dispose();
+		fontsCache.clear();
 		_g2d.dispose();
 		_g2d = null;
 		// if (!_stack.isEmpty() && J2DRegistry.DEBUG) {
