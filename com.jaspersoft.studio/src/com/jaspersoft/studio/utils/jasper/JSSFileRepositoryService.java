@@ -6,6 +6,7 @@ package com.jaspersoft.studio.utils.jasper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import net.sf.jasperreports.eclipse.util.FileExtension;
 import net.sf.jasperreports.eclipse.util.StringUtils;
 import net.sf.jasperreports.engine.JRRuntimeException;
 import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.util.JRResourcesUtil;
 import net.sf.jasperreports.repo.DefaultRepositoryService;
 import net.sf.jasperreports.repo.FileRepositoryService;
 import net.sf.jasperreports.repo.InputStreamResource;
@@ -95,8 +97,8 @@ public class JSSFileRepositoryService implements RepositoryService {
 						resourceType, rs);
 			} else if (ReportResource.class.equals(resourceType) && uri.endsWith(FileExtension.PointJASPER)) {
 				String nuri = StringUtils.replaceAllIns(uri, FileExtension.PointJASPER + "$", FileExtension.PointJRXML);
-				InputStreamResource inr = rs.getResource(nuri, InputStreamResource.class);
-				if (inr == null)
+				File jrxmlFile = JRResourcesUtil.resolveFile(context, nuri); 				
+				if (!jrxmlFile.exists())
 					return null;
 				if (rs instanceof DefaultRepositoryService) {
 					URI dUri = new URI(uri);
@@ -108,7 +110,7 @@ public class JSSFileRepositoryService implements RepositoryService {
 						or.setOutputStream(((FileRepositoryService) rs).getOutputStream(uri));
 					else
 						or.setOutputStream(new ByteArrayOutputStream());
-					JasperCompileManager.getInstance(jConfig).compileToStream(inr.getInputStream(),
+					JasperCompileManager.getInstance(jConfig).compileToStream(new FileInputStream(jrxmlFile),
 							or.getOutputStream());
 					rs.saveResource(uri, or);
 				}
