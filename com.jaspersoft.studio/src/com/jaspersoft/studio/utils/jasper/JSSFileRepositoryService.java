@@ -8,7 +8,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,13 +96,12 @@ public class JSSFileRepositoryService implements RepositoryService {
 						resourceType, rs);
 			} else if (ReportResource.class.equals(resourceType) && uri.endsWith(FileExtension.PointJASPER)) {
 				String nuri = StringUtils.replaceAllIns(uri, FileExtension.PointJASPER + "$", FileExtension.PointJRXML);
-				File jrxmlFile = JRResourcesUtil.resolveFile(context, nuri); 				
+				File jrxmlFile = JRResourcesUtil.resolveFile(context, nuri);
 				if (!jrxmlFile.exists())
 					return null;
 				if (rs instanceof DefaultRepositoryService) {
-					URI dUri = new URI(uri);
-					JasperCompileManager.getInstance(jConfig).compileToFile(new URI(nuri).getRawPath(),
-							dUri.getRawPath());
+					JasperCompileManager.getInstance(jConfig).compileToFile(jrxmlFile.getAbsolutePath(),
+							jrxmlFile.getParent().concat("/"+uri));
 				} else {
 					OutputStreamResource or = new OutputStreamResource();
 					if (rs instanceof FileRepositoryService)
@@ -114,7 +112,7 @@ public class JSSFileRepositoryService implements RepositoryService {
 							or.getOutputStream());
 					rs.saveResource(uri, or);
 				}
-				refreshFile(rs, uri);
+				refreshFile(rs,jrxmlFile.getAbsolutePath());
 				return rs.getResource(uri, resourceType);
 			} else if (ReportResource.class.equals(resourceType)) {
 				InputStreamResource inr = rs.getResource(uri, InputStreamResource.class);
@@ -160,17 +158,15 @@ public class JSSFileRepositoryService implements RepositoryService {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					if (rs instanceof DefaultRepositoryService) {
-						IFile[] fs = JDTUtils.WS_ROOT.findFilesForLocationURI(new URI(uri));
+						IFile[] fs = JDTUtils.WS_ROOT.findFilesForLocationURI(new File(uri).toURI());
 						if (fs != null && fs.length > 0)
-							fs[0].refreshLocal(1, monitor);
+							fs[0].getParent().refreshLocal(1, monitor);
 					} else if (rs instanceof FileRepositoryService) {
 						IFile[] fs = JDTUtils.WS_ROOT
 								.findFilesForLocationURI(new File(((FileRepositoryService) rs).getRoot(), uri).toURI());
 						if (fs != null && fs.length > 0)
 							fs[0].refreshLocal(1, monitor);
 					}
-				} catch (URISyntaxException e) {
-					return Status.CANCEL_STATUS;
 				} catch (CoreException e) {
 					return Status.CANCEL_STATUS;
 				}
