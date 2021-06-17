@@ -130,9 +130,9 @@ public class SelectionHelper {
 	 * or null if the editor or the part are not found
 	 */
 	public static EditPart getBackgroundEditPart() {
-		JrxmlEditor jrxmlEditor = (JrxmlEditor) getActiveJRXMLEditor();
-		if (jrxmlEditor != null) {
-			MRoot root = (MRoot) jrxmlEditor.getModel();
+		IEditorPart editorpart = getActiveJRXMLEditor();
+		if (editorpart instanceof JrxmlEditor) {
+			MRoot root = (MRoot) ((JrxmlEditor) editorpart).getModel();
 			for (INode node : ((MReport) root.getChildren().get(0)).getChildren()) {
 				if (node instanceof MBackgrounImage) {
 					return ((MBackgrounImage) node).getFigureEditPart();
