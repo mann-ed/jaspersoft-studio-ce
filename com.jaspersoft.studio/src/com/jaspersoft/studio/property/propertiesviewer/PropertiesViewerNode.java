@@ -90,6 +90,10 @@ public class PropertiesViewerNode implements IPropertiesViewerNode {
 		return keywords;
 	}
 	
+	public void setNodeKeywords(Collection<String> keywords) {
+		this.keywords = keywords;
+	}
+	
 	public void update(){
 		// DO NOTHING - should be overridden by subclasses
 		// that want to perform custom update operations on
