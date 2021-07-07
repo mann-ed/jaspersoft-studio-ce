@@ -100,8 +100,11 @@ public class JSSFileRepositoryService implements RepositoryService {
 				if (!jrxmlFile.exists())
 					return null;
 				if (rs instanceof DefaultRepositoryService) {
-					JasperCompileManager.getInstance(jConfig).compileToFile(jrxmlFile.getAbsolutePath(),
-							jrxmlFile.getParent().concat("/"+uri));
+					String destinationPath=uri;
+					if(!new File(uri).isAbsolute()) {
+						destinationPath=jrxmlFile.getParent().concat("/"+uri);
+					}
+					JasperCompileManager.getInstance(jConfig).compileToFile(jrxmlFile.getAbsolutePath(),destinationPath);
 				} else {
 					OutputStreamResource or = new OutputStreamResource();
 					if (rs instanceof FileRepositoryService)
