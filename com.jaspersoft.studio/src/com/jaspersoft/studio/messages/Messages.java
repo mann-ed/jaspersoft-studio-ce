@@ -1633,6 +1633,7 @@ public class Messages extends NLS {
 	public static String MTextField_textfield_category;
 	public static String MVariable_calculation;
 	public static String MVariable_calculation_description;
+	public static String MVariable_description_description;
 	public static String MVariable_expression_description;
 	public static String MVariable_increment_group_description;
 	public static String MVariable_increment_type_description;

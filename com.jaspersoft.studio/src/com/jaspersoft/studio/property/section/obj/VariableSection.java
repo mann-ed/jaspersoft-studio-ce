@@ -4,8 +4,6 @@
  ******************************************************************************/
 package com.jaspersoft.studio.property.section.obj;
 
-import net.sf.jasperreports.engine.design.JRDesignVariable;
-
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -17,13 +15,18 @@ import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.property.section.widgets.SPIncrementType;
 import com.jaspersoft.studio.property.section.widgets.SPResetType;
 
+import net.sf.jasperreports.engine.design.JRDesignVariable;
+
 public class VariableSection extends AbstractSection {
 	public void createControls(Composite parent, TabbedPropertySheetPage tabbedPropertySheetPage) {
 		super.createControls(parent, tabbedPropertySheetPage);
 
 		parent.setLayout(new GridLayout(2, false));
-
+		
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		
+		createWidget4Property(parent, JRDesignVariable.PROPERTY_DESCRIPTION).getControl().setLayoutData(gd);
+		
 		createWidget4Property(parent, JRDesignVariable.PROPERTY_CALCULATION).getControl().setLayoutData(gd);
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -53,6 +56,7 @@ public class VariableSection extends AbstractSection {
 	@Override
 	protected void initializeProvidedProperties() {
 		super.initializeProvidedProperties();
+		addProvidedProperties(JRDesignVariable.PROPERTY_DESCRIPTION, Messages.common_description);
 		addProvidedProperties(JRDesignVariable.PROPERTY_CALCULATION, Messages.MVariable_calculation);
 		addProvidedProperties(JRDesignVariable.PROPERTY_EXPRESSION, Messages.common_expression);
 		addProvidedProperties(JRDesignVariable.PROPERTY_INITIAL_VALUE_EXPRESSION,

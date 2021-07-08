@@ -25,11 +25,13 @@ import com.jaspersoft.studio.property.descriptor.classname.NClassTypePropertyDes
 import com.jaspersoft.studio.property.descriptor.combo.RWComboBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
 import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
+import com.jaspersoft.studio.property.descriptor.text.NTextPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
 import com.jaspersoft.studio.utils.EnumHelper;
 import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.eclipse.util.StringUtils;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.JRGroup;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
@@ -128,6 +130,13 @@ public class MVariable extends MVariableSystem implements ICopyable {
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
 		super.createPropertyDescriptors(desc);
+		
+		NTextPropertyDescriptor descriptionD = new NTextPropertyDescriptor(JRDesignVariable.PROPERTY_DESCRIPTION,
+				Messages.common_description);
+		descriptionD.setDescription(Messages.MVariable_description_description);
+		desc.add(descriptionD);
+		descriptionD.setHelpRefBuilder(new HelpReferenceBuilder(
+				"net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#variableDescription")); //$NON-NLS-1$
 
 		resetGroupD = new RWComboBoxPropertyDescriptor(JRDesignVariable.PROPERTY_RESET_GROUP, Messages.common_reset_group,
 				new String[] { "" }, NullEnum.NULL); //$NON-NLS-1$
@@ -159,14 +168,14 @@ public class MVariable extends MVariableSystem implements ICopyable {
 		expressionD.setDescription(Messages.MVariable_expression_description);
 		desc.add(expressionD);
 		expressionD.setHelpRefBuilder(
-				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#variableExpression"));
+				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#variableExpression")); //$NON-NLS-1$
 
 		JRExpressionPropertyDescriptor iniValExprD = new JRExpressionPropertyDescriptor(
 				JRDesignVariable.PROPERTY_INITIAL_VALUE_EXPRESSION, Messages.MVariable_initial_value_expression);
 		iniValExprD.setDescription(Messages.MVariable_initial_value_expression_description);
 		desc.add(iniValExprD);
 		iniValExprD.setHelpRefBuilder(
-				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#initialValueExpression"));
+				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#initialValueExpression")); //$NON-NLS-1$
 
 		NClassTypePropertyDescriptor factoryClassName = new NClassTypePropertyDescriptor(
 				JRDesignVariable.PROPERTY_INCREMENTER_FACTORY_CLASS_NAME, Messages.MVariable_incrementer_factory_class_name);
@@ -176,7 +185,7 @@ public class MVariable extends MVariableSystem implements ICopyable {
 		factoryClassName.setDescription(Messages.MVariable_incrementer_factory_class_name_description);
 		desc.add(factoryClassName);
 
-		setHelpPrefix(desc, "net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#variable");
+		setHelpPrefix(desc, "net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#variable"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -212,6 +221,9 @@ public class MVariable extends MVariableSystem implements ICopyable {
 		Object s = super.getPropertyValue(id);
 		if (s != null)
 			return s;
+		if (id.equals(JRDesignVariable.PROPERTY_DESCRIPTION)) {
+			return jrVariable.getDescription();
+		}
 		if (id.equals(JRDesignVariable.PROPERTY_RESET_GROUP)) {
 			if (jrVariable.getResetTypeValue().equals(ResetTypeEnum.GROUP) && resetGroupD != null) {
 				if (jrVariable.getResetGroup() != null) {
@@ -278,8 +290,15 @@ public class MVariable extends MVariableSystem implements ICopyable {
 				JRDesignDataset jrDataset = getDataSet();
 				JRGroup group = (JRGroup) jrDataset.getGroupsMap().get(value);
 				jrVariable.setResetGroup(group);
-			} else
+			} else {
 				jrVariable.setResetGroup(null);
+			}
+		} else if (id.equals(JRDesignVariable.PROPERTY_DESCRIPTION)) { 
+			if (StringUtils.isNullOrEmpty((String) value)) {
+				jrVariable.setDescription(null);
+			} else {
+				jrVariable.setDescription((String) value);
+			}
 		} else if (id.equals(JRDesignVariable.PROPERTY_EXPRESSION))
 			jrVariable.setExpression(ExprUtil.setValues(jrVariable.getExpression(), value));
 		else if (id.equals(JRDesignVariable.PROPERTY_INITIAL_VALUE_EXPRESSION))
