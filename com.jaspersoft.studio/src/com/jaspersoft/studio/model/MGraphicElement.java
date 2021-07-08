@@ -475,16 +475,10 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		forecolorD.setDescription(Messages.MGraphicElement_forecolor_description);
 		desc.add(forecolorD);
 
-		// OpaqueModePropertyDescriptor opaqueD = new
-		// OpaqueModePropertyDescriptor(JRBaseStyle.PROPERTY_MODE,
-		// Messages.common_opaque, NullEnum.INHERITED);
-		// opaqueD.setDescription(Messages.MGraphicElement_opaque_description);
-		// opaqueD.setCategory(Messages.common_graphic);
-		// desc.add(opaqueD);
-
 		NullCheckBoxPropertyDescriptor opaqueDBool = new NullCheckBoxPropertyDescriptor(JRBaseStyle.PROPERTY_MODE,
 				Messages.common_opaque);
 		opaqueDBool.setDescription(Messages.MGraphicElement_opaque_description);
+		opaqueDBool.setCategory(Messages.common_graphic);
 		desc.add(opaqueDBool);
 
 		positionTypeD = new NamedEnumPropertyDescriptor<>(JRBaseElement.PROPERTY_POSITION_TYPE,
