@@ -57,8 +57,10 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 public class ElementPreviewer {
 	private Composite cmp;
 	private Browser browser;
+	private String previewTitle;
+	private String previewMessage;
 
-	public ElementPreviewer(Composite parent) {
+	public ElementPreviewer(Composite parent, String previewTitle, String previewMessage) {
 		cmp = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 0;
@@ -69,6 +71,9 @@ public class ElementPreviewer {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
 		browser.setLayoutData(gd);
+		
+		this.previewTitle = previewTitle;
+		this.previewMessage = previewMessage;
 	}
 
 	public Composite getControl() {
@@ -83,7 +88,7 @@ public class ElementPreviewer {
 			UIUtils.getDisplay().asyncExec(() -> {
 				StringBuffer sb = new StringBuffer();
 				sb.append("<!DOCTYPE html>").append("<html >").append("<head>")
-						.append("    <title>Highcharts loading page</title>  ").append("    <style>")
+						.append("    <title>").append(previewTitle).append("</title>  ").append("    <style>")
 						.append("        .container{").append("            display: flex;")
 						.append("            align-items: center;").append("            justify-content: center;")
 						.append("            height:95%;").append("        }").append("        body, html{")
@@ -92,10 +97,10 @@ public class ElementPreviewer {
 						.append("        }        ").append("    </style>").append("    <script>")
 						.append("        i = 0;").append("        setInterval(function() {")
 						.append("            i = ++i % 4;")
-						.append("            document.querySelector('.loading').innerHTML = \"Loading HTML5 chart \" + Array(i+1).join(\".\");")
+						.append("            document.querySelector('.loading').innerHTML = \"").append(previewMessage).append("\" + Array(i+1).join(\".\");")
 						.append("        }, 800);").append("    </script>").append("</head>").append("<body>")
 						.append("    <div class=\"container\">")
-						.append("        <div class=\"loading\">Loading HTML5 chart</div>").append("    </div>  ")
+						.append("        <div class=\"loading\">").append(previewMessage).append("</div>").append("    </div>  ")
 						.append("</body>").append("</html>");
 				browser.setText(sb.toString());
 			});
