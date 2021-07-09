@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import net.sf.jasperreports.engine.type.LineStyleEnum;
 import net.sf.jasperreports.engine.type.NamedEnum;
 
 import org.eclipse.osgi.util.NLS;
 
 import com.jaspersoft.studio.messages.MessagesByKeys;
+import com.jaspersoft.studio.model.MLinePen;
+import com.jaspersoft.studio.property.combomenu.ComboItem;
 import com.jaspersoft.studio.property.descriptor.NullEnum;
+import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
+import com.jaspersoft.studio.property.section.widgets.SPLineStyleEnum;
 
 public class EnumHelper {
 
@@ -175,4 +180,34 @@ public class EnumHelper {
 	public static String getEnumTranslation(NamedEnum nameEnum) {
 		return MessagesByKeys.getString(nameEnum.getName());
 	}
+	
+	/**
+	 * Retrieves the value suitable for a {@link ComboItem} element.
+	 * <p>
+	 * 	<i>SAMPLE</i>: check for the {@link LineStyleEnum} used in {@link MLinePen} and {@link SPLineStyleEnum}
+	 * </p>
+	 * 
+	 * @param jrEnum the enumeration instance
+	 * @param isNullable if it can be null
+	 * @return the integer value suitable for the combo item
+	 * 
+	 * @see NamedEnumPropertyDescriptor#getIntValue(Enum)
+	 * @see ComboItem
+	 * @see NullEnum
+	 */
+	public static Integer getIntValueForCombo(Enum<?> jrEnum, boolean isNullable) {
+		if (jrEnum == null) {
+			return 0;
+		}
+		Enum<?>[] jrEnums = jrEnum.getDeclaringClass().getEnumConstants();
+		int ind = 0;
+		for (; ind < jrEnums.length; ind++) {
+			if (jrEnums[ind] == jrEnum) {
+				break;
+			}
+		}
+		// consider also special case (i.e inherited)
+		return isNullable ? ind+1 : ind; 
+	}
+	
 }

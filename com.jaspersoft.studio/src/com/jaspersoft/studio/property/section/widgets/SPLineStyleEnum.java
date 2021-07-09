@@ -7,10 +7,6 @@ package com.jaspersoft.studio.property.section.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.engine.base.JRBasePen;
-import net.sf.jasperreports.engine.type.LineStyleEnum;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
@@ -23,6 +19,11 @@ import com.jaspersoft.studio.property.combomenu.ComboItemAction;
 import com.jaspersoft.studio.property.combomenu.ComboMenuViewer;
 import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.section.AbstractSection;
+import com.jaspersoft.studio.utils.EnumHelper;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.engine.base.JRBasePen;
+import net.sf.jasperreports.engine.type.LineStyleEnum;
 
 /**
  * Reperesent the lineStyle of an element as a combo popup element.
@@ -78,16 +79,16 @@ public class SPLineStyleEnum {
 				ResourceManager.getImage(this.getClass(), "/icons/resources/inherited.png"), 0, NullEnum.INHERITED, null));
 		itemsList.add(
 				new ComboItem("Solid line ", true, ResourceManager.getImage(this.getClass(), "/icons/resources/line-solid.png"),
-						1, LineStyleEnum.SOLID, LineStyleEnum.SOLID));
+						1, LineStyleEnum.SOLID, EnumHelper.getIntValueForCombo(LineStyleEnum.SOLID, true)));
 		itemsList.add(new ComboItem("Dashed line ", true,
 				ResourceManager.getImage(this.getClass(), "/icons/resources/line-dashed.png"), 2, LineStyleEnum.DASHED,
-				LineStyleEnum.DASHED));
+				EnumHelper.getIntValueForCombo(LineStyleEnum.DASHED,true)));
 		itemsList.add(new ComboItem("Dotted line ", true,
 				ResourceManager.getImage(this.getClass(), "/icons/resources/line-dotted.png"), 3, LineStyleEnum.DOTTED,
-				LineStyleEnum.DOTTED));
+				EnumHelper.getIntValueForCombo(LineStyleEnum.DOTTED,true)));
 		itemsList.add(new ComboItem("Double line ", true,
 				ResourceManager.getImage(this.getClass(), "/icons/resources/line-double.png"), 4, LineStyleEnum.DOUBLE,
-				LineStyleEnum.DOUBLE));
+				EnumHelper.getIntValueForCombo(LineStyleEnum.DOUBLE,true)));
 		// Creating the combo popup
 		combo = new ComboMenuViewer(composite, SWT.NORMAL, SPRWPopUpCombo.getLongest(itemsList));
 		combo.setItems(itemsList);
@@ -102,7 +103,7 @@ public class SPLineStyleEnum {
 			}
 		});
 	}
-
+	
 	/**
 	 * Set the contextual help for the control
 	 * 

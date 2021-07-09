@@ -27,6 +27,7 @@ import com.jaspersoft.studio.property.descriptors.FloatPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptors.JSSPopupPropertyDescriptor;
 import com.jaspersoft.studio.utils.AlfaRGB;
 import com.jaspersoft.studio.utils.Colors;
+import com.jaspersoft.studio.utils.EnumHelper;
 
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.JRPen;
@@ -73,7 +74,7 @@ public class MLinePen extends APropertyNode implements IPropertySource {
 			for (int i = 0; i < values.length; i++) {
 				LineStyleEnum value = values[i];
 				lineSpacingItems.add(new ComboItem(MessagesByKeys.getString("LineStyle_".concat(value.getName())), true,
-						images[i], i + 1, value, value));
+						images[i], i + 1, value, EnumHelper.getIntValueForCombo(value,true)));
 			}
 		}
 		return lineSpacingItems;
