@@ -28,16 +28,12 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.PropertySheet;
 
 import com.jaspersoft.studio.JSSCompoundCommand;
 import com.jaspersoft.studio.help.HelpSystem;
@@ -284,35 +280,34 @@ public abstract class ASPropertyWidget<T extends IPropertyDescriptor> implements
 	};
 
 	private IStatusLineManager getStatusLineManager() {
-		IWorkbench wb = PlatformUI.getWorkbench();
-		IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
-
-		IWorkbenchPage page = win.getActivePage();
-
-		IWorkbenchPart part = page.getActivePart();
-		if (part == null)
+		IStatusLineManager statusLineManager = null;
+		IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		
+		try {
+			IWorkbenchPart workbenchPart = activeWindow.getActivePage().getActivePart();
+			if (workbenchPart instanceof PropertySheet) {
+				final IViewPart viewPart = (IViewPart) workbenchPart;
+				statusLineManager = viewPart.getViewSite().getActionBars().getStatusLineManager();
+			} 
+			return statusLineManager;
+		}
+		catch (Exception ex) {
 			return null;
-		IWorkbenchPartSite site = part.getSite();
-		IActionBars actionBars = null;
-		if (site instanceof IEditorSite)
-			actionBars = ((IEditorSite) site).getActionBars();
-		else if (site instanceof IViewSite)
-			actionBars = ((IViewSite) site).getActionBars();
-		if (actionBars == null)
-			return null;
-		return actionBars.getStatusLineManager();
+		}
 	}
 
 	protected void handleFocusGained() {
 		IStatusLineManager statusLineManager = getStatusLineManager();
-		if (statusLineManager != null)
+		if (statusLineManager != null) {
 			statusLineManager.setMessage(pDescriptor.getDescription());
+		}
 	}
 
 	protected void handleFocusLost() {
 		IStatusLineManager statusLineManager = getStatusLineManager();
-		if (statusLineManager != null)
+		if (statusLineManager != null) {
 			statusLineManager.setMessage(null);
+		}
 	}
 
 	public abstract Control getControl();
