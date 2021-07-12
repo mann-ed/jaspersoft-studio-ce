@@ -14,7 +14,6 @@ import com.jaspersoft.studio.model.ANode;
 import com.jaspersoft.studio.property.descriptors.DoublePropertyDescriptor;
 import com.jaspersoft.studio.property.descriptors.JSSComboPropertyDescriptor;
 
-import net.sf.jasperreports.components.barcode4j.Barcode4jComponent;
 import net.sf.jasperreports.components.barcode4j.FourStateBarcodeComponent;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.JRElement;
@@ -74,12 +73,6 @@ public class MFourStateBarcode extends MBarcode4j {
 				FourStateBarcodeComponent.PROPERTY_TRACK_HEIGHT, Messages.MFourStateBarcode_track_height);
 		trackHeightD.setDescription(Messages.MFourStateBarcode_track_height_description);
 		desc.add(trackHeightD);
-
-		DoublePropertyDescriptor vertQuietZoneD = new DoublePropertyDescriptor(
-				Barcode4jComponent.PROPERTY_VERTICAL_QUIET_ZONE, Messages.MBarcode4j_vertical_quiet_zone);
-		vertQuietZoneD.setDescription(Messages.MBarcode4j_vertical_quiet_zone_description);
-		desc.add(vertQuietZoneD);
-		vertQuietZoneD.setCategory(Messages.common_properties_category);
 
 		checksumModeD.setCategory(Messages.common_properties_category);
 		intercharD.setCategory(Messages.common_properties_category);
