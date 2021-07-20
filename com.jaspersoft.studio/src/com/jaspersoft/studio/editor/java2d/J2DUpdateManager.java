@@ -100,25 +100,27 @@ public final class J2DUpdateManager extends DeferredUpdateManager {
 
 			// Create a J2DGraphics with the reight size..
 			Graphics graphics = gs.getGraphics(rect); 
-			((J2DGraphics)graphics).getGraphics2D().setColor(java.awt.Color.red);
-			((J2DGraphics)graphics).getGraphics2D().fillRect(0,0,rect.width, rect.height);
-			
-			if (!updating) {
-				/**
-				 * If a paint occurs not as part of an update, we should notify that the region
-				 * is being painted. Otherwise, notification already occurs in repairDamage().
-				 */
-				Rectangle rect2 = graphics.getClip(new Rectangle());
-				Map<IFigure,Rectangle> map = new HashMap<IFigure,Rectangle>();
-				map.put(rootFigure, rect2);
-				firePainting(rect, map);
+			if(graphics!=null) {
+				((J2DGraphics)graphics).getGraphics2D().setColor(java.awt.Color.red);
+				((J2DGraphics)graphics).getGraphics2D().fillRect(0,0,rect.width, rect.height);
+				
+				if (!updating) {
+					/**
+					 * If a paint occurs not as part of an update, we should notify that the region
+					 * is being painted. Otherwise, notification already occurs in repairDamage().
+					 */
+					Rectangle rect2 = graphics.getClip(new Rectangle());
+					Map<IFigure,Rectangle> map = new HashMap<IFigure,Rectangle>();
+					map.put(rootFigure, rect2);
+					firePainting(rect, map);
+				}
+				performValidation();
+				rootFigure.paint(graphics);
+				
+				
+				gs.flushGraphics(rect);
+				graphics.dispose();
 			}
-			performValidation();
-			rootFigure.paint(graphics);
-			
-			
-			gs.flushGraphics(rect);
-			graphics.dispose();
 			
 		} else {
 			/*
