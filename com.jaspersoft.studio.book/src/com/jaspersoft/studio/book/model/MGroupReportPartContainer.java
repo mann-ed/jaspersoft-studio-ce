@@ -117,8 +117,7 @@ public class MGroupReportPartContainer extends MReportPartContainer {
 
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
-		validator = new GroupNameValidator();
-		validator.setTargetNode(this);
+		updateValidator();
 
 		if (!isDetail()) {
 			JSSTextPropertyDescriptor nameD = new JSSValidatedTextPropertyDescriptor(JRDesignGroup.PROPERTY_NAME,
@@ -138,6 +137,9 @@ public class MGroupReportPartContainer extends MReportPartContainer {
 	 * edited
 	 */
 	public void updateValidator() {
+		if (validator == null) {
+			validator = new GroupNameValidator();
+		}
 		validator.setTargetNode(this);
 	}
 

@@ -207,6 +207,13 @@ public class MStyle extends APropertyNode
 	protected void postDescriptors(IPropertyDescriptor[] descriptors) {
 		super.postDescriptors(descriptors);
 		// Set into the validator the actual reference
+		updateNameValidator();
+	}
+	
+	protected void updateNameValidator() {
+		if (validator == null) {
+			validator = new StyleNameValidator();
+		}
 		validator.setTargetNode(this);
 	}
 
@@ -254,6 +261,7 @@ public class MStyle extends APropertyNode
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
+		updateNameValidator();
 		styleD = new RWStyleComboBoxPropertyDescriptor(JRDesignStyle.PROPERTY_PARENT_STYLE,
 				Messages.common_parent_style, new String[] { "" }, NullEnum.NULL); //$NON-NLS-1$
 		styleD.setDescription(Messages.MStyle_parent_style_description);
@@ -261,8 +269,6 @@ public class MStyle extends APropertyNode
 				"net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#reportElement_style")); //$NON-NLS-1$
 		desc.add(styleD);
 
-		validator = new StyleNameValidator();
-		validator.setTargetNode(this);
 		JSSValidatedTextPropertyDescriptor nameD = new JSSValidatedTextPropertyDescriptor(JRDesignStyle.PROPERTY_NAME,
 				Messages.common_name, validator);
 		nameD.setDescription(Messages.MStyle_name_description);

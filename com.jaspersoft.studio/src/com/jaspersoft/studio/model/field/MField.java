@@ -146,6 +146,13 @@ public class MField extends APropertyNode implements ICopyable, IDragable {
 	protected void postDescriptors(IPropertyDescriptor[] descriptors) {
 		super.postDescriptors(descriptors);
 		// Set into the validator the actual reference
+		updateNameValidator();
+	}
+	
+	protected void updateNameValidator() {
+		if (validator == null) {
+			validator = new FieldNameValidator();
+		}
 		validator.setTargetNode(this);
 	}
 
@@ -157,15 +164,13 @@ public class MField extends APropertyNode implements ICopyable, IDragable {
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
+		updateNameValidator();
 		JPropertyExpressionsDescriptor propertiesD = new JPropertyExpressionsDescriptor(
 				JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS, Messages.MGraphicElement_property_expressions);
 		propertiesD.setDescription(Messages.MGraphicElement_property_expressions_description);
 		desc.add(propertiesD);
 		propertiesD.setHelpRefBuilder(
 				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#property"));
-
-		validator = new FieldNameValidator();
-		validator.setTargetNode(this);
 		JSSTextPropertyDescriptor nameD = new JSSValidatedTextPropertyDescriptor(JRDesignField.PROPERTY_NAME,
 				Messages.common_name, validator);
 		nameD.setDescription(Messages.MField_name_description);

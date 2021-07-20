@@ -199,9 +199,16 @@ public class MDataset extends APropertyNode implements ICopyable {
 	protected void postDescriptors(IPropertyDescriptor[] descriptors) {
 		super.postDescriptors(descriptors);
 		// Set into the validator the actual reference
-		validator.setTargetNode(this);
+		updateNameValidator();
 	}
 
+	protected void updateNameValidator() {
+		if (validator == null) {
+			validator = new DatasetNameValidator();
+		}
+		validator.setTargetNode(this);
+	}
+	
 	/**
 	 * Creates the property descriptors.
 	 * 
@@ -210,8 +217,7 @@ public class MDataset extends APropertyNode implements ICopyable {
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
-		validator = new DatasetNameValidator();
-		validator.setTargetNode(this);
+		updateNameValidator();
 		JSSValidatedTextPropertyDescriptor nameD = new JSSValidatedTextPropertyDescriptor(JRDesignDataset.PROPERTY_NAME,
 				Messages.common_name, validator);
 		nameD.setDescription(Messages.MDataset_name_description);

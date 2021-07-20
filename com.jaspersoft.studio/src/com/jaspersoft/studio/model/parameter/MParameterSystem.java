@@ -49,7 +49,7 @@ public class MParameterSystem extends APropertyNode implements IDragable {
 	/** The icon descriptor. */
 	private static IIconDescriptor iconDescriptor;
 
-	private   IPropertyDescriptor[] descriptors;
+	private IPropertyDescriptor[] descriptors;
 
 	private static ParameterNameValidator validator;
 
@@ -138,9 +138,16 @@ public class MParameterSystem extends APropertyNode implements IDragable {
 	protected void postDescriptors(IPropertyDescriptor[] descriptors) {
 		super.postDescriptors(descriptors);
 		// Set into the validator the actual reference
-		validator.setTargetNode(this);
+		updateNameValidator();
 	}
 
+	protected void updateNameValidator() {
+		if (validator == null) {
+			validator = new ParameterNameValidator();
+		}
+		validator.setTargetNode(this);
+	}
+	
 	/**
 	 * Creates the property descriptors.
 	 * 
@@ -149,8 +156,7 @@ public class MParameterSystem extends APropertyNode implements IDragable {
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
-		validator = new ParameterNameValidator();
-		validator.setTargetNode(this);
+		updateNameValidator();
 		JSSValidatedTextPropertyDescriptor nameD = new JSSValidatedTextPropertyDescriptor(JRDesignParameter.PROPERTY_NAME,
 				Messages.common_name, validator);
 		nameD.setDescription(Messages.MParameterSystem_name_description);
