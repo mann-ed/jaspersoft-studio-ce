@@ -6,11 +6,11 @@ package com.jaspersoft.studio.model.style;
 
 import java.text.MessageFormat;
 
-import net.sf.jasperreports.engine.JRStyle;
-import net.sf.jasperreports.engine.design.JasperDesign;
-
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.property.descriptors.AbstractJSSCellEditorValidator;
+
+import net.sf.jasperreports.engine.JRStyle;
+import net.sf.jasperreports.engine.design.JasperDesign;
 
 /**
  * Validator to check if a name for a style name is valid. It is valid essentially if it 
@@ -30,7 +30,7 @@ public class StyleNameValidator extends AbstractJSSCellEditorValidator {
 		if (d !=null ){
 			JRStyle style = d.getStylesMap().get(value);
 			if (style != null && getTarget().getValue() != style){
-				String message = MessageFormat.format(Messages.VariableNameValidator_variableDuplicatedName, new Object[] { value });
+				String message = MessageFormat.format(Messages.StyleNameValidator_styleDuplicatedName, new Object[] { value });
 				return message;
 			}
 		}

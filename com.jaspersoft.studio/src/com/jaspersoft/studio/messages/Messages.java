@@ -1727,6 +1727,7 @@ public class Messages extends NLS {
 	public static String ParameterDialog_5;
 	public static String ParameterDialog_6;
 	public static String ParameterDialog_7;
+	public static String ParameterNameValidator_parameterDuplicatedName;
 	public static String ParameterPage_dataset_parameters;
 	public static String ParameterPage_description;
 	public static String ParametersDialog_built_in_parameters;
@@ -2203,6 +2204,7 @@ public class Messages extends NLS {
 	public static String StyleDescriptor_5;
 	public static String StyleDescriptor_6;
 	public static String StyleEditPart_styleTemplatePrefix;
+	public static String StyleNameValidator_styleDuplicatedName;
 	public static String StylesListSection_Inherited_From_Default_Style;
 	public static String StylesListSection_NotEditable_Message;
 	public static String StylesListSection_NotEditable_Title;

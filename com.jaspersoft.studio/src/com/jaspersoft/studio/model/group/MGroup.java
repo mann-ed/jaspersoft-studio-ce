@@ -143,6 +143,9 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 	 * edited
 	 */
 	public void updateValidator() {
+		if (validator == null) {
+			validator = new GroupNameValidator();
+		}
 		validator.setTargetNode(this);
 	}
 
@@ -154,8 +157,7 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
-		validator = new GroupNameValidator();
-		validator.setTargetNode(this);
+		updateValidator();
 		JSSTextPropertyDescriptor nameD = new JSSValidatedTextPropertyDescriptor(JRDesignGroup.PROPERTY_NAME,
 				Messages.common_name, validator);
 		nameD.setDescription(Messages.MGroup_name_description);
