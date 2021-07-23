@@ -6,8 +6,8 @@ package com.jaspersoft.studio.utils.jasper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +25,7 @@ import net.sf.jasperreports.eclipse.util.FileExtension;
 import net.sf.jasperreports.eclipse.util.StringUtils;
 import net.sf.jasperreports.engine.JRRuntimeException;
 import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.util.JRResourcesUtil;
 import net.sf.jasperreports.repo.DefaultRepositoryService;
 import net.sf.jasperreports.repo.FileRepositoryService;
 import net.sf.jasperreports.repo.InputStreamResource;
@@ -95,24 +96,26 @@ public class JSSFileRepositoryService implements RepositoryService {
 						resourceType, rs);
 			} else if (ReportResource.class.equals(resourceType) && uri.endsWith(FileExtension.PointJASPER)) {
 				String nuri = StringUtils.replaceAllIns(uri, FileExtension.PointJASPER + "$", FileExtension.PointJRXML);
-				InputStreamResource inr = rs.getResource(nuri, InputStreamResource.class);
-				if (inr == null)
+				File jrxmlFile = JRResourcesUtil.resolveFile(context, nuri);
+				if (!jrxmlFile.exists())
 					return null;
 				if (rs instanceof DefaultRepositoryService) {
-					URI dUri = new URI(uri);
-					JasperCompileManager.getInstance(jConfig).compileToFile(new URI(nuri).getRawPath(),
-							dUri.getRawPath());
+					String destinationPath=uri;
+					if(!new File(uri).isAbsolute()) {
+						destinationPath=jrxmlFile.getParent().concat("/"+uri);
+					}
+					JasperCompileManager.getInstance(jConfig).compileToFile(jrxmlFile.getAbsolutePath(),destinationPath);
 				} else {
 					OutputStreamResource or = new OutputStreamResource();
 					if (rs instanceof FileRepositoryService)
 						or.setOutputStream(((FileRepositoryService) rs).getOutputStream(uri));
 					else
 						or.setOutputStream(new ByteArrayOutputStream());
-					JasperCompileManager.getInstance(jConfig).compileToStream(inr.getInputStream(),
+					JasperCompileManager.getInstance(jConfig).compileToStream(new FileInputStream(jrxmlFile),
 							or.getOutputStream());
 					rs.saveResource(uri, or);
 				}
-				refreshFile(rs, uri);
+				refreshFile(rs,jrxmlFile.getAbsolutePath());
 				return rs.getResource(uri, resourceType);
 			} else if (ReportResource.class.equals(resourceType)) {
 				InputStreamResource inr = rs.getResource(uri, InputStreamResource.class);
@@ -158,17 +161,15 @@ public class JSSFileRepositoryService implements RepositoryService {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					if (rs instanceof DefaultRepositoryService) {
-						IFile[] fs = JDTUtils.WS_ROOT.findFilesForLocationURI(new URI(uri));
+						IFile[] fs = JDTUtils.WS_ROOT.findFilesForLocationURI(new File(uri).toURI());
 						if (fs != null && fs.length > 0)
-							fs[0].refreshLocal(1, monitor);
+							fs[0].getParent().refreshLocal(1, monitor);
 					} else if (rs instanceof FileRepositoryService) {
 						IFile[] fs = JDTUtils.WS_ROOT
 								.findFilesForLocationURI(new File(((FileRepositoryService) rs).getRoot(), uri).toURI());
 						if (fs != null && fs.length > 0)
 							fs[0].refreshLocal(1, monitor);
 					}
-				} catch (URISyntaxException e) {
-					return Status.CANCEL_STATUS;
 				} catch (CoreException e) {
 					return Status.CANCEL_STATUS;
 				}
