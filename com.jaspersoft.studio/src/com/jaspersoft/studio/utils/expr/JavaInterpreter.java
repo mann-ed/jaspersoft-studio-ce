@@ -56,7 +56,6 @@ public class JavaInterpreter extends AInterpreter {
 		interpreter.eval("import java.net.*;");
 		interpreter.eval("import java.sql.*;");
 		interpreter.eval("import net.sf.jasperreports.engine.data.*;");
-		interpreter.eval("import *;");
 
 		if (jasperDesign != null) {
 			String[] imports = jasperDesign.getImports();
