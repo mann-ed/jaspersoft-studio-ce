@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
@@ -18,9 +19,11 @@ import net.sf.jasperreports.eclipse.builder.jdt.JDTUtils;
 import net.sf.jasperreports.eclipse.util.FileExtension;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.StringUtils;
+import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JRDesignSubreport;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.util.JRExpressionUtil;
 
 public class SubreportsUtil {
 	
@@ -32,35 +35,62 @@ public class SubreportsUtil {
 		Map<File, IFile> fmap = new HashMap<>();
 		try {
 			List<JRDesignElement> elements = ModelUtils.getAllElements(jd);
+			SubMonitor submon = SubMonitor.convert(monitor, elements.size());
 			for (JRDesignElement ele : elements) {
 				if (ele instanceof JRDesignSubreport)
-					publishSubreport(jConfig, fmap, monitor, file, jd, (JRDesignSubreport) ele);
+					addSubreport(jConfig, fmap, submon.split(1), file, jd, (JRDesignSubreport) ele);
 			}
 		} finally {
 			jConfig.init(file);
 		}
 		return fmap;
 	}
-
-	private static void publishSubreport(JasperReportsConfiguration jConfig, Map<File, IFile> fmap,
-			IProgressMonitor monitor, IFile file, JasperDesign parent, JRDesignSubreport ele) {
-		jConfig.init(file);
-		String expr = ExpressionUtil.eval(ele.getExpression(), jConfig, parent);
+	
+	/*
+	 * Tries to get the file related to the subreport expression.
+	 * Simple mode on: you try to locate the file using the simple text expression information
+	 * Simple mode off: you try to use a "best-effort" expression evaluation.
+	 * 
+	 * NOTE: Pay attention that using an Expression evaluation (with proper interpreter) is expensive.
+	 * In many cases a "simple" expression referencing the file will be used, maybe with an absolute
+	 * or relative path. No need to overkill the computation using the (bsh) interpreter.
+	 */
+	private static File getSubreportFileItem(
+			IFile file, JRExpression expression, JasperReportsConfiguration jConfig, JasperDesign parent, boolean simpleMode) {
+		String expr = simpleMode ? JRExpressionUtil.getSimpleExpressionText(expression) : ExpressionUtil.eval(expression, jConfig, parent);
 		if (expr == null || expr.isEmpty()) {
-			return;
+			return null;
 		}
 		if (expr.endsWith(FileExtension.PointJASPER)) {
 			expr = StringUtils.replaceAllIns(expr, FileExtension.PointJASPER + "$", FileExtension.PointJRXML);
 		}
 		expr = expr.replaceFirst("repo:", "");
 		File f = FileUtils.findFile(file, expr);
-		if (f == null) {
+		if(f==null) {
 			try {
 				f = fallbackFindFile(file, expr);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 		}
+		return f;
+	}
+
+	private static void addSubreport(
+			JasperReportsConfiguration jConfig, Map<File, IFile> fmap,
+			IProgressMonitor monitor, IFile file, JasperDesign parent, JRDesignSubreport ele) {
+		jConfig.init(file);
+		JRExpression expression = ele.getExpression();
+		SubMonitor submon = SubMonitor.convert(monitor, 100);
+		// first try the quicker simple mode to get the subreport file
+		File f = getSubreportFileItem(file, expression, jConfig, parent, true);
+		if(f==null) {
+			f = getSubreportFileItem(file, expression, jConfig, parent, false);
+			if (f == null) {
+				return;
+			}
+		}
+		submon.setWorkRemaining(10);
 		if (fmap.containsKey(f)) {
 			return;
 		}
@@ -73,10 +103,12 @@ public class SubreportsUtil {
 					JasperDesign jd = JRXMLUtils.getJasperDesign(jConfig, ifile.getContents(), ifile.getFileExtension());
 					if (jd != null) {
 						for (JRDesignElement el : ModelUtils.getAllElements(jd)) {
-							if (el instanceof JRDesignSubreport)
-								publishSubreport(jConfig, fmap, monitor, ifile, jd, (JRDesignSubreport) el);
-							if (monitor.isCanceled())
+							if (el instanceof JRDesignSubreport) {
+								addSubreport(jConfig, fmap, monitor, ifile, jd, (JRDesignSubreport) el);
+							}
+							if (monitor.isCanceled()) {
 								break;
+							}
 						}
 					}
 				} catch (Exception e) {
@@ -86,6 +118,7 @@ public class SubreportsUtil {
 				fmap.put(f, null);
 			}
 		}
+		submon.setWorkRemaining(0);
 	}
 
 	private static File fallbackFindFile(IFile file, String expression) {

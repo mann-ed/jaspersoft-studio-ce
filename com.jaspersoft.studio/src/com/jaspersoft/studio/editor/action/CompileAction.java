@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.actions.SelectionAction;
@@ -88,18 +89,20 @@ public class CompileAction extends SelectionAction implements IMenuCreator {
 			Job job = new Job(Messages.CompileAction_jobName) {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
+					SubMonitor subM = SubMonitor.convert(monitor,100);
 					IWorkbenchPart part = getWorkbenchPart();
 					if (part != null && part.getSite() != null && part.getSite().getPage() != null
 							&& part.getSite().getPage().getActiveEditor() != null) {
 						IEditorPart editor = part.getSite().getPage().getActiveEditor();
 						if (editor instanceof ISaveablePart && ((ISaveablePart) editor).isDirty())
-							editor.doSave(monitor);
+							editor.doSave(subM.split(5));
 					}
-					IStatus status = actionCompile(jConfig, monitor, true, console);
+					subM.setWorkRemaining(5);
+					IStatus status = actionCompile(jConfig, subM.split(95), true, console);
 					return status;
 				}
 			};
-			job.setPriority(Job.SHORT);
+			job.setPriority(Job.BUILD);
 			job.schedule();
 		}
 	}
@@ -143,7 +146,8 @@ public class CompileAction extends SelectionAction implements IMenuCreator {
 						return errorHandler;
 					};
 				};
-
+				
+				SubMonitor submon = SubMonitor.convert(monitor,100);
 				// ATTENTION! this can generate possible errors, because we are
 				// not calling builders in the right order
 				// we are also not looking very good for for subreports, because
@@ -151,7 +155,8 @@ public class CompileAction extends SelectionAction implements IMenuCreator {
 				// file.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
 				// monitor);
 				if (compileMain) {
-					IFile destFIle = builder.compileJRXML(mfile, monitor, jConfig);
+					monitor.subTask(Messages.CompileAction_SubtaskCompilingMainReport);
+					IFile destFIle = builder.compileJRXML(mfile, submon.split(10), jConfig);
 					if (console != null && destFIle != null) {
 						File file = destFIle.getRawLocation().toFile();
 						if (file.exists()) {
@@ -162,11 +167,16 @@ public class CompileAction extends SelectionAction implements IMenuCreator {
 						}
 					}
 				}
-				Map<File, IFile> fmap = getSubreports(jConfig, mfile, jConfig.getJasperDesign(), monitor);
+				submon.setWorkRemaining(90);
+				monitor.subTask(Messages.CompileAction_SubtaskRetrievingAllSubs);
+				Map<File, IFile> fmap = getSubreports(jConfig, mfile, jConfig.getJasperDesign(), submon.split(80));
+								
+				monitor.subTask(Messages.CompileAction_SubtaskCompilingAllSubs);
+				SubMonitor subcompileMon = submon.split(10).setWorkRemaining(fmap.size());
 				for (File f : fmap.keySet()) {
 					IFile file = fmap.get(f);
 					if (file != null) {
-						builder.compileJRXML(file, monitor, jConfig);
+						builder.compileJRXML(file, subcompileMon.split(1), jConfig);
 					} else {
 						try {
 							JasperCompileManager.compileReportToFile(f.getAbsolutePath());
@@ -175,6 +185,7 @@ public class CompileAction extends SelectionAction implements IMenuCreator {
 						}
 					}
 				}
+				submon.setWorkRemaining(0);
 			} catch (CoreException ex) {
 				return Status.CANCEL_STATUS;
 			}
@@ -246,6 +257,7 @@ public class CompileAction extends SelectionAction implements IMenuCreator {
 		IFile mfile = (IFile) jConfig.get(FileUtils.KEY_FILE);
 		if (mfile != null)
 			try {
+				SubMonitor submon = SubMonitor.convert(monitor,100);
 				// ATTENTION! this can generate possible errors, because we are
 				// not calling builders in the right order
 				// we are also not looking very good for for subreports, because
@@ -254,14 +266,20 @@ public class CompileAction extends SelectionAction implements IMenuCreator {
 				// monitor);
 
 				JasperReportsBuilder builder = new JasperReportsBuilder();
-				if (compileMain)
-					builder.compileJRXML(mfile, monitor, jConfig);
-				Map<File, IFile> fmap = SubreportsUtil.getSubreportFiles(jConfig, mfile, jConfig.getJasperDesign(),
-						monitor);
+				if (compileMain) {
+					monitor.subTask(Messages.CompileAction_SubtaskCompilingMainReport);
+					builder.compileJRXML(mfile, submon.split(10), jConfig);
+				}
+				submon.setWorkRemaining(90);
+				monitor.subTask(Messages.CompileAction_SubtaskRetrievingAllSubs);
+				Map<File, IFile> fmap = SubreportsUtil.getSubreportFiles(jConfig, mfile, jConfig.getJasperDesign(),submon.split(80));
+				
+				monitor.subTask(Messages.CompileAction_SubtaskCompilingAllSubs);
+				SubMonitor subcompileMon = submon.split(10).setWorkRemaining(fmap.size());
 				for (File f : fmap.keySet()) {
 					IFile file = fmap.get(f);
 					if (file != null) {
-						builder.compileJRXML(file, monitor, jConfig);
+						builder.compileJRXML(file, subcompileMon.split(1), jConfig);
 					} else {
 						try {
 							JasperCompileManager.compileReportToFile(f.getAbsolutePath());
@@ -272,6 +290,7 @@ public class CompileAction extends SelectionAction implements IMenuCreator {
 					if (monitor.isCanceled())
 						break;
 				}
+				submon.setWorkRemaining(0);
 			} catch (CoreException e) {
 				return Status.CANCEL_STATUS;
 			}

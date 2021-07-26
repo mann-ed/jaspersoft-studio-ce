@@ -307,6 +307,9 @@ public class Messages extends NLS {
 	public static String CompileAction_jobName;
 	public static String CompileAction_manage;
 	public static String CompileAction_noJRInstalled;
+	public static String CompileAction_SubtaskCompilingAllSubs;
+	public static String CompileAction_SubtaskCompilingMainReport;
+	public static String CompileAction_SubtaskRetrievingAllSubs;
 	public static String CompileHandler_compilingReport;
 	public static String CompileHandler_compilingStart;
 	public static String CompositeElementImportWizardPage_errorNameUsed;
