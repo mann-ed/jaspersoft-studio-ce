@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
@@ -34,9 +35,10 @@ public class SubreportsUtil {
 		Map<File, IFile> fmap = new HashMap<>();
 		try {
 			List<JRDesignElement> elements = ModelUtils.getAllElements(jd);
+			SubMonitor submon = SubMonitor.convert(monitor, elements.size());
 			for (JRDesignElement ele : elements) {
 				if (ele instanceof JRDesignSubreport)
-					addSubreport(jConfig, fmap, monitor, file, jd, (JRDesignSubreport) ele);
+					addSubreport(jConfig, fmap, submon.split(1), file, jd, (JRDesignSubreport) ele);
 			}
 		} finally {
 			jConfig.init(file);
@@ -79,6 +81,7 @@ public class SubreportsUtil {
 			IProgressMonitor monitor, IFile file, JasperDesign parent, JRDesignSubreport ele) {
 		jConfig.init(file);
 		JRExpression expression = ele.getExpression();
+		SubMonitor submon = SubMonitor.convert(monitor, 100);
 		// first try the quicker simple mode to get the subreport file
 		File f = getSubreportFileItem(file, expression, jConfig, parent, true);
 		if(f==null) {
@@ -87,6 +90,7 @@ public class SubreportsUtil {
 				return;
 			}
 		}
+		submon.setWorkRemaining(10);
 		if (fmap.containsKey(f)) {
 			return;
 		}
@@ -99,10 +103,12 @@ public class SubreportsUtil {
 					JasperDesign jd = JRXMLUtils.getJasperDesign(jConfig, ifile.getContents(), ifile.getFileExtension());
 					if (jd != null) {
 						for (JRDesignElement el : ModelUtils.getAllElements(jd)) {
-							if (el instanceof JRDesignSubreport)
+							if (el instanceof JRDesignSubreport) {
 								addSubreport(jConfig, fmap, monitor, ifile, jd, (JRDesignSubreport) el);
-							if (monitor.isCanceled())
+							}
+							if (monitor.isCanceled()) {
 								break;
+							}
 						}
 					}
 				} catch (Exception e) {
@@ -112,6 +118,7 @@ public class SubreportsUtil {
 				fmap.put(f, null);
 			}
 		}
+		submon.setWorkRemaining(0);
 	}
 
 	private static File fallbackFindFile(IFile file, String expression) {
