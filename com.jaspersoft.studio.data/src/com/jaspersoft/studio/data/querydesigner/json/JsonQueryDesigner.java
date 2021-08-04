@@ -372,7 +372,6 @@ public class JsonQueryDesigner extends TreeBasedQueryDesigner {
 								if(treeViewer!=null && !treeViewer.getTree().isDisposed()){
 									treeViewer.setInput(jsonDataManager
 											.getJsonSupportModel());
-									treeViewer.expandToLevel(2);
 									decorateTreeUsingQueryText();
 								}
 								isRefreshing = false;
