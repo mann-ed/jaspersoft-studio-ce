@@ -35,7 +35,6 @@ import com.jaspersoft.studio.data.fields.IFieldsProvider;
 import com.jaspersoft.studio.property.dataset.dialog.DataQueryAdapters;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.utils.parameter.ParameterUtil;
-import com.jaspersoft.studio.utils.parameter.SimpleValueParameter;
 
 import net.sf.jasperreports.data.DataAdapterService;
 import net.sf.jasperreports.eclipse.util.Misc;
