@@ -27,6 +27,7 @@ public class ParameterUtil {
 			throws JRException {
 		Map<String, Object> oldmap = jConfig.getJRParameters();
 		try {
+			jConfig.setJRParameters(inmap);
 			ExpressionUtil.initBuiltInParameters(jConfig, null, dataset);
 			Map<String, Object> map = jConfig.getJRParameters();
 			if (map == null) {

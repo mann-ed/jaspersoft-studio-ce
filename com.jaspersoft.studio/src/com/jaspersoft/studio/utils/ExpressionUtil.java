@@ -398,7 +398,7 @@ public class ExpressionUtil {
 				jr = JasperCompileManager.getInstance(jrConfig).compile(jd);
 			}
 		}
-		if (ds == null) {
+		if (ds == null || ds.isMainDataset()) {
 			prms = jrConfig.getJRParameters();
 		}
 		if (prms == null) {
@@ -409,7 +409,6 @@ public class ExpressionUtil {
 			Map<String, Object> newP = JRParameterDefaultValuesEvaluator.evaluateParameterDefaultValues(jrConfig, jr,
 					prms);
 			// if all is ok, let's replace parameters
-			prms.clear();
 			prms.putAll(newP);
 		} catch (JRExpressionEvalException e) {
 			// let's try to eliminate wrong parameters
