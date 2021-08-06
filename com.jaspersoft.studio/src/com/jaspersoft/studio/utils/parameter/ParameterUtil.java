@@ -25,50 +25,7 @@ public class ParameterUtil {
 
 	public static void setParameters(JasperReportsConfiguration jConfig, JRDataset dataset, Map<String, Object> inmap)
 			throws JRException {
-		Map<String, Object> oldmap = jConfig.getJRParameters();
-		try {
-			ExpressionUtil.initBuiltInParameters(jConfig, null, dataset);
-			Map<String, Object> map = jConfig.getJRParameters();
-			if (map == null) {
-				map = new HashMap<>();
-				jConfig.setJRParameters(map);
-			}
-			for (JRParameter p : dataset.getParameters()) {
-				if (!p.isSystemDefined()) {
-					if (map != null && p.isForPrompting()) {
-						Object val = map.get(p.getName());
-						if (val != null) {
-							inmap.put(p.getName(), val);
-							continue;
-						}
-					}
-
-					// if (p.getDefaultValueExpression() != null) {
-					// try {
-					// Object val = p.getValueClass().newInstance();
-					// inmap.put(p.getName(), val);
-					// } catch (InstantiationException e) {
-					// inmap.put(p.getName(), getDefaultInstance(p, jConfig,
-					// dataset));
-					// } catch (IllegalAccessException e) {
-					// inmap.put(p.getName(), getDefaultInstance(p, jConfig,
-					// dataset));
-					// }
-					// } else {
-					// Even if no default value expression was specified, tries
-					// to provide a default value based on class type of the
-					// parameter.
-					if (map.containsKey(p.getName()))
-						inmap.put(p.getName(), map.get(p.getName()));
-					else
-						inmap.put(p.getName(), getDefaultInstance(p, jConfig, dataset));
-					// }
-				}
-			}
-		} finally {
-			if (dataset != null)
-				jConfig.setJRParameters(oldmap);
-		}
+			ExpressionUtil.initBuiltInParameters(jConfig, null, dataset, inmap);
 	}
 
 	@SuppressWarnings("rawtypes")

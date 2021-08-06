@@ -357,12 +357,12 @@ public class ExpressionUtil {
 	}
 
 	public static void initBuiltInParameters(JasperReportsConfiguration jrConfig, JasperReport jr) throws JRException {
-		initBuiltInParameters(jrConfig, jr, null);
+		initBuiltInParameters(jrConfig, jr, null, jrConfig.getJRParameters());
 	}
 
-	public static void initBuiltInParameters(JasperReportsConfiguration jrConfig, JasperReport jr, JRDataset ds)
-			throws JRException {
-		Map<String, Object> prms = null;
+	public static void initBuiltInParameters(JasperReportsConfiguration jrConfig, JasperReport jr, JRDataset ds,
+			Map<String, Object> inmap) throws JRException {
+		Map<String, Object> prms = inmap;
 		if (ds != null) {
 			JasperDesign jd = new JasperDesign();
 			jd.setName(jrConfig.getJasperDesign().getName());
@@ -398,18 +398,13 @@ public class ExpressionUtil {
 				jr = JasperCompileManager.getInstance(jrConfig).compile(jd);
 			}
 		}
-		if (ds == null) {
-			prms = jrConfig.getJRParameters();
-		}
 		if (prms == null) {
 			prms = new HashMap<>();
-			jrConfig.setJRParameters(prms);
 		}
 		try {
 			Map<String, Object> newP = JRParameterDefaultValuesEvaluator.evaluateParameterDefaultValues(jrConfig, jr,
 					prms);
 			// if all is ok, let's replace parameters
-			prms.clear();
 			prms.putAll(newP);
 		} catch (JRExpressionEvalException e) {
 			// let's try to eliminate wrong parameters
@@ -429,7 +424,8 @@ public class ExpressionUtil {
 							np.setValueClass(prm.getValueClass());
 							jd.addParameter(np);
 						}
-						initBuiltInParameters(jrConfig, JasperCompileManager.getInstance(jrConfig).compile(jd));
+						initBuiltInParameters(jrConfig, JasperCompileManager.getInstance(jrConfig).compile(jd), ds,
+								inmap);
 						break;
 					}
 				}

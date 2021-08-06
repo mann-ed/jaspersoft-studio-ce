@@ -35,7 +35,6 @@ import com.jaspersoft.studio.data.fields.IFieldsProvider;
 import com.jaspersoft.studio.property.dataset.dialog.DataQueryAdapters;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.utils.parameter.ParameterUtil;
-import com.jaspersoft.studio.utils.parameter.SimpleValueParameter;
 
 import net.sf.jasperreports.data.DataAdapterService;
 import net.sf.jasperreports.eclipse.util.Misc;
@@ -60,22 +59,20 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 
 	public List<JRDesignField> getFields(DataAdapterService con, JasperReportsConfiguration jConfig, JRDataset jDataset)
 			throws JRException, UnsupportedOperationException {
+		Connection c = null;
+		List<JRDesignField> columns = null;
 		Map<String, Object> parameters = new HashMap<>();
 		con.contributeParameters(parameters);
-
-		ParameterUtil.setParameters(jConfig, jDataset, parameters);
-		parameters.put(JRJdbcQueryExecuterFactory.PROPERTY_JDBC_FETCH_SIZE, 0);
-		parameters.put(JRParameter.REPORT_MAX_COUNT, 1);
-		List<JRDesignField> columns = null;
-		Connection c = null;
 		try {
 			c = (Connection) parameters.get(JRParameter.REPORT_CONNECTION);
+
+			ParameterUtil.setParameters(jConfig, jDataset, parameters);
+			parameters.put(JRJdbcQueryExecuterFactory.PROPERTY_JDBC_FETCH_SIZE, 0);
+			parameters.put(JRParameter.REPORT_MAX_COUNT, 1);
 
 			// JasperReports query executer instances require
 			// REPORT_PARAMETERS_MAP parameter to be defined and not null
 			Map<String, JRValueParameter> tmpMap = ParameterUtil.convertMap(parameters, jDataset);
-			tmpMap.put(JRParameter.REPORT_PARAMETERS_MAP,
-					new SimpleValueParameter(new HashMap<String, JRValueParameter>()));
 
 			QueryExecuterFactory queryExecuterFactory = JRQueryExecuterUtils.getInstance(jConfig)
 					.getExecuterFactory(jDataset.getQuery().getLanguage());
