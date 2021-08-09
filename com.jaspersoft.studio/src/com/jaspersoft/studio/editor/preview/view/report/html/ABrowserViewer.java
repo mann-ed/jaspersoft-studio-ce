@@ -120,7 +120,8 @@ public class ABrowserViewer extends APreview implements IURLViewable {
 				if(isEdgeEnabled) {
 					// It seems the WebView control is needing a kind of resizing/relayouting
 					// if compared to the other "standard" browser (types).
-					browser.getParent().pack();
+					browser.pack(true);
+					container.layout();
 				}
 			}
 		}
