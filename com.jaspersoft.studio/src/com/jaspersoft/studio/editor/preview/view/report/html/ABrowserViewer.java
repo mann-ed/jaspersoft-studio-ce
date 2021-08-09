@@ -42,6 +42,8 @@ public class ABrowserViewer extends APreview implements IURLViewable {
 	private StackLayout stackLayout;
 	private Composite container;
 	private Composite externalBrowserCmp;
+	
+	private boolean isEdgeEnabled;
 
 	public ABrowserViewer(Composite parent, JasperReportsConfiguration jContext) {
 		super(parent, jContext);
@@ -49,6 +51,7 @@ public class ABrowserViewer extends APreview implements IURLViewable {
 			if (browser != null)
 				browser.dispose();
 		});
+		this.isEdgeEnabled = BrowserUtils.isEdgeWebViewEnabled();
 	}
 
 	@Override
@@ -111,8 +114,14 @@ public class ABrowserViewer extends APreview implements IURLViewable {
 					Browser.setCookie(scookie, urlcookie);
 					browser.setUrl(url, null, new String[] { "Accept-Timezone: " + TimeZone.getDefault().getID(),
 							"User-Agent: " + HttpUtils.USER_AGENT_JASPERSOFT_STUDIO });
-				} else
+				} else {
 					browser.setUrl(url);
+				}
+				if(isEdgeEnabled) {
+					// It seems the WebView control is needing a kind of resizing/relayouting
+					// if compared to the other "standard" browser (types).
+					browser.getParent().pack();
+				}
 			}
 		}
 	}
@@ -262,7 +271,7 @@ public class ABrowserViewer extends APreview implements IURLViewable {
 		if(browser!=null) {
 			updateUIForBrowser();
 			if (!useExternalBrowser()) {
-				browser.refresh();			
+				browser.refresh();
 			}
 		}
 	}
