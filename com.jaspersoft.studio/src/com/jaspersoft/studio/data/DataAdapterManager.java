@@ -274,9 +274,9 @@ public class DataAdapterManager {
 		DataAdapterFactory factory = findFactoryByDataAdapterClass(srcDataAdapter.getClass().getName());
 		DataAdapterDescriptor copy = factory.createDataAdapter();
 		copy.setName(src.name);
-		srcDataAdapter = (DataAdapter) CastorUtil.getInstance(jrContext)
+		DataAdapter copyDataAdapter = (DataAdapter) CastorUtil.getInstance(jrContext)
 				.read(new ByteArrayInputStream(src.toXml(jrContext).getBytes()));
-		copy.setDataAdapter(srcDataAdapter);
+		copy.setDataAdapter(copyDataAdapter);
 		return copy;
 	}
 }
