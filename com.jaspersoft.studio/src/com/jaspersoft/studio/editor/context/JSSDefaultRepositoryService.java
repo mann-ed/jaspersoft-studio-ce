@@ -36,9 +36,11 @@ public class JSSDefaultRepositoryService extends DefaultRepositoryService {
 
 	@Override
 	public InputStream getInputStream(RepositoryContext context, String uri) {
-		if (Misc.isNullOrEmpty(uri) || uri.startsWith("repo:"))
+		if (Misc.isNullOrEmpty(uri) || uri.startsWith("repo:")) {
 			return null;
+		}
 		try {
+			// URL resolution
 			URL url = JRResourcesUtil.createURL(uri, urlHandlerFactory);
 			if (url != null) {
 				if (url.getProtocol().equalsIgnoreCase("http") || url.getProtocol().equalsIgnoreCase("https")) {
@@ -59,12 +61,27 @@ public class JSSDefaultRepositoryService extends DefaultRepositoryService {
 				}
 				return JRLoader.getInputStream(url);
 			}
+			// JR related resolution(s)
 			File file = JRResourcesUtil.resolveFile(SimpleRepositoryContext.of(jConf), uri);
-			if (file != null)
+			if (file != null) {
 				return JRLoader.getInputStream(file);
+			}
 			url = JRResourcesUtil.findClassLoaderResource(uri, classLoader);
-			if (url != null)
+			if (url != null) {
 				return JRLoader.getInputStream(url);
+			}
+			// FIXME - We should investigate further if there is a wrong RepositoryContext usage 
+			// or if there is an actual problem on the JR API side
+			// Temporary fallback solution: try resolution of relative paths - #JSS-3137 and Community #13226
+			try {
+				String currentPathLocation = jConf.getAssociatedReportFile().getParent().getLocationURI().toString();
+				File relativeFile = new File(new URI(currentPathLocation+"/"+uri));
+				if(relativeFile.exists()) {
+					return JRLoader.getInputStream(relativeFile);				
+				}
+			} catch (URISyntaxException e) {
+				throw new JRRuntimeException(e);
+			}			
 		} catch (JRException e) {
 			throw new JRRuntimeException(e);
 		}
