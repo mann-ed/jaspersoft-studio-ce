@@ -71,8 +71,6 @@ public class JSSDefaultRepositoryService extends DefaultRepositoryService {
 			if (url != null) {
 				return JRLoader.getInputStream(url);
 			}
-			// FIXME - We should investigate further if there is a wrong RepositoryContext usage 
-			// or if there is an actual problem on the JR API side
 			// Temporary fallback solution: try resolution of relative paths - #JSS-3137 and Community #13226
 			File relativeFile = FileUtils.findFile(jConf.getAssociatedReportFile(), uri);
 			if(relativeFile!=null && relativeFile.exists()) {
