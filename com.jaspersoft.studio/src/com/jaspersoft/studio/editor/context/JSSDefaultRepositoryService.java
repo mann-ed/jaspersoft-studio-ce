@@ -16,6 +16,7 @@ import org.apache.http.client.fluent.Request;
 
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.HttpUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JRException;
@@ -73,15 +74,10 @@ public class JSSDefaultRepositoryService extends DefaultRepositoryService {
 			// FIXME - We should investigate further if there is a wrong RepositoryContext usage 
 			// or if there is an actual problem on the JR API side
 			// Temporary fallback solution: try resolution of relative paths - #JSS-3137 and Community #13226
-			try {
-				String currentPathLocation = jConf.getAssociatedReportFile().getParent().getLocationURI().toString();
-				File relativeFile = new File(new URI(currentPathLocation+"/"+uri));
-				if(relativeFile.exists()) {
-					return JRLoader.getInputStream(relativeFile);				
-				}
-			} catch (URISyntaxException e) {
-				throw new JRRuntimeException(e);
-			}			
+			File relativeFile = FileUtils.findFile(jConf.getAssociatedReportFile(), uri);
+			if(relativeFile!=null && relativeFile.exists()) {
+				return JRLoader.getInputStream(relativeFile);
+			}
 		} catch (JRException e) {
 			throw new JRRuntimeException(e);
 		}
