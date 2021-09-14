@@ -67,8 +67,8 @@ public abstract class AImpObject {
 
 	protected String getFileName(File f) {
 		String fname = f.getName();
-		if (fname.contains("___")) {
-			int ind = fname.indexOf("___");
+		if (fname.contains(FileUtils.TMPCOPY_FILE_PREFIX)) {
+			int ind = fname.indexOf(FileUtils.TMPCOPY_FILE_PREFIX);
 			fname = fname.substring(0, ind);
 		}
 		return fname;
