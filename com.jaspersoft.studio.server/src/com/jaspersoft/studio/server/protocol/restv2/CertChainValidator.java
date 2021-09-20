@@ -14,6 +14,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.SignatureException;
 import java.security.cert.CertPathBuilder;
 import java.security.cert.CertPathValidator;
@@ -55,8 +56,18 @@ public class CertChainValidator {
 			.toCharArray();
 	private static String stype = System.getProperty("javax.net.ssl.trustStoreType"); //$NON-NLS-1$
 
+	/**
+	 * FIXME - This method is used as workaround because of the "faulty"
+	 * Security Provider class found in the TIBCO Progress Google Big Query driver.
+	 * See for the details the related bug: JSS-3175.
+	 */
+	private static void removeFaultySecurityProviders() {
+		Security.removeProvider("DDPKIProvider");
+	}
+	
 	public static KeyStore getDefaultTrustStore()
 			throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+		removeFaultySecurityProviders();
 		stype = System.getProperty("javax.net.ssl.trustStoreType"); //$NON-NLS-1$
 		KeyStore trustStore = KeyStore.getInstance(Misc.isNullOrEmpty(stype) ? KeyStore.getDefaultType() : stype);
 		fname = System.getProperty("javax.net.ssl.trustStore"); //$NON-NLS-1$
