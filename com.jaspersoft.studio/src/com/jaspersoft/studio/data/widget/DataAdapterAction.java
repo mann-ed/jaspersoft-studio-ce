@@ -348,6 +348,8 @@ public class DataAdapterAction extends Action implements IMenuCreator, PropertyC
 	 * @return the selected data adapter
 	 */
 	public DataAdapterDescriptor getSelected() {
-		return selectedDA;
+		// Returning a copy to avoid possible manipulation on the inner data adapter instance
+		// caused by special data adapter services that manipulates the URL or the associated parameters
+		return DataAdapterManager.cloneDataAdapter(selectedDA, editor.getConfiguration());
 	}
 }

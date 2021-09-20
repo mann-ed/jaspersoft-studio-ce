@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
@@ -67,6 +68,7 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.FileExtension;
+import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.engine.JRConditionalStyle;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRSimpleTemplate;
@@ -79,7 +81,10 @@ import net.sf.jasperreports.engine.design.JRDesignReportTemplate;
 import net.sf.jasperreports.engine.design.JRDesignScriptlet;
 import net.sf.jasperreports.engine.design.JRDesignSubreport;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.repo.RepositoryContext;
 import net.sf.jasperreports.repo.RepositoryUtil;
+import net.sf.jasperreports.repo.SimpleRepositoryContext;
+import net.sf.jasperreports.repo.SimpleRepositoryResourceContext;
 
 /*
  * The Class ReportContainer.
@@ -528,6 +533,11 @@ public class ReportContainer extends MultiPageToolbarEditorPart
 				return;
 			}
 			if (obj instanceof JRDesignSubreport) {
+				IFile file = (IFile) jrContext.get(FileUtils.KEY_FILE);
+				String parentPath = file.getParent().getLocation().toFile().getAbsolutePath();
+				SimpleRepositoryResourceContext context = SimpleRepositoryResourceContext.of(parentPath);
+				RepositoryContext repoContext = SimpleRepositoryContext.of(jrContext, context);
+				RepositoryUtil ru = RepositoryUtil.getInstance(repoContext);
 				if (getEditorInput() instanceof FileEditorInput) {
 					JRDesignSubreport s = (JRDesignSubreport) obj;
 					if (s.getExpression() != null) {
@@ -535,7 +545,7 @@ public class ReportContainer extends MultiPageToolbarEditorPart
 						if (path != null) {
 							String fpath = path.replaceAll("\\.jasper$", FileExtension.PointJRXML);
 							try {
-								RepositoryUtil.getInstance(jrContext).getBytesFromLocation(fpath);
+								ru.getBytesFromLocation(fpath);
 							} catch (JRException e) {
 								if (e.getMessage().startsWith("Byte data not found at:")
 										&& s.getExpression().getText().trim().contains("$P{SUBREPORT_DIR}")) {
@@ -545,11 +555,11 @@ public class ReportContainer extends MultiPageToolbarEditorPart
 									if (p != null) {
 										fpath = p.replaceAll("\\.jasper$", FileExtension.PointJRXML);
 										try {
-											RepositoryUtil.getInstance(jrContext).getBytesFromLocation(fpath);
+											ru.getBytesFromLocation(fpath);
 										} catch (JRException e1) {
 											e1.printStackTrace();
 											try {
-												RepositoryUtil.getInstance(jrContext).getBytesFromLocation(p);
+												ru.getBytesFromLocation(p);
 												if (!UIUtils.showConfirmation("Subreport File",
 														String.format(
 																"File %s does not exists, do you want to open %s?",
@@ -565,7 +575,7 @@ public class ReportContainer extends MultiPageToolbarEditorPart
 								} else {
 									e.printStackTrace();
 									try {
-										RepositoryUtil.getInstance(jrContext).getBytesFromLocation(path);
+										ru.getBytesFromLocation(path);
 										if (!UIUtils.showConfirmation("Subreport File", String.format(
 												"File %s does not exists, do you want to open %s?", fpath, path)))
 											return;

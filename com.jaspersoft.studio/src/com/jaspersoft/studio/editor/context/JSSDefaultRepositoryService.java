@@ -16,6 +16,7 @@ import org.apache.http.client.fluent.Request;
 
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.HttpUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JRException;
@@ -36,9 +37,11 @@ public class JSSDefaultRepositoryService extends DefaultRepositoryService {
 
 	@Override
 	public InputStream getInputStream(RepositoryContext context, String uri) {
-		if (Misc.isNullOrEmpty(uri) || uri.startsWith("repo:"))
+		if (Misc.isNullOrEmpty(uri) || uri.startsWith("repo:")) {
 			return null;
+		}
 		try {
+			// URL resolution
 			URL url = JRResourcesUtil.createURL(uri, urlHandlerFactory);
 			if (url != null) {
 				if (url.getProtocol().equalsIgnoreCase("http") || url.getProtocol().equalsIgnoreCase("https")) {
@@ -59,12 +62,20 @@ public class JSSDefaultRepositoryService extends DefaultRepositoryService {
 				}
 				return JRLoader.getInputStream(url);
 			}
+			// JR related resolution(s)
 			File file = JRResourcesUtil.resolveFile(SimpleRepositoryContext.of(jConf), uri);
-			if (file != null)
+			if (file != null) {
 				return JRLoader.getInputStream(file);
+			}
 			url = JRResourcesUtil.findClassLoaderResource(uri, classLoader);
-			if (url != null)
+			if (url != null) {
 				return JRLoader.getInputStream(url);
+			}
+			// Temporary fallback solution: try resolution of relative paths - #JSS-3137 and Community #13226
+			File relativeFile = FileUtils.findFile(jConf.getAssociatedReportFile(), uri);
+			if(relativeFile!=null && relativeFile.exists()) {
+				return JRLoader.getInputStream(relativeFile);
+			}
 		} catch (JRException e) {
 			throw new JRRuntimeException(e);
 		}
