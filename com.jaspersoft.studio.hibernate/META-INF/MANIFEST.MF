@@ -6,7 +6,7 @@ Bundle-SymbolicName: com.jaspersoft.studio.hibernate;singleton:=true
 Bundle-Version: 5.4.24.final
 Bundle-Activator: com.jaspersoft.studio.hibernate.HibernateActivator
 Bundle-Vendor: %Bundle-Vendor
-Require-Bundle: com.jaspersoft.studio;bundle-version="6.17.0"
+Require-Bundle: com.jaspersoft.studio;bundle-version="7.10.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.jaspersoft.studio.hibernate
 Bundle-ActivationPolicy: lazy
