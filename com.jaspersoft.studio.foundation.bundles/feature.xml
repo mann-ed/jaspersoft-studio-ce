@@ -72,7 +72,7 @@
          id="com.jaspersoft.studio.bundles.itext"
          download-size="0"
          install-size="0"
-         version="2.1.7.js8_b01"/>
+         version="2.1.7.js9_b01"/>
 
    <plugin
          id="joda-time"
@@ -107,13 +107,6 @@
          download-size="0"
          install-size="0"
          version="3.1.0.b01"
-         unpack="false"/>
-
-   <plugin
-         id="com.jaspersoft.studio.bundles.bouncycastle"
-         download-size="0"
-         install-size="0"
-         version="1.64.0.jdk15on-b01"
          unpack="false"/>
 
    <plugin
@@ -281,6 +274,34 @@
          download-size="0"
          install-size="0"
          version="1.10.11.v20210720-1445"
+         unpack="false"/>
+
+   <plugin
+         id="org.bouncycastle.bcpg"
+         download-size="0"
+         install-size="0"
+         version="1.69.0.v20210713-1924"
+         unpack="false"/>
+
+   <plugin
+         id="org.bouncycastle.bcpkix"
+         download-size="0"
+         install-size="0"
+         version="1.69.0.v20210713-1924"
+         unpack="false"/>
+
+   <plugin
+         id="org.bouncycastle.bcprov"
+         download-size="0"
+         install-size="0"
+         version="1.69.0.v20210713-1924"
+         unpack="false"/>
+
+   <plugin
+         id="org.bouncycastle.bcutil"
+         download-size="0"
+         install-size="0"
+         version="1.69.0.v20210713-1924"
          unpack="false"/>
 
 </feature>
