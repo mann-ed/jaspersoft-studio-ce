@@ -24,8 +24,8 @@ Special thanks to all people who support this software.
 --launcher.defaultAction openFile</programArgs>
       <vmArgs>-Xms128m
 -Xmx1024m
--XX:+UseG1GC
--XX:+UseStringDeduplication
+-XX:+CMSClassUnloadingEnabled
+-XX:+UseConcMarkSweepGC
 -Dfile.encoding=UTF-8
 -Djava.net.preferIPv4Stack=true
 -Ddeployment.security.TLSv1.1=true
