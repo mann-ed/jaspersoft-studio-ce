@@ -90,11 +90,9 @@ public class DBMetadata {
 		mcmp.setLayout(new GridLayout());
 
 		msg = new Label(mcmp, SWT.WRAP | SWT.CENTER);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.verticalAlignment = SWT.CENTER;
-		gd.grabExcessVerticalSpace = true;
-		gd.horizontalAlignment = SWT.CENTER;
-		gd.horizontalIndent = 20;
+		GridData gd = new GridData(SWT.FILL,SWT.CENTER,true,true);
+		gd.minimumHeight = 100;
+		gd.minimumWidth = 200;
 		msg.setLayoutData(gd);
 		msg.setText(Messages.DBMetadata_0);
 		msg.addMouseListener(new MouseAdapter() {
@@ -514,6 +512,20 @@ public class DBMetadata {
 		return true;
 	}
 
+	/**
+	 * Updates the text message (if available) in the metadata panel.
+	 */
+	public void updateMessageText(String newText) {
+		UIUtils.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				if(msg!=null && !msg.isDisposed()) {
+					msg.setText(newText);
+				}
+			}
+		});
+	}
+	
 	protected void updateItermediateUI() {
 		updateItermediateUI(true);
 	}

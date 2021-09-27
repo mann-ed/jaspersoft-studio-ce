@@ -113,6 +113,8 @@ public class Messages extends NLS {
 	public static String OrderByDesc_2;
 	public static String SelectDistinct_0;
 	public static String SQLQueryDesigner_diagram;
+	public static String SQLQueryDesigner_MetadataLoadingAlwaysDisabledMsg;
+	public static String SQLQueryDesigner_MetadataLoadingDisabledOnOpenMsg;
 	public static String SQLQueryDesigner_outline;
 	public static String SQLQueryDesigner_readmetadata;
 	public static String SQLQueryDesigner_text;
@@ -138,8 +140,14 @@ public class Messages extends NLS {
 	public static String SQLEditorPreferencesPage_7;
 	public static String SQLEditorPreferencesPage_8;
 	public static String SQLEditorPreferencesPage_9;
+	public static String SQLEditorPreferencesPage_AvoidInitialMetadataLoading;
 	public static String SQLEditorPreferencesPage_comboLabel;
 	public static String SQLEditorPreferencesPage_dialogTitle;
+	public static String SQLEditorPreferencesPage_FullyAvoidMetadataLoading;
+	public static String SQLEditorPreferencesPage_MetadataDisabledAlwaysOption;
+	public static String SQLEditorPreferencesPage_MetadataLoadingAlwaysOption;
+	public static String SQLEditorPreferencesPage_MetadataLoadingDisabledOnOpeningOption;
+	public static String SQLEditorPreferencesPage_QueryDialogMetadataLoadingText;
 	public static String Text2Model_warn;
 	static {
 		// initialize resource bundle

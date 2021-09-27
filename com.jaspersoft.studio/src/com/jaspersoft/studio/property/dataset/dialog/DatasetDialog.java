@@ -84,6 +84,19 @@ import net.sf.jasperreports.engine.design.JRDesignSortField;
 import net.sf.jasperreports.engine.design.JasperDesign;
 
 public class DatasetDialog extends PersistentLocationFormDialog implements IFieldSetter, IDataPreviewInfoProvider {
+
+	/**
+	 * Utility interface to manage the details of the JDBC Metadata Loading inside the Dataset&Query dialog
+	 */
+	public interface JDBC_METADATA_LOADING {
+		public static final String DISABLED = "ALWAYS_DISABLED"; //$NON-NLS-1$
+		public static final String DISABLED_ON_STARTUP = "DISABLED_ON_STARTUP"; //$NON-NLS-1$
+		public static final String ENABLED = "ALWAYS_ENABLED"; //$NON-NLS-1$
+		public static final String P_JDBC_METADATA_LOADING = "com.jaspersoft.studio.data.sql.prefs.JDBCMETADATALOADING"; //$NON-NLS-1$
+	}
+	
+	private static boolean INITIAL_JDBCMETADATA_LOADING = true;
+	
 	private MDataset mdataset;
 	private JasperReportsConfiguration jConfig;
 	private Map<JRField, JRField> mapfields;
@@ -102,6 +115,7 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 
 	public DatasetDialog(Shell shell, MDataset mdataset, JasperReportsConfiguration jConfig, CommandStack cmdStack) {
 		super(shell);
+		INITIAL_JDBCMETADATA_LOADING = true; // be sure to reset on each dialog opening
 		this.cmdStack = cmdStack;
 		this.mdataset = mdataset;
 		this.jConfig = jConfig;
@@ -119,6 +133,20 @@ public class DatasetDialog extends PersistentLocationFormDialog implements IFiel
 		for (int i = 0; i < oldParamList.size(); i++)
 			mapparam.put(oldParamList.get(i), newParamList.get(i));
 
+	}
+	
+	/**
+	 * Checks the flag indicating if the initial metadata loading (event) has still to occur.
+	 */
+	public static boolean isInitialJDBCMetadataLoading() {
+		return INITIAL_JDBCMETADATA_LOADING;
+	}
+	
+	/**
+	 * Forces the information about the initial metadata loading as performed.
+	 */
+	public static void initialJDBCMetadataPerformed() {
+		INITIAL_JDBCMETADATA_LOADING = false;
 	}
 
 	@Override

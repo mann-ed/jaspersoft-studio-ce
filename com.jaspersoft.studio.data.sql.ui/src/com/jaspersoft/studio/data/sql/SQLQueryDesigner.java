@@ -41,6 +41,7 @@ import com.jaspersoft.studio.data.sql.ui.gef.SQLQueryDiagram;
 import com.jaspersoft.studio.data.sql.ui.metadata.DBMetadata;
 import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.model.util.ModelVisitor;
+import com.jaspersoft.studio.property.dataset.dialog.DatasetDialog;
 import com.jaspersoft.studio.swt.widgets.CSashForm;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.utils.jobs.CheckedRunnableWithProgress;
@@ -276,37 +277,78 @@ public class SQLQueryDesigner extends SimpleSQLQueryDesigner {
 		});
 	}
 
-	public void updateMetadata() {
-		if (da instanceof JDBCDataAdapterDescriptor)
-			try {
-				getRoot().setValue(getjDataset());
-				container.run(true, true, new CheckedRunnableWithProgress() {
-
-					@Override
-					protected void runOperations(IProgressMonitor monitor) {
-						try {
-							runningmonitor = monitor;
-							monitor.beginTask(Messages.SQLQueryDesigner_readmetadata, IProgressMonitor.UNKNOWN);
-							dbMetadata.closeConnection();
-							DataAdapterService das = DataAdapterServiceUtil
-									.getInstance(new ParameterContributorContext(jConfig, null, null))
-									.getService(da.getDataAdapter());
-							dbMetadata.updateMetadata(da, das, monitor);
-						} finally {
-							monitor.done();
-							runningmonitor = null;
-						}
-					}
-				});
-			} catch (InvocationTargetException ex) {
-				container.getQueryStatus().showError(ex.getTargetException());
-				runningmonitor = null;
-				dbMetadata.forceRunningStatus(false);
-			} catch (InterruptedException ex) {
-				container.getQueryStatus().showError(ex);
-				runningmonitor = null;
-				dbMetadata.forceRunningStatus(false);
+	/**
+	 * Checks if the metadata update should be tried. 
+	 */
+	private boolean canUpdateMetadata() {
+		if(jConfig!=null) {
+			String loading = jConfig.getProperty(SQLEditorPreferencesPage.P_JDBC_METADATA_LOADING, DatasetDialog.JDBC_METADATA_LOADING.ENABLED);
+			if(DatasetDialog.isInitialJDBCMetadataLoading()) {
+				return DatasetDialog.JDBC_METADATA_LOADING.ENABLED.equals(loading);
 			}
+			else {
+				return DatasetDialog.JDBC_METADATA_LOADING.ENABLED.equals(loading) || DatasetDialog.JDBC_METADATA_LOADING.DISABLED_ON_STARTUP.equals(loading) ;
+			}
+		}
+		else {
+			// fallback: always show metadata
+			return true;			
+		}
+	}
+	
+	/*
+	 * Refresh the message of the metadata panel.
+	 */
+	private void updateMetadataMessage() {
+		if(jConfig!=null) {
+			String loading = jConfig.getProperty(SQLEditorPreferencesPage.P_JDBC_METADATA_LOADING, DatasetDialog.JDBC_METADATA_LOADING.ENABLED);
+			if(DatasetDialog.JDBC_METADATA_LOADING.DISABLED.equals(loading)) {
+				dbMetadata.updateMessageText(Messages.SQLQueryDesigner_MetadataLoadingAlwaysDisabledMsg);
+			}
+			else if(DatasetDialog.isInitialJDBCMetadataLoading() && DatasetDialog.JDBC_METADATA_LOADING.DISABLED_ON_STARTUP.equals(loading)) {
+				dbMetadata.updateMessageText(Messages.SQLQueryDesigner_MetadataLoadingDisabledOnOpenMsg);
+			}
+		}			
+	}
+	
+	public void updateMetadata() {
+		updateMetadataMessage();
+		if(canUpdateMetadata()) {
+			if (da instanceof JDBCDataAdapterDescriptor) {
+				try {
+					getRoot().setValue(getjDataset());
+					container.run(true, true, new CheckedRunnableWithProgress() {
+	
+						@Override
+						protected void runOperations(IProgressMonitor monitor) {
+							try {
+								runningmonitor = monitor;
+								monitor.beginTask(Messages.SQLQueryDesigner_readmetadata, IProgressMonitor.UNKNOWN);
+								dbMetadata.closeConnection();
+								DataAdapterService das = DataAdapterServiceUtil
+										.getInstance(new ParameterContributorContext(jConfig, null, null))
+										.getService(da.getDataAdapter());
+								dbMetadata.updateMetadata(da, das, monitor);
+							} finally {
+								monitor.done();
+								runningmonitor = null;
+							}
+						}
+					});
+				} catch (InvocationTargetException ex) {
+					container.getQueryStatus().showError(ex.getTargetException());
+					runningmonitor = null;
+					dbMetadata.forceRunningStatus(false);
+				} catch (InterruptedException ex) {
+					container.getQueryStatus().showError(ex);
+					runningmonitor = null;
+					dbMetadata.forceRunningStatus(false);
+				}
+			}
+		}
+		if(DatasetDialog.isInitialJDBCMetadataLoading()) {
+			DatasetDialog.initialJDBCMetadataPerformed();
+		}
 	}
 
 	public SQLQueryOutline getOutline() {
