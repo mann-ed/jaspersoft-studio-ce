@@ -8,17 +8,13 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import net.sf.jasperreports.eclipse.util.FileExtension;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -32,6 +28,8 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.templates.TemplateBundle;
+
+import net.sf.jasperreports.eclipse.util.FileExtension;
 
 public class NewFileCreationWizardPage extends WizardNewFileCreationPage implements ContextData {
 
@@ -239,27 +237,32 @@ public class NewFileCreationWizardPage extends WizardNewFileCreationPage impleme
 	public void storeSettings() {
 		if (getWizard() instanceof JSSWizard && getWizard() != null) {
 			Map<String, Object> settings = ((JSSWizard) getWizard()).getSettings();
-
-			if (settings == null)
+			if (settings == null) {
 				return;
-			IFile file = null;
+			}
 			if (isPageComplete()) {
 				IPath path = getContainerFullPath();
 				String fname = getFileName();
-
 				settings.put(JSSWizard.FILE_PATH, path); // the type is IPath
 				settings.put(JSSWizard.FILE_NAME, fname);
-
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				IResource resource = root.findMember(path);
-				file = ((IContainer) resource).getFile(new Path(fname));
 			} else {
 				settings.remove(JSSWizard.FILE_PATH);
 				settings.remove(JSSWizard.FILE_NAME);
 			}
-			JasperReportsConfiguration jConfig = (JasperReportsConfiguration) settings
-					.get(JSSWizard.JASPERREPORTS_CONFIGURATION);
-			jConfig.init(file);
 		}
+	}
+	
+	@Override
+	public IFile createNewFile() {
+		if (getWizard() instanceof JSSWizard && getWizard() != null) {
+			Map<String, Object> settings = ((JSSWizard) getWizard()).getSettings();
+			if (settings != null) {
+				IFile createdFile = super.createNewFile();
+				JasperReportsConfiguration jConfig = (JasperReportsConfiguration) settings.get(JSSWizard.JASPERREPORTS_CONFIGURATION);
+				jConfig.init(createdFile);
+				return createdFile;
+			}
+		}
+		return super.createNewFile();
 	}
 }
