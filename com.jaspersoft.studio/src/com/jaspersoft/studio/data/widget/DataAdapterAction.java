@@ -348,13 +348,9 @@ public class DataAdapterAction extends Action implements IMenuCreator, PropertyC
 	 * @return the selected data adapter
 	 */
 	public DataAdapterDescriptor getSelected() {
-		// Returning a copy to avoid possible manipulation on the inner data adapter instance
-		// caused by special data adapter services that manipulates the URL or the associated parameters
-		if(selectedDA!=null) {
-			return DataAdapterManager.cloneDataAdapter(selectedDA, editor.getConfiguration());
-		}
-		else {
-			return null;
-		}
+		// FIXME we should investigate further the DA manipulation performed by some DA services
+		// of the PRO drivers. It is reflecting on the in memory instances and therefore especially
+		// on the workspace ones.
+		return selectedDA;
 	}
 }
