@@ -108,11 +108,16 @@ public class JDBCFieldsProvider implements IFieldsProvider {
 										&& Misc.isNullOrEmpty(table))) {
 									ResultSet rsmc = c.getMetaData().getColumns(catalog, schema, table, name);
 									while (rsmc.next()) {
-										if (Misc.isNullOrEmpty(jdbcTypeClass))
+										if (Misc.isNullOrEmpty(jdbcTypeClass)) {
 											jdbcTypeClass = getColumnType(rsmc.getInt("SQL_DATA_TYPE"));
-										if (isSlowMetadataDB)
-											field.setDescription(
-													StringUtils.xmlEncode(rsmc.getString("REMARKS"), null));
+										}
+										if (isSlowMetadataDB) {
+											String remarksStr = rsmc.getString("REMARKS");
+											if(remarksStr != null && !remarksStr.trim().isEmpty()) {
+												field.setDescription(
+														StringUtils.xmlEncode(remarksStr, null));
+											}
+										}
 										break;
 									}
 								}
