@@ -102,6 +102,18 @@ public class DataPreviewTable implements DatasetReaderListener {
 		createControl(parent);
 	}
 
+	// Fix for JSS-3180: we try to make the Toolbar more visible in Mac OS X
+	private ToolBar getRunPreviewToolbar() {
+		if(UIUtils.isMacOSX()) {
+			ToolBar toolbar = new ToolBar(composite, SWT.FLAT | SWT.BORDER);
+			toolbar.setForeground(UIUtils.getDisplay().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+			return toolbar;
+		}
+		else {
+			return new ToolBar(composite, SWT.FLAT); 
+		}
+	}
+	
 	/*
 	 * Creates the widget area.
 	 */
@@ -116,10 +128,9 @@ public class DataPreviewTable implements DatasetReaderListener {
 			}
 		});
 
-		toolbar = new ToolBar(composite, SWT.FLAT);
+		toolbar = getRunPreviewToolbar();
 		final ToolItem itemDrop = new ToolItem(toolbar, SWT.DROP_DOWN);
 		itemDrop.setText(Messages.DataPreviewTable_PreviewButton);
-
 		itemDrop.addSelectionListener(new SelectionAdapter() {
 
 			private Menu dropMenu = null;
