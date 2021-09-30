@@ -20,7 +20,6 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -95,15 +94,12 @@ public class SQLQueryDesigner extends SimpleSQLQueryDesigner {
 	@Override
 	public Control createControl(Composite parent) {
 		sf = new CSashForm(parent, SWT.HORIZONTAL);
-		sf.setLayoutData(new GridData(GridData.FILL_BOTH));
-		sf.setLayout(new GridLayout());
+		sf.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 
 		dbMetadata = new DBMetadata(this);
-		Control c = dbMetadata.createControl(sf);
-		c.setLayoutData(new GridData(GridData.FILL_VERTICAL));
+		dbMetadata.createControl(sf);
 
 		tabFolder = new CTabFolder(sf, SWT.FLAT | SWT.BOTTOM | SWT.BORDER);
-		tabFolder.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
 		createSource(tabFolder);
 		createOutline(tabFolder);

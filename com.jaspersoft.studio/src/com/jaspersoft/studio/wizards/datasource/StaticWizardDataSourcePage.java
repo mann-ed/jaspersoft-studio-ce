@@ -179,7 +179,7 @@ public class StaticWizardDataSourcePage extends JSSWizardRunnablePage {
 
 		composite_editor = new Composite(composite_container, SWT.NONE);
 		composite_editor.setLayout(new StackLayout());
-		GridData gd = new GridData(GridData.FILL_BOTH);
+		GridData gd = new GridData(SWT.FILL,SWT.FILL,true,true);
 		gd.horizontalSpan = 3;
 		composite_editor.setLayoutData(gd);
 
@@ -330,8 +330,13 @@ public class StaticWizardDataSourcePage extends JSSWizardRunnablePage {
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		if (visible)
+		if (visible) {
 			loadSettings();
+			// FIX for JSS-3181: in the latest platform it appears with Mac OS X 
+			// and additional redraw invocation is required to prevent UI glitches
+			// in some corner cases
+			composite_editor.redraw();
+		}
 	}
 
 	@Override
