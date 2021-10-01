@@ -142,13 +142,13 @@
          id="com.jaspersoft.studio.bundles.batik"
          download-size="0"
          install-size="0"
-         version="1.11.0.b02"/>
+         version="1.14.0.b01"/>
 
    <plugin
          id="com.jaspersoft.studio.bundles.jackson"
          download-size="0"
          install-size="0"
-         version="2.10.0.b02"
+         version="2.11.4.b01"
          unpack="false"/>
 
    <plugin
