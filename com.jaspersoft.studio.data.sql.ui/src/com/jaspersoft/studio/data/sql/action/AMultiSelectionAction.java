@@ -17,8 +17,9 @@ public abstract class AMultiSelectionAction extends AAction {
 	@Override
 	public boolean calculateEnabled(Object[] selection) {
 		super.calculateEnabled(selection);
-		if (selection == null)
+		if (selection == null || selection.length==0) {
 			return false;
+		}
 		else {
 			for (Object s : selection) {
 				s = convertObject(s);
