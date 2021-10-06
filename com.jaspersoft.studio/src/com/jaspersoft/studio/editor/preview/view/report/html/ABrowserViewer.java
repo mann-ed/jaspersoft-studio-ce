@@ -73,7 +73,7 @@ public class ABrowserViewer extends APreview implements IURLViewable {
 
 					@Override
 					protected int computeWidth(Control control) {
-						return Math.max(200, getUrlWidth(control.getParent()) - 250);
+						return Math.max(200, getUrlWidth(control.getParent()) - 320);
 					}
 				};
 			tmanager.add(urlBar);

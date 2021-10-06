@@ -23,15 +23,11 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
@@ -228,17 +224,22 @@ public class PreviewContainer extends PreviewJRPrint implements IDataAdapterRunn
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
-
 		container.setLayout(new GridLayout(1, false));
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, "com.jaspersoft.studio.doc.editor_preview"); //$NON-NLS-1$
 
 		Composite toolbarContainer = new Composite(container, SWT.NONE);
+		toolbarContainer.setLayout(new GridLayout(3,false));
 		GridData additionalToolbarGD = new GridData(SWT.FILL, SWT.TOP, true, false);
 		toolbarContainer.setLayoutData(additionalToolbarGD);
+				
 		getDataAdapterToolBarManager(toolbarContainer);
+		this.dataDapterToolBarManager.getTopToolBar().setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		
 		getActionToolBarManager(toolbarContainer);
+		this.actionToolBarManager.getTopToolBar().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 		final Button lbutton = new Button(toolbarContainer, SWT.PUSH);
+		lbutton.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false, false));
 		lbutton.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/application-sidebar-expand.png")); //$NON-NLS-1$
 		lbutton.setToolTipText(Messages.PreviewContainer_buttonText);
 		lbutton.addSelectionListener(new SelectionAdapter() {
@@ -248,56 +249,11 @@ public class PreviewContainer extends PreviewJRPrint implements IDataAdapterRunn
 			}
 		});
 
-		// The toolbar container uses a custom layout to have always the data adapter
-		// toolbar at full size on
-		// the start, the parameter button on the end and to give the remaining space to
-		// the action toolbar,
-		// that eventually will be able to resize and go down. The action toolbar will
-		// be always 100 at least
-		toolbarContainer.setLayout(new Layout() {
-
-			@Override
-			protected void layout(Composite composite, boolean flushCache) {
-				Control[] children = composite.getChildren();
-				int spacing = 5;
-				Point daToolbarSize = children[0].computeSize(SWT.DEFAULT, SWT.DEFAULT, flushCache);
-				Point buttonSize = children[2].computeSize(SWT.DEFAULT, SWT.DEFAULT, flushCache);
-				Rectangle parentSize = composite.getClientArea();
-				int actionToolbarWidth = Math.max(100, parentSize.width - daToolbarSize.x - buttonSize.x - spacing);
-				Point actionToolbarSize = children[1].computeSize(actionToolbarWidth, SWT.DEFAULT, flushCache);
-				int offestX = 0;
-				children[0].setBounds(0, 0, daToolbarSize.x, daToolbarSize.y);
-				offestX += daToolbarSize.x + spacing;
-				children[1].setBounds(offestX, 0, actionToolbarWidth, actionToolbarSize.y);
-				int buttonStart = parentSize.width - buttonSize.x;
-				int remainingSpace = parentSize.width - (actionToolbarWidth + offestX);
-				if (remainingSpace < buttonSize.x) {
-					buttonStart = actionToolbarWidth + offestX + spacing;
-				}
-				children[2].setBounds(buttonStart, 0, buttonSize.x, buttonSize.y);
-			}
-
-			@Override
-			protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {
-				Control[] children = composite.getChildren();
-				Point daToolbarSize = children[0].computeSize(SWT.DEFAULT, SWT.DEFAULT, flushCache);
-				Point buttonSize = children[2].computeSize(SWT.DEFAULT, SWT.DEFAULT, flushCache);
-				Rectangle parentSize = composite.getClientArea();
-				int width = Math.max(100, parentSize.width - daToolbarSize.x - buttonSize.x);
-				Point actionToolbarSize = children[1].computeSize(width, SWT.DEFAULT, flushCache);
-				int height = Math.max(daToolbarSize.y, Math.max(buttonSize.y, actionToolbarSize.y));
-				return new Point(width + daToolbarSize.x + buttonSize.x, height);
-			}
-		});
-
 		sashform = new CSashForm(container, SWT.HORIZONTAL);
-		GridData gd = new GridData(GridData.FILL_BOTH);
+		GridData gd = new GridData(SWT.FILL,SWT.FILL,true,true);
 		sashform.setLayoutData(gd);
-
 		createLeft(parent, sashform);
-
 		createRight(sashform);
-
 		sashform.setWeights(new int[] { 40, 60 });
 	}
 

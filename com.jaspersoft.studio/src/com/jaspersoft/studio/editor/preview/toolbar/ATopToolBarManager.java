@@ -34,8 +34,8 @@ public abstract class ATopToolBarManager {
 	protected ToolBar topToolBar;
 
 	protected void createToolBar(Composite parent) {
-		topToolBar = new ToolBar(parent, SWT.FLAT | SWT.WRAP | SWT.RIGHT | SWT.HORIZONTAL);
-		tbManager = new ToolBarManager(topToolBar);
+		tbManager = new ToolBarManager( SWT.FLAT | SWT.HORIZONTAL | SWT.RIGHT);
+		topToolBar = ((ToolBarManager)tbManager).createControl(parent);
 		removeAll();
 		fillToolbar(tbManager);
 
