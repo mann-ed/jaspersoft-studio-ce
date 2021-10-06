@@ -61,14 +61,14 @@ public class SWTViewer extends APreview implements IJRPrintable, IPreferencePage
 	@Override
 	protected Control createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
+		GridLayout layout = new GridLayout(1,false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		composite.setLayout(layout);
 
 		rptviewer = new ReportViewer(jContext);
 		Control ctrl = rptviewer.createControl(composite);
-		ctrl.setLayoutData(new GridData(GridData.FILL_BOTH));
+		ctrl.setLayoutData(new GridData(SWT.FILL, SWT.FILL,true,true));
 
 		return composite;
 	}

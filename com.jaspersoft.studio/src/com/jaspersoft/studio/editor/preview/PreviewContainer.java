@@ -17,7 +17,6 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
@@ -55,7 +54,6 @@ import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.messages.MessagesByKeys;
 import com.jaspersoft.studio.preferences.util.PreferencesUtils;
 import com.jaspersoft.studio.statistics.UsageStatisticsIDs;
-import com.jaspersoft.studio.swt.toolbar.ToolItemContribution;
 import com.jaspersoft.studio.swt.widgets.CSashForm;
 import com.jaspersoft.studio.utils.JRXMLUtils;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
@@ -311,7 +309,7 @@ public class PreviewContainer extends PreviewJRPrint implements IDataAdapterRunn
 
 	protected void createLeft(Composite parent, SashForm sf) {
 		Composite leftComposite = new Composite(sf, SWT.BORDER);
-		GridLayout layout = new GridLayout();
+		GridLayout layout = new GridLayout(1,false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		leftComposite.setLayout(layout);
@@ -321,31 +319,27 @@ public class PreviewContainer extends PreviewJRPrint implements IDataAdapterRunn
 
 		final Composite cleftcompo = new Composite(leftComposite, SWT.NONE);
 		cleftcompo.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		cleftcompo.setLayoutData(new GridData(GridData.FILL_BOTH));
+		cleftcompo.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 		cleftcompo.setLayout(new StackLayout());
 
 		Composite bottom = new Composite(leftComposite, SWT.NONE);
-		bottom.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
-		bottom.setLayout(new GridLayout(2, false));
+		bottom.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
+		bottom.setLayout(new GridLayout(1,false));
 
-		ToolBar tb = new ToolBar(bottom, SWT.FLAT | SWT.WRAP | SWT.RIGHT);
-		ToolBarManager tbm = new ToolBarManager(tb);
-		tbm.add(new RunStopAction(this));
-		ToolItemContribution tireset = new ToolItemContribution("", SWT.PUSH); //$NON-NLS-1$
-		tbm.add(tireset);
-		tbm.update(true);
-		ToolItem toolItem = tireset.getToolItem();
+		ToolBar tb = new ToolBar(bottom, SWT.FLAT | SWT.RIGHT | SWT.HORIZONTAL);
+		tb.setLayoutData(new GridData(SWT.CENTER,SWT.FILL,true,false));
+		ActionContributionItem runStopToolItem = new ActionContributionItem(new RunStopAction(this));
+		runStopToolItem.fill(tb, 0);
+		ToolItem toolItem = new ToolItem(tb, SWT.PUSH);
 		toolItem.setText(Messages.PreviewContainer_resetactiontitle);
 		toolItem.setToolTipText(Messages.PreviewContainer_resetactiontooltip);
 		toolItem.addSelectionListener(new SelectionAdapter() {
-
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				reportControler.resetParametersToDefault();
 			}
-
 		});
-		tbm.update(true);
+		tb.pack();
 
 		getLeftContainer().populate(cleftcompo, getReportControler().createControls(cleftcompo));
 		getLeftContainer().switchView(null, ReportController.FORM_PARAMETERS);
