@@ -8,9 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.viewer.BrowserUtils;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -26,9 +23,12 @@ import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AFileResource;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MReference;
-import com.jaspersoft.studio.server.model.MResourceBundle;
+import com.jaspersoft.studio.server.model.MReportUnit;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.utils.ReferenceResolver;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.viewer.BrowserUtils;
 
 public class OpenInBrowserAction extends Action {
 	private static final String ID = "OPENINBROWSER"; //$NON-NLS-1$
@@ -47,9 +47,24 @@ public class OpenInBrowserAction extends Action {
 	public boolean isEnabled() {
 		TreeSelection treeSelection = (TreeSelection) treeViewer.getSelection();
 		Object firstElement = treeSelection.getFirstElement();
-		return treeSelection.size() == 1
-				&& ((firstElement instanceof AMResource || firstElement instanceof MServerProfile)
-						&& !(firstElement instanceof AFileResource));
+		return treeSelection.size() == 1 && isResourceOpenable(firstElement);
+	}
+	
+	private boolean isResourceOpenable(Object selectedEl) {
+		if(selectedEl instanceof MReportUnit) {
+			//dedicated check: MReportUnit is actually a subclass of AFileResource
+			return true;
+		}
+		else if(selectedEl instanceof MServerProfile) {
+			//the server entry in the repository explorer
+			return true;
+		}
+		else if(selectedEl instanceof AMResource && !(selectedEl instanceof AFileResource)) {
+			//all generic resources not "file" like (see #JS-60178)
+			return true;
+		}
+		// fallback
+		return false;
 	}
 
 	@Override
