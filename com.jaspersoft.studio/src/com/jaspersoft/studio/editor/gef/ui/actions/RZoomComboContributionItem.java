@@ -16,6 +16,8 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -154,7 +156,18 @@ public class RZoomComboContributionItem  extends ContributionItem implements Zoo
 	 * @return the new control
 	 */
 	protected Control createControl(Composite parent) {
-		combo = new Combo(parent, SWT.DROP_DOWN);
+		// NOTE: we use a container composite in order prevent a buggy behavior as shown
+		// in the following bug (Windows issue) - https://bugs.eclipse.org/bugs/show_bug.cgi?id=48905
+		Composite comboComp = new Composite(parent,SWT.NONE);
+		GridLayout comboCompL = new GridLayout();
+		comboCompL.horizontalSpacing=0;
+		comboCompL.verticalSpacing=0;
+		comboCompL.marginHeight=0;
+		comboCompL.marginWidth=0;
+		comboComp.setLayout(comboCompL);
+		combo = new Combo(comboComp, SWT.DROP_DOWN);
+		GridData comboGD = new GridData(SWT.FILL,SWT.CENTER,true,true);
+		combo.setLayoutData(comboGD);
 		combo.addSelectionListener(new SelectionListener() {
 			
 			public void widgetSelected(SelectionEvent e) {
@@ -178,9 +191,9 @@ public class RZoomComboContributionItem  extends ContributionItem implements Zoo
 
 		// Initialize width of combo
 		combo.setItems(initStrings);
-		toolitem.setWidth(computeWidth(combo));
+		toolitem.setWidth(computeWidth(comboComp));
 		refresh(true);
-		return combo;
+		return comboComp;
 	}
 
 	/**

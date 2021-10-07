@@ -34,9 +34,10 @@ public class TFContainer extends Composite {
 		layout.verticalSpacing = 0;
 		setLayout(layout);
 
-		toolBar = new ToolBar(this, SWT.HORIZONTAL | SWT.FLAT | SWT.WRAP | SWT.RIGHT);
+		toolBar = new ToolBar(this, SWT.HORIZONTAL | SWT.FLAT | SWT.RIGHT);
+		toolBar.setLayoutData(new GridData(SWT.FILL,SWT.CENTER,true,false));
 		
-		additionalToolbar = new ToolBar(this, SWT.HORIZONTAL | SWT.FLAT | SWT.WRAP | SWT.RIGHT);
+		additionalToolbar = new ToolBar(this, SWT.HORIZONTAL | SWT.FLAT | SWT.RIGHT);
 		GridData additionalToolbarGD = new GridData(SWT.RIGHT, SWT.CENTER, true, false);
 		additionalToolbar.setLayoutData(additionalToolbarGD);
 		additionalToolbarManager = new ToolBarManager(additionalToolbar);
