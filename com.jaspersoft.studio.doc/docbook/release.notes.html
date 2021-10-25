@@ -4,6 +4,31 @@
 <h1>Jaspersoft Studio Release Notes</h1>
 <hr/>
 <pre>
+Jaspersoft Studio version 6.18.0 (2021-10-27)
+--------------------------------------------
+- Full support for JasperReports Library 6.18.0
+
+- RCP version is now based on Eclipse 4.21 platform
+
+- Updated Batik library to version 1.14
+
+- Updated BouncyCastle library to version 1.69
+
+- Updated iText library to version 2.1.7.js9
+
+- Updated Jackson Library to version 2.11.4
+
+- Support for the usage of Microsoft Edge browser instead of Internet Explorer 11
+	- Microsoft Edge WebView2 Runtime (Fixed version x64) - https://developer.microsoft.com/en-us/microsoft-edge/webview2/
+	- Need to properly setup the following properties in the Jaspersoft Studio.ini file
+		>  -Dorg.eclipse.swt.browser.DefaultType=edge
+		>  -Dorg.eclipse.swt.browser.EdgeDir=C:\\<target_location_for_webdev>
+	- How do I explicitly use Edge as the Browser's underlying renderer? - https://www.eclipse.org/swt/faq.php#howuseedge
+	- What configuration options are available for the Edge renderer? - https://www.eclipse.org/swt/faq.php#howuseedgeoptions
+	- What are the limitations of the Edge Browser renderer? - https://www.eclipse.org/swt/faq.php#edgelimitations
+
+- Minor and major bug fixes
+
 Jaspersoft Studio version 6.17.0 (2021-05-13)
 --------------------------------------------
 - Full support for JasperReports Library 6.17.0
