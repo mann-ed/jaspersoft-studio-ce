@@ -78,6 +78,8 @@ import com.jaspersoft.studio.swt.widgets.ResizableToolItem;
 import com.jaspersoft.studio.utils.AContributorAction;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+
 public class JRBookDesignEditor extends AGraphicEditor {
 
 	/**
@@ -446,4 +448,13 @@ public class JRBookDesignEditor extends AGraphicEditor {
 		}
 	}
 
+	@Override
+	public void setFocus() {
+		super.setFocus();
+		if(UIUtils.isMacOSX()) {
+			// forces a redraw since we noticed glitches (i.e black canvas or screwed up)
+			// with the most recent version of Mac OS X
+			getGraphicalViewer().getControl().redraw();
+		}
+	}
 }
