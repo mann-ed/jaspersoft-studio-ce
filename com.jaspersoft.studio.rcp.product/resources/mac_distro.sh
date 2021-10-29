@@ -57,6 +57,9 @@ then
   exit 1
 fi
 
+# Try to remove a possible "junk" entitlements.xml file (used for signing)
+rm -fr "/Volumes/TIBCO Jaspersoft Studio/entitlement.xml"
+
 # Fix icons position....
 echo '
    tell application "Finder"
@@ -82,7 +85,6 @@ echo '
      end tell
    end tell
 ' | osascript
-
 
 
 # Unmount the Jaspersoft Studio image
