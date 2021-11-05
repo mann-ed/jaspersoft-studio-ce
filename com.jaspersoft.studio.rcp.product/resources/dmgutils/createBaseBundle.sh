@@ -1,5 +1,5 @@
 # 1. Create a sparse bundle image
-hdiutil create -ov  -size 700m -type SPARSEBUNDLE -volname "TIBCO Jaspersoft Studio" -fs "Journaled HFS+" -attach jaspersoftstudio.dmg
+hdiutil create -ov  -size 2500m -type SPARSEBUNDLE -volname "TIBCO Jaspersoft Studio" -fs "Journaled HFS+" -attach jaspersoftstudio.dmg
 
 ## 2. Copy the icon of the volume (jssbox.icns)
 cp jssbox.icns "/Volumes/TIBCO Jaspersoft Studio/.VolumeIcon.icns"
@@ -14,7 +14,9 @@ ln -s /Applications "/Volumes/TIBCO Jaspersoft Studio/Applications"
 SetFile -a C "/Volumes/TIBCO Jaspersoft Studio/"
 
 ## 6. Set the icon for the Jaspersoft Studio folder... (SetIcon is a self made command)
-SetIcon -i jssfolder.icns "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio/"
+## Might need to get the package from https://github.com/sveinbjornt/osxiconutils
+## seticon jssfolder.icns "/Volumes/Jaspersoft Studio/Jaspersoft Studio/"
+seticon jaspersoftstudio.icns "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio/"
 
 ## 7. Copy the background to the volume
 cp -Rf jss-package-background.png  "/Volumes/TIBCO Jaspersoft Studio/"
