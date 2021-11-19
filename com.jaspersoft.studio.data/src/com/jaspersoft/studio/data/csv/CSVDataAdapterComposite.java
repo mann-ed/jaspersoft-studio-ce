@@ -691,7 +691,7 @@ public class CSVDataAdapterComposite extends AFileDataAdapterComposite {
 		CsvDataAdapter csvDataAdapter = (CsvDataAdapter) dataAdapterDesc.getDataAdapter();
 
 		csvDataAdapter.setQueryExecuterMode(btnCheckQEMode.getSelection());
-
+		csvDataAdapter.setUseFirstRowAsHeader(btnCheckSkipFirstLine.getSelection());
 		csvDataAdapter.setColumnNames(rows);
 
 		csvDataAdapter.setDatePattern(dnf.getTextDatePattern());
@@ -905,7 +905,6 @@ public class CSVDataAdapterComposite extends AFileDataAdapterComposite {
 		tableViewer.refresh();
 		setTableSelection(-1);
 		btnDelete.setEnabled(true);
-		btnCheckSkipFirstLine.setSelection(true);
 		pchangesuport.firePropertyChange("dirty", false, true);
 		ds.close();
 	}
