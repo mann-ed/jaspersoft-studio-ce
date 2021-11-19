@@ -1157,6 +1157,7 @@ public class Messages extends NLS {
 	public static String JRVersionPathDialog_1;
 	public static String JRVersionPathDialog_2;
 	public static String JRVersionPathDialog_3;
+	public static String JRVersionPathDialog_description;
 	public static String JRVersionPreferencesPages_3;
 	public static String JRVersionPreferencesPages_4;
 	public static String JRVersionPreferencesPages_5;

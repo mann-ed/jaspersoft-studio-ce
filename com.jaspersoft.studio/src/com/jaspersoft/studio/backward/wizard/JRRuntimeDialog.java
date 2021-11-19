@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -116,31 +115,6 @@ public class JRRuntimeDialog extends ATitledDialog {
 		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		gd.widthHint = 140;
 		c.setLayoutData(gd);
-
-		Button bUrl = new Button(c, SWT.PUSH);
-		bUrl.setText(Messages.JRVersionPage_3);
-		bUrl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-		bUrl.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				JRDefinition value = new JRDefinition("", ""); //$NON-NLS-1$ //$NON-NLS-2$
-				WizardDialog d = new WizardDialog(UIUtils.getShell(), new JRRuntimeURLWizard(value)) {
-					@Override
-					protected void createButtonsForButtonBar(Composite parent) {
-						super.createButtonsForButtonBar(parent);
-						getButton(IDialogConstants.FINISH_ID).setText(Messages.JRRuntimeDialog_2);
-					}
-				};
-				d.setPageSize(800, 40);
-				if (d.open() == Dialog.OK) {
-					setVersion(value);
-					viewer.refresh();
-					viewer.setSelection(new StructuredSelection(value));
-					viewer.reveal(value);
-					save();
-				}
-			}
-		});
 
 		Button bPath = new Button(c, SWT.PUSH);
 		bPath.setText(Messages.JRVersionPage_4);
