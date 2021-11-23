@@ -124,10 +124,12 @@ public class JRRuntimeDialog extends ATitledDialog {
 			public void widgetSelected(SelectionEvent e) {
 				JRVersionPathDialog d = new JRVersionPathDialog(parent.getShell(), new JRDefinition("", "")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (d.open() == Dialog.OK) {
-					setVersion(d.getValue());
+					JRDefinition newDefinition = d.getValue();
+					setVersion(newDefinition);
 					viewer.refresh();
-					viewer.setSelection(new StructuredSelection(d.getValue()));
-					viewer.reveal(d.getValue());
+					viewer.setSelection(new StructuredSelection(newDefinition));
+					viewer.reveal(newDefinition);
+					JRBackwardManager.copyJRToolkitUtility(new File(newDefinition.getResourceURL()));
 					save();
 				}
 			}
