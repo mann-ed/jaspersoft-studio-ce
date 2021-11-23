@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -117,31 +116,6 @@ public class JRRuntimeDialog extends ATitledDialog {
 		gd.widthHint = 140;
 		c.setLayoutData(gd);
 
-		Button bUrl = new Button(c, SWT.PUSH);
-		bUrl.setText(Messages.JRVersionPage_3);
-		bUrl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-		bUrl.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				JRDefinition value = new JRDefinition("", ""); //$NON-NLS-1$ //$NON-NLS-2$
-				WizardDialog d = new WizardDialog(UIUtils.getShell(), new JRRuntimeURLWizard(value)) {
-					@Override
-					protected void createButtonsForButtonBar(Composite parent) {
-						super.createButtonsForButtonBar(parent);
-						getButton(IDialogConstants.FINISH_ID).setText(Messages.JRRuntimeDialog_2);
-					}
-				};
-				d.setPageSize(800, 40);
-				if (d.open() == Dialog.OK) {
-					setVersion(value);
-					viewer.refresh();
-					viewer.setSelection(new StructuredSelection(value));
-					viewer.reveal(value);
-					save();
-				}
-			}
-		});
-
 		Button bPath = new Button(c, SWT.PUSH);
 		bPath.setText(Messages.JRVersionPage_4);
 		bPath.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
@@ -150,10 +124,12 @@ public class JRRuntimeDialog extends ATitledDialog {
 			public void widgetSelected(SelectionEvent e) {
 				JRVersionPathDialog d = new JRVersionPathDialog(parent.getShell(), new JRDefinition("", "")); //$NON-NLS-1$ //$NON-NLS-2$
 				if (d.open() == Dialog.OK) {
-					setVersion(d.getValue());
+					JRDefinition newDefinition = d.getValue();
+					setVersion(newDefinition);
 					viewer.refresh();
-					viewer.setSelection(new StructuredSelection(d.getValue()));
-					viewer.reveal(d.getValue());
+					viewer.setSelection(new StructuredSelection(newDefinition));
+					viewer.reveal(newDefinition);
+					JRBackwardManager.copyJRToolkitUtility(new File(newDefinition.getResourceURL()));
 					save();
 				}
 			}
