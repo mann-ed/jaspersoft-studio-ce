@@ -49,7 +49,8 @@ public class GlobalPreferencePage extends FieldEditorPreferencePage implements I
 	public static final String JSS_DISABLE_EXPRESSION_EVALUATION = "com.jaspersoft.studio.secure.disableExpression"; //$NON-NLS-1$
 	public static final String JSS_ENABLE_INTERNAL_CONSOLE = "com.jaspersoft.studio.jss.console"; //$NON-NLS-1$
 	public static final String JSS_USE_ALWAYS_EXTERNAL_BROWSER = "com.jaspersoft.studio.jss.browser.external"; //$NON-NLS-1$
-
+	public static final String JSS_CLEANUP_MARKERS_ONSTARTUP = "com.jaspersoft.studio.jss.clean.jrprojects.markers"; //$NON-NLS-1$
+	
 	public static final String JSS_PROPERTIES_VIEW_MODE = "com.jaspersoft.studio.properties.view.mode"; //$NON-NLS-1$
 	public static final String JSS_PROPERTIES_SHOW_SET = "com.jaspersoft.studio.properties.show.set"; //$NON-NLS-1$
 
@@ -138,7 +139,7 @@ public class GlobalPreferencePage extends FieldEditorPreferencePage implements I
 		BooleanFieldEditor useAlwaysExternalBrowser = new BooleanFieldEditor(JSS_USE_ALWAYS_EXTERNAL_BROWSER,
 				Messages.GlobalPreferencePage_UseExternalBrowserCheckbox, getFieldEditorParent());
 		addField(useAlwaysExternalBrowser);
-
+		
 		Label separator2 = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
 		separator2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
 
@@ -152,10 +153,20 @@ public class GlobalPreferencePage extends FieldEditorPreferencePage implements I
 
 		BooleanFieldEditor disableExpressions = new BooleanFieldEditor(JSS_DISABLE_EXPRESSION_EVALUATION,
 				Messages.GlobalPreferencePage_disableExpression, getFieldEditorParent());
-
 		disableExpressions.getDescriptionControl(getFieldEditorParent())
 				.setToolTipText(Messages.GlobalPreferencePage_disableExpressionTooltip);
 		addField(disableExpressions);
+		
+		Label startupSep = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
+		startupSep.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
+		
+		Label startupOptions = new Label(getFieldEditorParent(), SWT.NONE);
+		startupOptions.setText(Messages.GlobalPreferencePage_StartupPrefTitle);
+		startupOptions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
+		
+		BooleanFieldEditor forceMarkersCleanup = new BooleanFieldEditor(JSS_CLEANUP_MARKERS_ONSTARTUP, 
+				Messages.GlobalPreferencePage_ForceCleanupErrorMarkersMsg, getFieldEditorParent());
+		addField(forceMarkersCleanup);
 
 		Label separator3 = new Label(getFieldEditorParent(), SWT.SEPARATOR | SWT.HORIZONTAL);
 		separator3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
@@ -540,6 +551,7 @@ public class GlobalPreferencePage extends FieldEditorPreferencePage implements I
 		store.setDefault(JSS_ENABLE_INTERNAL_CONSOLE, false);
 		store.setDefault(JSS_USE_ALWAYS_EXTERNAL_BROWSER, false);
 		store.setDefault(LOG_ENABLE, false);
+		store.setDefault(JSS_CLEANUP_MARKERS_ONSTARTUP, false);
 	}
 
 	@Override

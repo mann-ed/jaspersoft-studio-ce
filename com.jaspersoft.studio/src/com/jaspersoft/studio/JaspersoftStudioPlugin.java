@@ -201,6 +201,11 @@ public class JaspersoftStudioPlugin extends AbstractJRUIPlugin {
 		// };
 		// extensionsPreloadingJob.setPriority(Job.LONG);
 		// extensionsPreloadingJob.schedule();
+		
+		// Possibly delete markers from JasperReports projects in the workspace
+		if(getInstance().getPreferenceStore().getBoolean(GlobalPreferencePage.JSS_CLEANUP_MARKERS_ONSTARTUP)) {
+			JDTUtils.deleteAllJRProjectMarkers();
+		}
 
 		// JSS console activation (if requested)
 		if (getInstance().getPreferenceStore().getBoolean(GlobalPreferencePage.JSS_ENABLE_INTERNAL_CONSOLE)) {
