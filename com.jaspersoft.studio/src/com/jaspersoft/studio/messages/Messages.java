@@ -1557,6 +1557,8 @@ public class Messages extends NLS {
 	public static String MScriptlet_class_description;
 	public static String MScriptlet_description_description;
 	public static String MScriptlet_name_description;
+	public static String MScriptlet_PropertiesDescriptorDescription;
+	public static String MScriptlet_PropertiesDescriptorMsg;
 	public static String MSortField_name_description;
 	public static String MSortField_order_description;
 	public static String MSortField_typeTitle;

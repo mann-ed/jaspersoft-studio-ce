@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
@@ -82,7 +81,33 @@ import net.sf.jasperreports.properties.PropertyMetadata;
 import net.sf.jasperreports.properties.StandardPropertyMetadata;
 
 public class JRPropertyExpressionPage extends JSSHelpWizardPage {
+	
+	private PropertyExpressionsDTO value;
+	private Table table;
+	private TableViewer tableViewer;
+	private EditButton<PropertyDTO> editButton;
+	private Text searchPropertyText;
+	private ToolBar leftTopToolbar;
+	private ToolBar rightTopToolbar;
+	private ScrolledComposite scrolledCmp;
+	private Composite formComposite;
+	private List<PropertyMetadata> eds;
+	private List<PropertyMetadata> sortedEDS;
+	private Map<String, PropertyMetadata> props = new HashMap<>();
+	
+	private Composite sectionComposite;
+	private boolean refreshing = false;
+	private boolean canceled = false;
+	private String search;
+	private Composite mainPropertiesComposite;
+	private StackLayout mainPropertiesCmpLayout;
+	private Composite tableComposite;
+
+	private boolean added = true;
+	private boolean showExistingProperties = false;	
 	private boolean showExpression = true;
+	private boolean isTableViewMode = false;
+	private boolean forceStandardEditing = false;
 
 	public void setShowExpression(boolean showExpression) {
 		this.showExpression = showExpression;
@@ -106,11 +131,6 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		}
 	}
 
-	private PropertyExpressionsDTO value;
-	private Table table;
-	private TableViewer tableViewer;
-	private EditButton<PropertyDTO> editButton;
-
 	public PropertyExpressionsDTO getValue() {
 		return value;
 	}
@@ -121,8 +141,9 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 			fillTable();
 	}
 
-	protected JRPropertyExpressionPage(String pageName) {
+	protected JRPropertyExpressionPage(String pageName, boolean forceStandardEditing) {
 		super(pageName);
+		this.forceStandardEditing=forceStandardEditing;
 		setTitle(Messages.common_properties);
 		setDescription(Messages.JRPropertyPage_description);
 	}
@@ -148,74 +169,57 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		composite.setLayout(layout);
 		setControl(composite);
 
-		createButtons(composite);
+		createTopToolbar(composite);
 
-		txt = new Text(composite, SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH);
-		txt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		txt.setMessage(Messages.JRPropertyExpressionPage_0);
-		txt.addModifyListener((e) -> {
-			if (!Misc.isNullOrEmpty(search) && txt.getText().trim().equalsIgnoreCase(search.trim()))
-				return;
-			refreshWidgets();
-		});
-		txt.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				if (!Misc.isNullOrEmpty(search) && txt.getText().trim().equalsIgnoreCase(search.trim()))
-					return;
-				refreshWidgets();
-			}
-		});
-
-		createButtonsTable(composite);
-
-		badd.setEnabled(!tableView);
-		bSystem.setEnabled(!tableView);
-		txt.setEnabled(!tableView);
-
-		propCmp = new Composite(composite, SWT.NONE);
-		propCmpLayout = new StackLayout();
-		propCmp.setLayout(propCmpLayout);
+		mainPropertiesComposite = new Composite(composite, SWT.NONE);
+		mainPropertiesCmpLayout = new StackLayout();
+		mainPropertiesComposite.setLayout(mainPropertiesCmpLayout);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 3;
 		gd.heightHint = 500;
-		propCmp.setLayoutData(gd);
+		mainPropertiesComposite.setLayoutData(gd);
 
-		if (tableView) {
-			buildTable(propCmp);
-			propCmpLayout.topControl = tblCmp;
+		if (isTableViewMode) {
+			buildTable(mainPropertiesComposite);
+			mainPropertiesCmpLayout.topControl = tableComposite;
 			UIUtils.getDisplay().asyncExec(this::fillTable);
 		} else
-			buildForm(propCmp);
+			buildForm(mainPropertiesComposite);
 	}
 
 	protected void buildForm(Composite propCmp) {
-		sc = new ScrolledComposite(propCmp, SWT.H_SCROLL | SWT.V_SCROLL);
-		sc.setExpandHorizontal(true);
-		sc.setExpandVertical(true);
-		sc.setAlwaysShowScrollBars(true);
+		scrolledCmp = new ScrolledComposite(propCmp, SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledCmp.setExpandHorizontal(true);
+		scrolledCmp.setExpandVertical(true);
+		scrolledCmp.setAlwaysShowScrollBars(true);
 
-		cmp = new Composite(sc, SWT.NONE);
-		cmp.setLayout(new GridLayout(2, false));
-		cmp.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		cmp.setBackgroundMode(SWT.INHERIT_FORCE);
+		formComposite = new Composite(scrolledCmp, SWT.NONE);
+		formComposite.setLayout(new GridLayout(2, false));
+		formComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		formComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 
-		sc.setContent(cmp);
+		scrolledCmp.setContent(formComposite);
 		UIUtils.getDisplay().asyncExec(() -> {
-			txt.setFocus();
-			createFormWidgets(cmp, sc);
+			searchPropertyText.setFocus();
+			createFormWidgets();
 		});
 
-		sc.addListener(SWT.Resize, event -> sc.setMinSize(cmp.computeSize(sc.getClientArea().width, SWT.DEFAULT)));
-		propCmpLayout.topControl = sc;
+		scrolledCmp.addListener(SWT.Resize, event -> scrolledCmp.setMinSize(formComposite.computeSize(scrolledCmp.getClientArea().width, SWT.DEFAULT)));
+		mainPropertiesCmpLayout.topControl = scrolledCmp;
 	}
 
-	private void createButtons(Composite parent) {
-		buttons = new ToolBar(parent, SWT.FLAT);
+	private void createTopToolbar(Composite parent) {
+		leftTopToolbar = new ToolBar(parent, SWT.FLAT);
+		IPreferenceStore pstore = JaspersoftStudioPlugin.getInstance().getPreferenceStore();
+		isTableViewMode = pstore.getBoolean(GlobalPreferencePage.JSS_PROPERTIES_VIEW_MODE);
+		if(forceStandardEditing) {
+			isTableViewMode=true;
+		}
 
-		badd = new ToolItem(buttons, SWT.PUSH);
-		badd.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/plus.png")); //$NON-NLS-1$
-		badd.addListener(SWT.Selection, event -> {
+		// tool item new property
+		ToolItem btnAddPropertyToolItem = new ToolItem(leftTopToolbar, SWT.PUSH);
+		btnAddPropertyToolItem.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/plus.png")); //$NON-NLS-1$
+		btnAddPropertyToolItem.addListener(SWT.Selection, event -> {
 			PropertyExpressionDTO v = value instanceof DatasetPropertyExpressionsDTO
 					? new DatasetPropertyExpressionDTO(false, "property.name", "value", null) //$NON-NLS-1$ //$NON-NLS-2$
 					: new PropertyExpressionDTO(false, "property.name", "value"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -226,94 +230,105 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 			dialog.setValue(v);
 			if (dialog.open() == Window.OK) {
 				value.addProperty(v.getName(), v.getValue(), v.isExpression());
-				refreshWidgets();
+				refreshFormWidgets();
 			}
 		});
-		badd.setToolTipText(Messages.JRPropertyExpressionPage_6);
+		btnAddPropertyToolItem.setToolTipText(Messages.JRPropertyExpressionPage_6);
+		btnAddPropertyToolItem.setEnabled(!isTableViewMode);
 
-		bSystem = new ToolItem(buttons, SWT.CHECK);
-		bSystem.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/jrxml_icon.png")); //$NON-NLS-1$
-		IPreferenceStore pstore = JaspersoftStudioPlugin.getInstance().getPreferenceStore();
-		bSystem.addListener(SWT.Selection, event -> {
-			showExisting = bSystem.getSelection();
-			refreshWidgets();
+		// tool item existing properties
+		ToolItem btnShowExistingPropertiesToolItem = new ToolItem(leftTopToolbar, SWT.CHECK);
+		btnShowExistingPropertiesToolItem.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/jrxml_icon.png")); //$NON-NLS-1$
+		btnShowExistingPropertiesToolItem.addListener(SWT.Selection, event -> {
+			showExistingProperties = btnShowExistingPropertiesToolItem.getSelection();
+			refreshFormWidgets();
 			try {
-				pstore.setValue(GlobalPreferencePage.JSS_PROPERTIES_SHOW_SET, showExisting);
+				pstore.setValue(GlobalPreferencePage.JSS_PROPERTIES_SHOW_SET, showExistingProperties);
 				((ScopedPreferenceStore) pstore).save();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		});
-		bSystem.setToolTipText(Messages.JRPropertyExpressionPage_8);
-		showExisting = pstore.getBoolean(GlobalPreferencePage.JSS_PROPERTIES_SHOW_SET);
-		bSystem.setSelection(showExisting);
-	}
-
-	private boolean tableView = false;
-
-	private void createButtonsTable(Composite parent) {
-		buttons = new ToolBar(parent, SWT.FLAT);
-
-		final ToolItem bTbl = new ToolItem(buttons, SWT.PUSH);
-		IPreferenceStore pstore = JaspersoftStudioPlugin.getInstance().getPreferenceStore();
-		tableView = pstore.getBoolean(GlobalPreferencePage.JSS_PROPERTIES_VIEW_MODE);
-		if (!tableView)
-			bTbl.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/resources/eclipse/properties_view.gif")); //$NON-NLS-1$
-		else
-			bTbl.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/ui-scroll-pane-form.png")); //$NON-NLS-1$
-		bTbl.addListener(SWT.Selection, event -> {
-			if (!tableView) {
-				bTbl.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/ui-scroll-pane-form.png")); //$NON-NLS-1$
-				if (tblCmp == null)
-					buildTable(propCmp);
-				propCmpLayout.topControl = tblCmp;
-				propCmp.layout(true);
-				fillTable();
-			} else {
-				bTbl.setImage(
-						JaspersoftStudioPlugin.getInstance().getImage("icons/resources/eclipse/properties_view.gif")); //$NON-NLS-1$
-				if (sc == null)
-					buildForm(propCmp);
-				propCmpLayout.topControl = sc;
-				propCmp.layout(true);
-				refreshWidgets();
-			}
-			badd.setEnabled(tableView);
-			bSystem.setEnabled(tableView);
-			txt.setEnabled(tableView);
-			tableView = !tableView;
-
-			try {
-				pstore.setValue(GlobalPreferencePage.JSS_PROPERTIES_VIEW_MODE, tableView);
-				((ScopedPreferenceStore) pstore).save();
-			} catch (IOException e) {
-				e.printStackTrace();
+		btnShowExistingPropertiesToolItem.setToolTipText(Messages.JRPropertyExpressionPage_8);
+		showExistingProperties = pstore.getBoolean(GlobalPreferencePage.JSS_PROPERTIES_SHOW_SET);
+		btnShowExistingPropertiesToolItem.setSelection(showExistingProperties);
+		btnShowExistingPropertiesToolItem.setEnabled(!isTableViewMode);
+		
+		// search textbox 
+		searchPropertyText = new Text(parent, SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH);
+		searchPropertyText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		searchPropertyText.setMessage(Messages.JRPropertyExpressionPage_0);
+		searchPropertyText.addModifyListener((e) -> {
+			if (!Misc.isNullOrEmpty(search) && searchPropertyText.getText().trim().equalsIgnoreCase(search.trim()))
+				return;
+			refreshFormWidgets();
+		});
+		searchPropertyText.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				if (!Misc.isNullOrEmpty(search) && searchPropertyText.getText().trim().equalsIgnoreCase(search.trim()))
+					return;
+				refreshFormWidgets();
 			}
 		});
-		bTbl.setToolTipText(Messages.JRPropertyExpressionPage_12);
+		searchPropertyText.setEnabled(!isTableViewMode);
+		
+		// tool item switch between form and table mode
+		rightTopToolbar = new ToolBar(parent, SWT.FLAT);
+		ToolItem btnSwitchTableFormToolItem = new ToolItem(rightTopToolbar, SWT.PUSH);
+		if (!isTableViewMode) {
+			btnSwitchTableFormToolItem.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/resources/eclipse/properties_view.gif")); //$NON-NLS-1$
+		}
+		else {
+			btnSwitchTableFormToolItem.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/ui-scroll-pane-form.png")); //$NON-NLS-1$
+		}
+		btnSwitchTableFormToolItem.addListener(SWT.Selection, event -> {
+			if(!forceStandardEditing) {
+				if (!isTableViewMode) {
+					btnSwitchTableFormToolItem.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/ui-scroll-pane-form.png")); //$NON-NLS-1$
+					if (tableComposite == null) {
+						buildTable(mainPropertiesComposite);
+					}
+					mainPropertiesCmpLayout.topControl = tableComposite;
+					mainPropertiesComposite.layout(true);
+					fillTable();
+				} else {
+					btnSwitchTableFormToolItem.setImage(
+							JaspersoftStudioPlugin.getInstance().getImage("icons/resources/eclipse/properties_view.gif")); //$NON-NLS-1$
+					if (scrolledCmp == null) {
+						buildForm(mainPropertiesComposite);
+					}
+					mainPropertiesCmpLayout.topControl = scrolledCmp;
+					mainPropertiesComposite.layout(true);
+					refreshFormWidgets();
+				}
+				btnAddPropertyToolItem.setEnabled(isTableViewMode);
+				btnShowExistingPropertiesToolItem.setEnabled(isTableViewMode);
+				searchPropertyText.setEnabled(isTableViewMode);
+				isTableViewMode = !isTableViewMode;
+	
+				try {
+					pstore.setValue(GlobalPreferencePage.JSS_PROPERTIES_VIEW_MODE, isTableViewMode);
+					((ScopedPreferenceStore) pstore).save();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		btnSwitchTableFormToolItem.setToolTipText(Messages.JRPropertyExpressionPage_12);
 	}
 
-	private boolean showExisting = false;
-	private Text txt;
-	private ToolBar buttons;
-	private ScrolledComposite sc;
-	private Composite cmp;
-	private List<PropertyMetadata> eds;
-	private List<PropertyMetadata> sortedEDS;
-	private Map<String, PropertyMetadata> props = new HashMap<>();
-
-	private void createFormWidgets(Composite cmp, final ScrolledComposite sc) {
+	private void createFormWidgets() {
 		eds = HintsPropertiesList.getPropertiesMetadata(value.getJrElement(), value.geteContext());
-		for (PropertyMetadata pm : eds)
+		for (PropertyMetadata pm : eds) {
 			props.put(pm.getName(), pm);
-		refreshWidgets();
+		}
+		refreshFormWidgets();
 	}
-
-	private boolean added = true;
 
 	protected void createProperties(String search) {
 		String cat = null;
-		scmp = cmp;
+		sectionComposite = formComposite;
 
 		for (PropertyExpressionDTO pdto : value.getProperties())
 			if (!props.containsKey(pdto.getName())) {
@@ -326,7 +341,7 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		if (added) {
 			sortedEDS = new ArrayList<>(props.values());
 			Collections.sort(sortedEDS, new Comparator<PropertyMetadata>() {
-				private NullComparator nc = new NullComparator(true);
+				private NullComparator<String> nc = new NullComparator<>(true);
 
 				@Override
 				public int compare(PropertyMetadata o1, PropertyMetadata o2) {
@@ -347,11 +362,11 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		for (final PropertyMetadata pm : sortedEDS) {
 			if (canceled)
 				return;
-			if (cmp == null)
+			if (formComposite == null)
 				return;
-			if (cmp.isDisposed())
+			if (formComposite.isDisposed())
 				return;
-			if (showExisting && !value.hasProperty(pm.getName()))
+			if (showExistingProperties && !value.hasProperty(pm.getName()))
 				continue;
 			String c = pm.getCategory();
 			if (c != null && c.indexOf(':') >= 0)
@@ -366,19 +381,19 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 				cat = c;
 				buildSection(c);
 			}
-			if (scmp == cmp)
+			if (sectionComposite == formComposite)
 				buildSectionComposite();
 			final TColumn col = TColumnFactory.getTColumn(pm);
 			boolean custom = !eds.contains(props.get(pm.getName()));
 			if (custom && !value.hasProperty(pm.getName()))
 				continue;
 			col.setLabelEditable(custom);
-			UIUtils.getDisplay().syncExec(() -> TColumnFactory.addWidget(col, scmp, value,
+			UIUtils.getDisplay().syncExec(() -> TColumnFactory.addWidget(col, sectionComposite, value,
 					value.geteContext().getJasperReportsConfiguration()));
 		}
 		UIUtils.getDisplay().syncExec(() -> {
-			if (cmp != null && cmp.getChildren().length == 0) {
-				Label lbl = new Label(cmp, SWT.CENTER);
+			if (formComposite != null && formComposite.getChildren().length == 0) {
+				Label lbl = new Label(formComposite, SWT.CENTER);
 				lbl.setText(Messages.JRPropertyExpressionPage_14);
 				GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER | GridData.FILL_HORIZONTAL);
 				gd.horizontalSpan = 2;
@@ -387,42 +402,40 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		});
 	}
 
-	private Composite scmp;
-
 	private void buildSectionComposite() {
 		UIUtils.getDisplay().syncExec(() -> {
-			scmp = new Composite(cmp, SWT.NONE);
-			scmp.setLayout(new GridLayout(2, false));
+			sectionComposite = new Composite(formComposite, SWT.NONE);
+			sectionComposite.setLayout(new GridLayout(2, false));
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 2;
-			scmp.setLayoutData(gd);
+			sectionComposite.setLayoutData(gd);
 		});
 	}
 
 	private void buildSection(final String cat) {
 		UIUtils.getDisplay().syncExec(() -> {
-			if (cmp.isDisposed())
+			if (formComposite.isDisposed())
 				return;
-			if (scmp != null) {
-				cmp.layout(true);
-				sc.setMinSize(cmp.computeSize(sc.getClientArea().width, SWT.DEFAULT));
+			if (sectionComposite != null) {
+				formComposite.layout(true);
+				scrolledCmp.setMinSize(formComposite.computeSize(scrolledCmp.getClientArea().width, SWT.DEFAULT));
 			}
-			scmp = new Composite(cmp, SWT.NONE);
-			scmp.setLayout(new GridLayout(2, false));
+			sectionComposite = new Composite(formComposite, SWT.NONE);
+			sectionComposite.setLayout(new GridLayout(2, false));
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 2;
-			scmp.setLayoutData(gd);
+			sectionComposite.setLayoutData(gd);
 
-			Label lbl = new Label(scmp, SWT.NONE);
+			Label lbl = new Label(sectionComposite, SWT.NONE);
 			String gn = WordUtils.capitalizeFully(cat.replace(".", " ")); //$NON-NLS-1$ //$NON-NLS-2$
 			gn = gn.replaceAll("Jasperreports", "JasperReports"); //$NON-NLS-1$ //$NON-NLS-2$
 			lbl.setText(gn);
-			lbl.setFont(ResourceManager.getBoldFont(lbl.getFont()));
+			lbl.setFont(SWTResourceManager.getBoldFont(lbl.getFont()));
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 2;
 			lbl.setLayoutData(gd);
 
-			lbl = new Label(scmp, SWT.SEPARATOR | SWT.HORIZONTAL);
+			lbl = new Label(sectionComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 2;
 			lbl.setLayoutData(gd);
@@ -430,12 +443,12 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 	}
 
 	private void buildTable(Composite parent) {
-		tblCmp = new Composite(parent, SWT.NONE);
-		tblCmp.setLayout(new GridLayout(2, false));
-		tblCmp.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		tblCmp.setBackgroundMode(SWT.INHERIT_FORCE);
+		tableComposite = new Composite(parent, SWT.NONE);
+		tableComposite.setLayout(new GridLayout(2, false));
+		tableComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		tableComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 
-		table = new Table(tblCmp, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION | SWT.V_SCROLL);
+		table = new Table(tableComposite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION | SWT.V_SCROLL);
 		table.setHeaderVisible(true);
 		table.addMouseListener(new MouseAdapter() {
 
@@ -468,13 +481,13 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		table.setLayout(tlayout);
 
 		// Crete the popup menu
-		createPopoupMenu();
+		createTablePopupMenu();
 
-		GridData gd = new GridData(GridData.FILL_BOTH);
+		GridData gd = new GridData(SWT.FILL,SWT.FILL,true,true);
 		gd.heightHint = 400;
 		table.setLayoutData(gd);
 
-		Composite bGroup = new Composite(tblCmp, SWT.NONE);
+		Composite bGroup = new Composite(tableComposite, SWT.NONE);
 		bGroup.setLayout(new GridLayout(1, false));
 		bGroup.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
@@ -492,7 +505,7 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 						: new PropertyExpressionDTO(false, name, defValue);
 				v.seteContext(value.geteContext());
 				v.setJrElement(value.getJrElement());
-				JRPropertyExpressionDialog dialog = new JRPropertyExpressionDialog(propCmp.getShell());
+				JRPropertyExpressionDialog dialog = new JRPropertyExpressionDialog(mainPropertiesComposite.getShell());
 				dialog.setShowExpression(showExpression);
 				dialog.setValue(v);
 				if (dialog.open() == Window.OK)
@@ -518,7 +531,7 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		new ListOrderButtons().createOrderButtons(bGroup, tableViewer);
 	}
 
-	private void createPopoupMenu() {
+	private void createTablePopupMenu() {
 		Menu tableMenu = new Menu(table);
 		final MenuItem copyItem = new MenuItem(tableMenu, SWT.NONE);
 		copyItem.setText(Messages.common_copy);
@@ -598,16 +611,7 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		tableViewer.refresh(true);
 	}
 
-	private boolean refreshing = false;
-	private boolean canceled = false;
-	private String search;
-	private Composite propCmp;
-	private StackLayout propCmpLayout;
-	private Composite tblCmp;
-	private ToolItem badd;
-	private ToolItem bSystem;
-
-	protected void refreshWidgets() {
+	protected void refreshFormWidgets() {
 		if (refreshing) {
 			canceled = true;
 			return;
@@ -617,13 +621,13 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		Job job = new Job(Messages.JRPropertyExpressionPage_21) {
 
 			protected IStatus run(IProgressMonitor monitor) {
-				final boolean ex = showExisting;
+				final boolean ex = showExistingProperties;
 				try {
 					UIUtils.getDisplay().syncExec(() -> {
-						search = txt.getText();
-						if (cmp != null)
-							for (Control c : cmp.getChildren()) {
-								if (c == txt || c == buttons)
+						search = searchPropertyText.getText();
+						if (formComposite != null)
+							for (Control c : formComposite.getChildren()) {
+								if (c == searchPropertyText || c == leftTopToolbar || c == rightTopToolbar)
 									continue;
 								c.dispose();
 							}
@@ -633,19 +637,19 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 					createProperties(search.trim().toLowerCase());
 					if (!canceled) {
 						UIUtils.getDisplay().syncExec(() -> {
-							if (cmp == null)
+							if (formComposite == null || formComposite.isDisposed()) {
 								return;
-							if (cmp.isDisposed())
-								return;
-							sc.setMinSize(cmp.computeSize(sc.getClientArea().width, SWT.DEFAULT));
-							cmp.layout(true);
+							}
+							scrolledCmp.setMinSize(formComposite.computeSize(scrolledCmp.getClientArea().width, SWT.DEFAULT));
+							formComposite.layout(true);
 						});
 					}
 				} finally {
 					refreshing = false;
 					UIUtils.getDisplay().syncExec(() -> {
-						if (!txt.isDisposed() && !search.equals(txt.getText()) || ex != showExisting)
-							refreshWidgets();
+						if (!searchPropertyText.isDisposed() && !search.equals(searchPropertyText.getText()) || ex != showExistingProperties) {
+							refreshFormWidgets();
+						}
 					});
 				}
 				return Status.OK_STATUS;

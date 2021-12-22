@@ -4,6 +4,7 @@
  ******************************************************************************/
 package com.jaspersoft.studio.model.scriptlet;
 
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,9 @@ import com.jaspersoft.studio.model.IDragable;
 import com.jaspersoft.studio.model.util.IIconDescriptor;
 import com.jaspersoft.studio.model.util.NodeIconDescriptor;
 import com.jaspersoft.studio.property.descriptor.classname.NClassTypePropertyDescriptor;
+import com.jaspersoft.studio.property.descriptor.propexpr.JPropertyExpressionsDescriptor;
+import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionDTO;
+import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
 import com.jaspersoft.studio.property.descriptor.text.NTextPropertyDescriptor;
 import com.jaspersoft.studio.utils.ModelUtils;
 
@@ -28,9 +32,13 @@ import net.sf.jasperreports.engine.JRAbstractScriptlet;
 import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.JRDefaultScriptlet;
 import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JRPropertiesMap;
+import net.sf.jasperreports.engine.JRPropertyExpression;
 import net.sf.jasperreports.engine.JRScriptlet;
+import net.sf.jasperreports.engine.base.JRBaseScriptlet;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignParameter;
+import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
 import net.sf.jasperreports.engine.design.JRDesignScriptlet;
 
 /*
@@ -139,16 +147,22 @@ public class MScriptlet extends APropertyNode implements ICopyable, IDragable {
 		classD.setDescription(Messages.MScriptlet_class_description);
 		desc.add(classD);
 		classD.setHelpRefBuilder(
-				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#scriptlet_class"));
+				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#scriptlet_class")); //$NON-NLS-1$
 
-		NTextPropertyDescriptor descriptionD = new NTextPropertyDescriptor(JRDesignScriptlet.PROPERTY_DESCRIPTION,
-				Messages.common_description);
+		NTextPropertyDescriptor descriptionD = new NTextPropertyDescriptor(
+				JRBaseScriptlet.PROPERTY_DESCRIPTION,Messages.common_description);
 		descriptionD.setDescription(Messages.MScriptlet_description_description);
 		desc.add(descriptionD);
 		descriptionD.setHelpRefBuilder(
-				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#scriptletDescription"));
+				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#scriptletDescription")); //$NON-NLS-1$
+		
+		JPropertyExpressionsDescriptor propertiesD = new JPropertyExpressionsDescriptor(
+				JRDesignScriptlet.PROPERTY_PROPERTY_EXPRESSIONS, Messages.MScriptlet_PropertiesDescriptorMsg, true);
+		propertiesD.setDescription(
+				Messages.MScriptlet_PropertiesDescriptorDescription);
+		desc.add(propertiesD);
 
-		setHelpPrefix(desc, "net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#scriptlet");
+		setHelpPrefix(desc, "net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#scriptlet"); //$NON-NLS-1$
 	}
 
 	/*
@@ -157,14 +171,30 @@ public class MScriptlet extends APropertyNode implements ICopyable, IDragable {
 	 * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
 	 */
 	public Object getPropertyValue(Object id) {
-		JRDesignScriptlet jrField = (JRDesignScriptlet) getValue();
+		JRDesignScriptlet scriptlet = (JRDesignScriptlet) getValue();
 		if (id.equals(JRDesignScriptlet.PROPERTY_NAME))
-			return jrField.getName();
+			return scriptlet.getName();
 		if (id.equals(JRDesignScriptlet.PROPERTY_VALUE_CLASS_NAME))
-			return jrField.getValueClassName();
-		if (id.equals(JRDesignScriptlet.PROPERTY_DESCRIPTION))
-			return jrField.getDescription();
+			return scriptlet.getValueClassName();
+		if (id.equals(JRBaseScriptlet.PROPERTY_DESCRIPTION))
+			return scriptlet.getDescription();
+		if (id.equals(JRDesignScriptlet.PROPERTY_PROPERTY_EXPRESSIONS)) {
+			JRPropertyExpression[] propertyExpressions = scriptlet.getPropertyExpressions();
+			if (propertyExpressions != null) {
+				propertyExpressions = propertyExpressions.clone();
+			}
+			return new PropertyExpressionsDTO(propertyExpressions, getPropertiesMapClone(scriptlet), getValue(),
+					ModelUtils.getExpressionContext(this));
+		}
 		return null;
+	}
+	
+	protected JRPropertiesMap getPropertiesMapClone(JRDesignScriptlet scriptlet) {
+		JRPropertiesMap propertiesMap = scriptlet.getPropertiesMap();
+		if (propertiesMap != null){
+			propertiesMap = propertiesMap.cloneProperties();
+		}
+		return propertiesMap;
 	}
 
 	/*
@@ -173,11 +203,11 @@ public class MScriptlet extends APropertyNode implements ICopyable, IDragable {
 	 * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
 	 */
 	public void setPropertyValue(Object id, Object value) {
-		JRDesignScriptlet jrField = (JRDesignScriptlet) getValue();
+		JRDesignScriptlet scriptlet = (JRDesignScriptlet) getValue();
 		if (id.equals(JRDesignScriptlet.PROPERTY_NAME)) {
 			if (value instanceof String && !((String) value).isEmpty()) {
 				String newName = (String) value;
-				String oldName = jrField.getName();
+				String oldName = scriptlet.getName();
 				JRDesignDataset d = ModelUtils.getDataset(this);
 				if (d != null) {
 					Map<String, JRParameter> pmap = d.getParametersMap();
@@ -187,25 +217,59 @@ public class MScriptlet extends APropertyNode implements ICopyable, IDragable {
 						pmap.remove(oldName + JRScriptlet.SCRIPTLET_PARAMETER_NAME_SUFFIX);
 						pmap.put(newName + JRScriptlet.SCRIPTLET_PARAMETER_NAME_SUFFIX, p);
 					}
-					jrField.setName(newName);
+					scriptlet.setName(newName);
 				}
 			}
 		} else if (id.equals(JRDesignScriptlet.PROPERTY_VALUE_CLASS_NAME)) {
 			if (value instanceof String) {
 				if (((String) value).isEmpty())
 					value = null;
-				jrField.setValueClassName((String) value);
+				scriptlet.setValueClassName((String) value);
 				JRDesignDataset d = ModelUtils.getDataset(this);
 				if (d != null) {
 					Map<String, JRParameter> pmap = d.getParametersMap();
 					JRDesignParameter p = (JRDesignParameter) pmap
-							.get(jrField.getName() + JRScriptlet.SCRIPTLET_PARAMETER_NAME_SUFFIX);
+							.get(scriptlet.getName() + JRScriptlet.SCRIPTLET_PARAMETER_NAME_SUFFIX);
 					if (p != null)
-						p.setValueClassName(jrField.getValueClassName());
+						p.setValueClassName(scriptlet.getValueClassName());
 				}
 			}
-		} else if (id.equals(JRDesignScriptlet.PROPERTY_DESCRIPTION))
-			jrField.setDescription((String) value);
+		} else if (id.equals(JRBaseScriptlet.PROPERTY_DESCRIPTION)) {
+			scriptlet.setDescription((String) value);
+		} else if (id.equals(JRDesignScriptlet.PROPERTY_PROPERTY_EXPRESSIONS) && value instanceof PropertyExpressionsDTO) {
+			PropertyExpressionsDTO dto = (PropertyExpressionsDTO) value;
+			JRPropertyExpression[] expr = scriptlet.getPropertyExpressions();
+			// Remove the old expression properties if any
+			if (expr != null) {
+				for (JRPropertyExpression ex : expr)
+					scriptlet.removePropertyExpression(ex);
+			}
+			// Add the new expression properties
+			for (PropertyExpressionDTO p : dto.getProperties()) {
+				if (p.isExpression()) {
+					JRDesignPropertyExpression newExp = new JRDesignPropertyExpression();
+					newExp.setName(p.getName());
+					newExp.setValueExpression(p.getValueAsExpression());
+					scriptlet.addPropertyExpression(newExp);
+				}
+			}
+			// Now change properties, first remove the old ones if any
+			JRPropertiesMap originalMap = scriptlet.getPropertiesMap().cloneProperties();
+			String[] names = scriptlet.getPropertiesMap().getPropertyNames();
+			for (int i = 0; i < names.length; i++) {
+				scriptlet.getPropertiesMap().removeProperty(names[i]);
+			}
+			// Now add the new properties
+			for (PropertyExpressionDTO p : dto.getProperties()) {
+				if (!p.isExpression()) {
+					scriptlet.getPropertiesMap().setProperty(p.getName(), p.getValue());
+				}
+			}
+			// Really important to trigger the event using as source the JR object and not the node.
+			// Using the node itself could cause problems with the refresh of the advanced properties view.
+			firePropertyChange(
+					new PropertyChangeEvent(scriptlet, PROPERTY_MAP, originalMap, scriptlet.getPropertiesMap()));
+		} 
 	}
 
 	/**
