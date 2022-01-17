@@ -146,10 +146,10 @@ public class JRSPreferencesPage extends FieldEditorOverlayPage {
 
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
-						BrowserInfo.findUserAgent(value -> {
-							tf.getTextControl().setText(Misc.nvl(value));
-							b.setEnabled(true);
-						});
+//						BrowserInfo.findUserAgent(value -> {
+//							tf.getTextControl().setText(Misc.nvl(value));
+//							b.setEnabled(true);
+//						});
 						return Status.OK_STATUS;
 					}
 
