@@ -50,7 +50,6 @@ import net.sf.jasperreports.eclipse.util.CastorHelper;
 import net.sf.jasperreports.eclipse.util.SecureStorageUtils;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.util.JRXmlUtils;
-import net.sf.jasperreports.util.CastorUtil;
 
 /**
  * Wizard to import one of more connections to JRS from other workspaces of JSS
@@ -124,7 +123,7 @@ public class ImportJSSServersWizard extends Wizard implements IImportWizard {
 					if (actualNode.getNodeName().equals("serverProfile")) {
 						Node child = actualNode.getFirstChild();
 						while (child != null) {
-							ServerProfile sprof = (ServerProfile) CastorUtil.read(child, MServerProfile.MAPPINGFILE);
+							ServerProfile sprof = (ServerProfile) CastorHelper.read(child, MServerProfile.MAPPINGFILE);
 							result.add(sprof);
 							child = child.getNextSibling();
 						}
