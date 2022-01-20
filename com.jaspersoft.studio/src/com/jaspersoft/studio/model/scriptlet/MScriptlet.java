@@ -157,7 +157,7 @@ public class MScriptlet extends APropertyNode implements ICopyable, IDragable {
 				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#scriptletDescription")); //$NON-NLS-1$
 		
 		JPropertyExpressionsDescriptor propertiesD = new JPropertyExpressionsDescriptor(
-				JRDesignScriptlet.PROPERTY_PROPERTY_EXPRESSIONS, Messages.MScriptlet_PropertiesDescriptorMsg, true);
+				JRDesignScriptlet.PROPERTY_PROPERTY_EXPRESSIONS, Messages.MScriptlet_PropertiesDescriptorMsg, false);
 		propertiesD.setDescription(
 				Messages.MScriptlet_PropertiesDescriptorDescription);
 		desc.add(propertiesD);
