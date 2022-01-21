@@ -74,6 +74,7 @@ public class MVariable extends MVariableSystem implements ICopyable {
 	 */
 	public MVariable() {
 		super();
+		setEditable(true);
 	}
 
 	@Override
@@ -93,6 +94,7 @@ public class MVariable extends MVariableSystem implements ICopyable {
 	 */
 	public MVariable(ANode parent, JRDesignVariable jrVariable, int newIndex) {
 		super(parent, jrVariable, newIndex);
+		setEditable(true);
 	}
 
 	@Override
@@ -359,12 +361,6 @@ public class MVariable extends MVariableSystem implements ICopyable {
 			return getExpressionContext();
 		}
 		return super.getAdapter(adapter);
-	}
-
-	@Override
-	public void setValue(Object value) {
-		super.setValue(value);
-		setEditable(true);
 	}
 
 	@Override
