@@ -750,6 +750,11 @@ public class ExtensionManager {
 			if (l != null && !l.isEmpty())
 				lst.addAll(l);
 		}
+		for (ICustomActionsFactory f : customActionsFactories) {
+			List<Action> l = f.getActions(part);
+			if (l != null && !l.isEmpty())
+				lst.addAll(l);
+		}
 		return lst;
 	}
 
