@@ -112,7 +112,6 @@ public class HintsPropertiesList {
 	
 	private static void getScriptletProperties(JRDesignScriptlet holder, List<PropertyMetadata> result, PropertiesMetadataUtil pmu) throws JRException {
 		result.addAll(PropertyMetadataRegistry.getPropertiesMetadata(PropertyScope.SCRIPTLET));
-		result.addAll(pmu.getScriptletProperties("com.jaspersoft.jasperreports.jrs.bursting.BurstingScriptlet"));
 		result.addAll(pmu.getScriptletProperties(holder.getValueClassName()));
 	}
 

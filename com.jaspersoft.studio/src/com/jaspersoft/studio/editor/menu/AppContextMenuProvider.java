@@ -110,6 +110,7 @@ import com.jaspersoft.studio.formatting.actions.SameWidthMinAction;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.plugin.ExtensionManager;
 import com.jaspersoft.studio.plugin.IComponentFactory;
+import com.jaspersoft.studio.plugin.ICustomActionsFactory;
 import com.jaspersoft.studio.property.dataset.dialog.ContextualDatasetAction;
 import com.jaspersoft.studio.property.section.report.action.PageFormatAction;
 import com.jaspersoft.studio.property.section.report.action.PageRemoveMarginsAction;
@@ -351,9 +352,19 @@ public class AppContextMenuProvider extends AContextMenuProvider {
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
 
 		action = getActionRegistry().getAction(CreateScriptletAction.ID);
-		if (action != null && action.isEnabled())
+		if (action != null && action.isEnabled()) {
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
-
+		}
+		// custom scriptlet actions
+		ExtensionManager extManager = JaspersoftStudioPlugin.getExtensionManager();
+		List<String> customActionsIDs = extManager.getCustomActionsIDs(ICustomActionsFactory.CATEGORY_SCRIPTLET);
+		for(String actionId : customActionsIDs) {
+			action = getActionRegistry().getAction(actionId);
+			if (action != null && action.isEnabled()) {
+				menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
+			}
+		}
+		
 		action = getActionRegistry().getAction(CreateParameterAction.ID);
 		if (action != null && action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
@@ -410,8 +421,7 @@ public class AppContextMenuProvider extends AContextMenuProvider {
 		if (action != null && action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
 
-		ExtensionManager m = JaspersoftStudioPlugin.getExtensionManager();
-		List<String> lst = m.getActionIDs();
+		List<String> lst = extManager.getActionIDs();
 		for (String ids : lst) {
 			if (ids.equals(AContextMenuProvider.SEPARATOR)) {
 				menu.appendToGroup(IComponentFactory.GROUP_COMPONENT, new Separator());

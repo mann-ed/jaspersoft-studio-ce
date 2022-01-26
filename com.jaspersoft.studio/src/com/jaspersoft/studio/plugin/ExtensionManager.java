@@ -106,6 +106,7 @@ public class ExtensionManager {
 	private List<IParameterICContributor> prmICContributors = new ArrayList<>();
 	private List<IReportRunner> reportRunners = new ArrayList<>();
 	private List<AEditorContext> editorContext = new ArrayList<>();
+	private List<ICustomActionsFactory> customActionsFactories = new ArrayList<>();
 
 	public void init() {
 		IConfigurationElement[] config = Platform.getExtensionRegistry()
@@ -124,6 +125,21 @@ public class ExtensionManager {
 				System.out.println(ex.getMessage());
 			}
 		}
+		
+		config = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(JaspersoftStudioPlugin.PLUGIN_ID, ICustomActionsFactory.EXTENSION_POINT_SUFFIX); //$NON-NLS-1$
+		for (IConfigurationElement e : config) {
+			try {
+				Object o = e.createExecutableExtension(ICustomActionsFactory.EXTENSION_PROPERTY_NAME); //$NON-NLS-1$
+				if (o instanceof ICustomActionsFactory) {
+					ICustomActionsFactory actionsFactory = (ICustomActionsFactory) o;
+					customActionsFactories.add(actionsFactory);
+				}
+			} catch (CoreException ex) {
+				System.out.println(ex.getMessage());
+			}
+		}
+		
 
 		// List all the extensions that provide a DataAdapterFactory
 		config = Platform.getExtensionRegistry().getConfigurationElementsFor(JaspersoftStudioPlugin.PLUGIN_ID,
@@ -714,6 +730,19 @@ public class ExtensionManager {
 		return null;
 	}
 
+	public List<Action> getCustomActions(WorkbenchPart part, String categoryID) {
+		List<Action> lst = new ArrayList<>();
+		for (ICustomActionsFactory f : customActionsFactories) {
+			if(categoryID!=null && categoryID.equals(f.getFactoryCategoryID())) {
+				List<Action> l = f.getActions(part);
+				if (l != null && !l.isEmpty()) {
+					lst.addAll(l);
+				}
+			}
+		}
+		return lst;
+	}
+	
 	public List<Action> getActions(WorkbenchPart part) {
 		List<Action> lst = new ArrayList<Action>();
 		for (IComponentFactory f : nodeFactory) {
@@ -724,6 +753,19 @@ public class ExtensionManager {
 		return lst;
 	}
 
+	public List<String> getCustomActionsIDs(String categoryID) {
+		List<String> lst = new ArrayList<>();
+		for (ICustomActionsFactory f : customActionsFactories) {
+			if (categoryID != null && categoryID.equals(f.getFactoryCategoryID())) {
+				List<String> l = f.getActionIDs();
+				if (l != null && !l.isEmpty()) {
+					lst.addAll(l);
+				}
+			}
+		}
+		return lst;
+	}
+	
 	public List<String> getActionIDs() {
 		List<String> lst = new ArrayList<String>();
 		for (IComponentFactory f : nodeFactory) {
