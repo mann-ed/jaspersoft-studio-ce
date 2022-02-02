@@ -107,8 +107,8 @@ public class ReturnValueContainer {
 		List<ReturnValueContainer> result = new ArrayList<ReturnValueContainer>();
 		for (JRSubreportReturnValue subreportReturn : subreportReturns) {
 			ReturnValueContainer generalReturn = new ReturnValueContainer();
-			generalReturn.setCalculation(subreportReturn.getCalculationValue());
-			generalReturn.setFromVariable(subreportReturn.getSubreportVariable());
+			generalReturn.setCalculation(subreportReturn.getCalculation());
+			generalReturn.setFromVariable(subreportReturn.getFromVariable());
 			generalReturn.setToVariable(subreportReturn.getToVariable());
 			generalReturn.setIncrementerFactoryClassName(subreportReturn.getIncrementerFactoryClassName());
 			result.add(generalReturn);
