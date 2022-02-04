@@ -112,15 +112,19 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		}
 	}
 
-	protected Combo createComboControl(Composite parent) {
-		CustomReadOnlyCombo result = new CustomReadOnlyCombo(parent);
+	protected Combo createComboControl(Composite parent, int customStyle) {
+		CustomReadOnlyCombo result = new CustomReadOnlyCombo(parent, customStyle);
 		// MacOS fix, the combo on MacOS doesn't have a contextual menu, so we
 		// need to handle this listener manually
 		boolean handleComboListener = Util.isMac();
 		if (handleComboListener) {
 			result.addMouseListener(macComboMenuOpener);
 		}
-		return result;
+		return result;	
+	}
+	
+	protected Combo createComboControl(Composite parent) {
+		return createComboControl(parent, SWT.NONE);
 	}
 
 	@Override
