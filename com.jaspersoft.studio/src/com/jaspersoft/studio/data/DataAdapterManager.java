@@ -36,7 +36,7 @@ import net.sf.jasperreports.data.DataAdapter;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.eclipse.wizard.project.ProjectUtil;
 import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.util.CastorUtil;
+import net.sf.jasperreports.util.JacksonUtil;
 
 /*
  * The main plugin class to be used in the desktop.
@@ -274,8 +274,11 @@ public class DataAdapterManager {
 		DataAdapterFactory factory = findFactoryByDataAdapterClass(srcDataAdapter.getClass().getName());
 		DataAdapterDescriptor copy = factory.createDataAdapter();
 		copy.setName(src.name);
-		DataAdapter copyDataAdapter = (DataAdapter) CastorUtil.getInstance(jrContext)
-				.read(new ByteArrayInputStream(src.toXml(jrContext).getBytes()));
+		DataAdapter copyDataAdapter = 
+			JacksonUtil.getInstance(jrContext).loadXml(
+				new ByteArrayInputStream(src.toXml(jrContext).getBytes()), 
+				DataAdapter.class
+				);
 		copy.setDataAdapter(copyDataAdapter);
 		return copy;
 	}
