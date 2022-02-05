@@ -47,6 +47,8 @@ import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.Pair;
 import net.sf.jasperreports.engine.util.JRXmlUtils;
 import net.sf.jasperreports.util.CastorUtil;
+import net.sf.jasperreports.util.JacksonRuntimException;
+import net.sf.jasperreports.util.JacksonUtil;
 
 /**
  * Exported used to import/export the data adapter definition
@@ -321,7 +323,17 @@ public class ExportedAdapterHandler implements IExportedResourceHandler {
 							// maybe we should get context for this file?
 	
 							inputStream = new FileInputStream(storageElement);
-							dataAdapter = (DataAdapter) CastorUtil.getInstance(JasperReportsConfiguration.getDefaultInstance()).read(inputStream);
+							try
+							{
+								dataAdapter = JacksonUtil.getInstance(JasperReportsConfiguration.getDefaultInstance()).loadXml(inputStream, DataAdapter.class);
+							}
+							catch (JacksonRuntimException e)
+							{
+								// castor fallback; reusing inputStream with a close/recreation technique seen elsewhere in JSS
+								inputStream.close();
+								inputStream = new FileInputStream(storageElement);
+								dataAdapter = (DataAdapter) CastorUtil.getInstance(JasperReportsConfiguration.getDefaultInstance()).read(inputStream);
+							}
 							dataAdapterDescriptor.setDataAdapter(dataAdapter);
 							foundDataAdapters.add(dataAdapterDescriptor);
 						}

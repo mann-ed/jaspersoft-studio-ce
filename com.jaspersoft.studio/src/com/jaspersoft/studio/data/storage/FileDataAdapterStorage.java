@@ -52,6 +52,8 @@ import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.CastorHelper;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
+import net.sf.jasperreports.util.JacksonRuntimException;
+import net.sf.jasperreports.util.JacksonUtil;
 
 public class FileDataAdapterStorage extends ADataAdapterStorage {
 
@@ -355,8 +357,17 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 									Messages.DataAdapterManager_nodataadapterfound + className, null));
 			} else {
 				DataAdapterDescriptor dataAdapterDescriptor = factory.createDataAdapter();
-				DataAdapter dataAdapter = dataAdapterDescriptor.getDataAdapter(jrConfig);
-				dataAdapter = (DataAdapter) JSSCastorUtil.getInstance(jrConfig).read(in);
+				DataAdapter dataAdapter = null;
+				try
+				{
+					dataAdapter = JacksonUtil.getInstance(jrConfig).loadXml(in, DataAdapter.class);
+				}
+				catch (JacksonRuntimException e)
+				{
+					// castor fallback; input stream reset is already used prior to this call, so doing the same here
+					in.reset();
+					dataAdapter = (DataAdapter) JSSCastorUtil.getInstance(jrConfig).read(in);
+				}
 				dataAdapterDescriptor.setDataAdapter(dataAdapter);
 				dad = dataAdapterDescriptor;
 			}

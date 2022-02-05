@@ -36,6 +36,8 @@ import net.sf.jasperreports.data.DataAdapter;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.eclipse.wizard.project.ProjectUtil;
 import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.util.CastorUtil;
+import net.sf.jasperreports.util.JacksonRuntimException;
 import net.sf.jasperreports.util.JacksonUtil;
 
 /*
@@ -274,12 +276,27 @@ public class DataAdapterManager {
 		DataAdapterFactory factory = findFactoryByDataAdapterClass(srcDataAdapter.getClass().getName());
 		DataAdapterDescriptor copy = factory.createDataAdapter();
 		copy.setName(src.name);
-		DataAdapter copyDataAdapter = 
-			JacksonUtil.getInstance(jrContext).loadXml(
-				new ByteArrayInputStream(src.toXml(jrContext).getBytes()), 
-				DataAdapter.class
-				);
+
+		DataAdapter copyDataAdapter = null;
+		byte[] bytes = src.toXml(jrContext).getBytes(); 
+		try
+		{
+			copyDataAdapter = 
+				JacksonUtil.getInstance(jrContext).loadXml(
+					new ByteArrayInputStream(bytes), 
+					DataAdapter.class
+					);
+		}
+		catch (JacksonRuntimException e)
+		{
+			//castor fallback
+			copyDataAdapter = 
+				(DataAdapter) CastorUtil.getInstance(jrContext).read(
+					new ByteArrayInputStream(bytes)
+					);
+		}
 		copy.setDataAdapter(copyDataAdapter);
+		
 		return copy;
 	}
 }
