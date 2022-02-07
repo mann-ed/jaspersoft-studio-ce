@@ -259,7 +259,7 @@ public class JSSCastorUtil {
 	{
 		String targetVersion = JRPropertiesUtil.getInstance(jasperReportsContext)
 				.getProperty(JRXmlBaseWriter.PROPERTY_REPORT_VERSION);
-		if (versionComparator.compare(targetVersion, "6.18.1") > 0)
+		if (versionComparator.compare(targetVersion, "6.19.0") >= 0)
 		{
 			String xml = JacksonUtil.getInstance(jasperReportsContext).getXmlString(object);
 			try 
