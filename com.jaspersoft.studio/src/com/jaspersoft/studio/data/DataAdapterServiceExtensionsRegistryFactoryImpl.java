@@ -7,7 +7,7 @@ package com.jaspersoft.studio.data;
 import java.util.Collections;
 import java.util.List;
 
-import net.sf.jasperreports.data.DataAdapterServiceFactory;
+import net.sf.jasperreports.data.DataAdapterContributorFactory;
 import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.extensions.ExtensionsRegistry;
 import net.sf.jasperreports.extensions.ExtensionsRegistryFactory;
@@ -24,7 +24,7 @@ public class DataAdapterServiceExtensionsRegistryFactoryImpl implements Extensio
 		{
 			public <T> List<T> getExtensions(Class<T> extensionType) 
 			{
-				if (DataAdapterServiceFactory.class.equals(extensionType))
+				if (DataAdapterContributorFactory.class.equals(extensionType))
 				{
 					return (List<T>) Collections.singletonList(DataAdapterServiceFactoryImpl.getInstance());
 				}

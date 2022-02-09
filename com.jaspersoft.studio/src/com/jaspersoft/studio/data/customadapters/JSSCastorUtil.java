@@ -34,6 +34,7 @@ import org.xml.sax.InputSource;
 
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRPropertiesUtil;
 import net.sf.jasperreports.engine.JRRuntimeException;
@@ -259,7 +260,7 @@ public class JSSCastorUtil {
 	{
 		String targetVersion = JRPropertiesUtil.getInstance(jasperReportsContext)
 				.getProperty(JRXmlBaseWriter.PROPERTY_REPORT_VERSION);
-		if (versionComparator.compare(targetVersion, "6.19.0") >= 0)
+		if (versionComparator.compare(targetVersion, JRConstants.VERSION_6_19_0) >= 0)
 		{
 			String xml = JacksonUtil.getInstance(jasperReportsContext).getXmlString(object);
 			try 
