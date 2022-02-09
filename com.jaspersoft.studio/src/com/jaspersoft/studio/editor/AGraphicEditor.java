@@ -68,6 +68,10 @@ public abstract class AGraphicEditor extends J2DGraphicalEditor implements ITabb
 		this.jrContext = jrContext;
 	}
 
+	public JasperReportsConfiguration getJrContext() {
+		return jrContext;
+	}
+	
 	public FigureCanvas getEditor() {
 		return (FigureCanvas) getGraphicalViewer().getControl();
 	}
