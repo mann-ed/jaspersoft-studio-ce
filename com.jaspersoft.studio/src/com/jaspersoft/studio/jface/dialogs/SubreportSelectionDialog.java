@@ -16,6 +16,8 @@ import com.jaspersoft.studio.messages.Messages;
  */
 public class SubreportSelectionDialog extends FileSelectionDialog {
 
+	private static final String JRXML_TYPE = "*.jrxml"; //$NON-NLS-1$
+
 	/**
 	 * Create the dialog.
 	 * 
@@ -25,43 +27,41 @@ public class SubreportSelectionDialog extends FileSelectionDialog {
 		super(parentShell);
 	}
 
-	/**
-	 * @return the title for the dialog
-	 */
+	@Override
 	protected String getDialogTitle() {
-		return Messages.SubreportSelectionDialog_0;
+		return Messages.SubreportSelectionDialog_Title;
 	}
 
-	/**
-	 * Returns an array of strings containing the title for the modes section, plus the title of every mode.
-	 * <p>
-	 * 
-	 * Default implementation would return 6 strings, including 1 title and the following 5 modes:
-	 * <ol>
-	 * <li>workspace resource;</li>
-	 * <li>absolute path in filesystem;</li>
-	 * <li>URL;</li>
-	 * <li>no image;</li>
-	 * <li>custom expression</li>
-	 * </ol>
-	 * 
-	 * @return the title and labels for the group of modes
-	 */
+	@Override
 	protected String[] getImageModesAndHeaderTitles() {
-		return new String[] { Messages.SubreportSelectionDialog_1, Messages.SubreportSelectionDialog_2,
-				Messages.SubreportSelectionDialog_3,
-				Messages.SubreportSelectionDialog_4,
-				Messages.SubreportSelectionDialog_5,
-				Messages.SubreportSelectionDialog_6 };
+		return new String[] { 
+				Messages.SubreportSelectionDialog_SectionTitle, 
+				Messages.SubreportSelectionDialog_WorkspaceModeTxt,
+				Messages.SubreportSelectionDialog_AbsolutePathModeTxt,
+				Messages.SubreportSelectionDialog_UrlModeTxt,
+				Messages.SubreportSelectionDialog_NoSubreportModeTxt,
+				Messages.SubreportSelectionDialog_CustomExpressionModeTxt };
 	}
 
 	@Override
-	protected String getFileExtension() {
-		return Messages.SubreportSelectionDialog_7;
+	protected String getDefaultResourcesPattern() {
+		return Messages.SubreportSelectionDialog_JRXMLResourcePattern;
 	}
 
 	@Override
-	protected String[] getFileExtensions() {
-		return new String[] { "*.jrxml", "*.*" }; //$NON-NLS-1$ //$NON-NLS-2$
+	public String[] getSupportedTypes() {
+		return new String[] { JRXML_TYPE, ALL_FILES_TYPE }; 
+	}
+	
+	@Override
+	public String getSupportedTypeName(String type) {
+		switch (type) {
+		case JRXML_TYPE:
+			return Messages.SubreportSelectionDialog_JasperReportsFilesTypeTxt;
+		case ALL_FILES_TYPE:
+			return Messages.SubreportSelectionDialog_AllFilesTypeTxt;
+		default:
+			return super.getSupportedTypeName(type);
+		}
 	}
 }

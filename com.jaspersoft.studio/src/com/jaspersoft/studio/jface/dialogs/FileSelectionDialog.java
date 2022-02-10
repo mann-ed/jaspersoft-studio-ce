@@ -52,7 +52,9 @@ import net.sf.jasperreports.engine.design.JRDesignExpression;
  * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
  * 
  */
-public class FileSelectionDialog extends PersistentLocationDialog {
+public class FileSelectionDialog extends PersistentLocationDialog implements ISupportedTypes{
+	
+	public static final String ALL_FILES_TYPE = "*.*"; //$NON-NLS-1$
 
 	// Expression that will be associated to the image element
 	protected String fileExpressionText;
@@ -74,9 +76,7 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 	protected Group grpOptions;
 	protected WTextExpression customExpression;
 	protected JRDesignExpression jrFileExpression;
-
 	protected JasperReportsConfiguration jConfig;
-
 	protected boolean allowValidation = true;
 
 	/**
@@ -329,7 +329,7 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 
 	public void handleTxtFilesystemPathChange() {
 		fileExpressionText = getRootRelativePath(txtFilesystemPath.getText())
-				.replace(System.getProperty("file.separator").charAt(0), '/');
+				.replace(System.getProperty("file.separator").charAt(0), '/'); //$NON-NLS-1$
 	}
 
 	/*
@@ -429,7 +429,7 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 		IFile file = null;
 		FilteredResourcesSelectionDialog fd = new FilteredResourcesSelectionDialog(
 				UIUtils.getShell(), false, ResourcesPlugin.getWorkspace().getRoot(), IResource.FILE);
-		fd.setInitialPattern(getFileExtension());// $NON-NLS-1$
+		fd.setInitialPattern(getDefaultResourcesPattern());// $NON-NLS-1$
 		boolean isok = fd.open() == Dialog.OK;
 		if (isok) {
 			file = (IFile) fd.getFirstResult();
@@ -457,8 +457,8 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 				if (cpath.startsWith(rpath)) {
 					String path = rpath.relativize(cpath).toString();
 					path = FilenameUtils.separatorsToUnix(path);
-					if (!path.startsWith("/"))
-						path = "/" + path;
+					if (!path.startsWith("/")) //$NON-NLS-1$
+						path = "/" + path; //$NON-NLS-1$
 					return path;
 				}
 			}
@@ -466,18 +466,36 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 		return file;
 	}
 
-	protected String getFileExtension() {
-		return "*.*"; //$NON-NLS-1$
+	/**
+	 * Returns the default pattern that will be used for resources selection 
+	 * in some kind of situations (i.e workspace items selection).
+	 * 
+	 * @return default pattern
+	 */
+	protected String getDefaultResourcesPattern() {
+		return ALL_FILES_TYPE; //$NON-NLS-1$
 	}
-
-	protected String[] getFileExtensions() {
-		return new String[] { "*.*" }; //$NON-NLS-1$
+	
+	
+	@Override
+	public String[] getSupportedTypes() {
+		return new String[] { ALL_FILES_TYPE };
 	}
-
-	protected String[] getFileExtensionsNames() {
-		return new String[] { "All Files" }; //$NON-NLS-1$
+	
+	@Override
+	public String getSupportedTypeName(String type) {
+		return ALL_FILES_TYPE.equals(type) ? Messages.FileSelectionDialog_AllFilesText : type;
 	}
-
+	
+	private String[] getFileExtensionsNames() {
+		String[] types = getSupportedTypes();
+		String[] result = new String[types.length];
+		for(int i=0;i<types.length;i++) {
+			result[i] = getSupportedTypeName(types[i]);
+		}
+		return result;
+	}
+	
 	/*
 	 * Popup the dialog to select the image from the filesystem.
 	 */
@@ -487,7 +505,7 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 		FileDialog fd = new FileDialog(tmpShell);
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		fd.setFilterPath(root.getLocation().toOSString());
-		String[] extensions = getFileExtensions();
+		String[] extensions = getSupportedTypes();
 		String[] extensionNames = getFileExtensionsNames();
 		fd.setFilterExtensions(extensions);
 		if (extensions.length == extensionNames.length) {
@@ -563,4 +581,5 @@ public class FileSelectionDialog extends PersistentLocationDialog {
 	protected boolean allowNoFileOption() {
 		return true;
 	}
+
 }
