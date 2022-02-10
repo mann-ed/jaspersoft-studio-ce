@@ -273,6 +273,7 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 		}
 		// file changed, reset properties
 		isPropsCached = false;
+		getProperties();
 		if (preferenceListener == null) {
 			preferenceListener = new PreferenceListener();
 			JaspersoftStudioPlugin.getInstance().addPreferenceListener(preferenceListener, file);
