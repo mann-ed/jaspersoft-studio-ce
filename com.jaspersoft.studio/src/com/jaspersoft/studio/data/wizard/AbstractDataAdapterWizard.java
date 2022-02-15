@@ -82,8 +82,7 @@ public abstract class AbstractDataAdapterWizard extends JSSWizard implements Sel
 						// 1. instance a new dataAdapter using the factory
 						DataAdapterDescriptor newDataAdapter = factory.createDataAdapter();
 						for (int i = 1; i < 1000; i++) {
-							String name = fm.format(new Object[] { (i > 1) ? "(" + i + ")" : "" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
+							String name = fm.format(new Object[] { (i > 1) ? "(" + i + ")" : "" }).trim(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							if (storage.isDataAdapterNameValid(name)) {
 								newDataAdapter.getDataAdapter(getConfig()).setName(name);
 								break;
