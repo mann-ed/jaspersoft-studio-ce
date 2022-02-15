@@ -27,26 +27,9 @@
          version="0.0.0"/>
 
    <requires>
-      <import plugin="org.apache.commons.logging" version="1.2.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi"/>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.7.2" match="greaterOrEqual"/>
-      <import plugin="org.apache.commons.collections"/>
-      <import plugin="org.bouncycastle.bcprov"/>
-      <import plugin="org.bouncycastle.bcutil"/>
-      <import plugin="org.bouncycastle.bcpkix"/>
-      <import plugin="org.apache.commons.io"/>
-      <import plugin="org.apache.xalan"/>
-      <import plugin="org.apache.servicemix.bundles.rhino"/>
-      <import plugin="org.w3c.css.sac"/>
-      <import plugin="org.w3c.dom.smil"/>
-      <import plugin="com.jaspersoft.studio.bundles.batik"/>
-      <import plugin="org.apache.commons.codec"/>
-      <import plugin="org.apache.commons.collections4"/>
-      <import plugin="org.apache.commons.compress"/>
-      <import plugin="org.apache.commons.math3"/>
-      <import plugin="org.apache.santuario.xmlsec"/>
-      <import plugin="org.apache.servicemix.bundles.xmlbeans"/>
+      <import plugin="org.eclipse.osgi"/>
    </requires>
 
    <plugin
@@ -157,7 +140,7 @@
          id="com.jaspersoft.studio.bundles.jackson"
          download-size="0"
          install-size="0"
-         version="2.11.4.b01"
+         version="2.13.1.b01"
          unpack="false"/>
 
    <plugin
@@ -325,6 +308,20 @@
          download-size="0"
          install-size="0"
          version="2.7.2.1"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.logging.log4j.jcl"
+         download-size="0"
+         install-size="0"
+         version="2.17.1"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.logging.log4j.core"
+         download-size="0"
+         install-size="0"
+         version="2.17.1"
          unpack="false"/>
 
 </feature>
