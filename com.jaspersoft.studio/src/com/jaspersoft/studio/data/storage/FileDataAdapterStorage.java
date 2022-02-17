@@ -41,6 +41,7 @@ import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.DataAdapterEditorPart;
 import com.jaspersoft.studio.data.DataAdapterFactory;
 import com.jaspersoft.studio.data.DataAdapterManager;
+import com.jaspersoft.studio.data.DataAdapterUtils;
 import com.jaspersoft.studio.data.DefaultDataAdapterDescriptor;
 import com.jaspersoft.studio.data.customadapters.JSSCastorUtil;
 import com.jaspersoft.studio.messages.Messages;
@@ -71,7 +72,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 				IPath fpath = proxy.requestFullPath();
 				if (fpath != null) {
 					String fext = fpath.getFileExtension();
-					if (fext != null && fext.equalsIgnoreCase("xml")) //$NON-NLS-1$
+					if (fext != null && DataAdapterUtils.isSupportedFileExtension(fext)) //$NON-NLS-1$
 						checkFile((IFile) proxy.requestResource());
 				}
 			}
@@ -154,7 +155,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 													return false;
 												}
 												if (res.getType() == IResource.FILE
-														&& "xml".equalsIgnoreCase(res.getFileExtension())) //$NON-NLS-1$
+														&& DataAdapterUtils.isSupportedFileExtension(res.getFileExtension())) //$NON-NLS-1$
 													switch (delta.getKind()) {
 													case IResourceDelta.ADDED:
 														// checkFile((IFile)
@@ -254,7 +255,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 				|| !file.exists())
 			return;
 		String ext = file.getFileExtension();
-		if (ext.equalsIgnoreCase("xml")) { //$NON-NLS-1$
+		if (DataAdapterUtils.isSupportedFileExtension(ext)) { //$NON-NLS-1$
 			final DataAdapterDescriptor das = readDataADapter(file.getContents(), file);
 			if (das != null) {
 				das.setName(file.getProjectRelativePath().toOSString());

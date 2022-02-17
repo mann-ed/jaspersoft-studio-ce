@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog;
 
+import com.jaspersoft.studio.data.DataAdapterUtils;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.wizards.ContextHelpIDs;
 import com.jaspersoft.studio.wizards.JSSHelpWizardPage;
@@ -355,7 +356,7 @@ public class SelectDefaultDatasetPage extends JSSHelpWizardPage {
 	private void selectDataAdapterFromWorkspace() {
 		FilteredResourcesSelectionDialog fd = new FilteredResourcesSelectionDialog(UIUtils.getShell(), false,
 				ResourcesPlugin.getWorkspace().getRoot(), IResource.FILE);
-		fd.setInitialPattern("*.xml");//$NON-NLS-1$
+		fd.setInitialPattern(DataAdapterUtils.FILTER_FILE_EXTENSION);//$NON-NLS-1$
 		if (fd.open() == Dialog.OK) {
 			IFile file = (IFile) fd.getFirstResult();
 			String filepath = null;
@@ -415,7 +416,7 @@ public class SelectDefaultDatasetPage extends JSSHelpWizardPage {
 		} else {
 			fd.setFilterPath(path);
 		}
-		fd.setFilterExtensions(new String[] { "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
+		fd.setFilterExtensions(DataAdapterUtils.FILTER_EXTENSIONS); //$NON-NLS-1$ //$NON-NLS-2$
 		String selection = fd.open();
 		if (selection != null) {
 			pathText.setText(selection);

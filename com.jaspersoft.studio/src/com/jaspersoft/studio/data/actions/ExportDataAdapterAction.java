@@ -24,6 +24,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.DataAdapterEditorPart;
 import com.jaspersoft.studio.data.DataAdapterManager;
+import com.jaspersoft.studio.data.DataAdapterUtils;
 import com.jaspersoft.studio.data.MDataAdapter;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
@@ -64,7 +65,7 @@ public class ExportDataAdapterAction extends Action {
 			Object obj = p[i].getLastSegment();
 			if (obj instanceof MDataAdapter) {
 				SaveAsDialog saveAsDialog = new SaveAsDialog(UIUtils.getShell());
-				saveAsDialog.setOriginalName(((MDataAdapter) obj).getValue().getName().replace(" ", "") + ".xml"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				saveAsDialog.setOriginalName(((MDataAdapter) obj).getValue().getName().replace(" ", "") + DataAdapterUtils.DOTTED_FILE_EXTENSION); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				saveAsDialog.open();
 				IPath path = saveAsDialog.getResult();
 				if (path != null)
