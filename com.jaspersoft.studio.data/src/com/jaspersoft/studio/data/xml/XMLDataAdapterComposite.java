@@ -4,13 +4,8 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.xml;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.xml.XmlDataAdapter;
-import net.sf.jasperreports.data.xml.XmlDataAdapterImpl;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -26,6 +21,11 @@ import com.jaspersoft.studio.data.AFileDataAdapterComposite;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.DateNumberFormatWidget;
 import com.jaspersoft.studio.data.messages.Messages;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.xml.XmlDataAdapter;
+import net.sf.jasperreports.data.xml.XmlDataAdapterImpl;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class XMLDataAdapterComposite extends AFileDataAdapterComposite {
 
@@ -126,18 +126,18 @@ public class XMLDataAdapterComposite extends AFileDataAdapterComposite {
 
 		doBindFileNameWidget(xmlDataAdapter);
 		bindingContext.bindValue(
-				SWTObservables.observeSelection(supportsNamespaces),
-				PojoObservables.observeValue(dataAdapter, "namespaceAware")); //$NON-NLS-1$
+				WidgetProperties.widgetSelection().observe(supportsNamespaces),
+				PojoProperties.value("namespaceAware").observe(dataAdapter)); //$NON-NLS-1$
 		bindingContext.bindValue(
-				SWTObservables.observeText(textSelectExpression, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "selectExpression")); //$NON-NLS-1$
+				WidgetProperties.text(SWT.Modify).observe(textSelectExpression),
+				PojoProperties.value("selectExpression").observe(dataAdapter)); //$NON-NLS-1$
 
 		dnf.bindWidgets(xmlDataAdapter, bindingContext,
 				xmlDataAdapter.getLocale(), xmlDataAdapter.getTimeZone());
 
-		bindingContext.bindValue(SWTObservables
-				.observeSelection(btnRadioButtonCreateDataAdapter),
-				PojoObservables.observeValue(dataAdapter, "useConnection")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(btnRadioButtonCreateDataAdapter),
+				PojoProperties.value("useConnection").observe(dataAdapter)); //$NON-NLS-1$
 
 		if (!xmlDataAdapter.isUseConnection()) {
 			useConnection = true;

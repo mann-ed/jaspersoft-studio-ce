@@ -4,15 +4,10 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.mondrian;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.mondrian.MondrianDataAdapter;
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,6 +22,11 @@ import org.eclipse.swt.widgets.Text;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.jdbc.JDBCDataAdapterComposite;
 import com.jaspersoft.studio.data.messages.Messages;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.mondrian.MondrianDataAdapter;
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class MondrianDataAdapterComposite extends JDBCDataAdapterComposite {
 	private Text textCatalogURI;
@@ -68,7 +68,9 @@ public class MondrianDataAdapterComposite extends JDBCDataAdapterComposite {
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
 		super.bindWidgets(dataAdapter);
-		bindingContext.bindValue(SWTObservables.observeText(textCatalogURI, SWT.Modify), PojoObservables.observeValue(dataAdapter, "catalogURI")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textCatalogURI),
+				PojoProperties.value("catalogURI").observe(dataAdapter)); //$NON-NLS-1$
 	}
 
 	@Override

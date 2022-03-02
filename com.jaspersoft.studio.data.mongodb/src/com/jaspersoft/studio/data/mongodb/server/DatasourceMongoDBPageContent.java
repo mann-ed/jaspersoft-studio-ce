@@ -5,8 +5,8 @@
 package com.jaspersoft.studio.data.mongodb.server;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -79,18 +79,24 @@ public class DatasourceMongoDBPageContent extends APageContent {
 
 		ResourceProperty rsp = ResourceDescriptorUtil.getProperty(MRDatasourceMongoDB.MONGO_URI, resprop.getProperties());
 		rsp.setValue(Misc.nvl(rsp.getValue()));
-		bindingContext.bindValue(SWTObservables.observeText(turi, SWT.Modify), PojoObservables.observeValue(rsp, "value")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(turi),
+				PojoProperties.value("value").observe(rsp)); //$NON-NLS-1$
 
 		rsp = ResourceDescriptorUtil.getProperty(MRDatasourceMongoDB.USERNAME, resprop.getProperties());
 		rsp.setValue(Misc.nvl(rsp.getValue()));
-		bindingContext.bindValue(SWTObservables.observeText(tusername, SWT.Modify), PojoObservables.observeValue(rsp, "value")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tusername),
+				PojoProperties.value("value").observe(rsp)); //$NON-NLS-1$
 
 		if (tpass != null) {
 			rsp = ResourceDescriptorUtil.getProperty(MRDatasourceMongoDB.PASSWORD, resprop.getProperties());
 			if (rsp == null)
 				rsp = new ResourceProperty(MRDatasourceMongoDB.PASSWORD);
 			rsp.setValue(Misc.nvl(rsp.getValue()));
-			bindingContext.bindValue(SWTObservables.observeText(tpass, SWT.Modify), PojoObservables.observeValue(rsp, "value")); //$NON-NLS-1$
+			bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tpass),
+					PojoProperties.value("value").observe(rsp)); //$NON-NLS-1$
 		}
 	}
 

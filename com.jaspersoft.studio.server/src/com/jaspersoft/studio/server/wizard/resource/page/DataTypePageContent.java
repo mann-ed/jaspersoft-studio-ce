@@ -9,10 +9,10 @@ import java.text.ParseException;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.core.databinding.conversion.NumberToStringConverter;
-import org.eclipse.core.databinding.conversion.StringToNumberConverter;
+import org.eclipse.core.databinding.conversion.text.NumberToStringConverter;
+import org.eclipse.core.databinding.conversion.text.StringToNumberConverter;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -115,7 +115,7 @@ public class DataTypePageContent extends APageContent {
 		bmax = new Button(container, SWT.CHECK);
 		bmax.setText(Messages.RDDataTypePage_strictmax);
 
-		observeDataTypeComboSelection = SWTObservables.observeSingleSelectionIndex(ttype);
+		observeDataTypeComboSelection = WidgetProperties.singleSelectionIndex().observe(ttype);
 		observeDataTypeComboSelection.addValueChangeListener(new IValueChangeListener() {
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
@@ -166,11 +166,15 @@ public class DataTypePageContent extends APageContent {
 			numberFormat.setGroupingUsed(false);
 			IConverter targetToModelConverter = StringToNumberConverter.toInteger(numberFormat, true);
 			IConverter modelToTargetConverter = NumberToStringConverter.fromInteger(numberFormat, true);
-			Binding b = bindingContext.bindValue(SWTObservables.observeText(tlenght, SWT.Modify), PojoObservables.observeValue(getProxy(rd), "maxLenght"), //$NON-NLS-1$
+			Binding b = bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tlenght),
+					PojoProperties.value("maxLenght").observe(getProxy(rd)), //$NON-NLS-1$
 					new UpdateValueStrategy().setAfterGetValidator(tLengValidator).setConverter(targetToModelConverter), new UpdateValueStrategy().setConverter(modelToTargetConverter)); //$NON-NLS-1$
 			ControlDecorationSupport.create(b, SWT.TOP | SWT.LEFT);
 		}
-		bindingContext.bindValue(SWTObservables.observeText(tpattern, SWT.Modify), PojoObservables.observeValue(rd, "pattern")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tpattern),
+				PojoProperties.value("pattern").observe(rd)); //$NON-NLS-1$
 		if (tmin != null) {
 			IValidator minMaxValidator = new IValidator() {
 				public IStatus validate(Object value) {
@@ -214,14 +218,24 @@ public class DataTypePageContent extends APageContent {
 			setProtocolSpecific();
 		}
 
-		Binding b = bindingContext.bindValue(SWTObservables.observeText(tmin, SWT.Modify), PojoObservables.observeValue(rd, "minValue"), minUVSaGet, minUV); //$NON-NLS-1$ 
+		Binding b = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tmin),
+				PojoProperties.value("minValue").observe(rd), minUVSaGet, minUV); //$NON-NLS-1$ 
 		ControlDecorationSupport.create(b, SWT.TOP | SWT.LEFT);
-		b = bindingContext.bindValue(SWTObservables.observeText(tmax, SWT.Modify), PojoObservables.observeValue(rd, "maxValue"), maxUVSaGet, maxUV); //$NON-NLS-1$ 
+		b = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tmax),
+				PojoProperties.value("maxValue").observe(rd), maxUVSaGet, maxUV); //$NON-NLS-1$ 
 		ControlDecorationSupport.create(b, SWT.TOP | SWT.LEFT);
-		bindingContext.bindValue(SWTObservables.observeSelection(bmin), PojoObservables.observeValue(rd, "strictMin")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bmax), PojoObservables.observeValue(rd, "strictMax")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bmin),
+				PojoProperties.value("strictMin").observe(rd)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bmax),
+				PojoProperties.value("strictMax").observe(rd)); //$NON-NLS-1$
 
-		bindingContext.bindValue(observeDataTypeComboSelection, PojoObservables.observeValue(getProxy(rd), "dataType")); //$NON-NLS-1$ 
+		bindingContext.bindValue(
+				observeDataTypeComboSelection,
+				PojoProperties.value("dataType").observe(getProxy(rd))); //$NON-NLS-1$
 	}
 
 	private void setProtocolSpecific() {

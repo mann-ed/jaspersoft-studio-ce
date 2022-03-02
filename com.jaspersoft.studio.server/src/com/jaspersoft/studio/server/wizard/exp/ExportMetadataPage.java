@@ -11,10 +11,10 @@ import org.apache.commons.lang.SystemUtils;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -127,20 +127,26 @@ public class ExportMetadataPage extends JSSHelpWizardPage {
 		bIncMonEvt.setLayoutData(gd);
 		bIncMonEvt.setSelection(true);
 
-		Binding binding = bindingContext.bindValue(SWTObservables.observeText(tfile, SWT.Modify),
-				PojoObservables.observeValue(value, "file"), //$NON-NLS-1$
+		Binding binding = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tfile),
+				PojoProperties.value("file").observe(value), //$NON-NLS-1$
 				new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator()), null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT, null, new ControlDecorationUpdater());
-		bindingContext.bindValue(SWTObservables.observeSelection(bIncRepPerm),
-				PojoObservables.observeValue(value, "incRepositoryPermission")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bIncRepJobs),
-				PojoObservables.observeValue(value, "incReportJobs")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bIncAccEvt),
-				PojoObservables.observeValue(value, "includeAccessEvents")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bIncAudEvt),
-				PojoObservables.observeValue(value, "includeAuditEvents")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bIncMonEvt),
-				PojoObservables.observeValue(value, "includeMonitoringEvents")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bIncRepPerm),
+				PojoProperties.value("incRepositoryPermission").observe(value)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bIncRepJobs),
+				PojoProperties.value("incReportJobs").observe(value)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bIncAccEvt),
+				PojoProperties.value("includeAccessEvents").observe(value)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bIncAudEvt),
+				PojoProperties.value("includeAuditEvents").observe(value)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bIncMonEvt),
+				PojoProperties.value("includeMonitoringEvents").observe(value)); //$NON-NLS-1$
 	}
 
 	public ExportOptions getValue() {

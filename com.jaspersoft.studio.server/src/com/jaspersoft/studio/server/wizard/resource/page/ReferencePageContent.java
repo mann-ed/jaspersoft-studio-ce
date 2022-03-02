@@ -10,17 +10,14 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.ui.validator.EmptyStringValidator;
-
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -39,9 +36,9 @@ import com.jaspersoft.studio.server.ResourceFactory;
 import com.jaspersoft.studio.server.ServerManager;
 import com.jaspersoft.studio.server.WSClientHelper;
 import com.jaspersoft.studio.server.messages.Messages;
+import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.MFolder;
 import com.jaspersoft.studio.server.model.MReportUnit;
-import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.properties.dialog.RepositoryDialog;
 import com.jaspersoft.studio.server.protocol.Feature;
@@ -49,6 +46,9 @@ import com.jaspersoft.studio.server.protocol.IConnection;
 import com.jaspersoft.studio.server.protocol.restv2.WsTypes;
 import com.jaspersoft.studio.server.wizard.find.FindResourceJob;
 import com.jaspersoft.studio.server.wizard.resource.APageContent;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.ui.validator.EmptyStringValidator;
 
 public class ReferencePageContent extends APageContent {
 
@@ -194,12 +194,13 @@ public class ReferencePageContent extends APageContent {
 			bindingContext.removeBinding(b);
 			b.dispose();
 		}
-		bindingContext.bindValue(SWTObservables.observeText(trefuri, SWT.NONE),
-				PojoObservables.observeValue(res.getValue(), "referenceUri")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.NONE).observe(trefuri),
+				PojoProperties.value("referenceUri").observe(res.getValue())); //$NON-NLS-1$
 		if (ref != null) {
 			bindingContext.bindValue(
-					SWTObservables.observeText(tparent, SWT.NONE),
-					PojoObservables.observeValue(ref, "parentFolder")); //$NON-NLS-1$
+					WidgetProperties.text(SWT.NONE).observe(tparent),
+					PojoProperties.value("parentFolder").observe(ref)); //$NON-NLS-1$
 
 			IConnection c = res.getWsClient();
 			final Format f = (c != null ? c.getTimestampFormat() : DateFormat
@@ -225,33 +226,27 @@ public class ReferencePageContent extends APageContent {
 			};
 
 			bindingContext.bindValue(
-					SWTObservables.observeText(tcdate, SWT.NONE),
-					PojoObservables.observeValue(ref, "creationDate"),
+					WidgetProperties.text(SWT.NONE).observe(tcdate),
+					PojoProperties.value("creationDate").observe(ref), //$NON-NLS-1$
 					new UpdateValueStrategy().setConverter(t2mConv),
 					new UpdateValueStrategy().setConverter(m2tConv));
 
 			bindingContext.bindValue(
-					SWTObservables.observeText(ttype, SWT.NONE),
-					PojoObservables.observeValue(ref, "wsType")); //$NON-NLS-1$
+					WidgetProperties.text(SWT.NONE).observe(ttype),
+					PojoProperties.value("wsType").observe(ref)); //$NON-NLS-1$
 
-			bindingContext
-					.bindValue(
-							SWTObservables.observeText(tid, SWT.Modify),
-							PojoObservables.observeValue(ref, "name"), //$NON-NLS-1$
-							new UpdateValueStrategy()
-									.setAfterConvertValidator(new EmptyStringValidator()),
-							null);
-
-			bindingContext
-					.bindValue(
-							SWTObservables.observeText(tname, SWT.Modify),
-							PojoObservables.observeValue(ref, "label"), //$NON-NLS-1$
-							new UpdateValueStrategy()
-									.setAfterConvertValidator(new EmptyStringValidator()),
-							null);
 			bindingContext.bindValue(
-					SWTObservables.observeText(tdesc, SWT.Modify),
-					PojoObservables.observeValue(ref, "description")); //$NON-NLS-1$
+					WidgetProperties.text(SWT.Modify).observe(tid),
+					PojoProperties.value("name").observe(ref), //$NON-NLS-1$
+					new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator()), null);
+
+			bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tname),
+					PojoProperties.value("label").observe(ref), //$NON-NLS-1$
+					new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator()), null);
+			bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tdesc),
+					PojoProperties.value("description").observe(ref)); //$NON-NLS-1$
 		}
 		bindingContext.updateTargets();
 	}

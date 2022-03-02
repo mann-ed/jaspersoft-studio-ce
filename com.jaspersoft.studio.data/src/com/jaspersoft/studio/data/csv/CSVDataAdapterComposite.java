@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -489,14 +489,16 @@ public class CSVDataAdapterComposite extends AFileDataAdapterComposite {
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
 		doBindFileNameWidget(dataAdapter);
-		bindingContext.bindValue(SWTObservables.observeSelection(btnCheckQEMode),
-				PojoObservables.observeValue(dataAdapter, "queryExecuterMode")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnCheckSkipFirstLine),
-				PojoObservables.observeValue(dataAdapter, "useFirstRowAsHeader")); //$NON-NLS-1$
-
-		bindingContext.bindValue(SWTObservables.observeText(cEncoding),
-				PojoObservables.observeValue(dataAdapter, "encoding")); //$NON-NLS-1$
-
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnCheckQEMode),
+				PojoProperties.value("queryExecuterMode").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnCheckSkipFirstLine),
+				PojoProperties.value("useFirstRowAsHeader").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text().observe(cEncoding),
+				PojoProperties.value("encoding").observe(dataAdapter)); //$NON-NLS-1$
+		
 		CsvDataAdapter csvDataAdapter = (CsvDataAdapter) dataAdapter;
 		List<String> listColumnNames = csvDataAdapter.getColumnNames();
 		if (listColumnNames != null && listColumnNames.size() > 0) {
@@ -511,19 +513,24 @@ public class CSVDataAdapterComposite extends AFileDataAdapterComposite {
 		dnf.bindWidgets(csvDataAdapter, bindingContext, csvDataAdapter.getLocale(), csvDataAdapter.getTimeZone());
 
 		Proxy proxy = new Proxy(csvDataAdapter);
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioFieldComma),
-				PojoObservables.observeValue(proxy, "fieldComma")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioFieldTab),
-				PojoObservables.observeValue(proxy, "fieldTab")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioFieldSpace),
-				PojoObservables.observeValue(proxy, "fieldSpace")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioFieldSemicolon),
-				PojoObservables.observeValue(proxy, "fieldSemicolon")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioFieldNewLineUnix),
-				PojoObservables.observeValue(proxy, "fieldNewLineUnix")); //$NON-NLS-1$
-
-		bindingContext.bindValue(SWTObservables.observeText(textFieldOther, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "fieldDelimiter")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioFieldComma),
+				PojoProperties.value("fieldComma").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioFieldTab),
+				PojoProperties.value("fieldTab").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioFieldSpace),
+				PojoProperties.value("fieldSpace").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioFieldSemicolon),
+				PojoProperties.value("fieldSemicolon").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioFieldNewLineUnix),
+				PojoProperties.value("fieldNewLineUnix").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textFieldOther),
+				PojoProperties.value("fieldDelimiter").observe(proxy)); //$NON-NLS-1$
 
 		String fieldDelimiter = csvDataAdapter.getFieldDelimiter();
 		if (fieldDelimiter != null) { // should never be null
@@ -544,21 +551,27 @@ public class CSVDataAdapterComposite extends AFileDataAdapterComposite {
 			}
 		}
 
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioRowComma),
-				PojoObservables.observeValue(proxy, "rowComma")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioRowTab),
-				PojoObservables.observeValue(proxy, "rowTab")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioRowSpace),
-				PojoObservables.observeValue(proxy, "rowSpace")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioRowSemicolon),
-				PojoObservables.observeValue(proxy, "rowSemicolon")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioRowNewLineUnix),
-				PojoObservables.observeValue(proxy, "rowNewLineUnix")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioRowNewLineWin),
-				PojoObservables.observeValue(proxy, "rowNewLineWin")); //$NON-NLS-1$
-
-		bindingContext.bindValue(SWTObservables.observeText(textRowOther, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "recordDelimiter")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioRowComma),
+				PojoProperties.value("rowComma").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioRowTab),
+				PojoProperties.value("rowTab").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioRowSpace),
+				PojoProperties.value("rowSpace").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioRowSemicolon),
+				PojoProperties.value("rowSemicolon").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioRowNewLineUnix),
+				PojoProperties.value("rowNewLineUnix").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(btnRadioRowNewLineWin),
+				PojoProperties.value("rowNewLineWin").observe(proxy)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textRowOther),
+				PojoProperties.value("recordDelimiter").observe(proxy)); //$NON-NLS-1$
 
 		String recordDelimitier = csvDataAdapter.getRecordDelimiter();
 		if (recordDelimitier != null) { // should never be null

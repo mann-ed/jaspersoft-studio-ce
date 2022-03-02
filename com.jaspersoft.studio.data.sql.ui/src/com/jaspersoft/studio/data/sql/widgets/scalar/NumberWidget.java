@@ -7,12 +7,12 @@ package com.jaspersoft.studio.data.sql.widgets.scalar;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -64,8 +64,8 @@ public class NumberWidget extends AScalarWidget {
 		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 		targetToModel.setBeforeSetValidator(numberValidator);
 		Binding bindValue = bindingContext.bindValue(
-				SWTObservables.observeText(txt, SWT.Modify),
-				PojoObservables.observeValue(getValue(), "value"),
+				WidgetProperties.text(SWT.Modify).observe(txt),
+				PojoProperties.value("value").observe(getValue()),
 				targetToModel, null);
 
 		ControlDecorationSupport.create(bindValue, SWT.TOP | SWT.LEFT);

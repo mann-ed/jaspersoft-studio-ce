@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -122,8 +122,9 @@ public class EditExpressionXDialog extends ATitledDialog implements IFilterQuery
 
 			new Label(c, SWT.NONE).setText(" this one.");
 
-			bindingContext.bindValue(SWTObservables.observeSelection(prevoperator),
-					PojoObservables.observeValue(this, "prevcond")); //$NON-NLS-1$
+			bindingContext.bindValue(
+					WidgetProperties.widgetSelection().observe(prevoperator),
+					PojoProperties.value("prevcond").observe(this)); //$NON-NLS-1$
 		} else {
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 5;
@@ -155,8 +156,9 @@ public class EditExpressionXDialog extends ATitledDialog implements IFilterQuery
 		rcmp.setLayoutData(gd);
 
 		showRight();
-		bindingContext.bindValue(SWTObservables.observeSelection(operator),
-				PojoObservables.observeValue(this, "function")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(operator),
+				PojoProperties.value("function").observe(this)); //$NON-NLS-1$
 		return cmp;
 	}
 

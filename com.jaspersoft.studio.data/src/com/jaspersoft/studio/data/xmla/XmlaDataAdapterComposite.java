@@ -10,8 +10,8 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.text.MessageFormat;
 
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -280,20 +280,23 @@ public class XmlaDataAdapterComposite extends ADataAdapterComposite {
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
 		bindingContext.bindValue(
-				SWTObservables.observeText(xmlaUri, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "xmlaUrl")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(datasource),
-				PojoObservables.observeValue(dataAdapter, "datasource")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(catalog),
-				PojoObservables.observeValue(dataAdapter, "catalog")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(cube),
-				PojoObservables.observeValue(dataAdapter, "cube")); //$NON-NLS-1$
+				WidgetProperties.text(SWT.Modify).observe(xmlaUri),
+				PojoProperties.value("xmlaUrl").observe(dataAdapter)); //$NON-NLS-1$
 		bindingContext.bindValue(
-				SWTObservables.observeText(textUsername, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "username")); //$NON-NLS-1$
+				WidgetProperties.widgetSelection().observe(datasource),
+				PojoProperties.value("datasource").observe(dataAdapter)); //$NON-NLS-1$
 		bindingContext.bindValue(
-				SWTObservables.observeText(textPassword, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "password")); //$NON-NLS-1$
+				WidgetProperties.widgetSelection().observe(catalog),
+				PojoProperties.value("catalog").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(cube),
+				PojoProperties.value("cube").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textUsername),
+				PojoProperties.value("username").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textPassword),
+				PojoProperties.value("password").observe(dataAdapter)); //$NON-NLS-1$
 	}
 
 	public DataAdapterDescriptor getDataAdapter() {

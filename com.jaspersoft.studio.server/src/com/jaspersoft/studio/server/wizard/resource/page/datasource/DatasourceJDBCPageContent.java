@@ -7,8 +7,8 @@ package com.jaspersoft.studio.server.wizard.resource.page.datasource;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -130,14 +130,18 @@ public class DatasourceJDBCPageContent extends APageContent {
 	@Override
 	protected void rebind() {
 		ResourceDescriptor rd = res.getValue();
-		bindingContext.bindValue(SWTObservables.observeText(tdriver, SWT.Modify),
-				PojoObservables.observeValue(rd, "driverClass")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(turl, SWT.Modify),
-				PojoObservables.observeValue(rd, "connectionUrl")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(tuser, SWT.Modify),
-				PojoObservables.observeValue(rd, "username")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(tpass, SWT.Modify),
-				PojoObservables.observeValue(rd, "password")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tdriver),
+				PojoProperties.value("driverClass").observe(rd)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(turl),			
+				PojoProperties.value("connectionUrl").observe(rd)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tuser),	
+				PojoProperties.value("username").observe(rd)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tpass),
+				PojoProperties.value("password").observe(rd)); //$NON-NLS-1$
 		if (cpath != null && res.getValue() != null && res.getValue() instanceof List)
 			cpath.setClasspaths((List<String>) res.getValue());
 	}

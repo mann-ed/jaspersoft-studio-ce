@@ -32,7 +32,7 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.internal.resources.Folder;
 import org.eclipse.core.resources.IContainer;
@@ -46,7 +46,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -233,7 +233,9 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		try {
 			refreshing = true;
 			proxy = new Proxy(value);
-			dbc.bindValue(SWTObservables.observeText(tname, SWT.Modify), PojoObservables.observeValue(value, "name"), //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tname),
+					PojoProperties.value("name").observe(value), //$NON-NLS-1$
 					new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator() {
 						@Override
 						public IStatus validate(String value) {
@@ -244,7 +246,9 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 							return s;
 						}
 					}), null);
-			dbc.bindValue(SWTObservables.observeText(turl, SWT.Modify), PojoObservables.observeValue(proxy, "url"), //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(turl),
+					PojoProperties.value("url").observe(proxy), //$NON-NLS-1$
 					new UpdateValueStrategy().setAfterConvertValidator(new URLValidator() {
 						@Override
 						public IStatus validate(String value) {
@@ -253,35 +257,60 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 							return status;
 						}
 					}), null);
-			dbc.bindValue(SWTObservables.observeText(lpath, SWT.Modify),
-					PojoObservables.observeValue(proxy, "projectPath"), //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(lpath),
+					PojoProperties.value("projectPath").observe(proxy), //$NON-NLS-1$
 					new UpdateValueStrategy().setAfterConvertValidator(new NotEmptyIFolderValidator()), null);
-			dbc.bindValue(SWTObservables.observeText(torg, SWT.Modify),
-					PojoObservables.observeValue(value, "organisation")); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(torg),
+					PojoProperties.value("organisation").observe(value)); //$NON-NLS-1$
 			userValidator = new UsernameValidator(!(value.isUseSSO() || value.isAskPass()));
-			dbc.bindValue(SWTObservables.observeText(tuser, SWT.Modify), PojoObservables.observeValue(value, "user"), //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tuser),
+					PojoProperties.value("user").observe(value), //$NON-NLS-1$
 					new UpdateValueStrategy().setAfterConvertValidator(userValidator), null);
-			dbc.bindValue(SWTObservables.observeText(tuserA, SWT.Modify), PojoObservables.observeValue(value, "user"), //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tuserA),
+					PojoProperties.value("user").observe(value), //$NON-NLS-1$
 					new UpdateValueStrategy().setAfterConvertValidator(userValidator), null);
-			dbc.bindValue(SWTObservables.observeText(tpass, SWT.Modify), PojoObservables.observeValue(value, "pass")); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tpass),
+					PojoProperties.value("pass").observe(value)); //$NON-NLS-1$
 
-			dbc.bindValue(SWTObservables.observeText(ttimeout, SWT.Modify),
-					PojoObservables.observeValue(value, "timeout")); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(ttimeout),
+					PojoProperties.value("timeout").observe(value)); //$NON-NLS-1$
 
-			dbc.bindValue(SWTObservables.observeSelection(bchunked), PojoObservables.observeValue(value, "chunked")); //$NON-NLS-1$
-			dbc.bindValue(SWTObservables.observeText(bmime), PojoObservables.observeValue(proxy, "mime")); //$NON-NLS-1$
-			dbc.bindValue(SWTObservables.observeText(loc.getCombo()), PojoObservables.observeValue(value, "locale")); //$NON-NLS-1$
-			dbc.bindValue(SWTObservables.observeText(tz.getCombo()), PojoObservables.observeValue(value, "timeZone")); //$NON-NLS-1$
-			dbc.bindValue(SWTObservables.observeSingleSelectionIndex(bSSO), PojoObservables.observeValue(proxy, "sso")); //$NON-NLS-1$
-			dbc.bindValue(SWTObservables.observeSelection(bdaterange),
-					PojoObservables.observeValue(value, "supportsDateRanges")); //$NON-NLS-1$
-			dbc.bindValue(SWTObservables.observeSingleSelectionIndex(cUseProtocol),
-					PojoObservables.observeValue(proxy, "useProtocol")); //$NON-NLS-1$
-			dbc.bindValue(SWTObservables.observeSelection(bSyncDA), PojoObservables.observeValue(value, "syncDA")); //$NON-NLS-1$
-			dbc.bindValue(SWTObservables.observeSelection(bLogging), PojoObservables.observeValue(value, "logging")); //$NON-NLS-1$
-
-			dbc.bindValue(SWTObservables.observeText(cversion.getControl()),
-					PojoObservables.observeValue(proxy, "jrVersion")); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.widgetSelection().observe(bchunked),					
+					PojoProperties.value("chunked").observe(value)); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text().observe(bmime),
+					PojoProperties.value("mime").observe(proxy)); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text().observe(loc.getCombo()),
+					PojoProperties.value("locale").observe(value)); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text().observe(tz.getCombo()),
+					PojoProperties.value("timeZone").observe(value)); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.singleSelectionIndex().observe(bSSO),
+					PojoProperties.value("sso").observe(proxy)); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.widgetSelection().observe(bdaterange),
+					PojoProperties.value("supportsDateRanges").observe(value)); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.singleSelectionIndex().observe(cUseProtocol),
+					PojoProperties.value("useProtocol").observe(proxy)); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.widgetSelection().observe(bSyncDA),
+					PojoProperties.value("syncDA").observe(value)); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.widgetSelection().observe(bLogging),
+					PojoProperties.value("logging").observe(value)); //$NON-NLS-1$
+			dbc.bindValue(
+					WidgetProperties.text().observe(cversion.getControl()),
+					PojoProperties.value("jrVersion").observe(proxy)); //$NON-NLS-1$
 
 			tpass.loadSecret(JRServerSecretsProvider.SECRET_NODE_ID, Misc.nvl(sprofile.getValue().getPass()));
 

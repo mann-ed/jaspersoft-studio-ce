@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICellModifier;
@@ -172,8 +172,9 @@ public class DatasourceCustomPageContent extends APageContent {
 	@Override
 	protected void rebind() {
 		ResourceDescriptor rd = res.getValue();
-		bindingContext.bindValue(SWTObservables.observeText(srvName, SWT.Modify), PojoObservables.observeValue(rd, "serviceClass")); //$NON-NLS-1$
-
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(srvName),
+				PojoProperties.value("serviceClass").observe(rd)); //$NON-NLS-1$
 	}
 
 	private void attachCellEditors(final TableViewer viewer, Composite parent) {
