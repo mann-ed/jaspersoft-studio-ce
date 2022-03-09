@@ -136,11 +136,6 @@ public abstract class NumberPropertyDescription<T extends Number> extends Abstra
 	}
 
 	@Override
-	public String getToolTip(IWItemProperty wip, String value) {
-		return super.getToolTip(wip, value) + "\n" + getToolTip();
-	}
-
-	@Override
 	public String getToolTip() {
 		String tt = super.getToolTip();
 		if (getMin() != null)
