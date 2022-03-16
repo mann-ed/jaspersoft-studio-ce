@@ -459,8 +459,9 @@ public class MTable extends MGraphicElement
 		}
 
 		if (getTableManager() != null) {
-			if ((evt.getSource() instanceof JRDesignComponentElement) || (evt.getSource() instanceof StandardBaseColumn)
-					|| (evt.getSource() instanceof JRDesignCellContents)) {
+			Object source = evt.getSource();
+			if ((source instanceof JRDesignComponentElement) || (source instanceof StandardBaseColumn)
+					|| (source instanceof JRDesignCellContents) || (source instanceof StandardTable)) {
 				getTableManager().update();
 			}
 		}
