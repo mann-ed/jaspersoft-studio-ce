@@ -26,12 +26,6 @@
          search-location="both"/>
 
    <includes
-         id="org.eclipse.cvs"
-         version="0.0.0"
-         optional="true"
-         search-location="both"/>
-
-   <includes
          id="org.tigris.subversion.clientadapter.svnkit.feature"
          version="0.0.0"
          optional="true"

@@ -2,7 +2,7 @@
 <feature
       id="com.jaspersoft.studio.foundation.bundles"
       label="Jaspersoft Studio Required Bundles Feature"
-      version="1.0.20"
+      version="1.0.21"
       provider-name="TIBCO Software Inc.">
 
    <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
@@ -134,7 +134,7 @@
          id="com.jaspersoft.studio.bundles.batik"
          download-size="0"
          install-size="0"
-         version="1.14.0.b02"/>
+         version="1.14.0.b03"/>
 
    <plugin
          id="com.jaspersoft.studio.bundles.jackson"
@@ -251,28 +251,28 @@
          id="org.bouncycastle.bcpg"
          download-size="0"
          install-size="0"
-         version="1.69.0.v20210713-1924"
+         version="1.70.0.v20220105-1522"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcpkix"
          download-size="0"
          install-size="0"
-         version="1.69.0.v20210713-1924"
+         version="1.70.0.v20220105-1522"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcprov"
          download-size="0"
          install-size="0"
-         version="1.69.0.v20210923-1401"
+         version="1.70.0.v20220105-1522"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcutil"
          download-size="0"
          install-size="0"
-         version="1.69.0.v20210713-1924"
+         version="1.70.0.v20220105-1522"
          unpack="false"/>
 
    <plugin
