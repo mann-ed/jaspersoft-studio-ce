@@ -147,6 +147,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public TableFull getTfull()
   {
     return tfull;
@@ -174,6 +175,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setTfull(TableFull newTfull)
   {
     if (newTfull != tfull)
@@ -195,6 +197,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SubQueryOperand getSq()
   {
     return sq;
@@ -222,6 +225,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSq(SubQueryOperand newSq)
   {
     if (newSq != sq)
@@ -243,6 +247,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public FromValues getValues()
   {
     return values;
@@ -270,6 +275,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setValues(FromValues newValues)
   {
     if (newValues != values)
@@ -291,6 +297,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PivotTable getPivot()
   {
     return pivot;
@@ -318,6 +325,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPivot(PivotTable newPivot)
   {
     if (newPivot != pivot)
@@ -339,6 +347,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public UnpivotTable getUnpivot()
   {
     return unpivot;
@@ -366,6 +375,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setUnpivot(UnpivotTable newUnpivot)
   {
     if (newUnpivot != unpivot)
@@ -387,6 +397,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getAlias()
   {
     return alias;
@@ -397,6 +408,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setAlias(String newAlias)
   {
     String oldAlias = alias;
@@ -410,6 +422,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public DbObjectName getTblAlias()
   {
     return tblAlias;
@@ -437,6 +450,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setTblAlias(DbObjectName newTblAlias)
   {
     if (newTblAlias != tblAlias)
@@ -615,7 +629,7 @@ public class TableOrAliasImpl extends MinimalEObjectImpl.Container implements Ta
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (alias: ");
     result.append(alias);
     result.append(')');

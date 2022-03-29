@@ -69,6 +69,7 @@ public class tblsImpl extends TableFullImpl implements tbls
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<DbObjectName> getEntries()
   {
     if (entries == null)

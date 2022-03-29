@@ -69,6 +69,7 @@ public class OrColumnImpl extends PivotForClauseImpl implements OrColumn
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<ColumnOrAlias> getEntries()
   {
     if (entries == null)

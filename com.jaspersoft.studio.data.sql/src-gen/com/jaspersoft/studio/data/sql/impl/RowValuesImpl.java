@@ -71,6 +71,7 @@ public class RowValuesImpl extends MinimalEObjectImpl.Container implements RowVa
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<RowValue> getEntries()
   {
     if (entries == null)

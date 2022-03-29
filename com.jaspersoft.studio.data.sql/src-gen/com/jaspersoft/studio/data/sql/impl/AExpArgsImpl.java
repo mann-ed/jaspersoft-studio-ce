@@ -69,6 +69,7 @@ public class AExpArgsImpl extends AnalyticExprArgsImpl implements AExpArgs
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<AnalyticExprArg> getEntries()
   {
     if (entries == null)

@@ -26,10 +26,6 @@ public interface Like extends EObject
   /**
    * Returns the value of the '<em><b>Op Like</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op Like</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op Like</em>' attribute.
    * @see #setOpLike(String)
@@ -52,10 +48,6 @@ public interface Like extends EObject
   /**
    * Returns the value of the '<em><b>Op2</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op2</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op2</em>' containment reference.
    * @see #setOp2(LikeOperand)

@@ -26,10 +26,6 @@ public interface OrderByColumnFull extends OrOrderByColumn
   /**
    * Returns the value of the '<em><b>Col Order</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Col Order</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Col Order</em>' containment reference.
    * @see #setColOrder(ColumnFull)
@@ -52,10 +48,6 @@ public interface OrderByColumnFull extends OrOrderByColumn
   /**
    * Returns the value of the '<em><b>Col Order Int</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Col Order Int</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Col Order Int</em>' attribute.
    * @see #setColOrderInt(Long)
@@ -78,10 +70,6 @@ public interface OrderByColumnFull extends OrOrderByColumn
   /**
    * Returns the value of the '<em><b>Direction</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Direction</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Direction</em>' attribute.
    * @see #setDirection(String)

@@ -71,6 +71,7 @@ public class OrTableImpl extends MinimalEObjectImpl.Container implements OrTable
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<FromTable> getEntries()
   {
     if (entries == null)

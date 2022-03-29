@@ -84,6 +84,7 @@ public class FromTableImpl extends OrTableImpl implements FromTable
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public TableOrAlias getTable()
   {
     return table;
@@ -111,6 +112,7 @@ public class FromTableImpl extends OrTableImpl implements FromTable
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setTable(TableOrAlias newTable)
   {
     if (newTable != table)
@@ -132,6 +134,7 @@ public class FromTableImpl extends OrTableImpl implements FromTable
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<FromTableJoin> getFjoin()
   {
     if (fjoin == null)

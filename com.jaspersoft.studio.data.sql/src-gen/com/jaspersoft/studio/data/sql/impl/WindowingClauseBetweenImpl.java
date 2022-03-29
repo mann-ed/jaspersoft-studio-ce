@@ -77,6 +77,7 @@ public class WindowingClauseBetweenImpl extends WindowingClauseImpl implements W
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WindowingClauseOperandPreceding getWcoP()
   {
     return wcoP;
@@ -104,6 +105,7 @@ public class WindowingClauseBetweenImpl extends WindowingClauseImpl implements W
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setWcoP(WindowingClauseOperandPreceding newWcoP)
   {
     if (newWcoP != wcoP)
@@ -125,6 +127,7 @@ public class WindowingClauseBetweenImpl extends WindowingClauseImpl implements W
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WindowingClauseOperandFollowing getWcoF()
   {
     return wcoF;
@@ -152,6 +155,7 @@ public class WindowingClauseBetweenImpl extends WindowingClauseImpl implements W
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setWcoF(WindowingClauseOperandFollowing newWcoF)
   {
     if (newWcoF != wcoF)

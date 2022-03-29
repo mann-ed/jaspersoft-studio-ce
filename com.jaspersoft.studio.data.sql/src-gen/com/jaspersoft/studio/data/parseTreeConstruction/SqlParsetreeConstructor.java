@@ -266,11 +266,13 @@ protected class Model_QueryAssignment_2 extends AssignmentToken  {
 /************ begin Rule WithQuery ****************
  *
  * WithQuery:
- * 	w='WITH' wname=DBID withCols=WithColumns? 'AS' '(' query=SelectQuery ')';
+ * 	w='WITH' wname=DbObjectName withCols=WithColumns? 'AS' '(' query=SelectQuery ')' (',' additionalWname+=DbObjectName
+ * 	additionalWithCols+=WithColumns? 'AS' '(' additionalQueries+=SelectQuery ')')*;
  *
  **/
 
-// w='WITH' wname=DBID withCols=WithColumns? 'AS' '(' query=SelectQuery ')'
+// w='WITH' wname=DbObjectName withCols=WithColumns? 'AS' '(' query=SelectQuery ')' (',' additionalWname+=DbObjectName
+// additionalWithCols+=WithColumns? 'AS' '(' additionalQueries+=SelectQuery ')')*
 protected class WithQuery_Group extends GroupToken {
 	
 	public WithQuery_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -285,7 +287,8 @@ protected class WithQuery_Group extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new WithQuery_RightParenthesisKeyword_6(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new WithQuery_Group_7(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new WithQuery_RightParenthesisKeyword_6(lastRuleCallOrigin, this, 1, inst);
 			default: return null;
 		}	
 	}
@@ -332,7 +335,7 @@ protected class WithQuery_WAssignment_0 extends AssignmentToken  {
 
 }
 
-// wname=DBID
+// wname=DbObjectName
 protected class WithQuery_WnameAssignment_1 extends AssignmentToken  {
 	
 	public WithQuery_WnameAssignment_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -347,7 +350,7 @@ protected class WithQuery_WnameAssignment_1 extends AssignmentToken  {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new WithQuery_WAssignment_0(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new DbObjectName_DbnameAssignment(this, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -356,14 +359,26 @@ protected class WithQuery_WnameAssignment_1 extends AssignmentToken  {
 	public IEObjectConsumer tryConsume() {
 		if((value = eObjectConsumer.getConsumable("wname",true)) == null) return null;
 		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("wname");
-		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getWithQueryAccess().getWnameDBIDParserRuleCall_1_0(), value, null)) {
-			type = AssignmentType.DATATYPE_RULE_CALL;
-			element = grammarAccess.getWithQueryAccess().getWnameDBIDParserRuleCall_1_0();
-			return obj;
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getDbObjectNameRule().getType().getClassifier())) {
+				type = AssignmentType.PARSER_RULE_CALL;
+				element = grammarAccess.getWithQueryAccess().getWnameDbObjectNameParserRuleCall_1_0(); 
+				consumed = obj;
+				return param;
+			}
 		}
 		return null;
 	}
 
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		if(value == inst.getEObject() && !inst.isConsumed()) return null;
+		switch(index) {
+			case 0: return new WithQuery_WAssignment_0(lastRuleCallOrigin, next, actIndex, consumed);
+			default: return null;
+		}	
+	}	
 }
 
 // withCols=WithColumns?
@@ -524,6 +539,257 @@ protected class WithQuery_RightParenthesisKeyword_6 extends KeywordToken  {
 	}
 
 }
+
+// (',' additionalWname+=DbObjectName additionalWithCols+=WithColumns? 'AS' '(' additionalQueries+=SelectQuery ')')*
+protected class WithQuery_Group_7 extends GroupToken {
+	
+	public WithQuery_Group_7(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getWithQueryAccess().getGroup_7();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new WithQuery_RightParenthesisKeyword_7_6(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// ','
+protected class WithQuery_CommaKeyword_7_0 extends KeywordToken  {
+	
+	public WithQuery_CommaKeyword_7_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getWithQueryAccess().getCommaKeyword_7_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new WithQuery_Group_7(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new WithQuery_RightParenthesisKeyword_6(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// additionalWname+=DbObjectName
+protected class WithQuery_AdditionalWnameAssignment_7_1 extends AssignmentToken  {
+	
+	public WithQuery_AdditionalWnameAssignment_7_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getWithQueryAccess().getAdditionalWnameAssignment_7_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new DbObjectName_DbnameAssignment(this, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("additionalWname",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("additionalWname");
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getDbObjectNameRule().getType().getClassifier())) {
+				type = AssignmentType.PARSER_RULE_CALL;
+				element = grammarAccess.getWithQueryAccess().getAdditionalWnameDbObjectNameParserRuleCall_7_1_0(); 
+				consumed = obj;
+				return param;
+			}
+		}
+		return null;
+	}
+
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		if(value == inst.getEObject() && !inst.isConsumed()) return null;
+		switch(index) {
+			case 0: return new WithQuery_CommaKeyword_7_0(lastRuleCallOrigin, next, actIndex, consumed);
+			default: return null;
+		}	
+	}	
+}
+
+// additionalWithCols+=WithColumns?
+protected class WithQuery_AdditionalWithColsAssignment_7_2 extends AssignmentToken  {
+	
+	public WithQuery_AdditionalWithColsAssignment_7_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getWithQueryAccess().getAdditionalWithColsAssignment_7_2();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new WithColumns_Group(this, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("additionalWithCols",false)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("additionalWithCols");
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getWithColumnsRule().getType().getClassifier())) {
+				type = AssignmentType.PARSER_RULE_CALL;
+				element = grammarAccess.getWithQueryAccess().getAdditionalWithColsWithColumnsParserRuleCall_7_2_0(); 
+				consumed = obj;
+				return param;
+			}
+		}
+		return null;
+	}
+
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		if(value == inst.getEObject() && !inst.isConsumed()) return null;
+		switch(index) {
+			case 0: return new WithQuery_AdditionalWnameAssignment_7_1(lastRuleCallOrigin, next, actIndex, consumed);
+			default: return null;
+		}	
+	}	
+}
+
+// 'AS'
+protected class WithQuery_ASKeyword_7_3 extends KeywordToken  {
+	
+	public WithQuery_ASKeyword_7_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getWithQueryAccess().getASKeyword_7_3();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new WithQuery_AdditionalWithColsAssignment_7_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new WithQuery_AdditionalWnameAssignment_7_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// '('
+protected class WithQuery_LeftParenthesisKeyword_7_4 extends KeywordToken  {
+	
+	public WithQuery_LeftParenthesisKeyword_7_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getWithQueryAccess().getLeftParenthesisKeyword_7_4();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new WithQuery_ASKeyword_7_3(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// additionalQueries+=SelectQuery
+protected class WithQuery_AdditionalQueriesAssignment_7_5 extends AssignmentToken  {
+	
+	public WithQuery_AdditionalQueriesAssignment_7_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getWithQueryAccess().getAdditionalQueriesAssignment_7_5();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new SelectQuery_Group(this, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("additionalQueries",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("additionalQueries");
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getSelectQueryRule().getType().getClassifier())) {
+				type = AssignmentType.PARSER_RULE_CALL;
+				element = grammarAccess.getWithQueryAccess().getAdditionalQueriesSelectQueryParserRuleCall_7_5_0(); 
+				consumed = obj;
+				return param;
+			}
+		}
+		return null;
+	}
+
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		if(value == inst.getEObject() && !inst.isConsumed()) return null;
+		switch(index) {
+			case 0: return new WithQuery_LeftParenthesisKeyword_7_4(lastRuleCallOrigin, next, actIndex, consumed);
+			default: return null;
+		}	
+	}	
+}
+
+// ')'
+protected class WithQuery_RightParenthesisKeyword_7_6 extends KeywordToken  {
+	
+	public WithQuery_RightParenthesisKeyword_7_6(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getWithQueryAccess().getRightParenthesisKeyword_7_6();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new WithQuery_AdditionalQueriesAssignment_7_5(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
 
 
 /************ end Rule WithQuery ****************/
@@ -1383,15 +1649,15 @@ protected class SelectSubSet_QueryAssignment_2 extends AssignmentToken  {
  * Select:
  * 	select='SELECT' 'DISTINCT'? ('TOP' (INT | SIGNED_DOUBLE) 'PERCENT'? ('WITH' 'TIES')?)? cols=Columns 'FROM'
  * 	tbl=Tables ('WHERE' whereExpression=FullExpression)? ('GROUP' 'BY' groupByEntry=GroupByColumns)? ('HAVING'
- * 	havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET'
- * 	offset=Offset)? ('FETCH' 'FIRST' fetchFirst=FetchFirst)?;
+ * 	havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET' offset=Offset)?
+ * 	('FETCH' 'FIRST' fetchFirst=FetchFirst)?;
  *
  **/
 
-// select='SELECT' 'DISTINCT'? ('TOP' (INT | SIGNED_DOUBLE) 'PERCENT'? ('WITH' 'TIES')?)? cols=Columns 'FROM' tbl=Tables
-// ('WHERE' whereExpression=FullExpression)? ('GROUP' 'BY' groupByEntry=GroupByColumns)? ('HAVING'
-// havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET' offset=Offset)?
-// ('FETCH' 'FIRST' fetchFirst=FetchFirst)?
+// select='SELECT' 'DISTINCT'? ('TOP' (INT | SIGNED_DOUBLE) 'PERCENT'? ('WITH' 'TIES')?)? cols=Columns 'FROM'
+// tbl=Tables ('WHERE' whereExpression=FullExpression)? ('GROUP' 'BY' groupByEntry=GroupByColumns)? ('HAVING'
+// havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET' offset=Offset)? (
+// 'FETCH' 'FIRST' fetchFirst=FetchFirst)?
 protected class Select_Group extends GroupToken {
 	
 	public Select_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -3508,7 +3774,7 @@ protected class FromTableJoin_OnTableAssignment_1 extends AssignmentToken  {
 	}	
 }
 
-// 'ON' joinExpr=FullExpression | joinCond=JoinCondition
+// ('ON' joinExpr=FullExpression | joinCond=JoinCondition)
 protected class FromTableJoin_Alternatives_2 extends AlternativesToken {
 
 	public FromTableJoin_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -4094,7 +4360,7 @@ protected class TableOrAlias_Group extends GroupToken {
 
 }
 
-// tfull=TableFull | sq=SubQueryOperand | values=FromValues
+// (tfull=TableFull | sq=SubQueryOperand | values=FromValues)
 protected class TableOrAlias_Alternatives_0 extends AlternativesToken {
 
 	public TableOrAlias_Alternatives_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -6398,7 +6664,7 @@ protected class PivotInClause_LeftParenthesisKeyword_1 extends KeywordToken  {
 
 }
 
-// sq=SubQueryOperand | args=UnpivotInClauseArgs | pinany=PivotInClauseAny
+// (sq=SubQueryOperand | args=UnpivotInClauseArgs | pinany=PivotInClauseAny)
 protected class PivotInClause_Alternatives_2 extends AlternativesToken {
 
 	public PivotInClause_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -7475,7 +7741,7 @@ protected class PivotForClause_FORKeyword_0 extends KeywordToken  {
 
 }
 
-// ColumnFull | '(' Columns ')'
+// (ColumnFull | '(' Columns ')')
 protected class PivotForClause_Alternatives_1 extends AlternativesToken {
 
 	public PivotForClause_Alternatives_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -8949,7 +9215,7 @@ protected class OrderByColumnFull_Group extends GroupToken {
 
 }
 
-// colOrder=ColumnFull | colOrderInt=UNSIGNED
+// (colOrder=ColumnFull | colOrderInt=UNSIGNED)
 protected class OrderByColumnFull_Alternatives_0 extends AlternativesToken {
 
 	public OrderByColumnFull_Alternatives_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -11254,7 +11520,8 @@ protected class JRParameter_JrprmAssignment extends AssignmentToken  {
  *
  **/
 
-// op1=Operand (isnull=IsNullValue | in=InOperator | exists=ExistsOperator | between=Between | like=Like | comp=Comparison)
+// op1=Operand (isnull=IsNullValue | in=InOperator | exists=ExistsOperator | between=Between | like=Like
+// | comp=Comparison)
 protected class Expression_Group extends GroupToken {
 	
 	public Expression_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -11328,7 +11595,8 @@ protected class Expression_Op1Assignment_0 extends AssignmentToken  {
 	}	
 }
 
-// isnull=IsNullValue | in=InOperator | exists=ExistsOperator | between=Between | like=Like | comp=Comparison
+// (isnull=IsNullValue | in=InOperator | exists=ExistsOperator | between=Between | like=Like
+// | comp=Comparison)
 protected class Expression_Alternatives_1 extends AlternativesToken {
 
 	public Expression_Alternatives_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -12439,7 +12707,7 @@ protected class InOperator_OpAssignment_1 extends AssignmentToken  {
 
 }
 
-// subquery=SubQueryOperand | opList=OperandListGroup
+// (subquery=SubQueryOperand | opList=OperandListGroup)
 protected class InOperator_Alternatives_2 extends AlternativesToken {
 
 	public InOperator_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -12656,7 +12924,7 @@ protected class ExistsOperator_OpAssignment_1 extends AssignmentToken  {
 
 }
 
-// subquery=SubQueryOperand | opList=OperandListGroup
+// (subquery=SubQueryOperand | opList=OperandListGroup)
 protected class ExistsOperator_Alternatives_2 extends AlternativesToken {
 
 	public ExistsOperator_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -12785,7 +13053,8 @@ protected class ExistsOperator_OpListAssignment_2_1 extends AssignmentToken  {
  *
  **/
 
-// '(' opGroup=OperandList ')'
+// '('
+// opGroup=OperandList ')'
 protected class OperandListGroup_Group extends GroupToken {
 	
 	public OperandListGroup_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -13442,8 +13711,8 @@ protected class Operand_Group_1 extends GroupToken {
 
 }
 
-// {Plus.left=current} '+' | {Minus.left=current} '-' | {Concat.left=current} '||' | {Multiply.left=current} STAR |
-// {Division.left=current} '/'
+// ({Plus.left=current} '+' | {Minus.left=current} '-' | {Concat.left=current} '||' | {Multiply.left=current} STAR |
+// {Division.left=current} '/')
 protected class Operand_Alternatives_1_0 extends AlternativesToken {
 
 	public Operand_Alternatives_1_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -14576,7 +14845,8 @@ protected class OperandFunction_FanAssignment_4 extends AssignmentToken  {
  *
  **/
 
-// 'EXTRACT' '(' v=EXTRACT_VALUES 'FROM' operand=OperandGroup ')'
+// 'EXTRACT'
+// '(' v=EXTRACT_VALUES 'FROM' operand=OperandGroup ')'
 protected class FunctionExtract_Group extends GroupToken {
 	
 	public FunctionExtract_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -14784,7 +15054,8 @@ protected class FunctionExtract_RightParenthesisKeyword_5 extends KeywordToken  
  *
  **/
 
-// 'OVER' '(' anClause=AnalyticClause ')'
+// 'OVER' '(' anClause=AnalyticClause
+// ')'
 protected class FunctionAnalytical_Group extends GroupToken {
 	
 	public FunctionAnalytical_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -15196,7 +15467,7 @@ protected class WindowingClause_Group extends GroupToken {
 
 }
 
-// 'ROWS' | 'RANGE'
+// ('ROWS' | 'RANGE')
 protected class WindowingClause_Alternatives_0 extends AlternativesToken {
 
 	public WindowingClause_Alternatives_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -15240,7 +15511,7 @@ protected class WindowingClause_ROWSKeyword_0_0 extends KeywordToken  {
 }
 
 
-// WindowingClauseBetween | WindowingClauseOperandPreceding
+// (WindowingClauseBetween | WindowingClauseOperandPreceding)
 protected class WindowingClause_Alternatives_1 extends AlternativesToken {
 
 	public WindowingClause_Alternatives_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -15525,8 +15796,8 @@ protected class WindowingClauseBetween_WcoFAssignment_3 extends AssignmentToken 
  *
  **/
 
-// {WindowingClauseOperandFollowing} ('UNBOUNDED' 'FOLLOWING' | 'CURRENT' 'ROW' | exp=AnalyticExprArg ('PRECEDING' |
-// 'FOLLOWING'))
+// {WindowingClauseOperandFollowing} ('UNBOUNDED' 'FOLLOWING' | 'CURRENT'
+// 'ROW' | exp=AnalyticExprArg ('PRECEDING' | 'FOLLOWING'))
 protected class WindowingClauseOperandFollowing_Group extends GroupToken {
 	
 	public WindowingClauseOperandFollowing_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -15581,7 +15852,8 @@ protected class WindowingClauseOperandFollowing_WindowingClauseOperandFollowingA
 	}
 }
 
-// 'UNBOUNDED' 'FOLLOWING' | 'CURRENT' 'ROW' | exp=AnalyticExprArg ('PRECEDING' | 'FOLLOWING')
+// ('UNBOUNDED' 'FOLLOWING' | 'CURRENT'
+// 'ROW' | exp=AnalyticExprArg ('PRECEDING' | 'FOLLOWING'))
 protected class WindowingClauseOperandFollowing_Alternatives_1 extends AlternativesToken {
 
 	public WindowingClauseOperandFollowing_Alternatives_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -15739,7 +16011,7 @@ protected class WindowingClauseOperandFollowing_ExpAssignment_1_2_0 extends Assi
 	}	
 }
 
-// 'PRECEDING' | 'FOLLOWING'
+// ('PRECEDING' | 'FOLLOWING')
 protected class WindowingClauseOperandFollowing_Alternatives_1_2_1 extends AlternativesToken {
 
 	public WindowingClauseOperandFollowing_Alternatives_1_2_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -15798,8 +16070,8 @@ protected class WindowingClauseOperandFollowing_PRECEDINGKeyword_1_2_1_0 extends
  *
  **/
 
-// {WindowingClauseOperandPreceding} ('UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | expr=AnalyticExprArg ('PRECEDING' |
-// 'FOLLOWING'))
+// {WindowingClauseOperandPreceding} ('UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | expr=AnalyticExprArg ('PRECEDING'
+// | 'FOLLOWING'))
 protected class WindowingClauseOperandPreceding_Group extends GroupToken {
 	
 	public WindowingClauseOperandPreceding_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -15854,7 +16126,8 @@ protected class WindowingClauseOperandPreceding_WindowingClauseOperandPrecedingA
 	}
 }
 
-// 'UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | expr=AnalyticExprArg ('PRECEDING' | 'FOLLOWING')
+// ('UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | expr=AnalyticExprArg ('PRECEDING'
+// | 'FOLLOWING'))
 protected class WindowingClauseOperandPreceding_Alternatives_1 extends AlternativesToken {
 
 	public WindowingClauseOperandPreceding_Alternatives_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -15944,7 +16217,8 @@ protected class WindowingClauseOperandPreceding_PRECEDINGKeyword_1_0_1 extends K
 }
 
 
-// expr=AnalyticExprArg ('PRECEDING' | 'FOLLOWING')
+// expr=AnalyticExprArg ('PRECEDING'
+// | 'FOLLOWING')
 protected class WindowingClauseOperandPreceding_Group_1_2 extends GroupToken {
 	
 	public WindowingClauseOperandPreceding_Group_1_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -16012,7 +16286,8 @@ protected class WindowingClauseOperandPreceding_ExprAssignment_1_2_0 extends Ass
 	}	
 }
 
-// 'PRECEDING' | 'FOLLOWING'
+// ('PRECEDING'
+// | 'FOLLOWING')
 protected class WindowingClauseOperandPreceding_Alternatives_1_2_1 extends AlternativesToken {
 
 	public WindowingClauseOperandPreceding_Alternatives_1_2_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -16099,7 +16374,7 @@ protected class OrderByClause_Group extends GroupToken {
 
 }
 
-// 'ORDER' 'BY' | 'ORDER' 'SIBLINGS' 'BY'
+// ('ORDER' 'BY' | 'ORDER' 'SIBLINGS' 'BY')
 protected class OrderByClause_Alternatives_0 extends AlternativesToken {
 
 	public OrderByClause_Alternatives_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -16633,7 +16908,7 @@ protected class QueryPartitionClause_BYKeyword_1 extends KeywordToken  {
 
 }
 
-// args=AnalyticExprArgs | '(' AnalyticExprArgs ')'
+// (args=AnalyticExprArgs | '(' AnalyticExprArgs ')')
 protected class QueryPartitionClause_Alternatives_2 extends AlternativesToken {
 
 	public QueryPartitionClause_Alternatives_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -17884,7 +18159,7 @@ protected class OpFunctionArgAgregate_Group extends GroupToken {
 
 }
 
-// 'ALL' | 'DISTINCT'
+// ('ALL' | 'DISTINCT')
 protected class OpFunctionArgAgregate_Alternatives_0 extends AlternativesToken {
 
 	public OpFunctionArgAgregate_Alternatives_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -19382,7 +19657,7 @@ protected class SqlCaseWhen_WHENKeyword_0 extends KeywordToken  {
 
 }
 
-// wop=OperandGroup | expr=FullExpression
+// (wop=OperandGroup | expr=FullExpression)
 protected class SqlCaseWhen_Alternatives_1 extends AlternativesToken {
 
 	public SqlCaseWhen_Alternatives_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {

@@ -111,6 +111,7 @@ public class LikeOperandImpl extends MinimalEObjectImpl.Container implements Lik
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getOp2()
   {
     return op2;
@@ -121,6 +122,7 @@ public class LikeOperandImpl extends MinimalEObjectImpl.Container implements Lik
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp2(String newOp2)
   {
     String oldOp2 = op2;
@@ -134,6 +136,7 @@ public class LikeOperandImpl extends MinimalEObjectImpl.Container implements Lik
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpFunction getFop2()
   {
     return fop2;
@@ -161,6 +164,7 @@ public class LikeOperandImpl extends MinimalEObjectImpl.Container implements Lik
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFop2(OpFunction newFop2)
   {
     if (newFop2 != fop2)
@@ -182,6 +186,7 @@ public class LikeOperandImpl extends MinimalEObjectImpl.Container implements Lik
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpFunctionCast getFcast()
   {
     return fcast;
@@ -209,6 +214,7 @@ public class LikeOperandImpl extends MinimalEObjectImpl.Container implements Lik
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFcast(OpFunctionCast newFcast)
   {
     if (newFcast != fcast)
@@ -230,6 +236,7 @@ public class LikeOperandImpl extends MinimalEObjectImpl.Container implements Lik
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public POperand getFparam()
   {
     return fparam;
@@ -257,6 +264,7 @@ public class LikeOperandImpl extends MinimalEObjectImpl.Container implements Lik
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFparam(POperand newFparam)
   {
     if (newFparam != fparam)
@@ -399,7 +407,7 @@ public class LikeOperandImpl extends MinimalEObjectImpl.Container implements Lik
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (op2: ");
     result.append(op2);
     result.append(')');

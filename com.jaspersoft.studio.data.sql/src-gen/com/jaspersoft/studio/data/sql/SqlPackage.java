@@ -114,7 +114,7 @@ public interface SqlPackage extends EPackage
   int WITH_QUERY__W = 0;
 
   /**
-   * The feature id for the '<em><b>Wname</b></em>' attribute.
+   * The feature id for the '<em><b>Wname</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -141,13 +141,40 @@ public interface SqlPackage extends EPackage
   int WITH_QUERY__QUERY = 3;
 
   /**
+   * The feature id for the '<em><b>Additional Wname</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int WITH_QUERY__ADDITIONAL_WNAME = 4;
+
+  /**
+   * The feature id for the '<em><b>Additional With Cols</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int WITH_QUERY__ADDITIONAL_WITH_COLS = 5;
+
+  /**
+   * The feature id for the '<em><b>Additional Queries</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int WITH_QUERY__ADDITIONAL_QUERIES = 6;
+
+  /**
    * The number of structural features of the '<em>With Query</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int WITH_QUERY_FEATURE_COUNT = 4;
+  int WITH_QUERY_FEATURE_COUNT = 7;
 
   /**
    * The meta object id for the '{@link com.jaspersoft.studio.data.sql.impl.WithColumnsImpl <em>With Columns</em>}' class.
@@ -4127,15 +4154,15 @@ public interface SqlPackage extends EPackage
   EAttribute getWithQuery_W();
 
   /**
-   * Returns the meta object for the attribute '{@link com.jaspersoft.studio.data.sql.WithQuery#getWname <em>Wname</em>}'.
+   * Returns the meta object for the containment reference '{@link com.jaspersoft.studio.data.sql.WithQuery#getWname <em>Wname</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Wname</em>'.
+   * @return the meta object for the containment reference '<em>Wname</em>'.
    * @see com.jaspersoft.studio.data.sql.WithQuery#getWname()
    * @see #getWithQuery()
    * @generated
    */
-  EAttribute getWithQuery_Wname();
+  EReference getWithQuery_Wname();
 
   /**
    * Returns the meta object for the containment reference '{@link com.jaspersoft.studio.data.sql.WithQuery#getWithCols <em>With Cols</em>}'.
@@ -4158,6 +4185,39 @@ public interface SqlPackage extends EPackage
    * @generated
    */
   EReference getWithQuery_Query();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.jaspersoft.studio.data.sql.WithQuery#getAdditionalWname <em>Additional Wname</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Additional Wname</em>'.
+   * @see com.jaspersoft.studio.data.sql.WithQuery#getAdditionalWname()
+   * @see #getWithQuery()
+   * @generated
+   */
+  EReference getWithQuery_AdditionalWname();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.jaspersoft.studio.data.sql.WithQuery#getAdditionalWithCols <em>Additional With Cols</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Additional With Cols</em>'.
+   * @see com.jaspersoft.studio.data.sql.WithQuery#getAdditionalWithCols()
+   * @see #getWithQuery()
+   * @generated
+   */
+  EReference getWithQuery_AdditionalWithCols();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.jaspersoft.studio.data.sql.WithQuery#getAdditionalQueries <em>Additional Queries</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Additional Queries</em>'.
+   * @see com.jaspersoft.studio.data.sql.WithQuery#getAdditionalQueries()
+   * @see #getWithQuery()
+   * @generated
+   */
+  EReference getWithQuery_AdditionalQueries();
 
   /**
    * Returns the meta object for class '{@link com.jaspersoft.studio.data.sql.WithColumns <em>With Columns</em>}'.
@@ -7310,12 +7370,12 @@ public interface SqlPackage extends EPackage
     EAttribute WITH_QUERY__W = eINSTANCE.getWithQuery_W();
 
     /**
-     * The meta object literal for the '<em><b>Wname</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Wname</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute WITH_QUERY__WNAME = eINSTANCE.getWithQuery_Wname();
+    EReference WITH_QUERY__WNAME = eINSTANCE.getWithQuery_Wname();
 
     /**
      * The meta object literal for the '<em><b>With Cols</b></em>' containment reference feature.
@@ -7332,6 +7392,30 @@ public interface SqlPackage extends EPackage
      * @generated
      */
     EReference WITH_QUERY__QUERY = eINSTANCE.getWithQuery_Query();
+
+    /**
+     * The meta object literal for the '<em><b>Additional Wname</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference WITH_QUERY__ADDITIONAL_WNAME = eINSTANCE.getWithQuery_AdditionalWname();
+
+    /**
+     * The meta object literal for the '<em><b>Additional With Cols</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference WITH_QUERY__ADDITIONAL_WITH_COLS = eINSTANCE.getWithQuery_AdditionalWithCols();
+
+    /**
+     * The meta object literal for the '<em><b>Additional Queries</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference WITH_QUERY__ADDITIONAL_QUERIES = eINSTANCE.getWithQuery_AdditionalQueries();
 
     /**
      * The meta object literal for the '{@link com.jaspersoft.studio.data.sql.impl.WithColumnsImpl <em>With Columns</em>}' class.

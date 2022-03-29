@@ -65,6 +65,7 @@ public class OpFunctionArgOperandImpl extends OpFunctionArgImpl implements OpFun
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpFunctionArgAgregate getOp()
   {
     return op;
@@ -92,6 +93,7 @@ public class OpFunctionArgOperandImpl extends OpFunctionArgImpl implements OpFun
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp(OpFunctionArgAgregate newOp)
   {
     if (newOp != op)

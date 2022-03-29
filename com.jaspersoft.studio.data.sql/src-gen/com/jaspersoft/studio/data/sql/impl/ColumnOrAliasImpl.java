@@ -131,6 +131,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getCe()
   {
     return ce;
@@ -158,6 +159,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCe(Operands newCe)
   {
     if (newCe != ce)
@@ -179,6 +181,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getAlias()
   {
     return alias;
@@ -189,6 +192,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setAlias(String newAlias)
   {
     String oldAlias = alias;
@@ -202,6 +206,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public DbObjectName getColAlias()
   {
     return colAlias;
@@ -229,6 +234,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setColAlias(DbObjectName newColAlias)
   {
     if (newColAlias != colAlias)
@@ -250,6 +256,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getAllCols()
   {
     return allCols;
@@ -260,6 +267,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setAllCols(String newAllCols)
   {
     String oldAllCols = allCols;
@@ -273,6 +281,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public DbObjectNameAll getDbAllCols()
   {
     return dbAllCols;
@@ -300,6 +309,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setDbAllCols(DbObjectNameAll newDbAllCols)
   {
     if (newDbAllCols != dbAllCols)
@@ -452,7 +462,7 @@ public class ColumnOrAliasImpl extends OrColumnImpl implements ColumnOrAlias
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (alias: ");
     result.append(alias);
     result.append(", allCols: ");

@@ -142,10 +142,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xin</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xin</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XIN
    * @model name="xin" literal="{IN"
@@ -157,10 +153,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xnotin</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xnotin</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XNOTIN
    * @model name="xnotin" literal="{NOTIN"
@@ -172,10 +164,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xeq</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xeq</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XEQ
    * @model name="xeq" literal="{EQUAL"
@@ -187,10 +175,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xnoteq</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xnoteq</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XNOTEQ
    * @model name="xnoteq" literal="{NOTEQUAL"
@@ -202,10 +186,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xls</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xls</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XLS
    * @model name="xls" literal="{LESS"
@@ -217,10 +197,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xlsr</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xlsr</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XLSR
    * @model name="xlsr" literal="{LESS]"
@@ -232,10 +208,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xgtl</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xgtl</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XGTL
    * @model name="xgtl" literal="{[GREATER"
@@ -247,10 +219,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xgt</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xgt</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XGT
    * @model name="xgt" literal="{GREATER"
@@ -262,10 +230,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xbwn</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xbwn</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XBWN
    * @model name="xbwn" literal="{BETWEEN"
@@ -277,10 +241,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xbwnc</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xbwnc</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XBWNC
    * @model name="xbwnc" literal="{[BETWEEN]"
@@ -292,10 +252,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xbwnl</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xbwnl</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XBWNL
    * @model name="xbwnl" literal="{[BETWEEN"
@@ -307,10 +263,6 @@ public enum XFunction implements Enumerator
   /**
    * The '<em><b>Xbwnr</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Xbwnr</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #XBWNR
    * @model name="xbwnr" literal="{BETWEEN]"
@@ -459,6 +411,7 @@ public enum XFunction implements Enumerator
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public int getValue()
   {
     return value;
@@ -469,6 +422,7 @@ public enum XFunction implements Enumerator
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getName()
   {
     return name;
@@ -479,6 +433,7 @@ public enum XFunction implements Enumerator
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getLiteral()
   {
     return literal;

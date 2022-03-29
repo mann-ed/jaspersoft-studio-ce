@@ -55,7 +55,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cWAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final Keyword cWWITHKeyword_0_0 = (Keyword)cWAssignment_0.eContents().get(0);
 		private final Assignment cWnameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cWnameDBIDParserRuleCall_1_0 = (RuleCall)cWnameAssignment_1.eContents().get(0);
+		private final RuleCall cWnameDbObjectNameParserRuleCall_1_0 = (RuleCall)cWnameAssignment_1.eContents().get(0);
 		private final Assignment cWithColsAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cWithColsWithColumnsParserRuleCall_2_0 = (RuleCall)cWithColsAssignment_2.eContents().get(0);
 		private final Keyword cASKeyword_3 = (Keyword)cGroup.eContents().get(3);
@@ -63,12 +63,25 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cQueryAssignment_5 = (Assignment)cGroup.eContents().get(5);
 		private final RuleCall cQuerySelectQueryParserRuleCall_5_0 = (RuleCall)cQueryAssignment_5.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_6 = (Keyword)cGroup.eContents().get(6);
+		private final Group cGroup_7 = (Group)cGroup.eContents().get(7);
+		private final Keyword cCommaKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
+		private final Assignment cAdditionalWnameAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
+		private final RuleCall cAdditionalWnameDbObjectNameParserRuleCall_7_1_0 = (RuleCall)cAdditionalWnameAssignment_7_1.eContents().get(0);
+		private final Assignment cAdditionalWithColsAssignment_7_2 = (Assignment)cGroup_7.eContents().get(2);
+		private final RuleCall cAdditionalWithColsWithColumnsParserRuleCall_7_2_0 = (RuleCall)cAdditionalWithColsAssignment_7_2.eContents().get(0);
+		private final Keyword cASKeyword_7_3 = (Keyword)cGroup_7.eContents().get(3);
+		private final Keyword cLeftParenthesisKeyword_7_4 = (Keyword)cGroup_7.eContents().get(4);
+		private final Assignment cAdditionalQueriesAssignment_7_5 = (Assignment)cGroup_7.eContents().get(5);
+		private final RuleCall cAdditionalQueriesSelectQueryParserRuleCall_7_5_0 = (RuleCall)cAdditionalQueriesAssignment_7_5.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_7_6 = (Keyword)cGroup_7.eContents().get(6);
 		
 		//WithQuery:
-		//	w='WITH' wname=DBID withCols=WithColumns? 'AS' '(' query=SelectQuery ')';
+		//	w='WITH' wname=DbObjectName withCols=WithColumns? 'AS' '(' query=SelectQuery ')' (',' additionalWname+=DbObjectName
+		//	additionalWithCols+=WithColumns? 'AS' '(' additionalQueries+=SelectQuery ')')*;
 		@Override public ParserRule getRule() { return rule; }
 
-		//w='WITH' wname=DBID withCols=WithColumns? 'AS' '(' query=SelectQuery ')'
+		//w='WITH' wname=DbObjectName withCols=WithColumns? 'AS' '(' query=SelectQuery ')' (',' additionalWname+=DbObjectName
+		//additionalWithCols+=WithColumns? 'AS' '(' additionalQueries+=SelectQuery ')')*
 		public Group getGroup() { return cGroup; }
 
 		//w='WITH'
@@ -77,11 +90,11 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'WITH'
 		public Keyword getWWITHKeyword_0_0() { return cWWITHKeyword_0_0; }
 
-		//wname=DBID
+		//wname=DbObjectName
 		public Assignment getWnameAssignment_1() { return cWnameAssignment_1; }
 
-		//DBID
-		public RuleCall getWnameDBIDParserRuleCall_1_0() { return cWnameDBIDParserRuleCall_1_0; }
+		//DbObjectName
+		public RuleCall getWnameDbObjectNameParserRuleCall_1_0() { return cWnameDbObjectNameParserRuleCall_1_0; }
 
 		//withCols=WithColumns?
 		public Assignment getWithColsAssignment_2() { return cWithColsAssignment_2; }
@@ -103,6 +116,39 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 
 		//')'
 		public Keyword getRightParenthesisKeyword_6() { return cRightParenthesisKeyword_6; }
+
+		//(',' additionalWname+=DbObjectName additionalWithCols+=WithColumns? 'AS' '(' additionalQueries+=SelectQuery ')')*
+		public Group getGroup_7() { return cGroup_7; }
+
+		//','
+		public Keyword getCommaKeyword_7_0() { return cCommaKeyword_7_0; }
+
+		//additionalWname+=DbObjectName
+		public Assignment getAdditionalWnameAssignment_7_1() { return cAdditionalWnameAssignment_7_1; }
+
+		//DbObjectName
+		public RuleCall getAdditionalWnameDbObjectNameParserRuleCall_7_1_0() { return cAdditionalWnameDbObjectNameParserRuleCall_7_1_0; }
+
+		//additionalWithCols+=WithColumns?
+		public Assignment getAdditionalWithColsAssignment_7_2() { return cAdditionalWithColsAssignment_7_2; }
+
+		//WithColumns
+		public RuleCall getAdditionalWithColsWithColumnsParserRuleCall_7_2_0() { return cAdditionalWithColsWithColumnsParserRuleCall_7_2_0; }
+
+		//'AS'
+		public Keyword getASKeyword_7_3() { return cASKeyword_7_3; }
+
+		//'('
+		public Keyword getLeftParenthesisKeyword_7_4() { return cLeftParenthesisKeyword_7_4; }
+
+		//additionalQueries+=SelectQuery
+		public Assignment getAdditionalQueriesAssignment_7_5() { return cAdditionalQueriesAssignment_7_5; }
+
+		//SelectQuery
+		public RuleCall getAdditionalQueriesSelectQueryParserRuleCall_7_5_0() { return cAdditionalQueriesSelectQueryParserRuleCall_7_5_0; }
+
+		//')'
+		public Keyword getRightParenthesisKeyword_7_6() { return cRightParenthesisKeyword_7_6; }
 	}
 
 	public class WithColumnsElements extends AbstractParserRuleElementFinder {
@@ -368,14 +414,14 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//Select:
 		//	select='SELECT' 'DISTINCT'? ('TOP' (INT | SIGNED_DOUBLE) 'PERCENT'? ('WITH' 'TIES')?)? cols=Columns 'FROM'
 		//	tbl=Tables ('WHERE' whereExpression=FullExpression)? ('GROUP' 'BY' groupByEntry=GroupByColumns)? ('HAVING'
-		//	havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET'
-		//	offset=Offset)? ('FETCH' 'FIRST' fetchFirst=FetchFirst)?;
+		//	havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET' offset=Offset)?
+		//	('FETCH' 'FIRST' fetchFirst=FetchFirst)?;
 		@Override public ParserRule getRule() { return rule; }
 
-		//select='SELECT' 'DISTINCT'? ('TOP' (INT | SIGNED_DOUBLE) 'PERCENT'? ('WITH' 'TIES')?)? cols=Columns 'FROM' tbl=Tables
-		//('WHERE' whereExpression=FullExpression)? ('GROUP' 'BY' groupByEntry=GroupByColumns)? ('HAVING'
-		//havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET' offset=Offset)?
-		//('FETCH' 'FIRST' fetchFirst=FetchFirst)?
+		//select='SELECT' 'DISTINCT'? ('TOP' (INT | SIGNED_DOUBLE) 'PERCENT'? ('WITH' 'TIES')?)? cols=Columns 'FROM'
+		//tbl=Tables ('WHERE' whereExpression=FullExpression)? ('GROUP' 'BY' groupByEntry=GroupByColumns)? ('HAVING'
+		//havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET' offset=Offset)? (
+		//'FETCH' 'FIRST' fetchFirst=FetchFirst)?
 		public Group getGroup() { return cGroup; }
 
 		//select='SELECT'
@@ -393,7 +439,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'TOP'
 		public Keyword getTOPKeyword_2_0() { return cTOPKeyword_2_0; }
 
-		//INT | SIGNED_DOUBLE
+		//(INT | SIGNED_DOUBLE)
 		public Alternatives getAlternatives_2_1() { return cAlternatives_2_1; }
 
 		//INT
@@ -761,7 +807,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//TableOrAlias
 		public RuleCall getOnTableTableOrAliasParserRuleCall_1_0() { return cOnTableTableOrAliasParserRuleCall_1_0; }
 
-		//'ON' joinExpr=FullExpression | joinCond=JoinCondition
+		//('ON' joinExpr=FullExpression | joinCond=JoinCondition)
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 
 		//'ON' joinExpr=FullExpression
@@ -884,7 +930,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//tblAlias=DbObjectName?
 		public Group getGroup() { return cGroup; }
 
-		//tfull=TableFull | sq=SubQueryOperand | values=FromValues
+		//(tfull=TableFull | sq=SubQueryOperand | values=FromValues)
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 
 		//tfull=TableFull
@@ -1345,7 +1391,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'('
 		public Keyword getLeftParenthesisKeyword_1() { return cLeftParenthesisKeyword_1; }
 
-		//sq=SubQueryOperand | args=UnpivotInClauseArgs | pinany=PivotInClauseAny
+		//(sq=SubQueryOperand | args=UnpivotInClauseArgs | pinany=PivotInClauseAny)
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 
 		//sq=SubQueryOperand
@@ -1429,7 +1475,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//(('INCLUDE' | 'EXCLUDE') 'NULLS')?
 		public Group getGroup_1() { return cGroup_1; }
 
-		//'INCLUDE' | 'EXCLUDE'
+		//('INCLUDE' | 'EXCLUDE')
 		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
 
 		//'INCLUDE'
@@ -1603,7 +1649,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'FOR'
 		public Keyword getFORKeyword_0() { return cFORKeyword_0; }
 
-		//ColumnFull | '(' Columns ')'
+		//(ColumnFull | '(' Columns ')')
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 
 		//ColumnFull
@@ -1878,7 +1924,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//(colOrder=ColumnFull | colOrderInt=UNSIGNED) direction=('ASC' | 'DESC')?
 		public Group getGroup() { return cGroup; }
 
-		//colOrder=ColumnFull | colOrderInt=UNSIGNED
+		//(colOrder=ColumnFull | colOrderInt=UNSIGNED)
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 
 		//colOrder=ColumnFull
@@ -2380,7 +2426,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//	| comp=Comparison);
 		@Override public ParserRule getRule() { return rule; }
 
-		//op1=Operand (isnull=IsNullValue | in=InOperator | exists=ExistsOperator | between=Between | like=Like | comp=Comparison)
+		//op1=Operand (isnull=IsNullValue | in=InOperator | exists=ExistsOperator | between=Between | like=Like
+		//| comp=Comparison)
 		public Group getGroup() { return cGroup; }
 
 		//op1=Operand
@@ -2389,7 +2436,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//Operand
 		public RuleCall getOp1OperandParserRuleCall_0_0() { return cOp1OperandParserRuleCall_0_0; }
 
-		//isnull=IsNullValue | in=InOperator | exists=ExistsOperator | between=Between | like=Like | comp=Comparison
+		//(isnull=IsNullValue | in=InOperator | exists=ExistsOperator | between=Between | like=Like
+		//| comp=Comparison)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 
 		//isnull=IsNullValue
@@ -2713,7 +2761,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//InValue
 		public RuleCall getOpInValueParserRuleCall_1_0() { return cOpInValueParserRuleCall_1_0; }
 
-		//subquery=SubQueryOperand | opList=OperandListGroup
+		//(subquery=SubQueryOperand | opList=OperandListGroup)
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 
 		//subquery=SubQueryOperand
@@ -2777,7 +2825,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//ExistsValue
 		public RuleCall getOpExistsValueParserRuleCall_1_0() { return cOpExistsValueParserRuleCall_1_0; }
 
-		//subquery=SubQueryOperand | opList=OperandListGroup
+		//(subquery=SubQueryOperand | opList=OperandListGroup)
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 
 		//subquery=SubQueryOperand
@@ -2826,7 +2874,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//	opGroup=OperandList ')';
 		@Override public ParserRule getRule() { return rule; }
 
-		//'(' opGroup=OperandList ')'
+		//'('
+		//opGroup=OperandList ')'
 		public Group getGroup() { return cGroup; }
 
 		//'('
@@ -2958,8 +3007,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//{Division.left=current} '/') right=OperandFragment)*
 		public Group getGroup_1() { return cGroup_1; }
 
-		//{Plus.left=current} '+' | {Minus.left=current} '-' | {Concat.left=current} '||' | {Multiply.left=current} STAR |
-		//{Division.left=current} '/'
+		//({Plus.left=current} '+' | {Minus.left=current} '-' | {Concat.left=current} '||' | {Multiply.left=current} STAR |
+		//{Division.left=current} '/')
 		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
 
 		//{Plus.left=current} '+'
@@ -3157,7 +3206,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//	'(' v=EXTRACT_VALUES 'FROM' operand=OperandGroup ')';
 		@Override public ParserRule getRule() { return rule; }
 
-		//'EXTRACT' '(' v=EXTRACT_VALUES 'FROM' operand=OperandGroup ')'
+		//'EXTRACT'
+		//'(' v=EXTRACT_VALUES 'FROM' operand=OperandGroup ')'
 		public Group getGroup() { return cGroup; }
 
 		//'EXTRACT'
@@ -3199,7 +3249,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//	')';
 		@Override public ParserRule getRule() { return rule; }
 
-		//'OVER' '(' anClause=AnalyticClause ')'
+		//'OVER' '(' anClause=AnalyticClause
+		//')'
 		public Group getGroup() { return cGroup; }
 
 		//'OVER'
@@ -3279,7 +3330,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//('ROWS' | 'RANGE') (WindowingClauseBetween | WindowingClauseOperandPreceding)
 		public Group getGroup() { return cGroup; }
 
-		//'ROWS' | 'RANGE'
+		//('ROWS' | 'RANGE')
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 
 		//'ROWS'
@@ -3288,7 +3339,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'RANGE'
 		public Keyword getRANGEKeyword_0_1() { return cRANGEKeyword_0_1; }
 
-		//WindowingClauseBetween | WindowingClauseOperandPreceding
+		//(WindowingClauseBetween | WindowingClauseOperandPreceding)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 
 		//WindowingClauseBetween
@@ -3357,14 +3408,15 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//	'ROW' | exp=AnalyticExprArg ('PRECEDING' | 'FOLLOWING'));
 		@Override public ParserRule getRule() { return rule; }
 
-		//{WindowingClauseOperandFollowing} ('UNBOUNDED' 'FOLLOWING' | 'CURRENT' 'ROW' | exp=AnalyticExprArg ('PRECEDING' |
-		//'FOLLOWING'))
+		//{WindowingClauseOperandFollowing} ('UNBOUNDED' 'FOLLOWING' | 'CURRENT'
+		//'ROW' | exp=AnalyticExprArg ('PRECEDING' | 'FOLLOWING'))
 		public Group getGroup() { return cGroup; }
 
 		//{WindowingClauseOperandFollowing}
 		public Action getWindowingClauseOperandFollowingAction_0() { return cWindowingClauseOperandFollowingAction_0; }
 
-		//'UNBOUNDED' 'FOLLOWING' | 'CURRENT' 'ROW' | exp=AnalyticExprArg ('PRECEDING' | 'FOLLOWING')
+		//('UNBOUNDED' 'FOLLOWING' | 'CURRENT'
+		//'ROW' | exp=AnalyticExprArg ('PRECEDING' | 'FOLLOWING'))
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 
 		//'UNBOUNDED' 'FOLLOWING'
@@ -3376,7 +3428,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'FOLLOWING'
 		public Keyword getFOLLOWINGKeyword_1_0_1() { return cFOLLOWINGKeyword_1_0_1; }
 
-		//'CURRENT' 'ROW'
+		//'CURRENT'
+		//'ROW'
 		public Group getGroup_1_1() { return cGroup_1_1; }
 
 		//'CURRENT'
@@ -3394,7 +3447,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//AnalyticExprArg
 		public RuleCall getExpAnalyticExprArgParserRuleCall_1_2_0_0() { return cExpAnalyticExprArgParserRuleCall_1_2_0_0; }
 
-		//'PRECEDING' | 'FOLLOWING'
+		//('PRECEDING' | 'FOLLOWING')
 		public Alternatives getAlternatives_1_2_1() { return cAlternatives_1_2_1; }
 
 		//'PRECEDING'
@@ -3427,14 +3480,15 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//	| 'FOLLOWING'));
 		@Override public ParserRule getRule() { return rule; }
 
-		//{WindowingClauseOperandPreceding} ('UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | expr=AnalyticExprArg ('PRECEDING' |
-		//'FOLLOWING'))
+		//{WindowingClauseOperandPreceding} ('UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | expr=AnalyticExprArg ('PRECEDING'
+		//| 'FOLLOWING'))
 		public Group getGroup() { return cGroup; }
 
 		//{WindowingClauseOperandPreceding}
 		public Action getWindowingClauseOperandPrecedingAction_0() { return cWindowingClauseOperandPrecedingAction_0; }
 
-		//'UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | expr=AnalyticExprArg ('PRECEDING' | 'FOLLOWING')
+		//('UNBOUNDED' 'PRECEDING' | 'CURRENT' 'ROW' | expr=AnalyticExprArg ('PRECEDING'
+		//| 'FOLLOWING'))
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 
 		//'UNBOUNDED' 'PRECEDING'
@@ -3455,7 +3509,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'ROW'
 		public Keyword getROWKeyword_1_1_1() { return cROWKeyword_1_1_1; }
 
-		//expr=AnalyticExprArg ('PRECEDING' | 'FOLLOWING')
+		//expr=AnalyticExprArg ('PRECEDING'
+		//| 'FOLLOWING')
 		public Group getGroup_1_2() { return cGroup_1_2; }
 
 		//expr=AnalyticExprArg
@@ -3464,7 +3519,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//AnalyticExprArg
 		public RuleCall getExprAnalyticExprArgParserRuleCall_1_2_0_0() { return cExprAnalyticExprArgParserRuleCall_1_2_0_0; }
 
-		//'PRECEDING' | 'FOLLOWING'
+		//('PRECEDING'
+		//| 'FOLLOWING')
 		public Alternatives getAlternatives_1_2_1() { return cAlternatives_1_2_1; }
 
 		//'PRECEDING'
@@ -3495,7 +3551,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//('ORDER' 'BY' | 'ORDER' 'SIBLINGS' 'BY') args=OrderByClauseArgs
 		public Group getGroup() { return cGroup; }
 
-		//'ORDER' 'BY' | 'ORDER' 'SIBLINGS' 'BY'
+		//('ORDER' 'BY' | 'ORDER' 'SIBLINGS' 'BY')
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 
 		//'ORDER' 'BY'
@@ -3608,7 +3664,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'NULLS'
 		public Keyword getNULLSKeyword_2_0() { return cNULLSKeyword_2_0; }
 
-		//'FIRST' | 'LAST'
+		//('FIRST' | 'LAST')
 		public Alternatives getAlternatives_2_1() { return cAlternatives_2_1; }
 
 		//'FIRST'
@@ -3644,7 +3700,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'BY'
 		public Keyword getBYKeyword_1() { return cBYKeyword_1; }
 
-		//args=AnalyticExprArgs | '(' AnalyticExprArgs ')'
+		//(args=AnalyticExprArgs | '(' AnalyticExprArgs ')')
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 
 		//args=AnalyticExprArgs
@@ -3889,7 +3945,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//('ALL' | 'DISTINCT') Operand
 		public Group getGroup() { return cGroup; }
 
-		//'ALL' | 'DISTINCT'
+		//('ALL' | 'DISTINCT')
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 
 		//'ALL'
@@ -4233,7 +4289,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//'WHEN'
 		public Keyword getWHENKeyword_0() { return cWHENKeyword_0; }
 
-		//wop=OperandGroup | expr=FullExpression
+		//(wop=OperandGroup | expr=FullExpression)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 
 		//wop=OperandGroup
@@ -4305,7 +4361,7 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		//('LEFT' | 'RIGHT' | 'FULL') 'OUTER'?
 		public Group getGroup_1_1() { return cGroup_1_1; }
 
-		//'LEFT' | 'RIGHT' | 'FULL'
+		//('LEFT' | 'RIGHT' | 'FULL')
 		public Alternatives getAlternatives_1_1_0() { return cAlternatives_1_1_0; }
 
 		//'LEFT'
@@ -4448,9 +4504,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cXbwnrBETWEENKeyword_11_0 = (Keyword)cXbwnrEnumLiteralDeclaration_11.eContents().get(0);
 		
 		//enum XFunction:
-		//	xin='{IN' | xnotin='{NOTIN' | xeq='{EQUAL' | xnoteq='{NOTEQUAL' | xls='{LESS' |
-		//	xlsr='{LESS]' | xgtl='{[GREATER' | xgt='{GREATER' | xbwn='{BETWEEN' | xbwnc='{[BETWEEN]' | xbwnl='{[BETWEEN' |
-		//	xbwnr='{BETWEEN]';
+		//	xin='{IN' | xnotin='{NOTIN' | xeq='{EQUAL' | xnoteq='{NOTEQUAL' | xls='{LESS' | xlsr='{LESS]' | xgtl='{[GREATER' |
+		//	xgt='{GREATER' | xbwn='{BETWEEN' | xbwnc='{[BETWEEN]' | xbwnl='{[BETWEEN' | xbwnr='{BETWEEN]';
 		public EnumRule getRule() { return rule; }
 
 		//xin='{IN' | xnotin='{NOTIN' | xeq='{EQUAL' | xnoteq='{NOTEQUAL' | xls='{LESS' | xlsr='{LESS]' | xgtl='{[GREATER' |
@@ -4575,11 +4630,10 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cYearMonthYEAR_MONTHKeyword_19_0 = (Keyword)cYearMonthEnumLiteralDeclaration_19.eContents().get(0);
 		
 		//enum EXTRACT_VALUES:
-		//	ms='MICROSECOND' | s='SECOND' | m='MINUTE' | h='HOUR' |
-		//	day='DAY' | week='WEEK' | month='MONTH' | quart='QUARTER' | year='YEAR' | micros='SECOND_MICROSECOND' |
-		//	minMicro='MINUTE_MICROSECOND' | minSec='MINUTE_SECOND' | hms='HOUR_MICROSECOND' | hs='HOUR_SECOND' |
-		//	hmin='HOUR_MINUTE' | dms='DAY_MICROSECOND' | ds='DAY_SECOND' | daymin='DAY_MINUTE' | dayh='DAY_HOUR' |
-		//	yearMonth='YEAR_MONTH';
+		//	ms='MICROSECOND' | s='SECOND' | m='MINUTE' | h='HOUR' | day='DAY' | week='WEEK' | month='MONTH' | quart='QUARTER' |
+		//	year='YEAR' | micros='SECOND_MICROSECOND' | minMicro='MINUTE_MICROSECOND' | minSec='MINUTE_SECOND' |
+		//	hms='HOUR_MICROSECOND' | hs='HOUR_SECOND' | hmin='HOUR_MINUTE' | dms='DAY_MICROSECOND' | ds='DAY_SECOND' |
+		//	daymin='DAY_MINUTE' | dayh='DAY_HOUR' | yearMonth='YEAR_MONTH';
 		public EnumRule getRule() { return rule; }
 
 		//ms='MICROSECOND' | s='SECOND' | m='MINUTE' | h='HOUR' | day='DAY' | week='WEEK' | month='MONTH' | quart='QUARTER' |
@@ -5003,7 +5057,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//WithQuery:
-	//	w='WITH' wname=DBID withCols=WithColumns? 'AS' '(' query=SelectQuery ')';
+	//	w='WITH' wname=DbObjectName withCols=WithColumns? 'AS' '(' query=SelectQuery ')' (',' additionalWname+=DbObjectName
+	//	additionalWithCols+=WithColumns? 'AS' '(' additionalQueries+=SelectQuery ')')*;
 	public WithQueryElements getWithQueryAccess() {
 		return pWithQuery;
 	}
@@ -5075,8 +5130,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 	//Select:
 	//	select='SELECT' 'DISTINCT'? ('TOP' (INT | SIGNED_DOUBLE) 'PERCENT'? ('WITH' 'TIES')?)? cols=Columns 'FROM'
 	//	tbl=Tables ('WHERE' whereExpression=FullExpression)? ('GROUP' 'BY' groupByEntry=GroupByColumns)? ('HAVING'
-	//	havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET'
-	//	offset=Offset)? ('FETCH' 'FIRST' fetchFirst=FetchFirst)?;
+	//	havingEntry=FullExpression)? ('ORDER' 'BY' orderByEntry=OrderByColumns)? ('LIMIT' lim=Limit)? ('OFFSET' offset=Offset)?
+	//	('FETCH' 'FIRST' fetchFirst=FetchFirst)?;
 	public SelectElements getSelectAccess() {
 		return pSelect;
 	}
@@ -5529,9 +5584,8 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//enum XFunction:
-	//	xin='{IN' | xnotin='{NOTIN' | xeq='{EQUAL' | xnoteq='{NOTEQUAL' | xls='{LESS' |
-	//	xlsr='{LESS]' | xgtl='{[GREATER' | xgt='{GREATER' | xbwn='{BETWEEN' | xbwnc='{[BETWEEN]' | xbwnl='{[BETWEEN' |
-	//	xbwnr='{BETWEEN]';
+	//	xin='{IN' | xnotin='{NOTIN' | xeq='{EQUAL' | xnoteq='{NOTEQUAL' | xls='{LESS' | xlsr='{LESS]' | xgtl='{[GREATER' |
+	//	xgt='{GREATER' | xbwn='{BETWEEN' | xbwnc='{[BETWEEN]' | xbwnl='{[BETWEEN' | xbwnr='{BETWEEN]';
 	public XFunctionElements getXFunctionAccess() {
 		return eXFunction;
 	}
@@ -6019,11 +6073,10 @@ public class SqlGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//enum EXTRACT_VALUES:
-	//	ms='MICROSECOND' | s='SECOND' | m='MINUTE' | h='HOUR' |
-	//	day='DAY' | week='WEEK' | month='MONTH' | quart='QUARTER' | year='YEAR' | micros='SECOND_MICROSECOND' |
-	//	minMicro='MINUTE_MICROSECOND' | minSec='MINUTE_SECOND' | hms='HOUR_MICROSECOND' | hs='HOUR_SECOND' |
-	//	hmin='HOUR_MINUTE' | dms='DAY_MICROSECOND' | ds='DAY_SECOND' | daymin='DAY_MINUTE' | dayh='DAY_HOUR' |
-	//	yearMonth='YEAR_MONTH';
+	//	ms='MICROSECOND' | s='SECOND' | m='MINUTE' | h='HOUR' | day='DAY' | week='WEEK' | month='MONTH' | quart='QUARTER' |
+	//	year='YEAR' | micros='SECOND_MICROSECOND' | minMicro='MINUTE_MICROSECOND' | minSec='MINUTE_SECOND' |
+	//	hms='HOUR_MICROSECOND' | hs='HOUR_SECOND' | hmin='HOUR_MINUTE' | dms='DAY_MICROSECOND' | ds='DAY_SECOND' |
+	//	daymin='DAY_MINUTE' | dayh='DAY_HOUR' | yearMonth='YEAR_MONTH';
 	public EXTRACT_VALUESElements getEXTRACT_VALUESAccess() {
 		return eEXTRACT_VALUES;
 	}

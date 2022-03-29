@@ -25,10 +25,6 @@ public interface PivotFunctions extends EObject
   /**
    * Returns the value of the '<em><b>Abc</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Abc</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Abc</em>' attribute.
    * @see #setAbc(String)

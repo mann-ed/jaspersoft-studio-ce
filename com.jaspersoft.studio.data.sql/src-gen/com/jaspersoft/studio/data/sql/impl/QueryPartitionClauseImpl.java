@@ -66,6 +66,7 @@ public class QueryPartitionClauseImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AnalyticExprArgs getArgs()
   {
     return args;
@@ -93,6 +94,7 @@ public class QueryPartitionClauseImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setArgs(AnalyticExprArgs newArgs)
   {
     if (newArgs != args)

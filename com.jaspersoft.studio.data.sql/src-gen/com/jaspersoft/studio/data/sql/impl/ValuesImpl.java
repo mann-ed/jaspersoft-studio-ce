@@ -66,6 +66,7 @@ public class ValuesImpl extends MinimalEObjectImpl.Container implements Values
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Rows getRows()
   {
     return rows;
@@ -93,6 +94,7 @@ public class ValuesImpl extends MinimalEObjectImpl.Container implements Values
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRows(Rows newRows)
   {
     if (newRows != rows)

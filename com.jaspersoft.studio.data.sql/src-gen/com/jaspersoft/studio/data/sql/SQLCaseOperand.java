@@ -27,10 +27,6 @@ public interface SQLCaseOperand extends EObject
   /**
    * Returns the value of the '<em><b>Wop</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Wop</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Wop</em>' containment reference.
    * @see #setWop(Operands)
@@ -53,10 +49,6 @@ public interface SQLCaseOperand extends EObject
   /**
    * Returns the value of the '<em><b>Expr</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Expr</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Expr</em>' containment reference.
    * @see #setExpr(OrExpr)
@@ -79,10 +71,6 @@ public interface SQLCaseOperand extends EObject
   /**
    * Returns the value of the '<em><b>When</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>When</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>When</em>' containment reference.
    * @see #setWhen(SQLCaseWhens)

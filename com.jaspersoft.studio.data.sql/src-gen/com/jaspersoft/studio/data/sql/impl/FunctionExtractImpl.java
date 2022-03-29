@@ -88,6 +88,7 @@ public class FunctionExtractImpl extends MinimalEObjectImpl.Container implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EXTRACT_VALUES getV()
   {
     return v;
@@ -98,6 +99,7 @@ public class FunctionExtractImpl extends MinimalEObjectImpl.Container implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setV(EXTRACT_VALUES newV)
   {
     EXTRACT_VALUES oldV = v;
@@ -111,6 +113,7 @@ public class FunctionExtractImpl extends MinimalEObjectImpl.Container implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getOperand()
   {
     return operand;
@@ -138,6 +141,7 @@ public class FunctionExtractImpl extends MinimalEObjectImpl.Container implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOperand(Operands newOperand)
   {
     if (newOperand != operand)
@@ -256,7 +260,7 @@ public class FunctionExtractImpl extends MinimalEObjectImpl.Container implements
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (v: ");
     result.append(v);
     result.append(')');

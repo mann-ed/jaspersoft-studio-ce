@@ -66,6 +66,7 @@ public class SubQueryOperandImpl extends MinimalEObjectImpl.Container implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SelectQuery getSel()
   {
     return sel;
@@ -93,6 +94,7 @@ public class SubQueryOperandImpl extends MinimalEObjectImpl.Container implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSel(SelectQuery newSel)
   {
     if (newSel != sel)

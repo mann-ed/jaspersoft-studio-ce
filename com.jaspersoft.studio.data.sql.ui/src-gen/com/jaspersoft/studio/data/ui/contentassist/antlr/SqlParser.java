@@ -92,6 +92,7 @@ public class SqlParser extends AbstractContentAssistParser {
 					put(grammarAccess.getEXTRACT_VALUESAccess().getAlternatives(), "rule__EXTRACT_VALUES__Alternatives");
 					put(grammarAccess.getModelAccess().getGroup(), "rule__Model__Group__0");
 					put(grammarAccess.getWithQueryAccess().getGroup(), "rule__WithQuery__Group__0");
+					put(grammarAccess.getWithQueryAccess().getGroup_7(), "rule__WithQuery__Group_7__0");
 					put(grammarAccess.getWithColumnsAccess().getGroup(), "rule__WithColumns__Group__0");
 					put(grammarAccess.getFetchFirstAccess().getGroup(), "rule__FetchFirst__Group__0");
 					put(grammarAccess.getLimitAccess().getGroup_0(), "rule__Limit__Group_0__0");
@@ -259,6 +260,9 @@ public class SqlParser extends AbstractContentAssistParser {
 					put(grammarAccess.getWithQueryAccess().getWnameAssignment_1(), "rule__WithQuery__WnameAssignment_1");
 					put(grammarAccess.getWithQueryAccess().getWithColsAssignment_2(), "rule__WithQuery__WithColsAssignment_2");
 					put(grammarAccess.getWithQueryAccess().getQueryAssignment_5(), "rule__WithQuery__QueryAssignment_5");
+					put(grammarAccess.getWithQueryAccess().getAdditionalWnameAssignment_7_1(), "rule__WithQuery__AdditionalWnameAssignment_7_1");
+					put(grammarAccess.getWithQueryAccess().getAdditionalWithColsAssignment_7_2(), "rule__WithQuery__AdditionalWithColsAssignment_7_2");
+					put(grammarAccess.getWithQueryAccess().getAdditionalQueriesAssignment_7_5(), "rule__WithQuery__AdditionalQueriesAssignment_7_5");
 					put(grammarAccess.getFetchFirstAccess().getFetchFirstAssignment_0(), "rule__FetchFirst__FetchFirstAssignment_0");
 					put(grammarAccess.getFetchFirstAccess().getRowAssignment_1(), "rule__FetchFirst__RowAssignment_1");
 					put(grammarAccess.getOffsetAccess().getOffsetAssignment(), "rule__Offset__OffsetAssignment");

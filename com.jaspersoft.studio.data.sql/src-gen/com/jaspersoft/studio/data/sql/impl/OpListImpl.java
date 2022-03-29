@@ -69,6 +69,7 @@ public class OpListImpl extends OperandListImpl implements OpList
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<ScalarOperand> getEntries()
   {
     if (entries == null)

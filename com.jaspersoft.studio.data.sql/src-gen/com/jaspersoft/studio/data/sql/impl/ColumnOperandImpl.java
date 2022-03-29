@@ -87,6 +87,7 @@ public class ColumnOperandImpl extends MinimalEObjectImpl.Container implements C
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ColumnFull getCfull()
   {
     return cfull;
@@ -114,6 +115,7 @@ public class ColumnOperandImpl extends MinimalEObjectImpl.Container implements C
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCfull(ColumnFull newCfull)
   {
     if (newCfull != cfull)
@@ -135,6 +137,7 @@ public class ColumnOperandImpl extends MinimalEObjectImpl.Container implements C
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getOra()
   {
     return ora;
@@ -145,6 +148,7 @@ public class ColumnOperandImpl extends MinimalEObjectImpl.Container implements C
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOra(String newOra)
   {
     String oldOra = ora;
@@ -255,7 +259,7 @@ public class ColumnOperandImpl extends MinimalEObjectImpl.Container implements C
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (ora: ");
     result.append(ora);
     result.append(')');

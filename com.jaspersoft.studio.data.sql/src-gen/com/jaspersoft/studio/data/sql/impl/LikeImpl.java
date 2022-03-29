@@ -87,6 +87,7 @@ public class LikeImpl extends MinimalEObjectImpl.Container implements Like
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getOpLike()
   {
     return opLike;
@@ -97,6 +98,7 @@ public class LikeImpl extends MinimalEObjectImpl.Container implements Like
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOpLike(String newOpLike)
   {
     String oldOpLike = opLike;
@@ -110,6 +112,7 @@ public class LikeImpl extends MinimalEObjectImpl.Container implements Like
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public LikeOperand getOp2()
   {
     return op2;
@@ -137,6 +140,7 @@ public class LikeImpl extends MinimalEObjectImpl.Container implements Like
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp2(LikeOperand newOp2)
   {
     if (newOp2 != op2)
@@ -255,7 +259,7 @@ public class LikeImpl extends MinimalEObjectImpl.Container implements Like
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (opLike: ");
     result.append(opLike);
     result.append(')');

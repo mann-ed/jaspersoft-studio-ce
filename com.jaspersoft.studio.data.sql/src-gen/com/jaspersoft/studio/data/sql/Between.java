@@ -27,10 +27,6 @@ public interface Between extends EObject
   /**
    * Returns the value of the '<em><b>Op Between</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op Between</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op Between</em>' attribute.
    * @see #setOpBetween(String)
@@ -53,10 +49,6 @@ public interface Between extends EObject
   /**
    * Returns the value of the '<em><b>Op2</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op2</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op2</em>' containment reference.
    * @see #setOp2(Operands)
@@ -79,10 +71,6 @@ public interface Between extends EObject
   /**
    * Returns the value of the '<em><b>Op3</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op3</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op3</em>' containment reference.
    * @see #setOp3(Operands)

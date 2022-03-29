@@ -90,6 +90,7 @@ public class AnalyticClauseImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public QueryPartitionClause getAbc()
   {
     return abc;
@@ -117,6 +118,7 @@ public class AnalyticClauseImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setAbc(QueryPartitionClause newAbc)
   {
     if (newAbc != abc)
@@ -138,6 +140,7 @@ public class AnalyticClauseImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrderByClause getObc()
   {
     return obc;
@@ -165,6 +168,7 @@ public class AnalyticClauseImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setObc(OrderByClause newObc)
   {
     if (newObc != obc)
@@ -186,6 +190,7 @@ public class AnalyticClauseImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WindowingClause getWinc()
   {
     return winc;
@@ -213,6 +218,7 @@ public class AnalyticClauseImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setWinc(WindowingClause newWinc)
   {
     if (newWinc != winc)

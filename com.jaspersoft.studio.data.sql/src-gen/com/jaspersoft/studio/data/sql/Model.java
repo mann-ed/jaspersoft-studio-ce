@@ -26,10 +26,6 @@ public interface Model extends EObject
   /**
    * Returns the value of the '<em><b>Wq</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Wq</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Wq</em>' containment reference.
    * @see #setWq(WithQuery)
@@ -52,10 +48,6 @@ public interface Model extends EObject
   /**
    * Returns the value of the '<em><b>Query</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Query</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Query</em>' containment reference.
    * @see #setQuery(SelectQuery)

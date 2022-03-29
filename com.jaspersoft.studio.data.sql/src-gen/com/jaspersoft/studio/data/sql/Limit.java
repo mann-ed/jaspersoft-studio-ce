@@ -26,10 +26,6 @@ public interface Limit extends EObject
   /**
    * Returns the value of the '<em><b>L1</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>L1</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>L1</em>' attribute.
    * @see #setL1(Long)
@@ -52,10 +48,6 @@ public interface Limit extends EObject
   /**
    * Returns the value of the '<em><b>L2</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>L2</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>L2</em>' attribute.
    * @see #setL2(Long)

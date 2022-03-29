@@ -25,10 +25,6 @@ public interface WindowingClauseBetween extends WindowingClause
   /**
    * Returns the value of the '<em><b>Wco P</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Wco P</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Wco P</em>' containment reference.
    * @see #setWcoP(WindowingClauseOperandPreceding)
@@ -51,10 +47,6 @@ public interface WindowingClauseBetween extends WindowingClause
   /**
    * Returns the value of the '<em><b>Wco F</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Wco F</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Wco F</em>' containment reference.
    * @see #setWcoF(WindowingClauseOperandFollowing)

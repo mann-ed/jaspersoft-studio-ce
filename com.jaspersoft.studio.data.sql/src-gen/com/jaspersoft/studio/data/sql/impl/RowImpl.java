@@ -65,6 +65,7 @@ public class RowImpl extends RowsImpl implements Row
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public RowValues getRowValues()
   {
     return rowValues;
@@ -92,6 +93,7 @@ public class RowImpl extends RowsImpl implements Row
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRowValues(RowValues newRowValues)
   {
     if (newRowValues != rowValues)

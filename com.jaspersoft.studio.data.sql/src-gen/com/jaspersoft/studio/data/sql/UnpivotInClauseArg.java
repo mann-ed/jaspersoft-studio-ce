@@ -25,10 +25,6 @@ public interface UnpivotInClauseArg extends UnpivotInClauseArgs
   /**
    * Returns the value of the '<em><b>Pcols</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Pcols</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Pcols</em>' containment reference.
    * @see #setPcols(PivotColumns)
@@ -51,10 +47,6 @@ public interface UnpivotInClauseArg extends UnpivotInClauseArgs
   /**
    * Returns the value of the '<em><b>Cfuls</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Cfuls</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Cfuls</em>' containment reference.
    * @see #setCfuls(PivotColumns)

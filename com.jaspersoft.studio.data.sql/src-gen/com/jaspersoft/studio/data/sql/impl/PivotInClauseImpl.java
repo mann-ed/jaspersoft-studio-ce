@@ -99,6 +99,7 @@ public class PivotInClauseImpl extends MinimalEObjectImpl.Container implements P
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SubQueryOperand getSq()
   {
     return sq;
@@ -126,6 +127,7 @@ public class PivotInClauseImpl extends MinimalEObjectImpl.Container implements P
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSq(SubQueryOperand newSq)
   {
     if (newSq != sq)
@@ -147,6 +149,7 @@ public class PivotInClauseImpl extends MinimalEObjectImpl.Container implements P
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public UnpivotInClauseArgs getArgs()
   {
     return args;
@@ -174,6 +177,7 @@ public class PivotInClauseImpl extends MinimalEObjectImpl.Container implements P
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setArgs(UnpivotInClauseArgs newArgs)
   {
     if (newArgs != args)
@@ -195,6 +199,7 @@ public class PivotInClauseImpl extends MinimalEObjectImpl.Container implements P
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getPinany()
   {
     return pinany;
@@ -205,6 +210,7 @@ public class PivotInClauseImpl extends MinimalEObjectImpl.Container implements P
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPinany(String newPinany)
   {
     String oldPinany = pinany;
@@ -327,7 +333,7 @@ public class PivotInClauseImpl extends MinimalEObjectImpl.Container implements P
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (pinany: ");
     result.append(pinany);
     result.append(')');

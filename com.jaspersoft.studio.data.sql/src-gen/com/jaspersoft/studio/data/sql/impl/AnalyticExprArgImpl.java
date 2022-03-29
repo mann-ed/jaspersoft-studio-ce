@@ -77,6 +77,7 @@ public class AnalyticExprArgImpl extends AnalyticExprArgsImpl implements Analyti
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getCe()
   {
     return ce;
@@ -104,6 +105,7 @@ public class AnalyticExprArgImpl extends AnalyticExprArgsImpl implements Analyti
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCe(Operands newCe)
   {
     if (newCe != ce)
@@ -125,6 +127,7 @@ public class AnalyticExprArgImpl extends AnalyticExprArgsImpl implements Analyti
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public DbObjectName getColAlias()
   {
     return colAlias;
@@ -152,6 +155,7 @@ public class AnalyticExprArgImpl extends AnalyticExprArgsImpl implements Analyti
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setColAlias(DbObjectName newColAlias)
   {
     if (newColAlias != colAlias)

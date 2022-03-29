@@ -73,6 +73,7 @@ public class PivotFunctionsImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getAbc()
   {
     return abc;
@@ -83,6 +84,7 @@ public class PivotFunctionsImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setAbc(String newAbc)
   {
     String oldAbc = abc;
@@ -167,7 +169,7 @@ public class PivotFunctionsImpl extends MinimalEObjectImpl.Container implements 
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (abc: ");
     result.append(abc);
     result.append(')');

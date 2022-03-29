@@ -7,7 +7,7 @@ Model:
 	JRNPARAM? wq=WithQuery? query=SelectQuery;
 
 WithQuery:
-	w='WITH' wname=DBID withCols=(WithColumns)? 'AS' '(' query=SelectQuery ')';
+	w='WITH' wname=DbObjectName withCols=(WithColumns)? 'AS' '(' query=SelectQuery ')' (',' additionalWname+=DbObjectName additionalWithCols+=(WithColumns)? 'AS' '(' additionalQueries+=SelectQuery ')')*;
 
 WithColumns:
 	'(' UsingCols ')';

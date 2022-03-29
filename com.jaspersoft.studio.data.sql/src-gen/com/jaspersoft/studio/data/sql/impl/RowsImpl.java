@@ -71,6 +71,7 @@ public class RowsImpl extends MinimalEObjectImpl.Container implements Rows
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<Row> getEntries()
   {
     if (entries == null)

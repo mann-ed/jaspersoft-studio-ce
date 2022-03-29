@@ -27,10 +27,6 @@ public interface PivotInClause extends EObject
   /**
    * Returns the value of the '<em><b>Sq</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Sq</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sq</em>' containment reference.
    * @see #setSq(SubQueryOperand)
@@ -53,10 +49,6 @@ public interface PivotInClause extends EObject
   /**
    * Returns the value of the '<em><b>Args</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Args</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Args</em>' containment reference.
    * @see #setArgs(UnpivotInClauseArgs)
@@ -79,10 +71,6 @@ public interface PivotInClause extends EObject
   /**
    * Returns the value of the '<em><b>Pinany</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Pinany</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Pinany</em>' attribute.
    * @see #setPinany(String)

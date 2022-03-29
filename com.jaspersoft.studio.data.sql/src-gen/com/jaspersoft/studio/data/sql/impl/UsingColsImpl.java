@@ -69,6 +69,7 @@ public class UsingColsImpl extends WithColumnsImpl implements UsingCols
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<DbObjectName> getEntries()
   {
     if (entries == null)

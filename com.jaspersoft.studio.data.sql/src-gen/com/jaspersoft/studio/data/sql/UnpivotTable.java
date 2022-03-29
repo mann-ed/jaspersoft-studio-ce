@@ -27,10 +27,6 @@ public interface UnpivotTable extends EObject
   /**
    * Returns the value of the '<em><b>Pcols</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Pcols</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Pcols</em>' containment reference.
    * @see #setPcols(PivotColumns)
@@ -53,10 +49,6 @@ public interface UnpivotTable extends EObject
   /**
    * Returns the value of the '<em><b>Pfor</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Pfor</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Pfor</em>' containment reference.
    * @see #setPfor(PivotForClause)
@@ -79,10 +71,6 @@ public interface UnpivotTable extends EObject
   /**
    * Returns the value of the '<em><b>Inop</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Inop</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Inop</em>' containment reference.
    * @see #setInop(UnpivotInClause)
