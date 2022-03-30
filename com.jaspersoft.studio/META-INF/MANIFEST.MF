@@ -36,7 +36,9 @@ Bundle-ClassPath: patch-library.jar,
  lib/velocity-1.7-dep.jar,
  lib/commons-net-3.3.jar,
  .
-Import-Package: org.eclipse.ui,
+Import-Package: javax.servlet,
+ javax.servlet.http,
+ org.eclipse.ui,
  org.eclipse.ui.part
 Eclipse-RegisterBuddy: net.sf.jasperreports
 Eclipse-BuddyPolicy: registered
