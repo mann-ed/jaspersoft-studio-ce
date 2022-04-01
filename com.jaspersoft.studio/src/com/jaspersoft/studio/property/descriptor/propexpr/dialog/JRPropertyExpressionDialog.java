@@ -118,8 +118,8 @@ public class JRPropertyExpressionDialog extends JRPropertyDialog {
 			buseexpr.setText(Messages.JRPropertyExpressionDialog_UseExpressionCheckTxt);
 			buseexpr.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
 			simpleTextCheck = new Button(parent, SWT.CHECK);
-			simpleTextCheck.setText(Messages.JRPropertyExpressionDialog_SimpleTextCheck);
-			simpleTextCheck.setToolTipText(Messages.JRPropertyExpressionDialog_SimpleTextTooltip);
+			simpleTextCheck.setText("Simple Text");
+			simpleTextCheck.setToolTipText("Expression is a simple text expression where parameter, field, variable references have their values converted to string and expanded in-place in the resulting text.");
 			simpleTextCheck.setVisible(false);
 			simpleTextCheck.setEnabled(false);
 		}

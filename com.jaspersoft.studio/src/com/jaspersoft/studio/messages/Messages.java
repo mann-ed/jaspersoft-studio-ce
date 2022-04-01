@@ -2607,8 +2607,6 @@ public class Messages extends NLS {
 
 	public static String JRPropertyExpressionDialog_UseExpressionCheckTxt;
 	public static String JRPropertyExpressionDialog_1;
-	public static String JRPropertyExpressionDialog_SimpleTextCheck;
-	public static String JRPropertyExpressionDialog_SimpleTextTooltip;
 	
 	private Messages() {
 	}
