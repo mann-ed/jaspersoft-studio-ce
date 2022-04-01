@@ -137,9 +137,9 @@ public class CSVColDataAction extends CSVAction {
 
 			removeDataPropertyExpression(peDTO);
 		} else {
-			peDTO.setProperty(JRCsvMetadataExporter.PROPERTY_COLUMN_NAME, path, false);
+			peDTO.setProperty(JRCsvMetadataExporter.PROPERTY_COLUMN_NAME, path, false, false);
 			if (repeat)
-				peDTO.setProperty(JRCsvMetadataExporter.PROPERTY_REPEAT_VALUE, "true", false); //$NON-NLS-1$
+				peDTO.setProperty(JRCsvMetadataExporter.PROPERTY_REPEAT_VALUE, "true", false, false); //$NON-NLS-1$
 			else
 				peDTO.removeProperty(JRCsvMetadataExporter.PROPERTY_REPEAT_VALUE, false);
 		}
@@ -149,7 +149,7 @@ public class CSVColDataAction extends CSVAction {
 		else {
 			PropertyExpressionDTO dpe = peDTO.getProperty(JRCsvMetadataExporter.PROPERTY_DATA, true);
 			if (dpe == null){
-				peDTO.addProperty(JRCsvMetadataExporter.PROPERTY_DATA, data.getText(), true);
+				peDTO.addProperty(JRCsvMetadataExporter.PROPERTY_DATA, data.getText(), true, false);
 			} else {
 				dpe.setValue(data.getText());
 			}

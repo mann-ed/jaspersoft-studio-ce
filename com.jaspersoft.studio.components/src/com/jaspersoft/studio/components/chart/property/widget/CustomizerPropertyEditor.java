@@ -12,6 +12,7 @@ import com.jaspersoft.studio.widgets.framework.IPropertyEditor;
 
 import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.design.JRDesignElement;
+import net.sf.jasperreports.engine.type.ExpressionTypeEnum;
 
 /**
  * Properties editor of a chart customizer dynamic property, used to store the property inside the element
@@ -76,13 +77,13 @@ public class CustomizerPropertyEditor implements IPropertyEditor {
 			if (valueExpression.getText().isEmpty()){
 				propertiesDTO.removeProperty(fullPropertyName, true);
 			} else {
-				propertiesDTO.setProperty(fullPropertyName, valueExpression.getText(), true);
+				propertiesDTO.setProperty(fullPropertyName, valueExpression.getText(), true, ExpressionTypeEnum.SIMPLE_TEXT == valueExpression.getType());
 			}
 		} else if (value != null){
 			if (value.isEmpty()){
 				propertiesDTO.removeProperty(fullPropertyName, false);
 			} else {
-				propertiesDTO.setProperty(fullPropertyName, value, false);
+				propertiesDTO.setProperty(fullPropertyName, value, false, false);
 			}
 		}
 		

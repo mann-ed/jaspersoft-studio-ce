@@ -6,15 +6,16 @@ package com.jaspersoft.studio.model;
 
 import java.util.Collection;
 
-import net.sf.jasperreports.engine.design.JRDesignElement;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
-
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.jface.viewers.ISelection;
 
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
+
+import net.sf.jasperreports.engine.design.JRDesignElement;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
+import net.sf.jasperreports.engine.type.ExpressionTypeEnum;
 
 /**
  * Class to make an expression property of an element copyable. It also provide the command 
@@ -34,6 +35,8 @@ public class CopyElementExpressionProperty implements ICopyable {
 	 * Copied property value
 	 */
 	protected String value;
+	
+	protected boolean isSimpleText;
 
 	/**
 	 * Command to paste the copied expression property on a single target. The command
@@ -87,7 +90,7 @@ public class CopyElementExpressionProperty implements ICopyable {
 					alreadyPresent = true;
 					oldValue = elementProperties.getProperty(propertyName, isExpression()).getValue();
 				}
-				elementProperties.setProperty(propertyName, value, isExpression());
+				elementProperties.setProperty(propertyName, value, isExpression(), isSimpleText());
 				target.setPropertyValue(JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS, elementProperties);
 			}
 		}
@@ -98,7 +101,7 @@ public class CopyElementExpressionProperty implements ICopyable {
 			//This property should return always an object, if this not happen probably the element doesen't support it, so skip the operations on it
 			if (elementProperties != null){
 				if (alreadyPresent){
-					elementProperties.setProperty(propertyName, oldValue, isExpression());
+					elementProperties.setProperty(propertyName, oldValue, isExpression(), isSimpleText());
 				} else {
 					elementProperties.removeProperty(propertyName, isExpression());
 				}
@@ -118,8 +121,10 @@ public class CopyElementExpressionProperty implements ICopyable {
 		this.propertyName = propertyName;
 		if (value instanceof JRDesignExpression){
 			this.value = ((JRDesignExpression)value).getText();
+			this.isSimpleText = ExpressionTypeEnum.SIMPLE_TEXT == ((JRDesignExpression)value).getType();
 		} else {
 			this.value = (String)value;
+			this.isSimpleText = false;
 		}
 	}
 	
@@ -179,6 +184,10 @@ public class CopyElementExpressionProperty implements ICopyable {
 	 */
 	public String getPropertyName() {
 		return propertyName;
+	}
+	
+	public boolean isSimpleText() {
+		return isSimpleText;
 	}
 
 	/**

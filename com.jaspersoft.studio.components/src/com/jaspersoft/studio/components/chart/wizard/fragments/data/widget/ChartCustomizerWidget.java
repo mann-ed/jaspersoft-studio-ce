@@ -358,7 +358,7 @@ public abstract class ChartCustomizerWidget {
 		}
 		//And then we re-add them in the same order of the customizers list
 		for(ChartCustomizerDefinition definition : selectedCustomizers){
-			dto.addProperty(NamedChartCustomizer.CUSTOMIZER_CLASS_PROPERTY_PREFIX + definition.getKey(), definition.getCustomizerClass(), false);
+			dto.addProperty(NamedChartCustomizer.CUSTOMIZER_CLASS_PROPERTY_PREFIX + definition.getKey(), definition.getCustomizerClass(), false, false);
 		}
 	}
 
