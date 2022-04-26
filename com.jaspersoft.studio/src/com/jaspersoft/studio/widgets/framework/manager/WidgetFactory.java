@@ -51,6 +51,7 @@ import com.jaspersoft.studio.widgets.framework.ui.MeasureUnitPropertyDescription
 import com.jaspersoft.studio.widgets.framework.ui.MultiCheckBoxPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.MultiLineTextPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.NotNullableTextPropertyDescription;
+import com.jaspersoft.studio.widgets.framework.ui.PasswordTextPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.SelectableComboItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.TextPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.TimezoneComboPropertyDescription;
@@ -143,6 +144,7 @@ public class WidgetFactory {
 			hardcodedWidgets.put("fixednumbermeasureunit", new FixedNumberMesurePropertyDescription());
 			hardcodedWidgets.put("timezone_combo", new TimezoneComboPropertyDescription());
 			hardcodedWidgets.put("locale_combo", new LocaleComboPropertyDescription());
+			hardcodedWidgets.put("password_text", new PasswordTextPropertyDescription<String>());
 		}
 		return hardcodedWidgets;
 	}
