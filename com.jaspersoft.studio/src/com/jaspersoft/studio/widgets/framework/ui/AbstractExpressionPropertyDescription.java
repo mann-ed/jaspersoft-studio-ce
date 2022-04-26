@@ -255,10 +255,16 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 
 	public String getToolTip(IWItemProperty wip, String value) {
 		String tooltip = "";
-		if (!Misc.isNullOrEmpty(value))
-			tooltip += "\n\n" + value;
 		String wipTt = wip.getToolTip();
-		tooltip += wipTt != null ? wipTt : "\n" + getToolTip();
+		if(wipTt!=null) {
+			tooltip = wipTt;
+		}
+		else {
+			if (!Misc.isNullOrEmpty(value)) {
+				tooltip += "\n\n" + value;
+			}
+			tooltip += "\n" + getToolTip();
+		}
 		return tooltip.trim();
 	}
 
