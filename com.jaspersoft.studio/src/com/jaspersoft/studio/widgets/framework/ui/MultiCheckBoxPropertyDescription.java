@@ -131,6 +131,7 @@ public class MultiCheckBoxPropertyDescription<T> extends AbstractExpressionPrope
 	
 	/*
 	 * Converts the status of the checkboxes selection into a proper text value representation.
+	 * Returns null if no element is selected.
 	 */
 	private String convertToTextValue() {
 		StringBuilder result = new StringBuilder();
@@ -140,7 +141,8 @@ public class MultiCheckBoxPropertyDescription<T> extends AbstractExpressionPrope
 			}
 		}
 		result.setLength(Math.max(result.length()-1,0));
-		return result.toString();
+		String textValue = result.toString();
+		return textValue.isEmpty() ? null : textValue;
 	}
 	
 	/*
