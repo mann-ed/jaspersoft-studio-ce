@@ -66,6 +66,7 @@ public class TreePropertiesViewerPanel<T extends IPropertiesViewerNode> extends 
 	protected FilteredTree filteredTree;
 	protected CLabel titleLabel;
 	private SashForm panelSash;
+	private ScrolledComposite scrollComposite;
 	
 	/**
 	 * Creates the panel.
@@ -181,14 +182,14 @@ public class TreePropertiesViewerPanel<T extends IPropertiesViewerNode> extends 
 	 */
 	protected Composite createTitleArea(Composite parent) {
 		Composite titleArea = new Composite(parent, SWT.NONE);
-		GridData gd_TitleArea=new GridData(SWT.FILL,SWT.FILL,true,false,1,1);
+		GridData gd_TitleArea = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		titleArea.setLayoutData(gd_TitleArea);
 		FillLayout fl_TitleArea = new FillLayout(SWT.VERTICAL);
-		fl_TitleArea.marginHeight=5;
-		fl_TitleArea.marginWidth=5;
+		fl_TitleArea.marginHeight = 5;
+		fl_TitleArea.marginWidth = 5;
 		titleArea.setLayout(fl_TitleArea);
-    titleLabel = new CLabel(titleArea, SWT.NONE);
-    titleLabel.setFont(JFaceResources.getBannerFont());
+		titleLabel = new CLabel(titleArea, SWT.NONE);
+		titleLabel.setFont(JFaceResources.getBannerFont());
 		return titleArea;
 	}
 	
@@ -200,14 +201,13 @@ public class TreePropertiesViewerPanel<T extends IPropertiesViewerNode> extends 
 	 * @return the composite representing the content area
 	 */
 	protected Composite createContentArea(Composite parent){
-	  ScrolledComposite sc = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
-		GridData gd_ContentArea=new GridData(SWT.FILL,SWT.FILL,true,true,1,1);
-		sc.setLayoutData(gd_ContentArea);
-		Composite cmpContentArea = new Composite(sc, SWT.NONE);
-		sc.setContent(cmpContentArea);
-		sc.setMinSize(400,400);
-		sc.setExpandHorizontal(true);
-	  sc.setExpandVertical(true);
+		scrollComposite = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+		GridData gd_ContentArea = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		scrollComposite.setLayoutData(gd_ContentArea);
+		Composite cmpContentArea = new Composite(scrollComposite, SWT.NONE);
+		scrollComposite.setContent(cmpContentArea);
+		scrollComposite.setExpandHorizontal(true);
+		scrollComposite.setExpandVertical(true);
 		return cmpContentArea;
 	}
 	
@@ -272,6 +272,8 @@ public class TreePropertiesViewerPanel<T extends IPropertiesViewerNode> extends 
 		currentControl.setVisible(true);
 		contentAreaLayout.topControl=currentControl;
 		contentArea.layout();
+		
+		scrollComposite.setMinSize(currentControl.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		
 		// update other stuff
 		updateTitleArea();
