@@ -6,8 +6,6 @@ package com.jaspersoft.studio.widgets.framework.ui;
 
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
@@ -76,6 +74,10 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		super(name, label, description, mandatory, defaultValue);
 		this.keyValues = keyValues;
 	}
+	
+	public String[][] getKeyValues() {
+		return keyValues;
+	}
 
 	public static String[][] convert2KeyValue(String[] values) {
 		String[][] kv = new String[values.length][2];
@@ -85,6 +87,26 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		}
 		return kv;
 	}
+	
+	public static String getKeyFromValue(String[][] keyValues, String key) {
+		String keyFound = null;
+		for(int i=0;i<keyValues.length;i++) {
+			if(key.equals(keyValues[i][1])) {
+				return keyValues[i][0];
+			}
+		}
+		return keyFound;
+	}
+	
+	public static String getValueFromKey(String[][] keyValues, String value) {
+		String valueFound = null;
+		for(int i=0;i<keyValues.length;i++) {
+			if(value.equals(keyValues[i][0])) {
+				return keyValues[i][1];
+			}
+		}
+		return valueFound;
+	}	
 
 	protected String[] convert2Value(String[][] keyValues) {
 		String[] v = new String[keyValues.length];
