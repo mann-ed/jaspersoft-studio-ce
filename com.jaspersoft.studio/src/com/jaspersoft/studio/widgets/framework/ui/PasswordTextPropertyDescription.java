@@ -7,8 +7,11 @@ package com.jaspersoft.studio.widgets.framework.ui;
 import org.eclipse.swt.SWT;
 
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
+import com.jaspersoft.studio.widgets.framework.IWItemProperty;
 import com.jaspersoft.studio.widgets.framework.model.WidgetPropertyDescriptor;
 import com.jaspersoft.studio.widgets.framework.model.WidgetsDescriptor;
+
+import net.sf.jasperreports.eclipse.util.Misc;
 
 /**
  * Extending the original {@link TextPropertyDescription} one 
@@ -64,5 +67,21 @@ public class PasswordTextPropertyDescription<T> extends TextPropertyDescription<
 		result.setReadOnly(cpd.isReadOnly());
 		result.setFallbackValue(cpd.getFallbackValue());
 		return result;
+	}
+	
+	@Override
+	public String getToolTip(IWItemProperty wip, String value) {
+		String tooltip = "";
+		String wipTt = wip.getToolTip();
+		if(wipTt!=null) {
+			tooltip = wipTt;
+		}
+		else {
+			if (!Misc.isNullOrEmpty(value)) {
+				tooltip += "\n\n**********";
+			}
+			tooltip += "\n" + getToolTip();
+		}
+		return tooltip.trim();
 	}
 }
