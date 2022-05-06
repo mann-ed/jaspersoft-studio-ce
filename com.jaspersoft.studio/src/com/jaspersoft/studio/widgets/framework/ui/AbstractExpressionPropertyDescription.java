@@ -30,7 +30,7 @@ import net.sf.jasperreports.engine.design.JRDesignExpression;
 /**
  * Superclass of every {@link ItemPropertyDescription}. Since a widget is
  * composed of both expression part and simple control part, this class
- * implement the part regardig the expression, since its logic is shared between
+ * implement the part regarding the expression, since its logic is shared between
  * the widgets
  * 
  * @author Orlandin Marco
@@ -173,9 +173,9 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 	 */
 	protected Control createExpressionControl(final IWItemProperty wiProp, Composite parent) {
 		Text textExpression = new Text(parent, SWT.BORDER | SWT.WRAP);
-		// The expression control always fill the available area in both
-		// directions
-		GridData textData = new GridData(GridData.FILL_BOTH);
+		// The expression control always fill the available area in both directions
+		GridData textData = new GridData(SWT.FILL,SWT.FILL,true,true);
+		textData.widthHint=150;
 		textExpression.setLayoutData(textData);
 		textExpression.addFocusListener(new FocusAdapter() {
 
