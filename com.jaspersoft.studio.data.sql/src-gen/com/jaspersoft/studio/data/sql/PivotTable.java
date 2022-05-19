@@ -27,10 +27,6 @@ public interface PivotTable extends EObject
   /**
    * Returns the value of the '<em><b>Pfun</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Pfun</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Pfun</em>' containment reference.
    * @see #setPfun(PivotFunctions)
@@ -53,10 +49,6 @@ public interface PivotTable extends EObject
   /**
    * Returns the value of the '<em><b>Pfor</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Pfor</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Pfor</em>' containment reference.
    * @see #setPfor(PivotForClause)
@@ -79,10 +71,6 @@ public interface PivotTable extends EObject
   /**
    * Returns the value of the '<em><b>Pin</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Pin</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Pin</em>' containment reference.
    * @see #setPin(PivotInClause)

@@ -173,6 +173,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ColumnOperand getColumn()
   {
     return column;
@@ -200,6 +201,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setColumn(ColumnOperand newColumn)
   {
     if (newColumn != column)
@@ -221,6 +223,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operand getXop()
   {
     return xop;
@@ -248,6 +251,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setXop(Operand newXop)
   {
     if (newXop != xop)
@@ -269,6 +273,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SubQueryOperand getSubq()
   {
     return subq;
@@ -296,6 +301,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSubq(SubQueryOperand newSubq)
   {
     if (newSubq != subq)
@@ -317,6 +323,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpFunctionCast getFcast()
   {
     return fcast;
@@ -344,6 +351,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFcast(OpFunctionCast newFcast)
   {
     if (newFcast != fcast)
@@ -365,6 +373,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public FunctionExtract getFext()
   {
     return fext;
@@ -392,6 +401,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFext(FunctionExtract newFext)
   {
     if (newFext != fext)
@@ -413,6 +423,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpFunction getFunc()
   {
     return func;
@@ -440,6 +451,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFunc(OpFunction newFunc)
   {
     if (newFunc != func)
@@ -461,6 +473,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SQLCaseOperand getSqlcase()
   {
     return sqlcase;
@@ -488,6 +501,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSqlcase(SQLCaseOperand newSqlcase)
   {
     if (newSqlcase != sqlcase)
@@ -509,6 +523,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public POperand getParam()
   {
     return param;
@@ -536,6 +551,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setParam(POperand newParam)
   {
     if (newParam != param)
@@ -557,6 +573,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ExpOperand getEparam()
   {
     return eparam;
@@ -584,6 +601,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setEparam(ExpOperand newEparam)
   {
     if (newEparam != eparam)
@@ -605,6 +623,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ScalarOperand getScalar()
   {
     return scalar;
@@ -632,6 +651,7 @@ public class OperandImpl extends MinimalEObjectImpl.Container implements Operand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setScalar(ScalarOperand newScalar)
   {
     if (newScalar != scalar)

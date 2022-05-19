@@ -13,7 +13,7 @@
    </description>
 
    <copyright>
-      Copyright (C) 2010 - 2021. TIBCO Software Inc.
+      Copyright (C) 2010 - 2022. TIBCO Software Inc.
    </copyright>
 
    <license url="%licenseURL">
@@ -44,12 +44,12 @@
       <import plugin="com.jaspersoft.studio.properties" version="8.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.help.ui" version="3.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="javax.servlet" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="org.apache.log4j" version="1.2.15" match="greaterOrEqual"/>
       <import plugin="org.eclipse.nebula.widgets.cdatetime" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="com.jaspersoft.studio.babel.editor" version="8.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="net.sf.jasperreports.samples" version="8.1.0" match="greaterOrEqual"/>
+      <import plugin="org.bouncycastle.bcprov" version="1.69.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.swt"/>
       <import plugin="org.eclipse.pde.ui"/>
       <import plugin="org.eclipse.jetty.util"/>
@@ -61,7 +61,6 @@
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="com.jaspersoft.studio" version="8.1.0" match="greaterOrEqual"/>
       <import plugin="com.jaspersoft.studio.server" version="8.1.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.commons.pool" version="1.6.0" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.lang3" version="3.8.1" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.6.4" match="greaterOrEqual"/>
       <import plugin="com.jaspersoft.studio.bundles.soap" version="1.4.2" match="greaterOrEqual"/>
@@ -73,7 +72,7 @@
       <import plugin="org.apache.httpcomponents.httpcore" version="4.3.2" match="greaterOrEqual"/>
       <import plugin="com.jaspersoft.studio.book" version="8.1.0" match="greaterOrEqual"/>
       <import plugin="com.sun.activation.javax.activation"/>
-      <import plugin="jaxb-api"/>
+      <import plugin="org.eclipse.osgi"/>
       <import plugin="org.eclipse.ui" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.views" version="3.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.6.0" match="greaterOrEqual"/>
@@ -113,9 +112,8 @@
       <import plugin="org.eclipse.ui.ide" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jdt.core" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.discovery" version="0.2.0" match="greaterOrEqual"/>
+      <import plugin="com.sun.activation.javax.activation" version="1.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.console"/>
-      <import plugin="org.bouncycastle.bcprov" version="1.69.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi"/>
    </requires>
 
    <plugin

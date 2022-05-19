@@ -112,7 +112,6 @@ public class CustomVisualizationActivator extends AbstractJRUIPlugin {
 			
 			// Force the properties values in order to avoid problems with different Studio versions
 			// See Bugzilla #42275.
-			PreferencesUtils.storeJasperReportsProperty(CVConstants.CV_REQUIREJS_PROPERTY, pathToRequireJs);
 			PreferencesUtils.storeJasperReportsProperty(SCRIPTS_PATH, "com/jaspersoft/jasperreports/customvisualization/resources/require/.*"); //$NON-NLS-1$
 	}
 }

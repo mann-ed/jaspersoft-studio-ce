@@ -28,10 +28,6 @@ public interface OpFunctionCast extends EObject
   /**
    * Returns the value of the '<em><b>Op</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op</em>' containment reference.
    * @see #setOp(Operands)
@@ -54,10 +50,6 @@ public interface OpFunctionCast extends EObject
   /**
    * Returns the value of the '<em><b>Type</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Type</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Type</em>' attribute.
    * @see #setType(String)
@@ -80,10 +72,6 @@ public interface OpFunctionCast extends EObject
   /**
    * Returns the value of the '<em><b>P</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>P</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>P</em>' attribute.
    * @see #setP(Long)
@@ -106,10 +94,6 @@ public interface OpFunctionCast extends EObject
   /**
    * Returns the value of the '<em><b>P2</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>P2</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>P2</em>' attribute.
    * @see #setP2(Long)

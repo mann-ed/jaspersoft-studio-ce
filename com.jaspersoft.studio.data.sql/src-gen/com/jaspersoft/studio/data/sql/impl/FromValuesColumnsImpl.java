@@ -66,6 +66,7 @@ public class FromValuesColumnsImpl extends MinimalEObjectImpl.Container implemen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public FromValuesColumnNames getFvCols()
   {
     return fvCols;
@@ -93,6 +94,7 @@ public class FromValuesColumnsImpl extends MinimalEObjectImpl.Container implemen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFvCols(FromValuesColumnNames newFvCols)
   {
     if (newFvCols != fvCols)

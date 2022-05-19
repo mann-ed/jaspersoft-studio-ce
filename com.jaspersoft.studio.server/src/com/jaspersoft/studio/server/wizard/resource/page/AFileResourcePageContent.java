@@ -11,7 +11,7 @@ import java.util.List;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -151,13 +151,15 @@ public abstract class AFileResourcePageContent extends APageContent {
 		Binding binding = null;
 		if (res.getValue().getIsNew()) {
 			NotEmptyFileValidator nefValidator = new NotEmptyFileValidator(jrConfig);
-			binding = bindingContext.bindValue(SWTObservables.observeText(trefuri, SWT.Modify),
-					PojoObservables.observeValue(new FileProxy((AFileResource) res), "fileName"), //$NON-NLS-1$
+			binding = bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(trefuri),
+					PojoProperties.value("fileName").observe(new FileProxy((AFileResource) res)), //$NON-NLS-1$
 					new UpdateValueStrategy().setAfterConvertValidator(nefValidator), null);
 			nefValidator.setBinding(binding);
 		} else {
-			binding = bindingContext.bindValue(SWTObservables.observeText(trefuri, SWT.Modify),
-					PojoObservables.observeValue(new FileProxy((AFileResource) res), "fileName"));
+			binding = bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(trefuri),
+					PojoProperties.value("fileName").observe(new FileProxy((AFileResource) res))); //$NON-NLS-1$
 		}
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT, null, new ControlDecorationUpdater());
 

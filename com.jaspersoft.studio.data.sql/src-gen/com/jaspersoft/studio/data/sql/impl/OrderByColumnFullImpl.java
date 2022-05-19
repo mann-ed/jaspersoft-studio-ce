@@ -107,6 +107,7 @@ public class OrderByColumnFullImpl extends OrOrderByColumnImpl implements OrderB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ColumnFull getColOrder()
   {
     return colOrder;
@@ -134,6 +135,7 @@ public class OrderByColumnFullImpl extends OrOrderByColumnImpl implements OrderB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setColOrder(ColumnFull newColOrder)
   {
     if (newColOrder != colOrder)
@@ -155,6 +157,7 @@ public class OrderByColumnFullImpl extends OrOrderByColumnImpl implements OrderB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getColOrderInt()
   {
     return colOrderInt;
@@ -165,6 +168,7 @@ public class OrderByColumnFullImpl extends OrOrderByColumnImpl implements OrderB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setColOrderInt(Long newColOrderInt)
   {
     Long oldColOrderInt = colOrderInt;
@@ -178,6 +182,7 @@ public class OrderByColumnFullImpl extends OrOrderByColumnImpl implements OrderB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getDirection()
   {
     return direction;
@@ -188,6 +193,7 @@ public class OrderByColumnFullImpl extends OrOrderByColumnImpl implements OrderB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setDirection(String newDirection)
   {
     String oldDirection = direction;
@@ -308,7 +314,7 @@ public class OrderByColumnFullImpl extends OrOrderByColumnImpl implements OrderB
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (colOrderInt: ");
     result.append(colOrderInt);
     result.append(", direction: ");

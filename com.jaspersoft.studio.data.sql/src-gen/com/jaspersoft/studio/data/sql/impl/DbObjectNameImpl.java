@@ -99,6 +99,7 @@ public class DbObjectNameImpl extends ColumnFullImpl implements DbObjectName
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<DbObjectName> getEntries()
   {
     if (entries == null)
@@ -113,6 +114,7 @@ public class DbObjectNameImpl extends ColumnFullImpl implements DbObjectName
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getDbname()
   {
     return dbname;
@@ -123,6 +125,7 @@ public class DbObjectNameImpl extends ColumnFullImpl implements DbObjectName
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setDbname(String newDbname)
   {
     String oldDbname = dbname;
@@ -357,7 +360,7 @@ public class DbObjectNameImpl extends ColumnFullImpl implements DbObjectName
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (dbname: ");
     result.append(dbname);
     result.append(')');

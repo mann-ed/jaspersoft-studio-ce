@@ -34,6 +34,7 @@ import org.xml.sax.InputSource;
 
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRPropertiesUtil;
 import net.sf.jasperreports.engine.JRRuntimeException;
@@ -42,6 +43,7 @@ import net.sf.jasperreports.engine.util.VersionComparator;
 import net.sf.jasperreports.engine.xml.JRXmlBaseWriter;
 import net.sf.jasperreports.util.CastorMapping;
 import net.sf.jasperreports.util.CastorUtil;
+import net.sf.jasperreports.util.JacksonUtil;
 
 /**
  * Refactor of the JR {@link CastorUtil}, the main difference is this doesn't
@@ -254,14 +256,32 @@ public class JSSCastorUtil {
 		}
 	}
 
-	public void write(Object object, Writer writer) {
-		Marshaller marshaller = getWriteXmlContext().createMarshaller();
-		try {
-			marshaller.setWriter(writer);
-			marshaller.setMarshalAsDocument(false);
-			marshaller.marshal(object);
-		} catch (MarshalException | ValidationException | IOException e) {
-			throw new JRRuntimeException(e);
+	public void write(Object object, Writer writer) 
+	{
+		String targetVersion = JRPropertiesUtil.getInstance(jasperReportsContext)
+				.getProperty(JRXmlBaseWriter.PROPERTY_REPORT_VERSION);
+		if (versionComparator.compare(targetVersion, JRConstants.VERSION_6_19_0) >= 0)
+		{
+			String xml = JacksonUtil.getInstance(jasperReportsContext).getXmlString(object);
+			try 
+			{
+				writer.write(xml);
+			}
+			catch (IOException e) 
+			{
+				throw new JRRuntimeException(e);
+			}
+		}
+		else
+		{
+			Marshaller marshaller = getWriteXmlContext().createMarshaller();
+			try {
+				marshaller.setWriter(writer);
+				marshaller.setMarshalAsDocument(false);
+				marshaller.marshal(object);
+			} catch (MarshalException | ValidationException | IOException e) {
+				throw new JRRuntimeException(e);
+			}
 		}
 	}
 }

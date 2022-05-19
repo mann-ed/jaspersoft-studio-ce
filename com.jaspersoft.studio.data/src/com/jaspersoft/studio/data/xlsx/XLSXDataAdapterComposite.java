@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -269,10 +269,12 @@ public class XLSXDataAdapterComposite extends AFileDataAdapterComposite {
 
 		doBindFileNameWidget(xlsDataAdapter);
 
-		bindingContext.bindValue(SWTObservables.observeSelection(btnCheckQEMode),
-				PojoObservables.observeValue(dataAdapter, "queryExecuterMode")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(btnCheckSkipFirstLine),
-				PojoObservables.observeValue(dataAdapter, "useFirstRowAsHeader")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(btnCheckQEMode),
+				PojoProperties.value("queryExecuterMode").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(btnCheckSkipFirstLine),
+				PojoProperties.value("useFirstRowAsHeader").observe(dataAdapter)); //$NON-NLS-1$
 
 		dnf.bindWidgets(xlsDataAdapter, bindingContext, xlsDataAdapter.getLocale(), xlsDataAdapter.getTimeZone());
 

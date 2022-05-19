@@ -36,10 +36,6 @@ public class FunctionWidget extends AOperandWidget<FunctionOperand> {
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.minimumWidth = 250;
 		txt.setLayoutData(gd);
-
-//		DataBindingContext bindingContext = new DataBindingContext();
-//		bindingContext.bindValue(SWTObservables.observeText(txt, SWT.Modify),
-//				PojoObservables.observeValue(getValue(), "value")); //$NON-NLS-1$
 	}
 
 }

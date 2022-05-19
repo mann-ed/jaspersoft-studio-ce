@@ -1700,7 +1700,7 @@
        <content-type
              describer="com.jaspersoft.studio.data.DataAdapterDescriber"
              base-type="org.eclipse.core.runtime.xml"
-             file-extensions="xml"
+             file-extensions="xml,jrdax"
              id="com.jaspersoft.studio.content-types.dataAdapter"
              name="DataAdapter File">
        </content-type>

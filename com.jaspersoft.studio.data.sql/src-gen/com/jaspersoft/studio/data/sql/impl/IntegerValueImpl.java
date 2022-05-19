@@ -73,6 +73,7 @@ public class IntegerValueImpl extends MinimalEObjectImpl.Container implements In
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getInteger()
   {
     return integer;
@@ -83,6 +84,7 @@ public class IntegerValueImpl extends MinimalEObjectImpl.Container implements In
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setInteger(Long newInteger)
   {
     Long oldInteger = integer;
@@ -167,7 +169,7 @@ public class IntegerValueImpl extends MinimalEObjectImpl.Container implements In
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (integer: ");
     result.append(integer);
     result.append(')');

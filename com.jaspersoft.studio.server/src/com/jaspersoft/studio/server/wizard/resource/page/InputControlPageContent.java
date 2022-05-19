@@ -5,8 +5,8 @@
 package com.jaspersoft.studio.server.wizard.resource.page;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionEvent;
@@ -119,18 +119,23 @@ public class InputControlPageContent extends APageContent implements IPageComple
 
 	@Override
 	protected void rebind() {
-		bindingContext.bindValue(SWTObservables.observeSingleSelectionIndex(ctype),
-				PojoObservables.observeValue(getProxy(res.getValue()), "controlType")); //$NON-NLS-1$
-
-		bindingContext.bindValue(SWTObservables.observeSelection(bmand),
-				PojoObservables.observeValue(res.getValue(), "mandatory")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bread),
-				PojoObservables.observeValue(res.getValue(), "readOnly")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bvisible),
-				PojoObservables.observeValue(res.getValue(), "visible")); //$NON-NLS-1$
-		if (tvalue != null)
-			bindingContext.bindValue(SWTObservables.observeText(tvalue, SWT.Modify),
-					PojoObservables.observeValue(res.getValue(), "queryValueColumn")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.singleSelectionIndex().observe(ctype),
+				PojoProperties.value("controlType").observe(getProxy(res.getValue()))); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bmand),
+				PojoProperties.value("mandatory").observe(res.getValue())); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bread),
+				PojoProperties.value("readOnly").observe(res.getValue())); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bvisible),
+				PojoProperties.value("visible").observe(res.getValue())); //$NON-NLS-1$
+		if (tvalue != null) {
+			bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tvalue),
+					PojoProperties.value("queryValueColumn").observe(res.getValue())); //$NON-NLS-1$
+		}
 
 		handleTypeChanged(ctype, stackLayout);
 	}

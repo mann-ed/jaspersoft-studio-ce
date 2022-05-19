@@ -4,17 +4,14 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.sql.dialogs;
 
-import net.sf.jasperreports.eclipse.ui.ATitledDialog;
-import net.sf.jasperreports.eclipse.ui.validator.ValidatorUtil;
-
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -37,6 +34,9 @@ import com.jaspersoft.studio.data.sql.validator.TableAliasStringValidator;
 import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.model.util.ModelVisitor;
 import com.jaspersoft.studio.utils.UIUtil;
+
+import net.sf.jasperreports.eclipse.ui.ATitledDialog;
+import net.sf.jasperreports.eclipse.ui.validator.ValidatorUtil;
 
 public class EditFromTableDialog extends ATitledDialog {
 	private MFromTable mFromTable;
@@ -114,49 +114,39 @@ public class EditFromTableDialog extends ATitledDialog {
 		Control createButtonBar = super.createButtonBar(parent);
 
 		DataBindingContext bindingContext = new DataBindingContext();
-		Binding b = bindingContext
-				.bindValue(
-						SWTObservables.observeText(talias, SWT.Modify),
-						PojoObservables.observeValue(this, "alias"), //$NON-NLS-1$
-						new UpdateValueStrategy()
-								.setAfterConvertValidator(new TableAliasStringValidator() {
-									@Override
-									public IStatus validate(final Object value) {
-										IStatus status = super.validate(value);
-										if (status.equals(Status.OK_STATUS)
-												&& value != null
-												&& !((String) value).isEmpty()) {
-											ModelVisitor<Boolean> mv = new ModelVisitor<Boolean>(
-													mFromTable.getRoot()) {
-												@Override
-												public boolean visit(INode n) {
-													if (n instanceof MFrom
-															|| n instanceof MFromTable) {
-														if (n instanceof MFromTable
-																&& n != mFromTable) {
-															String al = ((MFromTable) n)
-																	.getAlias();
-															if (al != null
-																	&& al.equals(value)) {
-																setObject(Boolean.TRUE);
-																return false;
-															}
-														}
-														return true;
-													}
-													return false;
-												}
-											};
-											if (mv.getObject() != null
-													&& mv.getObject() == true)
-												return ValidationStatus
-														.error(Messages.EditFromTableDialog_1);
+		Binding b = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(talias),				
+				PojoProperties.value("alias").observe(this), //$NON-NLS-1$
+				new UpdateValueStrategy().setAfterConvertValidator(new TableAliasStringValidator() {
+					@Override
+					public IStatus validate(final Object value) {
+						IStatus status = super.validate(value);
+						if (status.equals(Status.OK_STATUS) && value != null && !((String) value).isEmpty()) {
+							ModelVisitor<Boolean> mv = new ModelVisitor<Boolean>(mFromTable.getRoot()) {
+								@Override
+								public boolean visit(INode n) {
+									if (n instanceof MFrom || n instanceof MFromTable) {
+										if (n instanceof MFromTable && n != mFromTable) {
+											String al = ((MFromTable) n).getAlias();
+											if (al != null && al.equals(value)) {
+												setObject(Boolean.TRUE);
+												return false;
+											}
 										}
-										return status;
+										return true;
 									}
-								}), null);
-		bindingContext.bindValue(SWTObservables.observeSelection(keyword),
-				PojoObservables.observeValue(this, "aliasKeyword")); //$NON-NLS-1$
+									return false;
+								}
+							};
+							if (mv.getObject() != null && mv.getObject() == true)
+								return ValidationStatus.error(Messages.EditFromTableDialog_1);
+						}
+						return status;
+					}
+				}), null);
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(keyword),
+				PojoProperties.value("aliasKeyword").observe(this)); //$NON-NLS-1$
 
 		ValidatorUtil.controlDecorator(b, getButton(IDialogConstants.OK_ID));
 		return createButtonBar;

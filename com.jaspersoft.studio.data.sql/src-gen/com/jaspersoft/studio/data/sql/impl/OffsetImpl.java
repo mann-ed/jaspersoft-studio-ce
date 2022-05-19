@@ -73,6 +73,7 @@ public class OffsetImpl extends MinimalEObjectImpl.Container implements Offset
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getOffset()
   {
     return offset;
@@ -83,6 +84,7 @@ public class OffsetImpl extends MinimalEObjectImpl.Container implements Offset
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOffset(Long newOffset)
   {
     Long oldOffset = offset;
@@ -167,7 +169,7 @@ public class OffsetImpl extends MinimalEObjectImpl.Container implements Offset
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (offset: ");
     result.append(offset);
     result.append(')');

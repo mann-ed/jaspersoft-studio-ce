@@ -8,17 +8,15 @@ import java.io.File;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -126,8 +124,9 @@ public abstract class AFileDataAdapterComposite extends ADataAdapterComposite {
 
 	protected void doBindFileNameWidget(DataAdapter dataAdapter) {
 		NotEmptyFileValidator nefValidator = new NotEmptyFileValidator(getJrContext());
-		Binding binding = bindingContext.bindValue(SWTObservables.observeText(textFileName, SWT.Modify),
-				PojoObservables.observeValue(new DAProxy((FileDataAdapter) dataAdapter), "dataFile"), //$NON-NLS-1$
+		Binding binding = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textFileName),
+				PojoProperties.value("dataFile").observe(new DAProxy((FileDataAdapter) dataAdapter)), //$NON-NLS-1$
 				new UpdateValueStrategy().setAfterConvertValidator(nefValidator), null);
 		nefValidator.setBinding(binding);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT, null, new ControlDecorationUpdater());

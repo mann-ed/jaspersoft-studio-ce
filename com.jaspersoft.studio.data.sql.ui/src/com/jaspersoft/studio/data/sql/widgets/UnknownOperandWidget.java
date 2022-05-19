@@ -5,8 +5,8 @@
 package com.jaspersoft.studio.data.sql.widgets;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -41,8 +41,9 @@ public class UnknownOperandWidget extends AOperandWidget<UnknownOperand> {
 		txt.setLayoutData(gd);
 
 		DataBindingContext bindingContext = new DataBindingContext();
-		bindingContext.bindValue(SWTObservables.observeText(txt, SWT.Modify),
-				PojoObservables.observeValue(getValue(), "value")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(txt),
+				PojoProperties.value("value").observe(getValue())); //$NON-NLS-1$
 	}
 
 }

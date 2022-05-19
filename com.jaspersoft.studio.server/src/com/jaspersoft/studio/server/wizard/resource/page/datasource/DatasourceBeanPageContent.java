@@ -4,11 +4,9 @@
  ******************************************************************************/
 package com.jaspersoft.studio.server.wizard.resource.page.datasource;
 
-import net.sf.jasperreports.data.bean.BeanDataAdapter;
-
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -26,6 +24,8 @@ import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.wizard.resource.APageContent;
 import com.jaspersoft.studio.utils.UIUtil;
+
+import net.sf.jasperreports.data.bean.BeanDataAdapter;
 
 public class DatasourceBeanPageContent extends APageContent {
 
@@ -92,8 +92,12 @@ public class DatasourceBeanPageContent extends APageContent {
 
 	@Override
 	protected void rebind() {
-		bindingContext.bindValue(SWTObservables.observeText(tname, SWT.Modify), PojoObservables.observeValue(res.getValue(), "beanName")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(tmethod, SWT.Modify), PojoObservables.observeValue(res.getValue(), "beanMethod")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tname),
+				PojoProperties.value("beanName").observe(res.getValue())); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tmethod),
+				PojoProperties.value("beanMethod").observe(res.getValue())); //$NON-NLS-1$				
 	}
 
 	@Override

@@ -4,10 +4,10 @@
    <description name="Jaspersoft Studio" url="http://jasperstudio.sf.net/updates">
       Jaspersoft Studio Update Site
    </description>
-   <feature url="features/com.jaspersoft.studio.feature_6.16.0.final.jar" id="com.jaspersoft.studio.feature" version="6.16.0.final" os="linux,macosx,win32" ws="cocoa,gtk,win32">
+   <feature url="features/com.jaspersoft.studio.feature_8.1.0.qualifier.jar" id="com.jaspersoft.studio.feature" version="8.1.0.qualifier" os="linux,macosx,win32" ws="cocoa,gtk,win32">
       <category name="com.jaspersoft.studio.category"/>
    </feature>
    <category-def name="com.jaspersoft.studio.category" label="Business Intelligence, Reporting Tools"/>
    <repository-reference location="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/" enabled="true" />
-   <repository-reference location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210825222808/repository" enabled="true" />
+   <repository-reference location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository" enabled="true" />
 </site>

@@ -31,10 +31,6 @@ public interface ScalarOperand extends RowValue, OperandList
   /**
    * Returns the value of the '<em><b>Sostr</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Sostr</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sostr</em>' attribute.
    * @see #setSostr(String)
@@ -57,10 +53,6 @@ public interface ScalarOperand extends RowValue, OperandList
   /**
    * Returns the value of the '<em><b>Sodbl</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Sodbl</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sodbl</em>' attribute.
    * @see #setSodbl(BigDecimal)
@@ -83,10 +75,6 @@ public interface ScalarOperand extends RowValue, OperandList
   /**
    * Returns the value of the '<em><b>Sodate</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Sodate</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sodate</em>' attribute.
    * @see #setSodate(String)
@@ -109,10 +97,6 @@ public interface ScalarOperand extends RowValue, OperandList
   /**
    * Returns the value of the '<em><b>Sotime</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Sotime</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sotime</em>' attribute.
    * @see #setSotime(String)
@@ -135,10 +119,6 @@ public interface ScalarOperand extends RowValue, OperandList
   /**
    * Returns the value of the '<em><b>Sodt</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Sodt</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sodt</em>' attribute.
    * @see #setSodt(String)
@@ -161,10 +141,6 @@ public interface ScalarOperand extends RowValue, OperandList
   /**
    * Returns the value of the '<em><b>So UInt</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>So UInt</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>So UInt</em>' attribute.
    * @see #setSoUInt(Long)
@@ -187,10 +163,6 @@ public interface ScalarOperand extends RowValue, OperandList
   /**
    * Returns the value of the '<em><b>Soint</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Soint</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Soint</em>' attribute.
    * @see #setSoint(Long)

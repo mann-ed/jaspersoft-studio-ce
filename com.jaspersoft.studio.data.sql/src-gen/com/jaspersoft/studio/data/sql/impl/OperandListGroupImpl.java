@@ -66,6 +66,7 @@ public class OperandListGroupImpl extends MinimalEObjectImpl.Container implement
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OperandList getOpGroup()
   {
     return opGroup;
@@ -93,6 +94,7 @@ public class OperandListGroupImpl extends MinimalEObjectImpl.Container implement
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOpGroup(OperandList newOpGroup)
   {
     if (newOpGroup != opGroup)

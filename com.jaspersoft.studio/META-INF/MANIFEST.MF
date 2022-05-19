@@ -16,7 +16,6 @@ Require-Bundle: org.eclipse.ui.cheatsheets;bundle-version="3.4.0";visibility:=re
  com.jaspersoft.studio.properties;bundle-version="8.1.0";visibility:=reexport,
  org.eclipse.help.ui;bundle-version="3.5.0";visibility:=reexport,
  org.eclipse.ui.forms;bundle-version="3.5.0",
- javax.servlet;bundle-version="3.0.0",
  org.apache.log4j;bundle-version="1.2.15";visibility:=reexport,
  org.eclipse.nebula.widgets.cdatetime;bundle-version="1.0.0";visibility:=reexport,
  com.jaspersoft.studio.babel.editor;bundle-version="8.1.0";visibility:=reexport,
@@ -37,7 +36,9 @@ Bundle-ClassPath: patch-library.jar,
  lib/velocity-1.7-dep.jar,
  lib/commons-net-3.3.jar,
  .
-Import-Package: org.eclipse.ui,
+Import-Package: javax.servlet,
+ javax.servlet.http,
+ org.eclipse.ui,
  org.eclipse.ui.part
 Eclipse-RegisterBuddy: net.sf.jasperreports
 Eclipse-BuddyPolicy: registered

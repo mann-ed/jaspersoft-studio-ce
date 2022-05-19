@@ -71,6 +71,7 @@ public class OrGroupByColumnImpl extends MinimalEObjectImpl.Container implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<GroupByColumnFull> getEntries()
   {
     if (entries == null)

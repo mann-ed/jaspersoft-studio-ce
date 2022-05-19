@@ -99,6 +99,7 @@ public class ExistsOperImpl extends MinimalEObjectImpl.Container implements Exis
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getOp()
   {
     return op;
@@ -109,6 +110,7 @@ public class ExistsOperImpl extends MinimalEObjectImpl.Container implements Exis
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp(String newOp)
   {
     String oldOp = op;
@@ -122,6 +124,7 @@ public class ExistsOperImpl extends MinimalEObjectImpl.Container implements Exis
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SubQueryOperand getSubquery()
   {
     return subquery;
@@ -149,6 +152,7 @@ public class ExistsOperImpl extends MinimalEObjectImpl.Container implements Exis
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSubquery(SubQueryOperand newSubquery)
   {
     if (newSubquery != subquery)
@@ -170,6 +174,7 @@ public class ExistsOperImpl extends MinimalEObjectImpl.Container implements Exis
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OperandListGroup getOpList()
   {
     return opList;
@@ -197,6 +202,7 @@ public class ExistsOperImpl extends MinimalEObjectImpl.Container implements Exis
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOpList(OperandListGroup newOpList)
   {
     if (newOpList != opList)
@@ -327,7 +333,7 @@ public class ExistsOperImpl extends MinimalEObjectImpl.Container implements Exis
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (op: ");
     result.append(op);
     result.append(')');

@@ -11,14 +11,14 @@ import java.util.Date;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -209,11 +209,14 @@ public class ResourcePageContent extends APageContent {
 	@Override
 	protected void rebind() {
 		ResourceDescriptor rd = res.getValue();
-		if (tudate != null)
-			bindingContext.bindValue(SWTObservables.observeText(tudate, SWT.NONE),
-					PojoObservables.observeValue(proxy, "updateDate")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(tparent, SWT.NONE),
-				PojoObservables.observeValue(proxy, "parentFolder")); //$NON-NLS-1$
+		if (tudate != null) {
+			bindingContext.bindValue(
+					WidgetProperties.text(SWT.NONE).observe(tudate),
+					PojoProperties.value("updateDate").observe(proxy)); //$NON-NLS-1$
+		}
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.NONE).observe(tparent),
+				PojoProperties.value("parentFolder").observe(proxy)); //$NON-NLS-1$
 		IConnection c = res.getWsClient();
 		final Format f = (c != null ? c.getTimestampFormat() : DateFormat.getTimeInstance());
 
@@ -237,22 +240,28 @@ public class ResourcePageContent extends APageContent {
 				return f.format(fromObject);
 			}
 		};
-		bindingContext.bindValue(SWTObservables.observeText(tcdate, SWT.NONE),
-				PojoObservables.observeValue(rd, "creationDate"), new UpdateValueStrategy().setConverter(t2mConv), //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.NONE).observe(tcdate),
+				PojoProperties.value("creationDate").observe(rd), //$NON-NLS-1$
+				new UpdateValueStrategy().setConverter(t2mConv),
 				new UpdateValueStrategy().setConverter(m2tConv));
-
-		bindingContext.bindValue(SWTObservables.observeText(ttype, SWT.NONE),
-				PojoObservables.observeValue(rd, "wsType")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bisRef),
-				PojoObservables.observeValue(rd, "isReference")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(tid, SWT.Modify), PojoObservables.observeValue(rd, "name"), //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.NONE).observe(ttype),
+				PojoProperties.value("wsType").observe(rd)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bisRef),
+				PojoProperties.value("isReference").observe(rd)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tid),
+				PojoProperties.value("name").observe(rd), //$NON-NLS-1$
 				new UpdateValueStrategy().setAfterConvertValidator(new IDValidator()), null);
-
-		bindingContext.bindValue(SWTObservables.observeText(tname, SWT.Modify),
-				PojoObservables.observeValue(rd, "label"), //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tname),				
+				PojoProperties.value("label").observe(rd), //$NON-NLS-1$
 				new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator()), null);
-		bindingContext.bindValue(SWTObservables.observeText(tdesc, SWT.Modify),
-				PojoObservables.observeValue(rd, "description")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tdesc),	
+				PojoProperties.value("description").observe(rd)); //$NON-NLS-1$
 		bindingContext.updateTargets();
 
 		final IConnection con = getWsClient();

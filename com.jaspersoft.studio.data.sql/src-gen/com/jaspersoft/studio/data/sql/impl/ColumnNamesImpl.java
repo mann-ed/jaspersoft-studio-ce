@@ -72,6 +72,7 @@ public class ColumnNamesImpl extends FromValuesColumnNamesImpl implements Column
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getColName()
   {
     return colName;
@@ -82,6 +83,7 @@ public class ColumnNamesImpl extends FromValuesColumnNamesImpl implements Column
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setColName(String newColName)
   {
     String oldColName = colName;
@@ -166,7 +168,7 @@ public class ColumnNamesImpl extends FromValuesColumnNamesImpl implements Column
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (colName: ");
     result.append(colName);
     result.append(')');

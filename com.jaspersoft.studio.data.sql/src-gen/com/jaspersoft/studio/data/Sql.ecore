@@ -9,11 +9,18 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WithQuery">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="w" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="wname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="wname" eType="#//DbObjectName"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="withCols" eType="#//WithColumns"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="query" eType="#//SelectQuery"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="additionalWname" upperBound="-1"
+        eType="#//DbObjectName" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="additionalWithCols" upperBound="-1"
+        eType="#//WithColumns" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="additionalQueries" upperBound="-1"
+        eType="#//SelectQuery" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WithColumns"/>
   <eClassifiers xsi:type="ecore:EClass" name="FetchFirst">

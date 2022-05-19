@@ -222,10 +222,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Ms</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Ms</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #MS
    * @model name="ms" literal="MICROSECOND"
@@ -237,10 +233,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>S</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>S</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #S
    * @model name="s" literal="SECOND"
@@ -252,10 +244,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>M</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>M</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #M
    * @model name="m" literal="MINUTE"
@@ -267,10 +255,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>H</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>H</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #H
    * @model name="h" literal="HOUR"
@@ -282,10 +266,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Day</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Day</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #DAY
    * @model name="day" literal="DAY"
@@ -297,10 +277,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Week</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Week</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #WEEK
    * @model name="week" literal="WEEK"
@@ -312,10 +288,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Month</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Month</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #MONTH
    * @model name="month" literal="MONTH"
@@ -327,10 +299,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Quart</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Quart</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #QUART
    * @model name="quart" literal="QUARTER"
@@ -342,10 +310,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Year</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Year</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #YEAR
    * @model name="year" literal="YEAR"
@@ -357,10 +321,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Micros</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Micros</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #MICROS
    * @model name="micros" literal="SECOND_MICROSECOND"
@@ -372,10 +332,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Min Micro</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Min Micro</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #MIN_MICRO
    * @model name="minMicro" literal="MINUTE_MICROSECOND"
@@ -387,10 +343,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Min Sec</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Min Sec</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #MIN_SEC
    * @model name="minSec" literal="MINUTE_SECOND"
@@ -402,10 +354,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Hms</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Hms</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #HMS
    * @model name="hms" literal="HOUR_MICROSECOND"
@@ -417,10 +365,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Hs</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Hs</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #HS
    * @model name="hs" literal="HOUR_SECOND"
@@ -432,10 +376,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Hmin</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Hmin</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #HMIN
    * @model name="hmin" literal="HOUR_MINUTE"
@@ -447,10 +387,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Dms</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Dms</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #DMS
    * @model name="dms" literal="DAY_MICROSECOND"
@@ -462,10 +398,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Ds</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Ds</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #DS
    * @model name="ds" literal="DAY_SECOND"
@@ -477,10 +409,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Daymin</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Daymin</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #DAYMIN
    * @model name="daymin" literal="DAY_MINUTE"
@@ -492,10 +420,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Dayh</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Dayh</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #DAYH
    * @model name="dayh" literal="DAY_HOUR"
@@ -507,10 +431,6 @@ public enum EXTRACT_VALUES implements Enumerator
   /**
    * The '<em><b>Year Month</b></em>' literal value.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of '<em><b>Year Month</b></em>' literal object isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @see #YEAR_MONTH
    * @model name="yearMonth" literal="YEAR_MONTH"
@@ -675,6 +595,7 @@ public enum EXTRACT_VALUES implements Enumerator
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public int getValue()
   {
     return value;
@@ -685,6 +606,7 @@ public enum EXTRACT_VALUES implements Enumerator
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getName()
   {
     return name;
@@ -695,6 +617,7 @@ public enum EXTRACT_VALUES implements Enumerator
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getLiteral()
   {
     return literal;

@@ -200,6 +200,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<SelectSubSet> getOp()
   {
     if (op == null)
@@ -214,6 +215,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getSelect()
   {
     return select;
@@ -224,6 +226,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSelect(String newSelect)
   {
     String oldSelect = select;
@@ -237,6 +240,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrColumn getCols()
   {
     return cols;
@@ -264,6 +268,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCols(OrColumn newCols)
   {
     if (newCols != cols)
@@ -285,6 +290,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrTable getTbl()
   {
     return tbl;
@@ -312,6 +318,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setTbl(OrTable newTbl)
   {
     if (newTbl != tbl)
@@ -333,6 +340,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrExpr getWhereExpression()
   {
     return whereExpression;
@@ -360,6 +368,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setWhereExpression(OrExpr newWhereExpression)
   {
     if (newWhereExpression != whereExpression)
@@ -381,6 +390,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrGroupByColumn getGroupByEntry()
   {
     return groupByEntry;
@@ -408,6 +418,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setGroupByEntry(OrGroupByColumn newGroupByEntry)
   {
     if (newGroupByEntry != groupByEntry)
@@ -429,6 +440,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrExpr getHavingEntry()
   {
     return havingEntry;
@@ -456,6 +468,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setHavingEntry(OrExpr newHavingEntry)
   {
     if (newHavingEntry != havingEntry)
@@ -477,6 +490,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrOrderByColumn getOrderByEntry()
   {
     return orderByEntry;
@@ -504,6 +518,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOrderByEntry(OrOrderByColumn newOrderByEntry)
   {
     if (newOrderByEntry != orderByEntry)
@@ -525,6 +540,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Limit getLim()
   {
     return lim;
@@ -552,6 +568,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setLim(Limit newLim)
   {
     if (newLim != lim)
@@ -573,6 +590,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Offset getOffset()
   {
     return offset;
@@ -600,6 +618,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOffset(Offset newOffset)
   {
     if (newOffset != offset)
@@ -621,6 +640,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public FetchFirst getFetchFirst()
   {
     return fetchFirst;
@@ -648,6 +668,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFetchFirst(FetchFirst newFetchFirst)
   {
     if (newFetchFirst != fetchFirst)
@@ -876,7 +897,7 @@ public class SelectImpl extends SelectQueryImpl implements Select
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (select: ");
     result.append(select);
     result.append(')');

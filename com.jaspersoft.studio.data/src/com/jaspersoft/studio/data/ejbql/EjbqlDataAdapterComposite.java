@@ -4,12 +4,8 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.ejbql;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.ejbql.EjbqlDataAdapter;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,6 +16,10 @@ import org.eclipse.swt.widgets.Text;
 import com.jaspersoft.studio.data.ADataAdapterComposite;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.messages.Messages;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.ejbql.EjbqlDataAdapter;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class EjbqlDataAdapterComposite extends ADataAdapterComposite {
 
@@ -44,9 +44,9 @@ public class EjbqlDataAdapterComposite extends ADataAdapterComposite {
 
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
-		bindingContext.bindValue(SWTObservables.observeText(punitName,
-				SWT.Modify), PojoObservables.observeValue(dataAdapter,
-				"persistanceUnitName")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(punitName),
+				PojoProperties.value("persistanceUnitName").observe(dataAdapter)); //$NON-NLS-1$
 	}
 
 	public DataAdapterDescriptor getDataAdapter() {

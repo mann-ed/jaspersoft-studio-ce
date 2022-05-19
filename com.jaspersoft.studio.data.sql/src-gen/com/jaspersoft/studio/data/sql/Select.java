@@ -36,10 +36,6 @@ public interface Select extends SelectQuery
    * Returns the value of the '<em><b>Op</b></em>' containment reference list.
    * The list contents are of type {@link com.jaspersoft.studio.data.sql.SelectSubSet}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op</em>' containment reference list.
    * @see com.jaspersoft.studio.data.sql.SqlPackage#getSelect_Op()
@@ -51,10 +47,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Select</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Select</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Select</em>' attribute.
    * @see #setSelect(String)
@@ -77,10 +69,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Cols</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Cols</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Cols</em>' containment reference.
    * @see #setCols(OrColumn)
@@ -103,10 +91,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Tbl</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Tbl</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Tbl</em>' containment reference.
    * @see #setTbl(OrTable)
@@ -129,10 +113,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Where Expression</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Where Expression</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Where Expression</em>' containment reference.
    * @see #setWhereExpression(OrExpr)
@@ -155,10 +135,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Group By Entry</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Group By Entry</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Group By Entry</em>' containment reference.
    * @see #setGroupByEntry(OrGroupByColumn)
@@ -181,10 +157,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Having Entry</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Having Entry</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Having Entry</em>' containment reference.
    * @see #setHavingEntry(OrExpr)
@@ -207,10 +179,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Order By Entry</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Order By Entry</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Order By Entry</em>' containment reference.
    * @see #setOrderByEntry(OrOrderByColumn)
@@ -233,10 +201,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Lim</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Lim</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Lim</em>' containment reference.
    * @see #setLim(Limit)
@@ -259,10 +223,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Offset</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Offset</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Offset</em>' containment reference.
    * @see #setOffset(Offset)
@@ -285,10 +245,6 @@ public interface Select extends SelectQuery
   /**
    * Returns the value of the '<em><b>Fetch First</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fetch First</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fetch First</em>' containment reference.
    * @see #setFetchFirst(FetchFirst)

@@ -87,6 +87,7 @@ public class ExprGroupImpl extends MinimalEObjectImpl.Container implements ExprG
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getIsnot()
   {
     return isnot;
@@ -97,6 +98,7 @@ public class ExprGroupImpl extends MinimalEObjectImpl.Container implements ExprG
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setIsnot(String newIsnot)
   {
     String oldIsnot = isnot;
@@ -110,6 +112,7 @@ public class ExprGroupImpl extends MinimalEObjectImpl.Container implements ExprG
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrExpr getExpr()
   {
     return expr;
@@ -137,6 +140,7 @@ public class ExprGroupImpl extends MinimalEObjectImpl.Container implements ExprG
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(OrExpr newExpr)
   {
     if (newExpr != expr)
@@ -255,7 +259,7 @@ public class ExprGroupImpl extends MinimalEObjectImpl.Container implements ExprG
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (isnot: ");
     result.append(isnot);
     result.append(')');

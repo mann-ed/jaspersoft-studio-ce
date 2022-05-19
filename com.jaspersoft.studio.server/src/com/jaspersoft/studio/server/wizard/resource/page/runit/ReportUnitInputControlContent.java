@@ -5,8 +5,8 @@
 package com.jaspersoft.studio.server.wizard.resource.page.runit;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -81,12 +81,14 @@ public class ReportUnitInputControlContent extends ReportUnitContent {
 
 		ReportProxy v = getProxy(res.getValue());
 		bindingContext.bindValue(
-				SWTObservables.observeSingleSelectionIndex(cictype),
-				PojoObservables.observeValue(v, "layoutControl")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(jspic, SWT.Modify),
-				PojoObservables.observeValue(v, "jspIC")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(ispromp),
-				PojoObservables.observeValue(v, "allowPrompt")); //$NON-NLS-1$
+				WidgetProperties.singleSelectionIndex().observe(cictype),
+				PojoProperties.value("layoutControl").observe(v)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(jspic),
+				PojoProperties.value("jspIC").observe(v)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(ispromp),
+				PojoProperties.value("allowPrompt").observe(v)); //$NON-NLS-1$
 
 		res.getChildren();
 		return composite;

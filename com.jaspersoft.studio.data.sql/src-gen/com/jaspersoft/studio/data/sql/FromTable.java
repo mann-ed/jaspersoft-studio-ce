@@ -26,10 +26,6 @@ public interface FromTable extends OrTable
   /**
    * Returns the value of the '<em><b>Table</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Table</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Table</em>' containment reference.
    * @see #setTable(TableOrAlias)
@@ -53,10 +49,6 @@ public interface FromTable extends OrTable
    * Returns the value of the '<em><b>Fjoin</b></em>' containment reference list.
    * The list contents are of type {@link com.jaspersoft.studio.data.sql.FromTableJoin}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fjoin</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fjoin</em>' containment reference list.
    * @see com.jaspersoft.studio.data.sql.SqlPackage#getFromTable_Fjoin()

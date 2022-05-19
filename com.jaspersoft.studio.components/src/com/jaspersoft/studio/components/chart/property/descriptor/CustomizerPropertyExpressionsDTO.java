@@ -96,9 +96,9 @@ public class CustomizerPropertyExpressionsDTO extends PropertyExpressionsDTO {
 		String key = getUniqueKey();
 		String classAttribute = NamedChartCustomizer.CUSTOMIZER_CLASS_PROPERTY_PREFIX + key;
 		if (headPosition) {
-			addProperty(classAttribute, className, false, 0);
+			addProperty(classAttribute, className, false, false, 0);
 		} else {
-			addProperty(classAttribute, className, false);
+			addProperty(classAttribute, className, false, false);
 		}
 	}
 
@@ -237,7 +237,7 @@ public class CustomizerPropertyExpressionsDTO extends PropertyExpressionsDTO {
 	 */
 	public void addCustomizer(ChartCustomizerDefinition definition) {
 		String classProperty = NamedChartCustomizer.CUSTOMIZER_CLASS_PROPERTY_PREFIX + definition.getKey();
-		addProperty(classProperty, definition.getCustomizerClass(), false);
+		addProperty(classProperty, definition.getCustomizerClass(), false, false);
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class CustomizerPropertyExpressionsDTO extends PropertyExpressionsDTO {
 			customizerClass = editElement.getCustomizerClass();
 		} else if (editElement.isOnlyClass()) {
 			String classProp = NamedChartCustomizer.CUSTOMIZER_CLASS_PROPERTY_PREFIX + editElement.getKey();
-			setProperty(classProp, editElement.getCustomizerClass(), false);
+			setProperty(classProp, editElement.getCustomizerClass(), false, false);
 		}
 	}
 
@@ -261,18 +261,18 @@ public class CustomizerPropertyExpressionsDTO extends PropertyExpressionsDTO {
 	 * When the properties set changes discard the cache
 	 */
 	@Override
-	public boolean addProperty(String name, String value, boolean isExpression) {
+	public boolean addProperty(String name, String value, boolean isExpression, boolean isText) {
 		customizerNumber = null;
-		return super.addProperty(name, value, isExpression);
+		return super.addProperty(name, value, isExpression, isText);
 	}
 
 	/**
 	 * When the properties set changes discard the cache
 	 */
 	@Override
-	public void setProperty(String name, String value, boolean isExpression) {
+	public void setProperty(String name, String value, boolean isExpression, boolean isText) {
 		customizerNumber = null;
-		super.setProperty(name, value, isExpression);
+		super.setProperty(name, value, isExpression, isText);
 	}
 
 	/**

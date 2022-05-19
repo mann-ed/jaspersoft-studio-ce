@@ -120,6 +120,7 @@ public class OpFunctionImpl extends MinimalEObjectImpl.Container implements OpFu
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getFname()
   {
     return fname;
@@ -130,6 +131,7 @@ public class OpFunctionImpl extends MinimalEObjectImpl.Container implements OpFu
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFname(String newFname)
   {
     String oldFname = fname;
@@ -143,6 +145,7 @@ public class OpFunctionImpl extends MinimalEObjectImpl.Container implements OpFu
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getStar()
   {
     return star;
@@ -153,6 +156,7 @@ public class OpFunctionImpl extends MinimalEObjectImpl.Container implements OpFu
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setStar(String newStar)
   {
     String oldStar = star;
@@ -166,6 +170,7 @@ public class OpFunctionImpl extends MinimalEObjectImpl.Container implements OpFu
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpFunctionArg getArgs()
   {
     return args;
@@ -193,6 +198,7 @@ public class OpFunctionImpl extends MinimalEObjectImpl.Container implements OpFu
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setArgs(OpFunctionArg newArgs)
   {
     if (newArgs != args)
@@ -214,6 +220,7 @@ public class OpFunctionImpl extends MinimalEObjectImpl.Container implements OpFu
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public FunctionAnalytical getFan()
   {
     return fan;
@@ -241,6 +248,7 @@ public class OpFunctionImpl extends MinimalEObjectImpl.Container implements OpFu
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFan(FunctionAnalytical newFan)
   {
     if (newFan != fan)
@@ -381,7 +389,7 @@ public class OpFunctionImpl extends MinimalEObjectImpl.Container implements OpFu
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (fname: ");
     result.append(fname);
     result.append(", star: ");

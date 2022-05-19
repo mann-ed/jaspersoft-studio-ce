@@ -4,8 +4,8 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.jndi;
 
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,8 +45,8 @@ public class JndiDataAdapterComposite extends ADataAdapterComposite {
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
 		bindingContext.bindValue(
-				SWTObservables.observeText(dataSourceName, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "dataSourceName")); //$NON-NLS-1$
+				WidgetProperties.text(SWT.Modify).observe(dataSourceName),
+				PojoProperties.value("dataSourceName").observe(dataAdapter)); //$NON-NLS-1$
 	}
 
 	public DataAdapterDescriptor getDataAdapter() {

@@ -12,6 +12,7 @@ import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO
 import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.JRPropertyExpression;
 import net.sf.jasperreports.engine.design.DesignDatasetPropertyExpression;
+import net.sf.jasperreports.engine.type.ExpressionTypeEnum;
 import net.sf.jasperreports.engine.type.PropertyEvaluationTimeEnum;
 
 public class DatasetPropertyExpressionsDTO extends PropertyExpressionsDTO {
@@ -25,8 +26,10 @@ public class DatasetPropertyExpressionsDTO extends PropertyExpressionsDTO {
 		this(jrElement, eContext);
 		if (propExpressions != null) {
 			for (JRPropertyExpression prop : propExpressions) {
-				DatasetPropertyExpressionDTO newProp = new DatasetPropertyExpressionDTO(true, prop.getName(),
-						prop.getValueExpression().getText(), ((DesignDatasetPropertyExpression) prop).getEvaluationTime());
+				DatasetPropertyExpressionDTO newProp = 
+						new DatasetPropertyExpressionDTO(true, prop.getName(), prop.getValueExpression().getText(),
+								ExpressionTypeEnum.SIMPLE_TEXT == prop.getValueExpression().getType(),
+								((DesignDatasetPropertyExpression) prop).getEvaluationTime());
 				newProp.seteContext(eContext);
 				newProp.setJrElement(jrElement);
 				properties.add(newProp);
@@ -34,8 +37,8 @@ public class DatasetPropertyExpressionsDTO extends PropertyExpressionsDTO {
 		}
 		if (propMap != null) {
 			for (String prop : propMap.getPropertyNames()) {
-				DatasetPropertyExpressionDTO newProp = new DatasetPropertyExpressionDTO(false, prop, propMap.getProperty(prop),
-						null);
+				DatasetPropertyExpressionDTO newProp = 
+						new DatasetPropertyExpressionDTO(false, prop, propMap.getProperty(prop),false,null);
 				newProp.seteContext(eContext);
 				newProp.setJrElement(jrElement);
 				properties.add(newProp);
@@ -49,9 +52,10 @@ public class DatasetPropertyExpressionsDTO extends PropertyExpressionsDTO {
 	}
 
 	@Override
-	public boolean addProperty(String name, String value, boolean isExpression) {
+	public boolean addProperty(String name, String value, boolean isExpression, boolean isSimpleText) {
 		if (!hasProperty(name, isExpression)) {
-			DatasetPropertyExpressionDTO newProp = new DatasetPropertyExpressionDTO(isExpression, name, value,
+			DatasetPropertyExpressionDTO newProp = 
+					new DatasetPropertyExpressionDTO(isExpression, name, value,isSimpleText,
 					isExpression ? PropertyEvaluationTimeEnum.REPORT : null);
 			newProp.seteContext(geteContext());
 			newProp.setJrElement(getJrElement());
@@ -75,10 +79,10 @@ public class DatasetPropertyExpressionsDTO extends PropertyExpressionsDTO {
 	 *          the position where the property should be inserted
 	 * @return true if a property with the same name\type was not found and the new one was inserted, false otherwise
 	 */
-	public boolean addProperty(String name, String value, boolean isExpression, int position) {
+	public boolean addProperty(String name, String value, boolean isExpression, boolean isSimpleText, int position) {
 		if (!hasProperty(name, isExpression)) {
-			DatasetPropertyExpressionDTO newProp = new DatasetPropertyExpressionDTO(isExpression, name, value,
-					isExpression ? PropertyEvaluationTimeEnum.REPORT : null);
+			DatasetPropertyExpressionDTO newProp = 
+					new DatasetPropertyExpressionDTO(isExpression, name, value,isSimpleText,isExpression ? PropertyEvaluationTimeEnum.REPORT : null);
 			newProp.seteContext(geteContext());
 			newProp.setJrElement(getJrElement());
 			properties.add(position, newProp);
@@ -91,11 +95,12 @@ public class DatasetPropertyExpressionsDTO extends PropertyExpressionsDTO {
 	public DatasetPropertyExpressionsDTO clone() {
 		DatasetPropertyExpressionsDTO copy = new DatasetPropertyExpressionsDTO(getJrElement(), geteContext());
 		for (PropertyExpressionDTO prop : getProperties()) {
-			boolean exp = prop.isExpression();
-			copy.addProperty(prop.getName(), prop.getValue(), exp);
-			if (exp)
-				((DatasetPropertyExpressionDTO) copy.getProperty(prop.getName(), exp))
+			boolean isExpr = prop.isExpression();
+			copy.addProperty(prop.getName(), prop.getValue(), isExpr, prop.isSimpleText());
+			if (isExpr) {
+				((DatasetPropertyExpressionDTO) copy.getProperty(prop.getName(), isExpr))
 						.setEvalTime(((DatasetPropertyExpressionDTO) prop).getEvalTime());
+			}
 		}
 		return copy;
 	}

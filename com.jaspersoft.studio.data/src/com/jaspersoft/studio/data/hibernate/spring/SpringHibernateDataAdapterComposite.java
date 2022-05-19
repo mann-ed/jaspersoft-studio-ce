@@ -4,14 +4,10 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.hibernate.spring;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.hibernate.spring.SpringHibernateDataAdapter;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,6 +23,10 @@ import org.eclipse.swt.widgets.Text;
 import com.jaspersoft.studio.data.ADataAdapterComposite;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.messages.Messages;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.hibernate.spring.SpringHibernateDataAdapter;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class SpringHibernateDataAdapterComposite extends ADataAdapterComposite {
 
@@ -86,8 +86,12 @@ public class SpringHibernateDataAdapterComposite extends ADataAdapterComposite {
 
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
-		bindingContext.bindValue(SWTObservables.observeText(springConfig, SWT.Modify), PojoObservables.observeValue(dataAdapter, "springConfig")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(beanIDtxt, SWT.Modify), PojoObservables.observeValue(dataAdapter, "beanId")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(springConfig), 
+				PojoProperties.value("springConfig").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(beanIDtxt),
+				PojoProperties.value("beanId").observe(dataAdapter)); //$NON-NLS-1$
 	}
 
 	public DataAdapterDescriptor getDataAdapter() {

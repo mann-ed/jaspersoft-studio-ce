@@ -69,6 +69,7 @@ public class pcolsImpl extends PivotColImpl implements pcols
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<DbObjectName> getEntries()
   {
     if (entries == null)

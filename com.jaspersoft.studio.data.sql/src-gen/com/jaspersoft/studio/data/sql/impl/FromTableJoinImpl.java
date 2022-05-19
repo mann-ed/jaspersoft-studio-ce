@@ -111,6 +111,7 @@ public class FromTableJoinImpl extends MinimalEObjectImpl.Container implements F
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getJoin()
   {
     return join;
@@ -121,6 +122,7 @@ public class FromTableJoinImpl extends MinimalEObjectImpl.Container implements F
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setJoin(String newJoin)
   {
     String oldJoin = join;
@@ -134,6 +136,7 @@ public class FromTableJoinImpl extends MinimalEObjectImpl.Container implements F
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public TableOrAlias getOnTable()
   {
     return onTable;
@@ -161,6 +164,7 @@ public class FromTableJoinImpl extends MinimalEObjectImpl.Container implements F
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOnTable(TableOrAlias newOnTable)
   {
     if (newOnTable != onTable)
@@ -182,6 +186,7 @@ public class FromTableJoinImpl extends MinimalEObjectImpl.Container implements F
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrExpr getJoinExpr()
   {
     return joinExpr;
@@ -209,6 +214,7 @@ public class FromTableJoinImpl extends MinimalEObjectImpl.Container implements F
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setJoinExpr(OrExpr newJoinExpr)
   {
     if (newJoinExpr != joinExpr)
@@ -230,6 +236,7 @@ public class FromTableJoinImpl extends MinimalEObjectImpl.Container implements F
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public JoinCondition getJoinCond()
   {
     return joinCond;
@@ -257,6 +264,7 @@ public class FromTableJoinImpl extends MinimalEObjectImpl.Container implements F
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setJoinCond(JoinCondition newJoinCond)
   {
     if (newJoinCond != joinCond)
@@ -399,7 +407,7 @@ public class FromTableJoinImpl extends MinimalEObjectImpl.Container implements F
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (join: ");
     result.append(join);
     result.append(')');

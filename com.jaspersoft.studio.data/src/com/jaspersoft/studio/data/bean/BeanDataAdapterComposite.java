@@ -4,12 +4,8 @@
  ******************************************************************************/
 package com.jaspersoft.studio.data.bean;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.bean.BeanDataAdapter;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,6 +19,10 @@ import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.messages.Messages;
 import com.jaspersoft.studio.swt.widgets.ClassType;
 import com.jaspersoft.studio.swt.widgets.ClasspathComponent;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.bean.BeanDataAdapter;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class BeanDataAdapterComposite extends ADataAdapterComposite {
 	private ClassType factoryText;
@@ -65,7 +65,12 @@ public class BeanDataAdapterComposite extends ADataAdapterComposite {
 		gd.horizontalSpan = 2;
 		useFDcheck.setLayoutData(gd);
 
-		cpath = new ClasspathComponent(this);
+		cpath = new ClasspathComponent(this) {
+			@Override
+			protected void handleClasspathChanged() {
+				pchangesuport.firePropertyChange("dirty", false, true);
+			}			
+		};
 		gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
 		cpath.getControl().setLayoutData(gd);
@@ -75,17 +80,16 @@ public class BeanDataAdapterComposite extends ADataAdapterComposite {
 	protected void bindWidgets(DataAdapter dataAdapter) {
 		BeanDataAdapter bda = (BeanDataAdapter) dataAdapter;
 
-		bindingContext.bindValue(SWTObservables.observeText(
-				factoryText.getControl(), SWT.Modify), PojoObservables
-				.observeValue(dataAdapter, "factoryClass")); //$NON-NLS-1$
-
 		bindingContext.bindValue(
-				SWTObservables.observeText(methodText, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "methodName")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(useFDcheck),
-				PojoObservables
-						.observeValue(dataAdapter, "useFieldDescription")); //$NON-NLS-1$
-
+				WidgetProperties.text(SWT.Modify).observe(factoryText.getControl()),
+				PojoProperties.value("factoryClass").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(methodText),
+				PojoProperties.value("methodName").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.buttonSelection().observe(useFDcheck),
+				PojoProperties.value("useFieldDescription").observe(dataAdapter)); //$NON-NLS-1$
+		
 		cpath.setClasspaths(bda.getClasspath());
 	}
 

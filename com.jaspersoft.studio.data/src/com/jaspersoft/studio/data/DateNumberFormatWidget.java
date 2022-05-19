@@ -7,13 +7,10 @@ package com.jaspersoft.studio.data;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -34,6 +31,9 @@ import com.jaspersoft.studio.swt.binding.LocaleToStringConverter;
 import com.jaspersoft.studio.swt.binding.String2LocaleConverter;
 import com.jaspersoft.studio.swt.binding.String2TimeZoneConverter;
 import com.jaspersoft.studio.swt.binding.TimeZone2StringConverter;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 public class DateNumberFormatWidget extends Composite {
 	private Text textDatePattern;
@@ -170,27 +170,21 @@ public class DateNumberFormatWidget extends Composite {
 	public void bindWidgets(DataAdapter dataAdapter,
 			DataBindingContext bindingContext, Locale l, TimeZone t) {
 		bindingContext.bindValue(
-				SWTObservables.observeText(textDatePattern, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "datePattern")); //$NON-NLS-1$
+				WidgetProperties.text(SWT.Modify).observe(textDatePattern),
+				PojoProperties.value("datePattern").observe(dataAdapter)); //$NON-NLS-1$
 		bindingContext.bindValue(
-				SWTObservables.observeText(textNumberPattern, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "numberPattern")); //$NON-NLS-1$
-
-		bindingContext
-				.bindValue(
-						SWTObservables.observeText(textLocale, SWT.Modify),
-						PojoObservables.observeValue(dataAdapter, "locale"), new UpdateValueStrategy() //$NON-NLS-1$
-								.setConverter(new String2LocaleConverter()),
-						new UpdateValueStrategy()
-								.setConverter(new LocaleToStringConverter()));
-
-		bindingContext
-				.bindValue(
-						SWTObservables.observeText(textTimeZone, SWT.Modify),
-						PojoObservables.observeValue(dataAdapter, "timeZone"), new UpdateValueStrategy() //$NON-NLS-1$
-								.setConverter(new String2TimeZoneConverter()),
-						new UpdateValueStrategy()
-								.setConverter(new TimeZone2StringConverter()));
+				WidgetProperties.text(SWT.Modify).observe(textNumberPattern),
+				PojoProperties.value("numberPattern").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textLocale),
+				PojoProperties.value("locale").observe(dataAdapter),
+				new UpdateValueStrategy().setConverter(new String2LocaleConverter()),
+				new UpdateValueStrategy().setConverter(new LocaleToStringConverter()));
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textTimeZone),
+				PojoProperties.value("timeZone").observe(dataAdapter),
+				new UpdateValueStrategy().setConverter(new String2TimeZoneConverter()),
+				new UpdateValueStrategy().setConverter(new TimeZone2StringConverter()));
 
 		locale = l;
 		if (locale != null)

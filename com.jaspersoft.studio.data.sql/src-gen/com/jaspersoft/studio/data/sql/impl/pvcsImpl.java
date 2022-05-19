@@ -69,6 +69,7 @@ public class pvcsImpl extends PivotsImpl implements pvcs
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<PivotCol> getEntries()
   {
     if (entries == null)

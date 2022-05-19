@@ -66,6 +66,7 @@ public class OrderByClauseImpl extends MinimalEObjectImpl.Container implements O
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrderByClauseArgs getArgs()
   {
     return args;
@@ -93,6 +94,7 @@ public class OrderByClauseImpl extends MinimalEObjectImpl.Container implements O
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setArgs(OrderByClauseArgs newArgs)
   {
     if (newArgs != args)

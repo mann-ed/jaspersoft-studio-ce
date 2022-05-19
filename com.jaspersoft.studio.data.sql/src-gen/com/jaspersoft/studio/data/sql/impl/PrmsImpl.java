@@ -71,6 +71,7 @@ public class PrmsImpl extends MinimalEObjectImpl.Container implements Prms
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<JRParameter> getEntries()
   {
     if (entries == null)

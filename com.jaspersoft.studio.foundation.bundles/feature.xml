@@ -2,7 +2,7 @@
 <feature
       id="com.jaspersoft.studio.foundation.bundles"
       label="Jaspersoft Studio Required Bundles Feature"
-      version="1.0.19"
+      version="1.0.21"
       provider-name="TIBCO Software Inc.">
 
    <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
@@ -10,7 +10,7 @@
    </description>
 
    <copyright>
-      Copyright (C) 2010 - 2021. TIBCO Software Inc.
+      Copyright (C) 2010 - 2022. TIBCO Software Inc.
    </copyright>
 
    <url>
@@ -28,7 +28,6 @@
 
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.commons.logging" version="1.2.0" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.7.2" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
    </requires>
@@ -58,7 +57,7 @@
          id="com.jaspersoft.studio.bundles.commons-beanutils"
          download-size="0"
          install-size="0"
-         version="1.9.3.201709071631"
+         version="1.9.4.b01"
          unpack="false"/>
 
    <plugin
@@ -72,7 +71,7 @@
          id="com.jaspersoft.studio.bundles.itext"
          download-size="0"
          install-size="0"
-         version="2.1.7.js9_b01"/>
+         version="2.1.7.js9_b02"/>
 
    <plugin
          id="joda-time"
@@ -99,14 +98,7 @@
          id="org.apache.servicemix.bundles.rhino"
          download-size="0"
          install-size="0"
-         version="1.7.11.1"
-         unpack="false"/>
-
-   <plugin
-         id="com.jaspersoft.studio.bundles.xmlbeans"
-         download-size="0"
-         install-size="0"
-         version="3.1.0.b01"
+         version="1.7.14.1"
          unpack="false"/>
 
    <plugin
@@ -142,13 +134,13 @@
          id="com.jaspersoft.studio.bundles.batik"
          download-size="0"
          install-size="0"
-         version="1.14.0.b01"/>
+         version="1.14.0.b03"/>
 
    <plugin
          id="com.jaspersoft.studio.bundles.jackson"
          download-size="0"
          install-size="0"
-         version="2.11.4.b01"
+         version="2.13.1.b01"
          unpack="false"/>
 
    <plugin
@@ -166,24 +158,10 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.commons.commons-collections4"
-         download-size="0"
-         install-size="0"
-         version="4.4.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.xml.security"
-         download-size="0"
-         install-size="0"
-         version="1.4.2.v201005080400"
-         unpack="false"/>
-
-   <plugin
          id="com.jaspersoft.studio.bundles.poi"
          download-size="0"
          install-size="0"
-         version="4.1.1.b03"/>
+         version="5.1.0.b01"/>
 
    <plugin
          id="com.jaspersoft.studio.bundles.cdt-java-client"
@@ -263,45 +241,87 @@
          version="1.4.2.b01"/>
 
    <plugin
-         id="org.apache.servicemix.bundles.dom4j"
-         download-size="0"
-         install-size="0"
-         version="2.1.3.1"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.ant"
          download-size="0"
          install-size="0"
-         version="1.10.11.v20210720-1445"
+         version="1.10.12.v20211102-1452"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcpg"
          download-size="0"
          install-size="0"
-         version="1.69.0.v20210713-1924"
+         version="1.70.0.v20220105-1522"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcpkix"
          download-size="0"
          install-size="0"
-         version="1.69.0.v20210713-1924"
+         version="1.70.0.v20220105-1522"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcprov"
          download-size="0"
          install-size="0"
-         version="1.69.0.v20210713-1924"
+         version="1.70.0.v20220105-1522"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcutil"
          download-size="0"
          install-size="0"
-         version="1.69.0.v20210713-1924"
+         version="1.70.0.v20220105-1522"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.servicemix.bundles.xmlbeans"
+         download-size="0"
+         install-size="0"
+         version="5.0.2.1"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.collections4"
+         download-size="0"
+         install-size="0"
+         version="4.4.0.v20200420-1700"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.santuario.xmlsec"
+         download-size="0"
+         install-size="0"
+         version="2.2.3"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.logging.log4j.api"
+         download-size="0"
+         install-size="0"
+         version="2.17.1"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.servicemix.bundles.xalan-serializer"
+         download-size="0"
+         install-size="0"
+         version="2.7.2.1"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.logging.log4j.jcl"
+         download-size="0"
+         install-size="0"
+         version="2.17.1"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.logging.log4j.core"
+         download-size="0"
+         install-size="0"
+         version="2.17.1"
          unpack="false"/>
 
 </feature>

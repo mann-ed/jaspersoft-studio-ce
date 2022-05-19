@@ -25,10 +25,6 @@ public interface JoinCondition extends EObject
   /**
    * Returns the value of the '<em><b>Use Cols</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Use Cols</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Use Cols</em>' containment reference.
    * @see #setUseCols(UsingCols)

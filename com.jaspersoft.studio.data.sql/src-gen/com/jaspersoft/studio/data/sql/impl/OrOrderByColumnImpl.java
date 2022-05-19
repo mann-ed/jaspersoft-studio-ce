@@ -71,6 +71,7 @@ public class OrOrderByColumnImpl extends MinimalEObjectImpl.Container implements
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<OrderByColumnFull> getEntries()
   {
     if (entries == null)

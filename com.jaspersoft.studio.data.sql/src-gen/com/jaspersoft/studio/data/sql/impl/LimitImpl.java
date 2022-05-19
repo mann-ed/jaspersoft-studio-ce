@@ -94,6 +94,7 @@ public class LimitImpl extends MinimalEObjectImpl.Container implements Limit
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getL1()
   {
     return l1;
@@ -104,6 +105,7 @@ public class LimitImpl extends MinimalEObjectImpl.Container implements Limit
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setL1(Long newL1)
   {
     Long oldL1 = l1;
@@ -117,6 +119,7 @@ public class LimitImpl extends MinimalEObjectImpl.Container implements Limit
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getL2()
   {
     return l2;
@@ -127,6 +130,7 @@ public class LimitImpl extends MinimalEObjectImpl.Container implements Limit
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setL2(Long newL2)
   {
     Long oldL2 = l2;
@@ -221,7 +225,7 @@ public class LimitImpl extends MinimalEObjectImpl.Container implements Limit
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (l1: ");
     result.append(l1);
     result.append(", l2: ");

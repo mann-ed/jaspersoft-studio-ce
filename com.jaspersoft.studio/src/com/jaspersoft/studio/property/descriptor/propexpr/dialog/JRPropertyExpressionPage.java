@@ -221,15 +221,15 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 		btnAddPropertyToolItem.setImage(JaspersoftStudioPlugin.getInstance().getImage("icons/plus.png")); //$NON-NLS-1$
 		btnAddPropertyToolItem.addListener(SWT.Selection, event -> {
 			PropertyExpressionDTO v = value instanceof DatasetPropertyExpressionsDTO
-					? new DatasetPropertyExpressionDTO(false, "property.name", "value", null) //$NON-NLS-1$ //$NON-NLS-2$
-					: new PropertyExpressionDTO(false, "property.name", "value"); //$NON-NLS-1$ //$NON-NLS-2$
+					? new DatasetPropertyExpressionDTO(false, "property.name", "value", false, null) //$NON-NLS-1$ //$NON-NLS-2$
+					: new PropertyExpressionDTO(false, "property.name", "value", false); //$NON-NLS-1$ //$NON-NLS-2$
 			v.seteContext(value.geteContext());
 			v.setJrElement(value.getJrElement());
 			JRPropertyExpressionDialog dialog = new JRPropertyExpressionDialog(UIUtils.getShell());
 			dialog.setShowExpression(showExpression);
 			dialog.setValue(v);
 			if (dialog.open() == Window.OK) {
-				value.addProperty(v.getName(), v.getValue(), v.isExpression());
+				value.addProperty(v.getName(), v.getValue(), v.isExpression(), v.isSimpleText());
 				refreshFormWidgets();
 			}
 		});
@@ -501,8 +501,8 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 				name += "_" + i; //$NON-NLS-1$
 				String defValue = "NEW_VALUE"; //$NON-NLS-1$
 				PropertyExpressionDTO v = value instanceof DatasetPropertyExpressionsDTO
-						? new DatasetPropertyExpressionDTO(false, name, defValue, null)
-						: new PropertyExpressionDTO(false, name, defValue);
+						? new DatasetPropertyExpressionDTO(false, name, defValue, false, null)
+						: new PropertyExpressionDTO(false, name, defValue, false);
 				v.seteContext(value.geteContext());
 				v.setJrElement(value.getJrElement());
 				JRPropertyExpressionDialog dialog = new JRPropertyExpressionDialog(mainPropertiesComposite.getShell());
@@ -566,10 +566,12 @@ public class JRPropertyExpressionPage extends JSSHelpWizardPage {
 				PastableProperties pasteContainer = (PastableProperties) Clipboard.getDefault().getContents();
 				List<CopyElementExpressionProperty> copiedProperties = pasteContainer.getCopiedProperties();
 				for (CopyElementExpressionProperty property : copiedProperties) {
-					if (!value.hasProperty(property.getPropertyName(), property.isExpression()))
-						value.addProperty(property.getPropertyName(), property.getValue(), property.isExpression());
-					else
-						value.setProperty(property.getPropertyName(), property.getValue(), property.isExpression());
+					if (!value.hasProperty(property.getPropertyName(), property.isExpression())) {
+						value.addProperty(property.getPropertyName(), property.getValue(), property.isExpression(), property.isSimpleText());
+					}
+					else {
+						value.setProperty(property.getPropertyName(), property.getValue(), property.isExpression(), property.isSimpleText());
+					}
 				}
 				tableViewer.setInput(value.getProperties());
 			}

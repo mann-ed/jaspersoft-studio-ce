@@ -27,10 +27,6 @@ public interface FunctionExtract extends EObject
    * Returns the value of the '<em><b>V</b></em>' attribute.
    * The literals are from the enumeration {@link com.jaspersoft.studio.data.sql.EXTRACT_VALUES}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>V</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>V</em>' attribute.
    * @see com.jaspersoft.studio.data.sql.EXTRACT_VALUES
@@ -55,10 +51,6 @@ public interface FunctionExtract extends EObject
   /**
    * Returns the value of the '<em><b>Operand</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Operand</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Operand</em>' containment reference.
    * @see #setOperand(Operands)

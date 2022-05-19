@@ -26,10 +26,6 @@ public interface GroupByColumnFull extends OrGroupByColumn
   /**
    * Returns the value of the '<em><b>Col Gr By</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Col Gr By</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Col Gr By</em>' containment reference.
    * @see #setColGrBy(ColumnFull)
@@ -52,10 +48,6 @@ public interface GroupByColumnFull extends OrGroupByColumn
   /**
    * Returns the value of the '<em><b>Gb Function</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Gb Function</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Gb Function</em>' containment reference.
    * @see #setGbFunction(OpFunction)
@@ -78,10 +70,6 @@ public interface GroupByColumnFull extends OrGroupByColumn
   /**
    * Returns the value of the '<em><b>Gr By Int</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Gr By Int</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Gr By Int</em>' attribute.
    * @see #setGrByInt(Long)

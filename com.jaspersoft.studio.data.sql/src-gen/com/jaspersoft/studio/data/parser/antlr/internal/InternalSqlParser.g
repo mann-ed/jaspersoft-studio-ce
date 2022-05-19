@@ -158,9 +158,9 @@ ruleWithQuery returns [EObject current=null]
 )(
 (
 		{ 
-	        newCompositeNode(grammarAccess.getWithQueryAccess().getWnameDBIDParserRuleCall_1_0()); 
+	        newCompositeNode(grammarAccess.getWithQueryAccess().getWnameDbObjectNameParserRuleCall_1_0()); 
 	    }
-		lv_wname_1_0=ruleDBID		{
+		lv_wname_1_0=ruleDbObjectName		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getWithQueryRule());
 	        }
@@ -168,7 +168,7 @@ ruleWithQuery returns [EObject current=null]
        			$current, 
        			"wname",
         		lv_wname_1_0, 
-        		"com.jaspersoft.studio.data.Sql.DBID");
+        		"com.jaspersoft.studio.data.Sql.DbObjectName");
 	        afterParserOrEnumRuleCall();
 	    }
 
@@ -224,7 +224,81 @@ ruleWithQuery returns [EObject current=null]
     {
     	newLeafNode(otherlv_6, grammarAccess.getWithQueryAccess().getRightParenthesisKeyword_6());
     }
+(
+	otherlv_7=Comma
+    {
+    	newLeafNode(otherlv_7, grammarAccess.getWithQueryAccess().getCommaKeyword_7_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getWithQueryAccess().getAdditionalWnameDbObjectNameParserRuleCall_7_1_0()); 
+	    }
+		lv_additionalWname_8_0=ruleDbObjectName		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getWithQueryRule());
+	        }
+       		add(
+       			$current, 
+       			"additionalWname",
+        		lv_additionalWname_8_0, 
+        		"com.jaspersoft.studio.data.Sql.DbObjectName");
+	        afterParserOrEnumRuleCall();
+	    }
+
 )
+)(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getWithQueryAccess().getAdditionalWithColsWithColumnsParserRuleCall_7_2_0()); 
+	    }
+		lv_additionalWithCols_9_0=ruleWithColumns		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getWithQueryRule());
+	        }
+       		add(
+       			$current, 
+       			"additionalWithCols",
+        		lv_additionalWithCols_9_0, 
+        		"com.jaspersoft.studio.data.Sql.WithColumns");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)?
+	otherlv_10=AS
+    {
+    	newLeafNode(otherlv_10, grammarAccess.getWithQueryAccess().getASKeyword_7_3());
+    }
+
+	otherlv_11=LeftParenthesis
+    {
+    	newLeafNode(otherlv_11, grammarAccess.getWithQueryAccess().getLeftParenthesisKeyword_7_4());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getWithQueryAccess().getAdditionalQueriesSelectQueryParserRuleCall_7_5_0()); 
+	    }
+		lv_additionalQueries_12_0=ruleSelectQuery		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getWithQueryRule());
+	        }
+       		add(
+       			$current, 
+       			"additionalQueries",
+        		lv_additionalQueries_12_0, 
+        		"com.jaspersoft.studio.data.Sql.SelectQuery");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)
+	otherlv_13=RightParenthesis
+    {
+    	newLeafNode(otherlv_13, grammarAccess.getWithQueryAccess().getRightParenthesisKeyword_7_6());
+    }
+)*)
 ;
 
 

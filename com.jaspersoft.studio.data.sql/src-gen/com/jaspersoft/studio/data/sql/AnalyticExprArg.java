@@ -25,10 +25,6 @@ public interface AnalyticExprArg extends AnalyticExprArgs
   /**
    * Returns the value of the '<em><b>Ce</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Ce</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Ce</em>' containment reference.
    * @see #setCe(Operands)
@@ -51,10 +47,6 @@ public interface AnalyticExprArg extends AnalyticExprArgs
   /**
    * Returns the value of the '<em><b>Col Alias</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Col Alias</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Col Alias</em>' containment reference.
    * @see #setColAlias(DbObjectName)

@@ -100,6 +100,7 @@ public class XExprImpl extends MinimalEObjectImpl.Container implements XExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public XFunction getXf()
   {
     return xf;
@@ -110,6 +111,7 @@ public class XExprImpl extends MinimalEObjectImpl.Container implements XExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setXf(XFunction newXf)
   {
     XFunction oldXf = xf;
@@ -123,6 +125,7 @@ public class XExprImpl extends MinimalEObjectImpl.Container implements XExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getCol()
   {
     return col;
@@ -150,6 +153,7 @@ public class XExprImpl extends MinimalEObjectImpl.Container implements XExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCol(Operands newCol)
   {
     if (newCol != col)
@@ -171,6 +175,7 @@ public class XExprImpl extends MinimalEObjectImpl.Container implements XExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Prms getPrm()
   {
     return prm;
@@ -198,6 +203,7 @@ public class XExprImpl extends MinimalEObjectImpl.Container implements XExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPrm(Prms newPrm)
   {
     if (newPrm != prm)
@@ -328,7 +334,7 @@ public class XExprImpl extends MinimalEObjectImpl.Container implements XExpr
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (xf: ");
     result.append(xf);
     result.append(')');

@@ -34,10 +34,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Column</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Column</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Column</em>' containment reference.
    * @see #setColumn(ColumnOperand)
@@ -60,10 +56,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Xop</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Xop</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Xop</em>' containment reference.
    * @see #setXop(Operand)
@@ -86,10 +78,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Subq</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Subq</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Subq</em>' containment reference.
    * @see #setSubq(SubQueryOperand)
@@ -112,10 +100,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Fcast</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fcast</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fcast</em>' containment reference.
    * @see #setFcast(OpFunctionCast)
@@ -138,10 +122,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Fext</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fext</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fext</em>' containment reference.
    * @see #setFext(FunctionExtract)
@@ -164,10 +144,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Func</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Func</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Func</em>' containment reference.
    * @see #setFunc(OpFunction)
@@ -190,10 +166,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Sqlcase</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Sqlcase</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sqlcase</em>' containment reference.
    * @see #setSqlcase(SQLCaseOperand)
@@ -216,10 +188,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Param</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Param</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Param</em>' containment reference.
    * @see #setParam(POperand)
@@ -242,10 +210,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Eparam</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Eparam</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Eparam</em>' containment reference.
    * @see #setEparam(ExpOperand)
@@ -268,10 +232,6 @@ public interface Operand extends EObject
   /**
    * Returns the value of the '<em><b>Scalar</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Scalar</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Scalar</em>' containment reference.
    * @see #setScalar(ScalarOperand)

@@ -28,10 +28,6 @@ public interface ColumnOrAlias extends OrColumn
   /**
    * Returns the value of the '<em><b>Ce</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Ce</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Ce</em>' containment reference.
    * @see #setCe(Operands)
@@ -54,10 +50,6 @@ public interface ColumnOrAlias extends OrColumn
   /**
    * Returns the value of the '<em><b>Alias</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Alias</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Alias</em>' attribute.
    * @see #setAlias(String)
@@ -80,10 +72,6 @@ public interface ColumnOrAlias extends OrColumn
   /**
    * Returns the value of the '<em><b>Col Alias</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Col Alias</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Col Alias</em>' containment reference.
    * @see #setColAlias(DbObjectName)
@@ -106,10 +94,6 @@ public interface ColumnOrAlias extends OrColumn
   /**
    * Returns the value of the '<em><b>All Cols</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>All Cols</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>All Cols</em>' attribute.
    * @see #setAllCols(String)
@@ -132,10 +116,6 @@ public interface ColumnOrAlias extends OrColumn
   /**
    * Returns the value of the '<em><b>Db All Cols</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Db All Cols</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Db All Cols</em>' containment reference.
    * @see #setDbAllCols(DbObjectNameAll)

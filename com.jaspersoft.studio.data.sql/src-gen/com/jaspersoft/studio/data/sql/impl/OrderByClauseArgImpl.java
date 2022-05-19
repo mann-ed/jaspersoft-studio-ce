@@ -65,6 +65,7 @@ public class OrderByClauseArgImpl extends OrderByClauseArgsImpl implements Order
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AnalyticExprArg getCol()
   {
     return col;
@@ -92,6 +93,7 @@ public class OrderByClauseArgImpl extends OrderByClauseArgsImpl implements Order
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCol(AnalyticExprArg newCol)
   {
     if (newCol != col)

@@ -128,11 +128,13 @@ public class XLSPathDataAction extends XLSAction {
 
 			removeDataPropertyExpression(peDTO);
 		} else {
-			peDTO.setProperty(JRXlsAbstractMetadataExporter.PROPERTY_COLUMN_NAME, path, false);
-			if (repeat)
-				peDTO.setProperty(JRXlsAbstractMetadataExporter.PROPERTY_REPEAT_VALUE, "true", false); //$NON-NLS-1$
-			else
+			peDTO.setProperty(JRXlsAbstractMetadataExporter.PROPERTY_COLUMN_NAME, path, false, false);
+			if (repeat) {
+				peDTO.setProperty(JRXlsAbstractMetadataExporter.PROPERTY_REPEAT_VALUE, "true", false, false); //$NON-NLS-1$
+			}
+			else {
 				peDTO.removeProperty(JRXlsAbstractMetadataExporter.PROPERTY_REPEAT_VALUE, false);
+			}
 		}
 
 		if (data == null)
@@ -140,7 +142,7 @@ public class XLSPathDataAction extends XLSAction {
 		else {
 			PropertyExpressionDTO dpe = peDTO.getProperty(JRXlsAbstractMetadataExporter.PROPERTY_DATA, true);
 			if (dpe == null){
-				peDTO.addProperty(JRXlsAbstractMetadataExporter.PROPERTY_DATA, data.getText(), true);
+				peDTO.addProperty(JRXlsAbstractMetadataExporter.PROPERTY_DATA, data.getText(), true, false);
 			} else {
 				dpe.setValue(data.getText());
 			}

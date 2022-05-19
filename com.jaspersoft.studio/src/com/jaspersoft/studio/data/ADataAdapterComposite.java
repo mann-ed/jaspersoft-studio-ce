@@ -7,15 +7,15 @@ package com.jaspersoft.studio.data;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.swt.widgets.Composite;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public abstract class ADataAdapterComposite extends Composite {
 
@@ -55,34 +55,31 @@ public abstract class ADataAdapterComposite extends Composite {
 	}
 
 	public void removeBindings() {
-		IObservableList bindings = bindingContext.getBindings();
-		for (Object o : bindings) {
-			bindingContext.removeBinding((Binding) o);
+		IObservableList<Binding> bindings = bindingContext.getBindings();
+		for (Binding o : bindings) {
+			bindingContext.removeBinding(o);
 		}
 	}
 
 	public void removeDirtyListenersToContext() {
-		IObservableList bindings = bindingContext.getBindings();
-		for (Object o : bindings) {
-			Binding b = (Binding) o;
-			b.getTarget().removeChangeListener(listener);
+		IObservableList<Binding> bindings = bindingContext.getBindings();
+		for (Binding o : bindings) {
+			o.getTarget().removeChangeListener(listener);
 		}
 	}
 
 	public void addDirtyListenersToContext() {
-		IObservableList bindings = bindingContext.getBindings();
-		for (Object o : bindings) {
-			Binding b = (Binding) o;
-			b.getTarget().addChangeListener(listener);
+		IObservableList<Binding> bindings = bindingContext.getBindings();
+		for (Binding o : bindings) {
+			o.getTarget().addChangeListener(listener);
 		}
 	}
 
 	@Override
 	public void dispose() {
-		IObservableList bindings = bindingContext.getBindings();
-		for (Object o : bindings) {
-			Binding b = (Binding) o;
-			b.getTarget().removeChangeListener(listener);
+		IObservableList<Binding> bindings = bindingContext.getBindings();
+		for (Binding o : bindings) {
+			o.getTarget().removeChangeListener(listener);
 		}
 		super.dispose();
 	}

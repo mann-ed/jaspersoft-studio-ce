@@ -72,6 +72,7 @@ public class RowValueImpl extends RowValuesImpl implements RowValue
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getNull()
   {
     return null_;
@@ -82,6 +83,7 @@ public class RowValueImpl extends RowValuesImpl implements RowValue
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setNull(String newNull)
   {
     String oldNull = null_;
@@ -166,7 +168,7 @@ public class RowValueImpl extends RowValuesImpl implements RowValue
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (null: ");
     result.append(null_);
     result.append(')');

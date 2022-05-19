@@ -66,6 +66,7 @@ public class WindowingClauseOperandFollowingImpl extends MinimalEObjectImpl.Cont
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AnalyticExprArg getExp()
   {
     return exp;
@@ -93,6 +94,7 @@ public class WindowingClauseOperandFollowingImpl extends MinimalEObjectImpl.Cont
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExp(AnalyticExprArg newExp)
   {
     if (newExp != exp)

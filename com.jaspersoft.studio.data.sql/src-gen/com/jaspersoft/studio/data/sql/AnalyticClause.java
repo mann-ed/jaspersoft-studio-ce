@@ -27,10 +27,6 @@ public interface AnalyticClause extends EObject
   /**
    * Returns the value of the '<em><b>Abc</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Abc</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Abc</em>' containment reference.
    * @see #setAbc(QueryPartitionClause)
@@ -53,10 +49,6 @@ public interface AnalyticClause extends EObject
   /**
    * Returns the value of the '<em><b>Obc</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Obc</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Obc</em>' containment reference.
    * @see #setObc(OrderByClause)
@@ -79,10 +71,6 @@ public interface AnalyticClause extends EObject
   /**
    * Returns the value of the '<em><b>Winc</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Winc</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Winc</em>' containment reference.
    * @see #setWinc(WindowingClause)
