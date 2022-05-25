@@ -41,7 +41,7 @@ public class MultiLineTextPropertyDescription<T> extends TextPropertyDescription
 	
 	@Override
 	protected int getTextControlStyle() {
-		return SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL;
+		return SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP;
 	}
 	
 	@Override
