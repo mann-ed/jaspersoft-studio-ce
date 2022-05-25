@@ -15,8 +15,6 @@ import com.jaspersoft.studio.widgets.framework.IWItemProperty;
 import com.jaspersoft.studio.widgets.framework.manager.DoubleControlComposite;
 import com.jaspersoft.studio.widgets.framework.model.WidgetPropertyDescriptor;
 import com.jaspersoft.studio.widgets.framework.model.WidgetsDescriptor;
-import com.jaspersoft.studio.widgets.framework.ui.ItemPropertyDescription;
-import com.jaspersoft.studio.widgets.framework.ui.SelectableComboItemPropertyDescription;
 
 /**
  * Widget that allows to edit the value for a timezone property. It uses a combo
@@ -50,6 +48,8 @@ public class TimezoneComboPropertyDescription extends SelectableComboItemPropert
 			} else if (wip.getFallbackValue() != null) {
 				localeCombo.setText(String.valueOf(wip.getFallbackValue()));
 				isFallback = true;
+			} else {
+				localeCombo.deselectAll();
 			}
 			changeFallbackForeground(isFallback, localeCombo);
 			cmp.switchToSecondContainer();

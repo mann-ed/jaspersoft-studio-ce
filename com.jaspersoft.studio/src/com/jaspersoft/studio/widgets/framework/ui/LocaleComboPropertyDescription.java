@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Locale;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 
@@ -49,6 +50,8 @@ public class LocaleComboPropertyDescription extends SelectableComboItemPropertyD
 			} else if (wip.getFallbackValue() != null) {
 				localeCombo.setText(String.valueOf(wip.getFallbackValue()));
 				isFallback = true;
+			} else {
+				localeCombo.deselectAll();
 			}
 			changeFallbackForeground(isFallback, localeCombo);
 			cmp.switchToSecondContainer();
@@ -83,6 +86,7 @@ public class LocaleComboPropertyDescription extends SelectableComboItemPropertyD
 		if (locs == null) {
 			Locale[] locales = Locale.getAvailableLocales();
 			sortLocalesOnToString(locales);
+			locales = (Locale[]) ArrayUtils.removeElement(locales, Locale.ROOT);
 			locs = new String[locales.length][2];
 			for (int i = 0; i < locs.length; i++) {
 				locs[i][0] = locales[i].toString();
