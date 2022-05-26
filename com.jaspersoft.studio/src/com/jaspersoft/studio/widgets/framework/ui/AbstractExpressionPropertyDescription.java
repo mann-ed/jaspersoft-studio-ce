@@ -121,9 +121,12 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 
 	@Override
 	public String getDefaultValueString() {
-		if (defaultValue != null)
-			return defaultValue.toString();
-		return ""; //$NON-NLS-1$
+		return (defaultValue != null) ? defaultValue.toString() : ""; //$NON-NLS-1$
+	}
+	
+	@Override
+	public String getFallbackValueString() {
+		return (fallbackValue != null) ? fallbackValue.toString() : ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -272,8 +275,12 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 		String tt = getName() + "\n\n";
 		tt += Misc.nvl(getDescription());
 		tt += "\n\n" + (isMandatory() ? "Mandatory" : "Optional");
-		if (!Misc.isNullOrEmpty(getDefaultValueString()))
+		if (!Misc.isNullOrEmpty(getDefaultValueString())) {
 			tt += "\n\nDefault: " + getDefaultValueString();
+		}
+		if (!Misc.isNullOrEmpty(getFallbackValueString())) {
+			tt += "\n\nFallback: " + getFallbackValueString();
+		}
 		return tt;
 	}
 

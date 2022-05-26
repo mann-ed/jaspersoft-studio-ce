@@ -55,6 +55,11 @@ public interface ItemPropertyDescription<T> {
 	 *
 	 */
 	public String getDefaultValueString();
+	
+	/**
+	 * The fallback value as a string
+	 */
+	public String getFallbackValueString();
 
 	/**
 	 * The default value of the widget
