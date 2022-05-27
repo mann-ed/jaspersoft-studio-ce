@@ -21,10 +21,9 @@ public class ScriptletSystemSection extends AbstractSection {
 	public void createControls(Composite parent, TabbedPropertySheetPage tabbedPropertySheetPage) {
 		super.createControls(parent, tabbedPropertySheetPage);
 		parent = getWidgetFactory().createSection(parent, "Scriptlet Properties", false, 2);
-		GridData gd = new GridData(SWT.FILL,SWT.FILL,true,false);
-		createWidget4Property(parent, JRDesignScriptlet.PROPERTY_NAME).getControl().setLayoutData(gd);
-		createWidget4Property(parent, JRBaseScriptlet.PROPERTY_DESCRIPTION).getControl().setLayoutData(gd);
-		createWidget4Property(parent, JRDesignScriptlet.PROPERTY_VALUE_CLASS_NAME).getControl().setLayoutData(gd);
+		createWidget4Property(parent, JRDesignScriptlet.PROPERTY_NAME).getControl().setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
+		createWidget4Property(parent, JRBaseScriptlet.PROPERTY_DESCRIPTION).getControl().setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
+		createWidget4Property(parent, JRDesignScriptlet.PROPERTY_VALUE_CLASS_NAME).getControl().setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
 	}
 	
 	@Override
