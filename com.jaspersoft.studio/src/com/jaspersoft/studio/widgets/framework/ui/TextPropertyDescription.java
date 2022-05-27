@@ -114,7 +114,7 @@ public class TextPropertyDescription<T> extends AbstractExpressionPropertyDescri
 
 			@Override
 			public void keyTraversed(TraverseEvent e) {
-				if ((e.stateMask & SWT.MODIFIER_MASK) == SWT.CTRL && e.keyCode == SWT.TAB) {
+				if ((e.stateMask & SWT.MODIFIER_MASK) == SWT.CTRL && e.keyCode == SWT.TAB && (simpleControl.getStyle() & SWT.MULTI)==0) {
 					e.doit = false;
 					String currentText = simpleControl.getText();
 					Point selection = simpleControl.getSelection();
@@ -125,7 +125,6 @@ public class TextPropertyDescription<T> extends AbstractExpressionPropertyDescri
 					simpleControl.setText(newText);
 					simpleControl.setSelection(newSelection);
 				}
-
 			}
 		});
 		// Flag used to overcome the problem of focus events in Mac OS X
