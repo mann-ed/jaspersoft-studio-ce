@@ -41,19 +41,23 @@ public class TimezoneComboPropertyDescription extends SelectableComboItemPropert
 			super.update(c, wip);
 		} else {
 			boolean isFallback = false;
-			Combo localeCombo = (Combo) cmp.getSecondContainer().getData();
+			Combo timezoneCombo = (Combo) cmp.getSecondContainer().getData();
 			String v = wip.getStaticValue();
 			if (v != null) {
-				localeCombo.setText(v);
+				timezoneCombo.setText(v);
 			} else if (wip.getFallbackValue() != null) {
-				localeCombo.setText(String.valueOf(wip.getFallbackValue()));
+				timezoneCombo.setText(String.valueOf(wip.getFallbackValue()));
 				isFallback = true;
 			} else {
-				localeCombo.deselectAll();
+				// The combo#deselectAll() method seems to not behave properly in Windows
+				// when the combo box is read only.
+				// Forcing the items (re)set, we properly show the empty text combo (no selection).				
+				timezoneCombo.removeAll();
+				timezoneCombo.setItems(convert2Value(tzs));
 			}
-			changeFallbackForeground(isFallback, localeCombo);
+			changeFallbackForeground(isFallback, timezoneCombo);
 			cmp.switchToSecondContainer();
-			localeCombo.setToolTipText(getToolTip(wip, localeCombo.getText()));
+			timezoneCombo.setToolTipText(getToolTip(wip, timezoneCombo.getText()));
 		}
 	}
 

@@ -46,12 +46,16 @@ public class LocaleComboPropertyDescription extends SelectableComboItemPropertyD
 			Combo localeCombo = (Combo) cmp.getSecondContainer().getData();
 			String v = wip.getStaticValue();
 			if (v != null) {
-				localeCombo.setText(v);
+				localeCombo.setText(getValueFromKey(locs, v));
 			} else if (wip.getFallbackValue() != null) {
 				localeCombo.setText(String.valueOf(wip.getFallbackValue()));
 				isFallback = true;
 			} else {
-				localeCombo.deselectAll();
+				// The combo#deselectAll() method seems to not behave properly in Windows
+				// when the combo box is read only.
+				// Forcing the items (re)set, we properly show the empty text combo (no selection).
+				localeCombo.removeAll();
+				localeCombo.setItems(convert2Value(locs));
 			}
 			changeFallbackForeground(isFallback, localeCombo);
 			cmp.switchToSecondContainer();
