@@ -277,6 +277,7 @@ public class TreePropertiesViewerPanel<T extends IPropertiesViewerNode> extends 
 		
 		// update other stuff
 		updateTitleArea();
+		node.update();
 		
 		return true;
 	}

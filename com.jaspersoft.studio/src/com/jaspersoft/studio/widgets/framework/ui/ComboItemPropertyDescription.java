@@ -108,7 +108,7 @@ public class ComboItemPropertyDescription<T> extends AbstractExpressionPropertyD
 		return valueFound;
 	}	
 
-	protected String[] convert2Value(String[][] keyValues) {
+	public static String[] convert2Value(String[][] keyValues) {
 		String[] v = new String[keyValues.length];
 		for (int i = 0; i < keyValues.length; i++)
 			v[i] = keyValues[i][1];
