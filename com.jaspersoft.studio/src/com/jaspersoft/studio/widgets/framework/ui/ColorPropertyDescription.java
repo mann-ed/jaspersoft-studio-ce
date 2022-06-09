@@ -5,22 +5,27 @@
 package com.jaspersoft.studio.widgets.framework.ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.studio.swt.events.ColorSelectedEvent;
 import com.jaspersoft.studio.swt.events.ColorSelectionListener;
 import com.jaspersoft.studio.swt.widgets.WColorPicker;
 import com.jaspersoft.studio.utils.AlfaRGB;
 import com.jaspersoft.studio.utils.Colors;
+import com.jaspersoft.studio.utils.ModelUtils;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.widgets.framework.IWItemProperty;
 import com.jaspersoft.studio.widgets.framework.manager.DoubleControlComposite;
 import com.jaspersoft.studio.widgets.framework.model.WidgetPropertyDescriptor;
 import com.jaspersoft.studio.widgets.framework.model.WidgetsDescriptor;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 /**
  * Property description to handle a color widget, accepting only opaque values
@@ -101,13 +106,36 @@ public class ColorPropertyDescription<T> extends AbstractExpressionPropertyDescr
 			if (v == null && defaultValue != null) {
 				v = defaultValue.toString();
 			}
+			boolean isFallback = false;
+			if(v == null && fallbackValue != null) {
+				isFallback = true;
+				v = fallbackValue.toString();
+			}
 			colorPicker.setHtmlColorNamesSupport(htmlColorNamesSupported);
 			colorPicker.setColor(WColorPicker.decodeColor(v, htmlColorNamesSupported));
 			colorPicker.setToolTipText(getToolTip(wip, v));
+			changeFallbackForeground(isFallback, colorPicker);
 			cmp.switchToSecondContainer();
 		}
 	}
 
+	@Override
+	protected void changeFallbackForeground(boolean isUsingFallback, Control control) {
+		Color dcolor = UIUtils.INHERITED_COLOR;
+		Color ecolor = SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND);
+		Control controlToUpdate = control;
+		if(control instanceof WColorPicker) {
+			// Children: 1) CLabel 2) Text 3) Toolbar
+			controlToUpdate = ((WColorPicker) control).getChildren()[1];
+		}
+		Color fg = controlToUpdate.getForeground();
+		if (isUsingFallback && !ModelUtils.safeEquals(fg, dcolor)) {
+			controlToUpdate.setForeground(dcolor);
+		} else if (!isUsingFallback && !ModelUtils.safeEquals(fg.getRGB(), ecolor.getRGB())) {
+			controlToUpdate.setForeground(null);
+		}
+	}
+	
 	/**
 	 * Enables/disables the ability for the color picker to detect HTML color
 	 * names when entered in the text box.
