@@ -11,6 +11,8 @@ import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -225,6 +227,23 @@ public class ColorsSelectorWidget extends Composite {
 				gc.dispose();
 			}
 		});
+		this.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				if(imagesCache!=null) {
+					imagesCache.dispose();
+					imagesCache=null;
+				}
+				if (canvasCache != null){
+					canvasCache.dispose();
+					canvasCache=null;
+				}
+				if (sliderCache != null){
+					sliderCache.dispose();
+					sliderCache=null;
+				}				
+			}
+		});
 	}
 
 	/**
@@ -345,22 +364,6 @@ public class ColorsSelectorWidget extends Composite {
 	 */
 	public void addSelectionListener(SelectionListener listener) {
 		selListeners.add(listener);
-	}
-
-	/**
-	 * dispose the control and the last image used into the square and rectangle
-	 * area
-	 */
-	@Override
-	public void dispose() {
-		super.dispose();
-		imagesCache.dispose();
-		if (canvasCache != null && !canvasCache.isDisposed()){
-			canvasCache.dispose();
-		}
-		if (sliderCache != null && !sliderCache.isDisposed()){
-			sliderCache.dispose();
-		}
 	}
 
 	/**
