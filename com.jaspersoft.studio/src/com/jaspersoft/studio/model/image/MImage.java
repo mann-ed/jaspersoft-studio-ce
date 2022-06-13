@@ -375,6 +375,9 @@ public class MImage extends MGraphicElementLineBox {
 		if (id.equals(JRDesignImage.PROPERTY_ANCHOR_NAME_EXPRESSION)) {
 			return ExprUtil.getExpression(jrElement.getAnchorNameExpression());
 		}
+		if (id.equals(JRDesignImage.PROPERTY_BOOKMARK_LEVEL_EXPRESSION)) {
+			return ExprUtil.getExpression(jrElement.getBookmarkLevelExpression());
+		}
 		if (id.equals(JRDesignImage.PROPERTY_BOOKMARK_LEVEL)) {
 			return jrElement.getBookmarkLevel();
 		}
@@ -473,10 +476,16 @@ public class MImage extends MGraphicElementLineBox {
 					ExprUtil.setValues(jrElement.getHyperlinkTooltipExpression(), value));
 		else if (id.equals(JRDesignHyperlink.PROPERTY_HYPERLINK_WHEN_EXPRESSION)) {
 			jrElement.setHyperlinkWhenExpression(ExprUtil.setValues(jrElement.getHyperlinkWhenExpression(), value));
-		} else if (id.equals(JRDesignImage.PROPERTY_ANCHOR_NAME_EXPRESSION))
+		} 
+		else if (id.equals(JRDesignImage.PROPERTY_ANCHOR_NAME_EXPRESSION)) {
 			jrElement.setAnchorNameExpression(ExprUtil.setValues(jrElement.getAnchorNameExpression(), value));
-		else if (id.equals(JRDesignImage.PROPERTY_BOOKMARK_LEVEL))
+		}
+		else if (id.equals(JRDesignImage.PROPERTY_BOOKMARK_LEVEL_EXPRESSION)) {
+			jrElement.setBookmarkLevelExpression(ExprUtil.setValues(jrElement.getBookmarkLevelExpression(), value));
+		}
+		else if (id.equals(JRDesignImage.PROPERTY_BOOKMARK_LEVEL)) {
 			jrElement.setBookmarkLevel(value != null ? Integer.parseInt(value.toString()) : 0);
+		}
 		else if (id.equals(JRDesignHyperlink.PROPERTY_HYPERLINK_PARAMETERS)) {
 			JRHyperlinkParameter[] oldParameters = jrElement.getHyperlinkParameters();
 			JRHyperlinkParameter[] newParameters = (JRHyperlinkParameter[]) value;
