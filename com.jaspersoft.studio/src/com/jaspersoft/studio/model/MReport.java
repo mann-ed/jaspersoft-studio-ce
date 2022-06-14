@@ -75,6 +75,7 @@ import net.sf.jasperreports.engine.design.events.CollectionElementAddedEvent;
 import net.sf.jasperreports.engine.type.BandTypeEnum;
 import net.sf.jasperreports.engine.type.OrientationEnum;
 import net.sf.jasperreports.engine.type.PrintOrderEnum;
+import net.sf.jasperreports.engine.type.RunDirectionEnum;
 import net.sf.jasperreports.engine.type.WhenNoDataTypeEnum;
 import net.sf.jasperreports.engine.util.FormatFactory;
 
@@ -289,7 +290,14 @@ public class MReport extends MLockableRefresh implements IGraphicElement, IConta
 		columnSpaceD.setDescription(Messages.MReport_column_space_description);
 		columnSpaceD.setCategory(Messages.MReport_columns_category);
 		desc.add(columnSpaceD);
-
+		
+		NamedEnumPropertyDescriptor<RunDirectionEnum> columnDirectionD = new NamedEnumPropertyDescriptor<RunDirectionEnum>(
+				JasperDesign.PROPERTY_COLUMN_DIRECTION, Messages.MReport_ColumnDirectionProperty,
+				RunDirectionEnum.LTR, NullEnum.NOTNULL);
+		columnDirectionD.setDescription(Messages.MReport_ColumnDirectionDescription);
+		columnDirectionD.setCategory(Messages.MReport_columns_category);
+		desc.add(columnDirectionD);
+		
 		RWLanguageComboBoxPropertyDescriptor languageD = new RWLanguageComboBoxPropertyDescriptor(
 				JasperDesign.PROPERTY_LANGUAGE, Messages.common_language, ModelUtils.getDefaultReportLanguages(),
 				NullEnum.NOTNULL, false);
@@ -407,6 +415,9 @@ public class MReport extends MLockableRefresh implements IGraphicElement, IConta
 		int whenNoDataValue = NamedEnumPropertyDescriptor.getIntValue(WhenNoDataTypeEnum.NO_PAGES, NullEnum.NULL,
 				WhenNoDataTypeEnum.NO_PAGES);
 		defaultsMap.put(JasperDesign.PROPERTY_WHEN_NO_DATA_TYPE, new DefaultValue(whenNoDataValue, true));
+		
+		int columnDirectionValue = NamedEnumPropertyDescriptor.getIntValue(RunDirectionEnum.LTR, NullEnum.NOTNULL,RunDirectionEnum.LTR);
+		defaultsMap.put(JasperDesign.PROPERTY_COLUMN_DIRECTION, new DefaultValue(columnDirectionValue,false));
 
 		return defaultsMap;
 	}
@@ -467,6 +478,9 @@ public class MReport extends MLockableRefresh implements IGraphicElement, IConta
 			return new Integer(jrDesign.getColumnSpacing());
 		if (id.equals(JasperDesign.PROPERTY_COLUMN_WIDTH))
 			return new Integer(jrDesign.getColumnWidth());
+		if (id.equals(JasperDesign.PROPERTY_COLUMN_DIRECTION)) {
+			return NamedEnumPropertyDescriptor.getIntValue(RunDirectionEnum.LTR, NullEnum.NOTNULL, jrDesign.getColumnDirection());
+		}
 		if (id.equals(JasperDesign.PROPERTY_LANGUAGE))
 			return jrDesign.getLanguage();
 		if (id.equals(JasperDesign.PROPERTY_ORIENTATION)) {
@@ -576,13 +590,16 @@ public class MReport extends MLockableRefresh implements IGraphicElement, IConta
 			jrDesign.setTopMargin((Integer) Misc.nvl(value, Integer.valueOf(0)));
 		else if (id.equals(JasperDesign.PROPERTY_BOTTOM_MARGIN))
 			jrDesign.setBottomMargin((Integer) Misc.nvl(value, Integer.valueOf(0)));
-
 		else if (id.equals(JasperDesign.PROPERTY_COLUMN_COUNT))
 			jrDesign.setColumnCount((Integer) Misc.nvl(value, Integer.valueOf(0)));
 		else if (id.equals(JasperDesign.PROPERTY_COLUMN_SPACING))
 			jrDesign.setColumnSpacing((Integer) Misc.nvl(value, Integer.valueOf(0)));
 		else if (id.equals(JasperDesign.PROPERTY_COLUMN_WIDTH))
 			jrDesign.setColumnWidth((Integer) Misc.nvl(value, Integer.valueOf(0)));
+		else if (id.equals(JasperDesign.PROPERTY_COLUMN_DIRECTION)) {
+			RunDirectionEnum enumValue = NamedEnumPropertyDescriptor.getEnumValue(RunDirectionEnum.LTR, NullEnum.NOTNULL, value);
+			jrDesign.setColumnDirection(enumValue);
+		}
 		// -- enums
 		else if (id.equals(JasperDesign.PROPERTY_ORIENTATION)) {
 			OrientationEnum enumValue = NamedEnumPropertyDescriptor.getEnumValue(OrientationEnum.LANDSCAPE,

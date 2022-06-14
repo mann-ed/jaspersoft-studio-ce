@@ -1514,6 +1514,8 @@ public class Messages extends NLS {
 	public static String MReport_column_space_description;
 	public static String MReport_column_width;
 	public static String MReport_column_width_description;
+	public static String MReport_ColumnDirectionDescription;
+	public static String MReport_ColumnDirectionProperty;
 	public static String MReport_columns_category;
 	public static String MReport_createBookmarksDescription;
 	public static String MReport_createBookmarksTitle;
@@ -1711,6 +1713,9 @@ public class Messages extends NLS {
 	public static String PageFormatDialog_7;
 	public static String PageFormatDialog_8;
 	public static String PageFormatDialog_9;
+	public static String PageFormatDialog_ColumnDirectionLabel;
+	public static String PageFormatDialog_ColumnDirectionTooltip;
+	public static String PageFormatDialog_PrintOrderTooltip;
 	public static String PageFormatSection_buttonText;
 	public static String PageFormatSection_pageLabel;
 	public static String PageFormatSection_sectionTitle;
