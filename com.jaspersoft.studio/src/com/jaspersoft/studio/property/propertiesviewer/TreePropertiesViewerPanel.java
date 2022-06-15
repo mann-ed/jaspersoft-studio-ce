@@ -22,6 +22,8 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -80,6 +82,23 @@ public class TreePropertiesViewerPanel<T extends IPropertiesViewerNode> extends 
 		toolkit = new FormToolkit(parent.getDisplay());
 		this.nodes=nodes;
 		this.nodeChangedListeners=new ArrayList<PropertiesNodeChangeListener>(1); // usually one listener is enough
+		this.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				if(nodeChangedListeners!=null) {
+					Object[] listeners = nodeChangedListeners.toArray();
+					for(Object l : listeners) {
+						removePropertiesNodeChangedListener((PropertiesNodeChangeListener) l);
+					}
+					nodeChangedListeners.clear();
+					nodeChangedListeners=null;
+				}
+				if(toolkit!=null) {
+					toolkit.dispose();
+					toolkit=null;
+				}
+			}
+		});
 		createPanelContent();
 	}
 
@@ -310,12 +329,6 @@ public class TreePropertiesViewerPanel<T extends IPropertiesViewerNode> extends 
 		/* Do nothing - Subclassing is allowed */
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		this.toolkit.dispose();
-	}
-	
 	/**
 	 * @return the currently selected node
 	 */

@@ -19,10 +19,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 /*
  * /* The Class Colors.
@@ -246,7 +247,7 @@ public class Colors {
 			}
 		}
 
-		Image image = new Image(Display.getCurrent(), data);
+		Image image = new Image(UIUtils.getDisplay(), data);
 		return image;
 	}
 
