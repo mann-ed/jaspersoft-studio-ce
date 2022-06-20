@@ -98,7 +98,7 @@
          id="org.apache.servicemix.bundles.rhino"
          download-size="0"
          install-size="0"
-         version="1.7.14.1"
+         version="1.7.14.2"
          unpack="false"/>
 
    <plugin
@@ -140,7 +140,7 @@
          id="com.jaspersoft.studio.bundles.jackson"
          download-size="0"
          install-size="0"
-         version="2.13.1.b01"
+         version="2.13.3.b01"
          unpack="false"/>
 
    <plugin
