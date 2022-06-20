@@ -571,9 +571,11 @@ public final class PageFormatDialog extends FormDialog {
 		if (jd.getPrintOrderValue() != PrintOrderEnum.getByName(cPrintOrder.getText()))
 			command.add(createCommand(JasperDesign.PROPERTY_PRINT_ORDER, NamedEnumPropertyDescriptor.getIntValue(
 					PrintOrderEnum.HORIZONTAL, NullEnum.NULL, PrintOrderEnum.getByName(cPrintOrder.getText()))));
-		if (jd.getColumnDirection() != RunDirectionEnum.getByName(cColumnDirection.getText())) {
+		RunDirectionEnum selectedColDirection = 
+				NamedEnumPropertyDescriptor.getEnumValue(RunDirectionEnum.LTR, NullEnum.NOTNULL,Math.max(cColumnDirection.getSelectionIndex(),0));
+		if (jd.getColumnDirection() != selectedColDirection) {
 			command.add(createCommand(JasperDesign.PROPERTY_COLUMN_DIRECTION, 
-					NamedEnumPropertyDescriptor.getIntValue(RunDirectionEnum.LTR, NullEnum.NOTNULL, RunDirectionEnum.getByName(cColumnDirection.getText()))));
+					NamedEnumPropertyDescriptor.getIntValue(RunDirectionEnum.LTR, NullEnum.NOTNULL, selectedColDirection)));
 		}
 
 		if (jd.getOrientationValue().equals(OrientationEnum.LANDSCAPE) && !landscape.getSelection())
