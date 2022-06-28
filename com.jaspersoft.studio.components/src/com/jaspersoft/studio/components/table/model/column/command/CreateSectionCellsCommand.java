@@ -259,7 +259,7 @@ public class CreateSectionCellsCommand extends Command {
 				}
 			}
 		}
-		
+		manager.update();
 	}
 	
 	/**
