@@ -12,6 +12,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.actions.ActionFactory;
 
 import com.jaspersoft.studio.editor.AContextMenuProvider;
+import com.jaspersoft.studio.editor.outline.actions.CreateConditionalStyleAction;
 import com.jaspersoft.studio.editor.outline.actions.CreateStyleAction;
 import com.jaspersoft.studio.editor.outline.actions.CreateStyleTemplateReferenceAction;
 import com.jaspersoft.studio.editor.outline.actions.SaveStyleAsTemplateAction;
@@ -43,6 +44,10 @@ public class AppStyleContextMenuProvider extends AContextMenuProvider {
 		// -----------------------------------------------------------
 
 		IAction action = getActionRegistry().getAction(CreateStyleAction.ID);
+		if (action != null && action.isEnabled())
+			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
+		
+		action = getActionRegistry().getAction(CreateConditionalStyleAction.ID);
 		if (action != null && action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
 

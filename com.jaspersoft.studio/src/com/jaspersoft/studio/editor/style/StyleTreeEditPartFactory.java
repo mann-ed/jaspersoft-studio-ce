@@ -23,6 +23,10 @@ import com.jaspersoft.studio.model.style.MConditionalStyle;
 import com.jaspersoft.studio.model.style.MStyle;
 import com.jaspersoft.studio.model.style.MStyleTemplateReference;
 import com.jaspersoft.studio.model.style.MStylesTemplate;
+import com.jaspersoft.studio.model.style.command.CreateConditionalStyleCommand;
+import com.jaspersoft.studio.model.style.command.DeleteConditionalStyleCommand;
+
+import net.sf.jasperreports.engine.design.JRDesignStyle;
 /*
  * A factory for creating OutlineTreeEditPart objects.
  */
@@ -55,11 +59,19 @@ public class StyleTreeEditPartFactory implements EditPartFactory {
 	 * @return the delete command
 	 */
 	public static Command getDeleteCommand(ANode parent, ANode child) {
+		if (parent instanceof MStyle && child instanceof MConditionalStyle) {
+			return new DeleteConditionalStyleCommand((MStyle) parent, (MConditionalStyle) child);
+		}
 		if (parent instanceof MStylesTemplate) {
-			if (child instanceof MStyleTemplateReference)
+			if (child instanceof MStyleTemplateReference) {
 				return new DeleteStyleTemplateCommand((MStylesTemplate) parent, (MStyleTemplateReference) child);
-			if (child instanceof MStyle)
+			}
+			if (child instanceof MConditionalStyle) {
+				return new DeleteConditionalStyleCommand((MStyle) child.getParent(), (MConditionalStyle) child);
+			}
+			if (child instanceof MStyle) {
 				return new DeleteStyleCommand((MStylesTemplate) parent, (MStyle) child);
+			}
 		}
 		return null;
 	}
@@ -104,7 +116,11 @@ public class StyleTreeEditPartFactory implements EditPartFactory {
 			if (child instanceof MStyleTemplateReference)
 				return new CreateStyleTemplateReferenceCommand((MStylesTemplate) parent, (MStyleTemplateReference) child,
 						newIndex);
-		} else if (parent.getParent() instanceof MStylesTemplate) {
+		} else if (child instanceof MConditionalStyle) {
+			if (parent instanceof MStyle && parent.getValue() instanceof JRDesignStyle)
+				return new CreateConditionalStyleCommand((MStyle) parent, (MConditionalStyle) child, newIndex);
+		} 
+		else if (parent.getParent() instanceof MStylesTemplate) {
 			if (child instanceof MStyle && !(child instanceof MConditionalStyle))
 				return new CreateStyleCommand((MStylesTemplate) parent.getParent(), (MStyle) child, newIndex);
 			if (child instanceof MStyleTemplateReference)

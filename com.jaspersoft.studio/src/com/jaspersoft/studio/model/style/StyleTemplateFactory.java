@@ -127,6 +127,13 @@ public class StyleTemplateFactory {
 		for (JRStyle s : jrst.getStyles()) {
 			APropertyNode n = (APropertyNode) ReportFactory.createNode(parent, s, -2);
 			n.setEditable(editable);
+			// create the "children" conditional styles
+			if (((JRDesignStyle) s).getConditionalStyleList() != null) {
+				for (Object jrc : ((JRDesignStyle) s).getConditionalStyleList()) {
+					ANode conditionalStyle = ReportFactory.createNode(n, jrc, -1);
+					conditionalStyle.setEditable(editable);
+				}
+			}
 		}
 	}
 
@@ -151,6 +158,12 @@ public class StyleTemplateFactory {
 					e.printStackTrace();
 				}
 			}
+			if (((JRDesignStyle) s).getConditionalStyleList() != null) {
+				for (Object jrc : ((JRDesignStyle) s).getConditionalStyleList()) {
+					ReportFactory.createNode(n, jrc, -1);
+				}
+			}
+
 		}
 		// Add the external styles to the JasperDesign
 		for (INode node : parent.getChildren()) {
