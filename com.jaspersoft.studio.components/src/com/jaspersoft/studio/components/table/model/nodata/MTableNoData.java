@@ -16,6 +16,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -365,7 +366,7 @@ public class MTableNoData extends APropertyNode implements IGraphicElement, IPas
 	public Color getForeground() {
 		if (getValue() == null)
 			return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
-		return null;
+		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
 	}
 
 	@Override
