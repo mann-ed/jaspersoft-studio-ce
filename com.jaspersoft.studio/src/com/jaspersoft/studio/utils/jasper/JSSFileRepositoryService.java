@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.messages.Messages;
 
 import net.sf.jasperreports.eclipse.builder.jdt.JDTUtils;
@@ -87,7 +88,7 @@ public class JSSFileRepositoryService implements RepositoryService {
 			if (r != null)
 				return r;
 		} catch (JRRuntimeException e) {
-			// do nothing
+			JaspersoftStudioPlugin.getInstance().logError("Problem occurred when trying to load the resource: " + uri, e);
 		}
 		try {
 			if (ReportResource.class.equals(resourceType) && uri.endsWith(FileExtension.PointJRXML)) {
