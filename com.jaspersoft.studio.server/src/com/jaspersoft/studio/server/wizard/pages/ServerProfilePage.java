@@ -56,6 +56,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -809,10 +811,18 @@ public class ServerProfilePage extends WizardPage implements WizardEndingStateLi
 		public String getUrl() {
 			UIUtils.getDisplay().asyncExec(() -> {
 				try {
+					
 					if (sp.getUrl() != null && sp.getUrl().trim().startsWith("https://")) { //$NON-NLS-1$
+						Cursor cursor = new Cursor(ssLabel.getDisplay(), SWT.CURSOR_HAND);
 						ssLabel.addMouseListener(mlistener);
+						ssLabel.addDisposeListener(new DisposeListener() {
+							@Override
+							public void widgetDisposed(DisposeEvent e) {
+								cursor.dispose();
+							}
+						});
 						setSslIcon();
-						ssLabel.setCursor(new Cursor(ssLabel.getDisplay(), SWT.CURSOR_HAND));
+						ssLabel.setCursor(cursor);
 						ssLabel.getParent().getParent().layout(true);
 						return;
 					}
