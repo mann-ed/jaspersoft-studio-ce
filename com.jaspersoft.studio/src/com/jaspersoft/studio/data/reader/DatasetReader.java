@@ -58,6 +58,7 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.fill.JRFiller;
 import net.sf.jasperreports.engine.fill.ReportFiller;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.utils.JasperReportsModelUtils;
 
 /**
  * Reader class for generic dataset.
@@ -98,7 +99,7 @@ public class DatasetReader {
 
 	public static void setupDataset(JasperDesign dataJD, JRDesignDataset designDataset,
 			JasperReportsConfiguration jConfig, List<String> columns) throws JRException {
-		// 2. Set query information
+		// Set query information
 		JRDesignQuery query = new JRDesignQuery();
 		if (designDataset.getQuery() != null) {
 			query.setLanguage(designDataset.getQuery().getLanguage());
@@ -108,10 +109,11 @@ public class DatasetReader {
 		// and the report language to the actual report one
 		dataJD.setLanguage(jConfig.getJasperDesign().getLanguage());
 		dataJD.setFilterExpression(designDataset.getFilterExpression());
-		// 3. Replace properties map
+		
+		// Replace properties map
 		ModelUtils.replacePropertiesMap(jConfig.getJasperDesign().getPropertiesMap(), dataJD.getPropertiesMap());
 
-		// 4. Set "standard" parameters
+		// Set "standard" parameters
 		List<JRParameter> parametersList = designDataset.getParametersList();
 		for (JRParameter param : parametersList) {
 			if (param.isSystemDefined())
@@ -122,7 +124,7 @@ public class DatasetReader {
 			dataJD.addParameter(param);
 		}
 
-		// 5. Add the fields
+		// Add the fields
 		if (!columns.isEmpty()) {
 			// Clear "dirty" fields
 			dataJD.getFieldsList().clear();
@@ -133,12 +135,12 @@ public class DatasetReader {
 				dataJD.addField(f);
 			}
 		}
-		// 5.a Add the variables
+		// Add the variables
 		// Clear "dirty" variables
 		dataJD.getVariablesList().clear();
 		dataJD.getVariablesMap().clear();
 
-		// 5.b add groups
+		// Add groups
 		dataJD.getGroupsList().clear();
 		dataJD.getMainDesignDataset().getGroupsMap().clear();
 		for (JRGroup sf : designDataset.getGroupsList()) {
@@ -147,7 +149,7 @@ public class DatasetReader {
 			dataJD.addGroup(gr);
 		}
 
-		// 5.c add the variables, ignore duplicates
+		// Add the variables, ignore duplicates
 		JRVariable[] variables = designDataset.getVariables();
 		for (JRVariable f : variables)
 			try {
@@ -175,13 +177,13 @@ public class DatasetReader {
 					e.printStackTrace();
 			}
 
-		// 6. add sort fields
+		// Add sort fields
 		dataJD.getSortFieldsList().clear();
 		dataJD.getMainDesignDataset().getSortFieldsMap().clear();
 		for (JRSortField sf : designDataset.getSortFieldsList())
 			dataJD.addSortField(sf);
 
-		// 6.b add scriptlets
+		// Add scriptlets
 		dataJD.getScriptletsList().clear();
 		dataJD.getMainDesignDataset().getScriptletsMap().clear();
 		for (JRScriptlet sf : designDataset.getScriptletsList())
@@ -260,7 +262,7 @@ public class DatasetReader {
 
 			JaspersoftStudioPlugin.getExtensionManager().onRun(jConfig, jrobj, hm);
 
-			// 9. Fill the report
+			// Fill the report
 
 			rf = JRFiller.createReportFiller(jConfig, jrobj);
 
@@ -300,11 +302,13 @@ public class DatasetReader {
 		Map<String, Object> hm = null;
 		try {
 			running = true;
-			// 1. Load JD from custom data preview report
+			// Load JD from custom data preview report
 			JasperDesign dataJD = getJasperDesign(jConfig);
-
+			
+			// Setup the dataset with proper details
 			setupDataset(dataJD, designDataset, jConfig, columns);
-			// and add the custom ones
+			
+			// Add the custom parameters for data preview
 			JRDesignParameter pColumns = new JRDesignParameter();
 			pColumns.setName(DataPreviewScriptlet.PARAM_COLUMNS);
 			pColumns.setValueClass(List.class);
@@ -313,13 +317,16 @@ public class DatasetReader {
 			pListeners.setName(DataPreviewScriptlet.PARAM_LISTENERS);
 			pListeners.setValueClass(List.class);
 			dataJD.addParameter(pListeners);
+			
+			// Add the proper "imports" information from the report
+			JasperReportsModelUtils.addImportStatements(jConfig.getJasperDesign(),dataJD);
 
-			// 6. Compile report
+			// Compile report
 			JasperReport jrobj = compile(jConfig, dataJD, monitor);
 			if (jrobj == null)
 				return;
 
-			// 7. Prepare parameters
+			// Prepare parameters
 			hm = prepareParameters(jConfig, maxRecords);
 			if (recalcParameters) {
 				ExpressionUtil.initBuiltInParameters(jConfig, jrobj);
@@ -331,7 +338,7 @@ public class DatasetReader {
 			if (rc != null)
 				hm.remove(JRParameter.REPORT_CONTEXT);
 
-			// 8. Contribute parameters from the data adapter
+			// Contribute parameters from the data adapter
 			fillReport(jConfig, designDataset, dataAdapterDesc, jrobj, hm);
 		} catch (DataPreviewInterruptedException e) {
 			e.printStackTrace();
