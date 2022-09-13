@@ -49,7 +49,6 @@ import com.jaspersoft.studio.server.action.resource.PasteResourceAsLinkAction;
 import com.jaspersoft.studio.server.action.resource.PropertiesAction;
 import com.jaspersoft.studio.server.action.resource.RefreshResourcesAction;
 import com.jaspersoft.studio.server.action.resource.RunReportUnitAction;
-import com.jaspersoft.studio.server.action.resource.ShowPermissionsAction;
 import com.jaspersoft.studio.server.action.server.CreateServerAction;
 import com.jaspersoft.studio.server.action.server.DeleteServerAction;
 import com.jaspersoft.studio.server.action.server.DuplicateServerAction;
@@ -70,7 +69,6 @@ import com.jaspersoft.studio.server.model.MReportUnit;
 import com.jaspersoft.studio.server.model.server.MServerProfile;
 import com.jaspersoft.studio.server.model.server.MServers;
 import com.jaspersoft.studio.server.model.server.ServerProfile;
-import com.jaspersoft.studio.server.protocol.Feature;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.JRPropertiesMap;
@@ -103,7 +101,6 @@ public class ServerProvider implements IRepositoryViewProvider {
 	private ExportMetadataAction exportMetadata;
 
 	private ImportDataSourceInJSSAction importDataSourceInJSSAction;
-	private ShowPermissionsAction showPermissionsAction;
 
 	public Action[] getActions(TreeViewer treeViewer) {
 		createActions(treeViewer);
@@ -158,9 +155,6 @@ public class ServerProvider implements IRepositoryViewProvider {
 			importMetadata = new ImportMetadataAction(treeViewer);
 		if (exportMetadata == null)
 			exportMetadata = new ExportMetadataAction(treeViewer);
-
-		if (showPermissionsAction == null)
-			showPermissionsAction = new ShowPermissionsAction(treeViewer);
 	}
 
 	public List<IAction> fillContextMenu(TreeViewer treeViewer, ANode node) {
@@ -254,11 +248,6 @@ public class ServerProvider implements IRepositoryViewProvider {
 
 			if (editAction.isEnabled())
 				lst.add(editAction);
-
-			if (((AMResource) node).getWsClient() != null
-					&& ((AMResource) node).getWsClient().isSupported(Feature.PERMISSION)
-					&& showPermissionsAction.isEnabled())
-				lst.add(showPermissionsAction);
 
 			lst.add(new Separator());
 

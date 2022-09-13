@@ -20,8 +20,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,8 +37,6 @@ import com.jaspersoft.studio.server.protocol.Feature;
 import com.jaspersoft.studio.server.protocol.IConnection;
 import com.jaspersoft.studio.server.protocol.restv2.DiffFields;
 import com.jaspersoft.studio.server.utils.ValidationUtils;
-import com.jaspersoft.studio.server.wizard.permission.PermissionDialog;
-import com.jaspersoft.studio.server.wizard.permission.PermissionWizard;
 import com.jaspersoft.studio.server.wizard.resource.APageContent;
 import com.jaspersoft.studio.utils.UIUtil;
 
@@ -98,26 +94,9 @@ public class ResourcePageContent extends APageContent {
 		bisRef.setText(Messages.ResourcePageContent_isReference);
 		bisRef.setEnabled(false);
 
-		if (res.getWsClient() != null && res.getWsClient().isSupported(Feature.PERMISSION)) {
-			bPerm = new Button(composite, SWT.PUSH);
-			bPerm.setText(Messages.ResourcePageContent_0);
-			if (res.getValue().getIsNew())
-				bPerm.setEnabled(false);
-			else
-				bPerm.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						PermissionWizard wizard = new PermissionWizard(res);
-						PermissionDialog dialog = new PermissionDialog(UIUtils.getShell(), wizard);
-						dialog.addApplyListener(wizard);
-						dialog.open();
-					}
-				});
-		} else {
-			gd = new GridData();
-			gd.horizontalSpan = 2;
-			bisRef.setLayoutData(gd);
-		}
+		gd = new GridData();
+		gd.horizontalSpan = 2;
+		bisRef.setLayoutData(gd);
 
 		UIUtil.createLabel(composite, Messages.AResourcePage_creationdate);
 		tcdate = new Text(composite, SWT.BORDER | SWT.READ_ONLY);
