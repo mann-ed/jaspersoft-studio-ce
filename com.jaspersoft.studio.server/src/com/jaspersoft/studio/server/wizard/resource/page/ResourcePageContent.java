@@ -56,7 +56,6 @@ public class ResourcePageContent extends APageContent {
 	private Text tcdate;
 	private Text ttype;
 	private Button bisRef;
-	private Button bPerm;
 
 	public ResourcePageContent(ANode parent, AMResource resource, DataBindingContext bindingContext) {
 		super(parent, resource, bindingContext);
