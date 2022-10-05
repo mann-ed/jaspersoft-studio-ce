@@ -187,7 +187,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <plugin id="org.apache.commons.cli"/>
       <plugin id="org.apache.commons.compress"/>
       <plugin id="org.apache.commons.dbcp"/>
-      <plugin id="org.apache.commons.io"/>
+      <plugin id="org.apache.commons.commons-io"/>
       <plugin id="org.apache.commons.lang"/>
       <plugin id="org.apache.commons.logging"/>
       <plugin id="org.apache.commons.math"/>
