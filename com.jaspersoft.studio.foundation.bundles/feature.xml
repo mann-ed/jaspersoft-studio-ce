@@ -293,7 +293,7 @@
          id="org.apache.santuario.xmlsec"
          download-size="0"
          install-size="0"
-         version="2.2.3"
+         version="2.3.0"
          unpack="false"/>
 
    <plugin
