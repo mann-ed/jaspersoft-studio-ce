@@ -224,7 +224,7 @@
          id="org.apache.commons.collections"
          download-size="0"
          install-size="0"
-         version="3.2.2.v201511171945"
+         version="3.2.2.v20220405-1659"
          unpack="false"/>
 
    <plugin
@@ -251,35 +251,35 @@
          id="org.bouncycastle.bcpg"
          download-size="0"
          install-size="0"
-         version="1.70.0.v20220105-1522"
+         version="1.71.0.v20220723-1943"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcpkix"
          download-size="0"
          install-size="0"
-         version="1.70.0.v20220105-1522"
+         version="1.71.0.v20220723-1943"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcprov"
          download-size="0"
          install-size="0"
-         version="1.70.0.v20220105-1522"
+         version="1.71.0.v20220723-1943"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcutil"
          download-size="0"
          install-size="0"
-         version="1.70.0.v20220105-1522"
+         version="1.71.0.v20220723-1943"
          unpack="false"/>
 
    <plugin
          id="org.apache.servicemix.bundles.xmlbeans"
          download-size="0"
          install-size="0"
-         version="5.0.2.1"
+         version="5.0.3.1"
          unpack="false"/>
 
    <plugin
