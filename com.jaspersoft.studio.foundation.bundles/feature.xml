@@ -161,7 +161,7 @@
          id="com.jaspersoft.studio.bundles.poi"
          download-size="0"
          install-size="0"
-         version="5.1.0.b01"/>
+         version="5.2.2.b01"/>
 
    <plugin
          id="com.jaspersoft.studio.bundles.cdt-java-client"
