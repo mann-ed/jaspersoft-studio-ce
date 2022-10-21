@@ -750,6 +750,9 @@ public class Messages extends NLS {
 	public static String ExportAsJasperReportsAction_filtername;
 	public static String ExportAsJasperReportsAction_title;
 	public static String ExportAsJasperReportsAction_tooltip;
+	public static String ExportAsJsonMetadataAction_FilterNameJSON;
+	public static String ExportAsJsonMetadataAction_Text;
+	public static String ExportAsJsonMetadataAction_Tooltip;
 	public static String ExportAsLHtmlAction_title;
 	public static String ExportAsOdsAction_filtername;
 	public static String ExportAsOdsAction_title;
@@ -760,6 +763,9 @@ public class Messages extends NLS {
 	public static String ExportAsPdfAction_filtername;
 	public static String ExportAsPdfAction_title;
 	public static String ExportAsPdfAction_tooltip;
+	public static String ExportAsPptxAction_FilterNamePPTX;
+	public static String ExportAsPptxAction_Text;
+	public static String ExportAsPptxAction_Tooltip;
 	public static String ExportAsRtfAction_filtername;
 	public static String ExportAsRtfAction_title;
 	public static String ExportAsRtfAction_tooltip;
@@ -780,6 +786,9 @@ public class Messages extends NLS {
 	public static String ExportAsXlsMetadataAction_tooltip;
 	public static String ExportAsXlsxAction_title;
 	public static String ExportAsXlsxAction_tooltip;
+	public static String ExportAsXlsxMetadataAction_FilterNameXLSX;
+	public static String ExportAsXlsxMetadataAction_Text;
+	public static String ExportAsXlsxMetadataAction_Tooltip;
 	public static String ExportAsXmlAction_ext1;
 	public static String ExportAsXmlAction_ext2;
 	public static String ExportAsXmlAction_title;

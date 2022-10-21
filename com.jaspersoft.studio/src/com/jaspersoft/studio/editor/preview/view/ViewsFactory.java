@@ -26,8 +26,7 @@ import com.jaspersoft.studio.editor.preview.view.report.system.OdtViewer;
 import com.jaspersoft.studio.editor.preview.view.report.system.PdfViewer;
 import com.jaspersoft.studio.editor.preview.view.report.system.PowerPointViewer;
 import com.jaspersoft.studio.editor.preview.view.report.system.RTFViewer;
-import com.jaspersoft.studio.editor.preview.view.report.system.XlsMetadataViewer;
-import com.jaspersoft.studio.editor.preview.view.report.system.XlsViewer;
+import com.jaspersoft.studio.editor.preview.view.report.system.XlsxMetadataViewer;
 import com.jaspersoft.studio.editor.preview.view.report.system.XlsxViewer;
 import com.jaspersoft.studio.messages.Messages;
 
@@ -60,10 +59,9 @@ public class ViewsFactory extends AViewsFactory {
 
 		pcmap.put("SEPARATOR3", null); //$NON-NLS-1$
 
-		pcmap.put("XLS", XlsViewer.class); //$NON-NLS-1$
 		pcmap.put("XLSx", XlsxViewer.class); //$NON-NLS-1$
 		pcmap.put("CSV", CSVViewer.class); //$NON-NLS-1$
-		pcmap.put("XLS Metadata", XlsMetadataViewer.class); //$NON-NLS-1$
+		pcmap.put("XLSx Metadata", XlsxMetadataViewer.class);
 		pcmap.put(Messages.ViewsFactory_6, CSVMetadataViewer.class);
 		pcmap.put(Messages.ViewsFactory_7, JSONMetadataViewer.class);
 
