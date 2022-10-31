@@ -115,14 +115,20 @@ public class FileSelector implements IFileSelection {
 
 			protected void showFindDialog(MServerProfile msp) {
 				if (msp.isSupported(Feature.SEARCHREPOSITORY)) {
-					boolean t = msp.getWsClient().getServerInfo().getVersion().compareTo("5.5") >= 0;
+					boolean t = msp.getWsClient().getServerInfo().getVersion().compareTo("5.5") >= 0; //$NON-NLS-1$
 					String[] incl = null;
-					if (dialog instanceof SubreportSelectionDialog)
+					if (dialog instanceof SubreportSelectionDialog) {
 						incl = new String[] { t ? FileType.jrxml.name() : ResourceMediaType.FILE_CLIENT_TYPE };
-					else if (dialog instanceof ImageSelectionDialog)
+					}
+					else if (dialog instanceof ImageSelectionDialog) {
 						incl = new String[] { t ? FileType.img.name() : ResourceMediaType.FILE_CLIENT_TYPE };
-					else if (dialog instanceof StyleTemplateSelectionDialog)
+					}
+					else if (dialog instanceof StyleTemplateSelectionDialog) {
 						incl = new String[] { t ? FileType.jrtx.name() : ResourceMediaType.FILE_CLIENT_TYPE };
+					}
+					else if (dialog instanceof IFileSelectorServerTypes) {
+						incl = ((IFileSelectorServerTypes) dialog).getServerSupportedTypes();
+					}
 					ResourceDescriptor rd = FindResourceJob.doFindResource(msp, incl, null, true);
 					if (rd != null) {
 						dialog.setFileExpressionText("repo:" + rd.getUriString()); //$NON-NLS-1$
@@ -137,12 +143,18 @@ public class FileSelector implements IFileSelection {
 
 						@Override
 						public boolean isResourceCompatible(AMResource r) {
-							if (dialog instanceof SubreportSelectionDialog)
+							if (dialog instanceof SubreportSelectionDialog) {
 								return r.getValue().getWsType().equals(ResourceDescriptor.TYPE_JRXML);
-							else if (dialog instanceof ImageSelectionDialog)
+							}
+							else if (dialog instanceof ImageSelectionDialog) {
 								return r.getValue().getWsType().equals(ResourceDescriptor.TYPE_IMAGE);
-							else if (dialog instanceof StyleTemplateSelectionDialog)
+							}
+							else if (dialog instanceof StyleTemplateSelectionDialog) {
 								return r.getValue().getWsType().equals(ResourceDescriptor.TYPE_STYLE_TEMPLATE);
+							}
+							else if (dialog instanceof IFileSelectorServerTypes) {
+								return ((IFileSelectorServerTypes) dialog).isResourceCompatible(r.getValue().getWsType());
+							}
 							return true;
 						}
 					};

@@ -32,6 +32,7 @@ import com.jaspersoft.studio.widgets.framework.manager.ItemPropertyLayoutData;
 import com.jaspersoft.studio.widgets.framework.ui.ItemPropertyDescription;
 
 import net.sf.jasperreports.eclipse.ui.util.PersistentLocationTitleAreaDialog;
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
@@ -274,7 +275,8 @@ public class ItemPropertyElementDialog extends PersistentLocationTitleAreaDialog
 		//to he control height is added a padding of 250 because the dialog has also the title and
 		//buttons area that require space
 		Point controlSize = itemProperty.computeSize(450, SWT.DEFAULT);
-		setDefaultSize(450, Math.max(controlSize.y + 250, 300));
+		Point defaultSize = UIUtils.getScaledSize(new Point(450, Math.max(controlSize.y + 250, 300)));
+		setDefaultSize(defaultSize.x,defaultSize.y);
 	
 		itemProperty.updateWidget();
 		

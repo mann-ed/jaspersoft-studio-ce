@@ -57,6 +57,7 @@ public class MSystemScriptlet extends APropertyNode {
 	 */
 	public MSystemScriptlet() {
 		super();
+		setEditable(false);
 	}
 
 	/**
@@ -71,6 +72,7 @@ public class MSystemScriptlet extends APropertyNode {
 	 */
 	public MSystemScriptlet(ANode parent, JRScriptlet jfRield, int newIndex) {
 		super(parent, newIndex);
+		setEditable(false);
 		setValue(jfRield);
 	}
 
@@ -159,7 +161,7 @@ public class MSystemScriptlet extends APropertyNode {
 			return jrField.getDescription();
 		return null;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

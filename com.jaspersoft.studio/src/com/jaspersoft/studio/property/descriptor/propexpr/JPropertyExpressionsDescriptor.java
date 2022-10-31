@@ -13,13 +13,19 @@ import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.property.section.widgets.SPPropertyExpressionButton;
 
 public class JPropertyExpressionsDescriptor extends NTextPropertyDescriptor {
+	private boolean forceStandardEditing=false;
 
 	public JPropertyExpressionsDescriptor(Object id, String displayName) {
+		this(id, displayName, false);
+	}
+
+	public JPropertyExpressionsDescriptor(Object id, String displayName, boolean forceStandardEditing) {
 		super(id, displayName);
+		this.forceStandardEditing=forceStandardEditing;
 	}
 
 	public CellEditor createPropertyEditor(Composite parent) {
-		JPropertyExpressionsCellEditor editor = new JPropertyExpressionsCellEditor(parent);
+		JPropertyExpressionsCellEditor editor = new JPropertyExpressionsCellEditor(parent,true,forceStandardEditing);
 		HelpSystem.bindToHelp(this, editor.getControl());
 		return editor;
 	}

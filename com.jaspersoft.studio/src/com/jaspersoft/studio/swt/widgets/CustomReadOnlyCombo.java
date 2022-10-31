@@ -91,9 +91,10 @@ public class CustomReadOnlyCombo extends Combo{
 		 * Create the combo, by default it is not read only
 		 * 
 		 * @param parent the parent of the combo
+		 * @param customStyle 
 		 */
-		public CustomReadOnlyCombo(Composite parent) {
-			super(parent, SWT.NONE);
+		public CustomReadOnlyCombo(Composite parent, int customStyle) {
+			super(parent, customStyle);
 			//this listener avoid to scroll the content with the mouse wheel
 			//when the control is not focused (this happen on windows)
 			addListener(SWT.MouseVerticalWheel, new Listener()

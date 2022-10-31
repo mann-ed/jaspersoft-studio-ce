@@ -13,19 +13,25 @@ import com.jaspersoft.studio.property.descriptor.propexpr.dialog.JRPropertyExpre
 
 public class JPropertyExpressionsCellEditor extends EditableDialogCellEditor {
 	private boolean showExpression = true;
+	private boolean forceStandardEditing = false;
 
 	public JPropertyExpressionsCellEditor(Composite parent) {
-		this(parent, true);
+		this(parent, true, false);
 	}
 
 	public JPropertyExpressionsCellEditor(Composite parent, boolean showExpression) {
+		this(parent,showExpression,false);
+	}
+	
+	public JPropertyExpressionsCellEditor(Composite parent, boolean showExpression, boolean forceStandardEditing) {
 		super(parent);
 		this.showExpression = showExpression;
+		this.forceStandardEditing = forceStandardEditing;
 	}
 
 	@Override
 	protected Object openDialogBox(Control cellEditorWindow) {
-		JRPropertyExpressionEditor wizard = new JRPropertyExpressionEditor();
+		JRPropertyExpressionEditor wizard = new JRPropertyExpressionEditor(forceStandardEditing);
 		wizard.setShowExpression(showExpression);
 		// clone the object to avoid side effect
 		wizard.setValue(((PropertyExpressionsDTO) getValue()).clone());

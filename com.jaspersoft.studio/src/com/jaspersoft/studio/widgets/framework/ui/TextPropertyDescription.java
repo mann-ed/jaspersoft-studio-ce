@@ -67,6 +67,19 @@ public class TextPropertyDescription<T> extends AbstractExpressionPropertyDescri
 		else
 			return widgetText;
 	}
+	
+	/**
+	 * @return the style bit(s) 
+	 */
+	protected int getTextControlStyle() {
+		return SWT.BORDER;
+	}
+	
+	protected GridData getTextControlGridData() {
+		GridData textData = new GridData(GridData.FILL_HORIZONTAL);
+		textData.verticalAlignment = SWT.CENTER;
+		return textData;
+	}
 
 	// Flag used to overcome the problem of focus events in Mac OS X
 	// - JSS Bugzilla 42999
@@ -75,18 +88,16 @@ public class TextPropertyDescription<T> extends AbstractExpressionPropertyDescri
 	@Override
 	public Control createControl(final IWItemProperty wiProp, Composite parent) {
 		DoubleControlComposite cmp = new DoubleControlComposite(parent, SWT.NONE);
-		cmp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		cmp.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
 
 		// create the expression control
 		lazyCreateExpressionControl(wiProp, cmp);
 
 		// create the simple control
-		final Text simpleControl = new Text(cmp.getSecondContainer(), SWT.BORDER);
+		final Text simpleControl = new Text(cmp.getSecondContainer(), getTextControlStyle());
 		cmp.getSecondContainer().setData(simpleControl);
 		cmp.setSimpleControlToHighlight(simpleControl);
-		GridData textData = new GridData(GridData.FILL_HORIZONTAL);
-		textData.verticalAlignment = SWT.CENTER;
-		simpleControl.setLayoutData(textData);
+		simpleControl.setLayoutData(getTextControlGridData());
 		simpleControl.addModifyListener(new ModifyListener() {
 
 			@Override
@@ -103,7 +114,7 @@ public class TextPropertyDescription<T> extends AbstractExpressionPropertyDescri
 
 			@Override
 			public void keyTraversed(TraverseEvent e) {
-				if ((e.stateMask & SWT.MODIFIER_MASK) == SWT.CTRL && e.keyCode == SWT.TAB) {
+				if ((e.stateMask & SWT.MODIFIER_MASK) == SWT.CTRL && e.keyCode == SWT.TAB && (simpleControl.getStyle() & SWT.MULTI)==0) {
 					e.doit = false;
 					String currentText = simpleControl.getText();
 					Point selection = simpleControl.getSelection();
@@ -114,7 +125,6 @@ public class TextPropertyDescription<T> extends AbstractExpressionPropertyDescri
 					simpleControl.setText(newText);
 					simpleControl.setSelection(newSelection);
 				}
-
 			}
 		});
 		// Flag used to overcome the problem of focus events in Mac OS X

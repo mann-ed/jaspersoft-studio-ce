@@ -25,7 +25,7 @@ import com.jaspersoft.studio.utils.SelectionHelper;
 public class CreateScriptletCommand extends Command {
 
 	/** The jr scriptlet. */
-	private JRDesignScriptlet jrScriptlet;
+	protected JRDesignScriptlet jrScriptlet;
 
 	/** The jr dataset. */
 	private JRDesignDataset jrDataset;

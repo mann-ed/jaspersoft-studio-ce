@@ -11,6 +11,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.jaspersoft.studio.editor.palette.JDPaletteCreationFactory;
+import com.jaspersoft.studio.editor.style.StyleEditPart;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.style.MConditionalStyle;
 import com.jaspersoft.studio.model.style.MStyle;
@@ -37,6 +38,11 @@ public class CreateConditionalStyleAction extends ACreateAndSelectAction {
 	
 	@Override
 	protected boolean calculateEnabled() {
+		// FIXME - for now disable the ability to create conditional style from JRTXEditor main area
+		List selectedObjects = getSelectedObjects();
+		if(selectedObjects!=null && selectedObjects.size()==1 && selectedObjects.get(0) instanceof StyleEditPart) {
+			return false;
+		}
 		List<Object> elements = editor.getSelectionCache().getSelectionModelForType(MStyle.class);
 		if (elements.size() == 1){
 			MStyle style = (MStyle)elements.get(0);

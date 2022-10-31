@@ -138,7 +138,9 @@ public class IntegerPropertyDescription extends NumberPropertyDescription<Intege
 
 	@Override
 	public String getToolTip() {
-		String tt = Misc.nvl(getDescription());
+		String tt = getName() + "\n\n";
+		tt += Misc.nvl(getDescription());
+		tt += "\n\n" + (isMandatory() ? "Mandatory" : "Optional");
 		if (!Misc.isNullOrEmpty(getDefaultValueString()))
 			tt += "\nDefault: " + getDefaultValue();
 		if (getMin() != null || getMax() != null) {

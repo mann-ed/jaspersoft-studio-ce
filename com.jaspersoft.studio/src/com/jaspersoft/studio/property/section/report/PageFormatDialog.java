@@ -47,6 +47,7 @@ import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.OrientationEnum;
 import net.sf.jasperreports.engine.type.PrintOrderEnum;
+import net.sf.jasperreports.engine.type.RunDirectionEnum;
 
 public final class PageFormatDialog extends FormDialog {
 
@@ -92,6 +93,8 @@ public final class PageFormatDialog extends FormDialog {
 
 	private Combo cPrintOrder;
 
+	private Combo cColumnDirection;
+	
 	private Composite tleft;
 
 	public PageFormatDialog(Shell shell, ANode node) {
@@ -187,7 +190,7 @@ public final class PageFormatDialog extends FormDialog {
 				setTBounds();
 				textControl.setFocus();
 				textControl.setSelection(currentSelection.x, currentSelection.y);
-				enablePrintOrder();
+				enablePrintOrderAndColumnDirection();
 			}
 		};
 
@@ -206,17 +209,24 @@ public final class PageFormatDialog extends FormDialog {
 		new Label(bright, SWT.NONE).setText(Messages.MReport_print_order);
 
 		cPrintOrder = new Combo(bright, SWT.READ_ONLY | SWT.BORDER);
-		String[] items = NamedEnumPropertyDescriptor
+		String[] printOrderItems = NamedEnumPropertyDescriptor
 				.getEnumItems(PrintOrderEnum.HORIZONTAL.getDeclaringClass().getEnumConstants(), NullEnum.NOTNULL);
-		cPrintOrder.setItems(items);
+		cPrintOrder.setItems(printOrderItems);
 		gd = new GridData();
 		gd.horizontalSpan = 2;
 		cPrintOrder.setLayoutData(gd);
-		cPrintOrder.setToolTipText(
-				"Vertical - the filling process run first from top to bottom and then from left to right; the first column is entirely filled, then the second one, the third, etc.\n"
-						+ "Horizontal - the filling process run first from left to right and then from top to bottom; the first row is filled in any column, then the second row, etc.");
+		cPrintOrder.setToolTipText(Messages.PageFormatDialog_PrintOrderTooltip);
+		
+		new Label(bright, SWT.NONE).setText(Messages.PageFormatDialog_ColumnDirectionLabel);
+		cColumnDirection = new Combo(bright, SWT.READ_ONLY | SWT.BORDER);
+		String[] columnDirectionItems = NamedEnumPropertyDescriptor.getEnumItems(RunDirectionEnum.LTR.getDeclaringClass().getEnumConstants(), NullEnum.NOTNULL);
+		cColumnDirection.setItems(columnDirectionItems);
+		gd = new GridData();
+		gd.horizontalSpan = 2;
+		cColumnDirection.setLayoutData(gd);
+		cColumnDirection.setToolTipText(Messages.PageFormatDialog_ColumnDirectionTooltip);
 
-		enablePrintOrder();
+		enablePrintOrderAndColumnDirection();
 	}
 
 	private void recalcColumns() {
@@ -468,13 +478,25 @@ public final class PageFormatDialog extends FormDialog {
 		cwidth.setUnit(PHolderUtil.getUnit(jd, JasperDesign.PROPERTY_COLUMN_WIDTH, defunit));
 		space.setUnit(PHolderUtil.getUnit(jd, JasperDesign.PROPERTY_COLUMN_SPACING, defunit));
 
-		if (jd.getPrintOrderValue() != null) {
-			if (jd.getPrintOrderValue().equals(PrintOrderEnum.VERTICAL))
-				cPrintOrder.select(0);
-			if (jd.getPrintOrderValue().equals(PrintOrderEnum.HORIZONTAL))
-				cPrintOrder.select(1);
+		PrintOrderEnum currPrintOrderValue = jd.getPrintOrderValue();
+		if (PrintOrderEnum.HORIZONTAL.equals(currPrintOrderValue)) {
+			cPrintOrder.select(1);
 		}
-		enablePrintOrder();
+		else {
+			// Vertical is default
+			cPrintOrder.select(0);
+		}
+		
+		RunDirectionEnum currColDirection = jd.getColumnDirection();
+		if(RunDirectionEnum.RTL.equals(currColDirection)) {
+			cColumnDirection.select(1);
+		}
+		else {
+			// LTR is default
+			cColumnDirection.select(0);
+		}
+
+		enablePrintOrderAndColumnDirection();
 	}
 
 	/**
@@ -549,6 +571,12 @@ public final class PageFormatDialog extends FormDialog {
 		if (jd.getPrintOrderValue() != PrintOrderEnum.getByName(cPrintOrder.getText()))
 			command.add(createCommand(JasperDesign.PROPERTY_PRINT_ORDER, NamedEnumPropertyDescriptor.getIntValue(
 					PrintOrderEnum.HORIZONTAL, NullEnum.NULL, PrintOrderEnum.getByName(cPrintOrder.getText()))));
+		RunDirectionEnum selectedColDirection = 
+				NamedEnumPropertyDescriptor.getEnumValue(RunDirectionEnum.LTR, NullEnum.NOTNULL,Math.max(cColumnDirection.getSelectionIndex(),0));
+		if (jd.getColumnDirection() != selectedColDirection) {
+			command.add(createCommand(JasperDesign.PROPERTY_COLUMN_DIRECTION, 
+					NamedEnumPropertyDescriptor.getIntValue(RunDirectionEnum.LTR, NullEnum.NOTNULL, selectedColDirection)));
+		}
 
 		if (jd.getOrientationValue().equals(OrientationEnum.LANDSCAPE) && !landscape.getSelection())
 			command.add(createCommand(JasperDesign.PROPERTY_ORIENTATION, OrientationEnum.PORTRAIT));
@@ -558,7 +586,7 @@ public final class PageFormatDialog extends FormDialog {
 		boolean changes = false;
 		JRPropertiesMap pmap = jd.getPropertiesMap().cloneProperties();
 		String defunit = uw.getUnit();
-		changes = PHolderUtil.setProperty(changes, pmap, "", defunit, null);
+		changes = PHolderUtil.setProperty(changes, pmap, "", defunit, null); //$NON-NLS-1$
 
 		changes = PHolderUtil.setProperty(changes, pmap, JasperDesign.PROPERTY_PAGE_HEIGHT, pheigh.getUnit(), defunit);
 		changes = PHolderUtil.setProperty(changes, pmap, JasperDesign.PROPERTY_PAGE_WIDTH, pwidth.getUnit(), defunit);
@@ -585,8 +613,9 @@ public final class PageFormatDialog extends FormDialog {
 		return cmd;
 	}
 
-	protected void enablePrintOrder() {
+	protected void enablePrintOrderAndColumnDirection() {
 		int c = cols.getValueAsInteger();
 		cPrintOrder.setEnabled(c >= 1);
+		cColumnDirection.setEnabled(c >= 1);
 	}
 }

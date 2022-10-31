@@ -70,6 +70,7 @@ public class MVariableSystem extends APropertyNode implements IDragable {
 	 */
 	public MVariableSystem() {
 		super();
+		setEditable(false);
 	}
 
 	/**
@@ -84,6 +85,7 @@ public class MVariableSystem extends APropertyNode implements IDragable {
 	 */
 	public MVariableSystem(ANode parent, JRDesignVariable jrVariable, int newIndex) {
 		super(parent, newIndex);
+		setEditable(false);
 		setValue(jrVariable);
 	}
 
@@ -254,9 +256,4 @@ public class MVariableSystem extends APropertyNode implements IDragable {
 		return jrDesignVariable;
 	}
 
-	@Override
-	public void setValue(Object value) {
-		super.setValue(value);
-		setEditable(false);
-	}
 }
