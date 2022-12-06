@@ -2008,7 +2008,7 @@
         locationURI="popup:com.jaspersoft.studio.editor.context.type">
      <command
            commandId="com.jaspersoft.studio.editor.context.type"
-           label="Reset To Parent"
+           label="Default - No setting"
            style="radio">
         <parameter
               name="org.eclipse.ui.commands.radioStateParameter"
