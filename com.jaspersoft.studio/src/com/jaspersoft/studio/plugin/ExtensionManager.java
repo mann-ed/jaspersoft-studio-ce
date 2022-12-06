@@ -43,6 +43,7 @@ import com.jaspersoft.studio.data.jdbc.JDBCDriverDefinitionsContainer;
 import com.jaspersoft.studio.editor.IEditorContributor;
 import com.jaspersoft.studio.editor.action.exporter.IExportedResourceHandler;
 import com.jaspersoft.studio.editor.context.AEditorContext;
+import com.jaspersoft.studio.editor.context.IResourceContextSwitchUtil;
 import com.jaspersoft.studio.editor.expression.ExpressionContext;
 import com.jaspersoft.studio.editor.expression.IExpressionEditorSupportFactory;
 import com.jaspersoft.studio.editor.preview.PreviewModeDetails;
@@ -105,7 +106,7 @@ public class ExtensionManager {
 	};
 	private List<IParameterICContributor> prmICContributors = new ArrayList<>();
 	private List<IReportRunner> reportRunners = new ArrayList<>();
-	private List<AEditorContext> editorContext = new ArrayList<>();
+	private Map<String, IResourceContextSwitchUtil> editorContextUtils = new HashMap<String, IResourceContextSwitchUtil>(); 
 	private List<ICustomActionsFactory> customActionsFactories = new ArrayList<>();
 
 	public void init() {
@@ -184,8 +185,15 @@ public class ExtensionManager {
 			try {
 				String cname = e.getAttribute("contextName");
 				Object o = e.createExecutableExtension("ClassFactory"); //$NON-NLS-1$
-				if (o instanceof AEditorContext)
+				if (o instanceof AEditorContext) {
 					editorContexts.add(new KeyValue<String, String>(cname, ((AEditorContext) o).getName()));
+				}
+				if(e.getAttribute("utilityClass")!=null) {
+					Object u = e.createExecutableExtension("utilityClass"); //$NON-NLS-1$
+					if (u instanceof IResourceContextSwitchUtil) {
+						editorContextUtils.put(cname, (IResourceContextSwitchUtil) u);
+					}
+				}
 			} catch (CoreException ex) {
 				System.out.println(ex.getMessage());
 			}
@@ -198,6 +206,14 @@ public class ExtensionManager {
 
 	public List<KeyValue<String, String>> getEditorContexts() {
 		return editorContexts;
+	}
+	
+	public IResourceContextSwitchUtil getEditorContextUtil(String contextName) {
+		return editorContextUtils.get(contextName);
+	}
+	
+	public Collection<IResourceContextSwitchUtil> getAllEditorContextUtils() {		
+		return editorContextUtils.values();
 	}
 
 	public AEditorContext getEditorContext(String c, IFile f) {

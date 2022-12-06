@@ -1,7 +1,11 @@
+/*******************************************************************************
+ * Copyright (C) 2010 - 2022. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
+ ******************************************************************************/
 package com.jaspersoft.studio.editor.context;
 
-import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +15,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -31,8 +34,6 @@ import org.eclipse.swt.widgets.ToolItem;
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.editor.AbstractJRXMLEditor;
 import com.jaspersoft.studio.messages.Messages;
-import com.jaspersoft.studio.utils.Colors;
-import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
@@ -42,14 +43,19 @@ import net.sf.jasperreports.eclipse.util.Misc;
 
 public class EditorContextUtil {
 
+	public static QualifiedName EC_KEY = 
+			new QualifiedName(JaspersoftStudioPlugin.getUniqueIdentifier(),	AEditorContext.EDITOR_CONTEXT);
+	public static boolean ENABLEMENU = false;
 	private static List<ContextSwitchAction> actions = new ArrayList<>();
 	private static Map<AbstractJRXMLEditor, Label> labels = new HashMap<>();
 
-	public static void fireContextChanged(IResource r) {
-		if (ENABLEMENU)
-			for (ContextSwitchAction csa : actions)
+	public static void fireContextChanged(IResource r, String state) {
+		if (ENABLEMENU) {
+			for (ContextSwitchAction csa : actions) {
 				csa.refresh(r);
-		else
+			}
+		}
+		else {
 			for (AbstractJRXMLEditor editor : labels.keySet()) {
 				JasperReportsConfiguration jConf = editor.getJrContext();
 				AEditorContext old = jConf.getEditorContext();
@@ -68,10 +74,12 @@ public class EditorContextUtil {
 				lbl.getParent().update();
 				lbl.getParent().layout(true);
 			}
+		}
+		Collection<IResourceContextSwitchUtil> allUtils = JaspersoftStudioPlugin.getExtensionManager().getAllEditorContextUtils();
+		for(IResourceContextSwitchUtil u : allUtils) {
+			u.essentialOperations(r, state);
+		}
 	}
-
-	public static QualifiedName EC_KEY = new QualifiedName(JaspersoftStudioPlugin.getUniqueIdentifier(),
-			AEditorContext.EDITOR_CONTEXT);
 
 	public static AEditorContext getEditorContext(IFile f, JasperReportsConfiguration jConf) {
 		String ctx = null;
@@ -109,8 +117,6 @@ public class EditorContextUtil {
 		}
 		return Misc.nvl(ctx, AEditorContext.NAME);
 	}
-
-	public static boolean ENABLEMENU = false;
 
 	public static Control createSwitch(Composite cmp, AbstractJRXMLEditor editor) {
 		if (ENABLEMENU) {
@@ -261,15 +267,15 @@ public class EditorContextUtil {
 			return null;
 		}
 
-		public void refresh(IResource r) {
+		public void refresh(IResource resource) {
 			JasperReportsConfiguration jConf = editor.getJrContext();
 			AEditorContext old = jConf.getEditorContext();
 			IFile f = (IFile) jConf.get(FileUtils.KEY_FILE);
 			AEditorContext ec = getEditorContext(f, jConf);
-			if (old.getClass().equals(ec.getClass()))
+			if (old.getClass().equals(ec.getClass())) {
 				return;
-			editor.changeContext(ec.getId(), !r.equals(f));
-
+			}
+			editor.changeContext(ec.getId(), !resource.equals(f));
 			setToolBarText(jConf.getEditorContext().getName());
 		}
 	}
