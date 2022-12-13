@@ -22,6 +22,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -40,11 +42,13 @@ import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.KeyValue;
 import net.sf.jasperreports.eclipse.util.Misc;
+import net.sf.jasperreports.eclipse.viewer.BrowserUtils;
 
 public class EditorContextUtil {
 
 	public static QualifiedName EC_KEY = 
 			new QualifiedName(JaspersoftStudioPlugin.getUniqueIdentifier(),	AEditorContext.EDITOR_CONTEXT);
+	private static final boolean EDGE_PROBLEM_FOUND = UIUtils.isWindows() && !BrowserUtils.isEdgeWebViewEnabled();
 	public static boolean ENABLEMENU = false;
 	private static List<ContextSwitchAction> actions = new ArrayList<>();
 	private static Map<AbstractJRXMLEditor, Label> labels = new HashMap<>();
@@ -70,9 +74,9 @@ public class EditorContextUtil {
 				if (lbl.isDisposed())
 					continue;
 				lbl.setText(editor.getJrContext().getEditorContext().getName());
-				lbl.pack();
-				lbl.getParent().update();
-				lbl.getParent().layout(true);
+				lbl.getParent().pack();
+				lbl.getParent().getParent().update();
+				lbl.getParent().getParent().layout(true);
 			}
 		}
 		Collection<IResourceContextSwitchUtil> allUtils = JaspersoftStudioPlugin.getExtensionManager().getAllEditorContextUtils();
@@ -129,12 +133,39 @@ public class EditorContextUtil {
 			toolBar.pack();
 			return toolBar;
 		}
-		Label lbl = new Label(cmp, SWT.NONE);
-		if (editor.getJrContext() != null)
-			lbl.setText(editor.getJrContext().getEditorContext().getName());
-		labels.put(editor, lbl);
-		lbl.addDisposeListener(e -> labels.remove(editor));
-		return lbl;
+		
+		int numColumns = 1;
+		if(EDGE_PROBLEM_FOUND) {
+			numColumns = 3;
+		}
+		
+		Composite container = new Composite(cmp,SWT.NONE);
+		GridLayout containerGL = new GridLayout(numColumns,false);
+		container.setLayout(containerGL);
+		container.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
+		
+		if(EDGE_PROBLEM_FOUND) {
+			Label warningLbl = new Label(container, SWT.NONE);
+			GridData warningLblGD = new GridData(SWT.FILL,SWT.CENTER,true,false);
+			warningLbl.setText(Messages.EditorContextUtil_EdgeWarningMsg);
+			warningLbl.setForeground(UIUtils.getDisplay().getSystemColor(SWT.COLOR_RED));
+			warningLbl.setLayoutData(warningLblGD);
+			
+			Label separator = new Label(container,SWT.SEPARATOR | SWT.VERTICAL);
+			GridData sepGD = new GridData(SWT.FILL,SWT.FILL,true,false);
+			sepGD.heightHint = 20;
+			separator.setLayoutData(sepGD);
+		}
+
+		Label contextNameLbl = new Label(container, SWT.NONE);
+		if (editor.getJrContext() != null) {
+			GridData contextNameLblGD = new GridData(SWT.FILL,SWT.CENTER,true,false);
+			contextNameLbl.setLayoutData(contextNameLblGD);
+			contextNameLbl.setText(editor.getJrContext().getEditorContext().getName());
+		}
+		labels.put(editor, contextNameLbl);
+		contextNameLbl.addDisposeListener(e -> labels.remove(editor));
+		return container;
 	}
 
 	public static class ContextSwitchAction extends Action implements IMenuCreator {
