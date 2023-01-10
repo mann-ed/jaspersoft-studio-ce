@@ -31,11 +31,7 @@ import com.jaspersoft.studio.editor.preview.view.report.system.XlsxViewer;
 import com.jaspersoft.studio.messages.Messages;
 
 public class ViewsFactory extends AViewsFactory {
-	public static final String X_HTML = "xHTML"; //$NON-NLS-1$
-	public static final String EXCEL_API = "ExcelAPI"; //$NON-NLS-1$
-	public static final String XLS_METADATA = Messages.ViewsFactory_2;
-	public static final String HTML = "HTML"; //$NON-NLS-1$
-	public static final String HTML_NO_INTERACTIVITY = Messages.ViewsFactory_4; //$NON-NLS-1$
+	public static final String HTML_NO_INTERACTIVITY = Messages.ViewsFactory_HtmlNoInteractiveViewer_LabelKey;
 	public static final String VIEWER_JAVA = "Java"; //$NON-NLS-1$
 	private static LinkedHashMap<String, Class<? extends APreview>> pcmap = new LinkedHashMap<String, Class<? extends APreview>>();
 	static {
@@ -43,32 +39,30 @@ public class ViewsFactory extends AViewsFactory {
 
 		pcmap.put("SEPARATOR1", null); //$NON-NLS-1$
 
-		pcmap.put(HTML, LayeredHTMLViewer.class); // $NON-NLS-1$
-		pcmap.put("SEPARATOR1", null); //$NON-NLS-1$
-		pcmap.put("SEPARATOR1", null); //$NON-NLS-1$
-		pcmap.put("PDF", PdfViewer.class); //$NON-NLS-1$
+		pcmap.put(Messages.ViewsFactory_HtmlViewer_LabelKey, LayeredHTMLViewer.class);
+		pcmap.put(Messages.ViewsFactory_PdfViewer_LabelKey, PdfViewer.class);
 
 		pcmap.put("SEPARATOR2", null); //$NON-NLS-1$
 
-		pcmap.put("RTF", RTFViewer.class); //$NON-NLS-1$
-		pcmap.put("DOCx", DocxViewer.class); //$NON-NLS-1$
-		pcmap.put("ODT", OdtViewer.class); //$NON-NLS-1$
-		pcmap.put("ODS", OdsViewer.class); //$NON-NLS-1$
-		pcmap.put("PPTx", PowerPointViewer.class); //$NON-NLS-1$
-		pcmap.put(Messages.ViewsFactory_5, TXTViewer.class);
+		pcmap.put(Messages.ViewsFactory_RtfViewer_LabelKey, RTFViewer.class);
+		pcmap.put(Messages.ViewsFactory_DocxViewer_LabelKey, DocxViewer.class);
+		pcmap.put(Messages.ViewsFactory_OdtViewer_LabelKey, OdtViewer.class);
+		pcmap.put(Messages.ViewsFactory_OdsViewer_LabelKey, OdsViewer.class);
+		pcmap.put(Messages.ViewsFactory_PptxViewer_LabelKey, PowerPointViewer.class);
+		pcmap.put(Messages.ViewsFactory_TxtViewer_LabelKey, TXTViewer.class);
 
 		pcmap.put("SEPARATOR3", null); //$NON-NLS-1$
 
-		pcmap.put("XLSx", XlsxViewer.class); //$NON-NLS-1$
-		pcmap.put("CSV", CSVViewer.class); //$NON-NLS-1$
-		pcmap.put("XLSx Metadata", XlsxMetadataViewer.class);
-		pcmap.put(Messages.ViewsFactory_6, CSVMetadataViewer.class);
-		pcmap.put(Messages.ViewsFactory_7, JSONMetadataViewer.class);
+		pcmap.put(Messages.ViewsFactory_XlsxViewer_LabelKey, XlsxViewer.class);
+		pcmap.put(Messages.ViewsFactory_CsvViewer_LabelKey, CSVViewer.class);
+		pcmap.put(Messages.ViewsFactory_XlsxMetadataViewer_LabelKey, XlsxMetadataViewer.class);
+		pcmap.put(Messages.ViewsFactory_CsvMetadataViewer_LabelKey, CSVMetadataViewer.class);
+		pcmap.put(Messages.ViewsFactory_JsonMetadataViewer_LabelKey, JSONMetadataViewer.class);
 
 		pcmap.put("SEPARATOR4", null); //$NON-NLS-1$
 
-		pcmap.put("XML", XMLViewer.class); //$NON-NLS-1$
-		pcmap.put(Messages.ViewsFactory_8, XMLImagesViewer.class);
+		pcmap.put(Messages.ViewsFactory_XmlViewer_LabelKey, XMLViewer.class);
+		pcmap.put(Messages.ViewsFactory_XmlImagesViewer_LabelKey, XMLImagesViewer.class);
 
 		// Load the contributed factories
 		int separatorIndex = 5;
