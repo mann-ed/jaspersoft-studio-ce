@@ -64,7 +64,7 @@ public class HTMLViewer extends ABrowserViewer implements IJRPrintable, IPrefere
 	protected int getUrlWidth(Control control) {
 		// Add the calculation of the toolbar width depending on the available size on the parent
 		// minus 130 to leave space to the refresh action and export action
-		return control.getParent().getSize().x - 130;
+		return control.getParent().getSize().x - UIUtils.getScaledWidth(110);
 	}
 
 	public void setJRPRint(Statistics stats, JasperPrint jrprint) throws Exception {
