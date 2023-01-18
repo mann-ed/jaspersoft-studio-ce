@@ -174,8 +174,8 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 		desc.add(minhD);
 
 		IntegerPropertyDescriptor minStartTopD = new IntegerPropertyDescriptor(
-				JRBaseGroup.PROPERTY_MIN_DETAILS_TO_START_FROM_TOP, Messages.MGroup_1);
-		minStartTopD.setDescription(Messages.MGroup_2);
+				JRBaseGroup.PROPERTY_MIN_DETAILS_TO_START_FROM_TOP, Messages.MGroup_MinDetailsTSFTTitle);
+		minStartTopD.setDescription(Messages.MGroup_MinDetailsTSFTDescription);
 		desc.add(minStartTopD);
 
 		CheckBoxPropertyDescriptor stNewColD = new CheckBoxPropertyDescriptor(JRBaseGroup.PROPERTY_START_NEW_COLUMN,
@@ -189,8 +189,8 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 		desc.add(stNewPageD);
 
 		CheckBoxPropertyDescriptor stPrevOrfanFooterD = new CheckBoxPropertyDescriptor(
-				JRBaseGroup.PROPERTY_PREVENT_ORPHAN_FOOTER, Messages.MGroup_0);
-		stPrevOrfanFooterD.setDescription(Messages.MGroup_0);
+				JRBaseGroup.PROPERTY_PREVENT_ORPHAN_FOOTER, Messages.MGroup_PreventOrphanFooterTitle);
+		stPrevOrfanFooterD.setDescription(Messages.MGroup_PreventOrphanFooterTitle);
 		desc.add(stPrevOrfanFooterD);
 
 		CheckBoxPropertyDescriptor rPageNumD = new CheckBoxPropertyDescriptor(JRBaseGroup.PROPERTY_RESET_PAGE_NUMBER,
@@ -199,9 +199,14 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 		desc.add(rPageNumD);
 
 		CheckBoxPropertyDescriptor rHeadEPD = new CheckBoxPropertyDescriptor(
-				JRBaseGroup.PROPERTY_REPRINT_HEADER_ON_EACH_PAGE, Messages.MGroup_reprintTitle);
-		rHeadEPD.setDescription(Messages.MGroup_reprintPosition);
+				JRBaseGroup.PROPERTY_REPRINT_HEADER_ON_EACH_PAGE, Messages.MGroup_reprintHeaderEPTitle);
+		rHeadEPD.setDescription(Messages.MGroup_reprintHeaderEPDescription);
 		desc.add(rHeadEPD);
+
+		CheckBoxPropertyDescriptor rColEPD = new CheckBoxPropertyDescriptor(
+				JRBaseGroup.PROPERTY_REPRINT_HEADER_ON_EACH_COLUMN, Messages.MGroup_ReprintHeaderECTitle);
+		rHeadEPD.setDescription(Messages.MGroup_ReprintHeaderECDescription);
+		desc.add(rColEPD);
 
 		CheckBoxPropertyDescriptor keepToD = new CheckBoxPropertyDescriptor(JRBaseGroup.PROPERTY_KEEP_TOGETHER,
 				Messages.MGroup_keepTitle);
@@ -224,6 +229,7 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 		defaultsMap.put(JRDesignGroup.PROPERTY_MIN_DETAILS_TO_START_FROM_TOP, new DefaultValue(0, false));
 		defaultsMap.put(JRDesignGroup.PROPERTY_KEEP_TOGETHER, new DefaultValue(Boolean.FALSE, false));
 		defaultsMap.put(JRDesignGroup.PROPERTY_REPRINT_HEADER_ON_EACH_PAGE, new DefaultValue(Boolean.FALSE, false));
+		defaultsMap.put(JRDesignGroup.PROPERTY_REPRINT_HEADER_ON_EACH_COLUMN, new DefaultValue(Boolean.FALSE, false));
 		defaultsMap.put(JRDesignGroup.PROPERTY_RESET_PAGE_NUMBER, new DefaultValue(Boolean.FALSE, false));
 		defaultsMap.put(JRDesignGroup.PROPERTY_START_NEW_COLUMN, new DefaultValue(Boolean.FALSE, false));
 		defaultsMap.put(JRDesignGroup.PROPERTY_START_NEW_PAGE, new DefaultValue(Boolean.FALSE, false));
@@ -261,6 +267,8 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 			return jrGroup.isResetPageNumber();
 		if (id.equals(JRBaseGroup.PROPERTY_REPRINT_HEADER_ON_EACH_PAGE))
 			return jrGroup.isReprintHeaderOnEachPage();
+		if (id.equals(JRBaseGroup.PROPERTY_REPRINT_HEADER_ON_EACH_COLUMN))
+			return jrGroup.isReprintHeaderOnEachColumn();
 		if (id.equals(JRBaseGroup.PROPERTY_KEEP_TOGETHER))
 			return jrGroup.isKeepTogether();
 		if (id.equals(JRBaseGroup.PROPERTY_PREVENT_ORPHAN_FOOTER))
@@ -338,6 +346,8 @@ public class MGroup extends APropertyNode implements ICopyable, IDragable {
 			jrGroup.setResetPageNumber((Boolean) value);
 		else if (id.equals(JRDesignGroup.PROPERTY_REPRINT_HEADER_ON_EACH_PAGE))
 			jrGroup.setReprintHeaderOnEachPage((Boolean) value);
+		else if (id.equals(JRDesignGroup.PROPERTY_REPRINT_HEADER_ON_EACH_COLUMN))
+			jrGroup.setReprintHeaderOnEachColumn((Boolean) value);
 		else if (id.equals(JRDesignGroup.PROPERTY_PREVENT_ORPHAN_FOOTER))
 			jrGroup.setPreventOrphanFooter((Boolean) value);
 		else if (id.equals(JRDesignGroup.PROPERTY_KEEP_TOGETHER))

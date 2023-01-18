@@ -950,6 +950,7 @@ public class Messages extends NLS {
 	public static String GlobalPreferencePage_title;
 	public static String GlobalPreferencePage_UseExternalBrowserCheckbox;
 	public static String GraphicSection_Detail_Section_Title;
+	public static String GroupArrangementSection_SectionTitle;
 	public static String GroupSection_SameNameErrorMsg;
 	public static String GroupSection_SameNameErrorTitle;
 	public static String GroupSection_SectionTitle;
@@ -1393,9 +1394,9 @@ public class Messages extends NLS {
 	public static String MGraphicElement_width_description;
 	public static String MGraphicElementLineBox_line_box_description;
 	public static String MGraphicElementLinePen_line_pen_description;
-	public static String MGroup_0;
-	public static String MGroup_1;
-	public static String MGroup_2;
+	public static String MGroup_PreventOrphanFooterTitle;
+	public static String MGroup_MinDetailsTSFTTitle;
+	public static String MGroup_MinDetailsTSFTDescription;
 	public static String MGroup_expression_description;
 	public static String MGroup_footerPosDescription;
 	public static String MGroup_footerPosTitle;
@@ -1410,8 +1411,10 @@ public class Messages extends NLS {
 	public static String MGroup_newPageTitle;
 	public static String MGroup_pageNumberDescription;
 	public static String MGroup_pageNumberTitle;
-	public static String MGroup_reprintPosition;
-	public static String MGroup_reprintTitle;
+	public static String MGroup_ReprintHeaderECDescription;
+	public static String MGroup_ReprintHeaderECTitle;
+	public static String MGroup_reprintHeaderEPDescription;
+	public static String MGroup_reprintHeaderEPTitle;
 	public static String MHyperLink_hyperlink_anchor_expression;
 	public static String MHyperLink_hyperlink_anchor_expression_description;
 	public static String MHyperLink_hyperlink_category;
