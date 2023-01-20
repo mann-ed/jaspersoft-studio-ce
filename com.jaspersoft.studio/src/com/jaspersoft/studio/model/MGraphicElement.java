@@ -1202,6 +1202,18 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		return true;
 	}
 
+	/**
+	 * Checks if the element is supporting the report splitting feature.
+	 * <br/><br/>
+	 * NOTE: default value is <code>true</code>.
+	 * 
+	 * @return <code>true</code> if it supports report splitting,
+	 * 			<code>false</code> otherwise.
+	 */
+	public boolean isReportSplittingSupported() {
+		return true;
+	}
+	
 	@Override
 	public Rectangle getAbsoluteBounds() {
 		int x = getValue().getX();

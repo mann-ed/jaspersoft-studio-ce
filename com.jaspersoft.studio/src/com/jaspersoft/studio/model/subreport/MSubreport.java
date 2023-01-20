@@ -348,4 +348,9 @@ public class MSubreport extends MGraphicElement {
 	public JRDesignSubreport getValue() {
 		return (JRDesignSubreport) super.getValue();
 	}
+	
+	@Override
+	public boolean isReportSplittingSupported() {
+		return false;
+	}
 }

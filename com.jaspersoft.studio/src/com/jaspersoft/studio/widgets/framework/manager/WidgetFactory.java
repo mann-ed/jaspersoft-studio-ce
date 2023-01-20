@@ -32,6 +32,7 @@ import com.jaspersoft.studio.widgets.framework.model.WidgetPropertyDescriptor;
 import com.jaspersoft.studio.widgets.framework.model.WidgetsDescriptor;
 import com.jaspersoft.studio.widgets.framework.ui.ArrayPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.BigDecimalPropertyDescription;
+import com.jaspersoft.studio.widgets.framework.ui.BooleanComboPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.CheckboxItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.ClassItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.ColorPropertyDescription;
@@ -145,6 +146,7 @@ public class WidgetFactory {
 			hardcodedWidgets.put("timezone_combo", new TimezoneComboPropertyDescription());
 			hardcodedWidgets.put("locale_combo", new LocaleComboPropertyDescription());
 			hardcodedWidgets.put("password_text", new PasswordTextPropertyDescription<String>());
+			hardcodedWidgets.put("boolean", new BooleanComboPropertyDescription());
 		}
 		return hardcodedWidgets;
 	}

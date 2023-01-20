@@ -104,6 +104,7 @@ import com.jaspersoft.studio.editor.action.order.BringBackwardAction;
 import com.jaspersoft.studio.editor.action.order.BringForwardAction;
 import com.jaspersoft.studio.editor.action.order.BringToBackAction;
 import com.jaspersoft.studio.editor.action.order.BringToFrontAction;
+import com.jaspersoft.studio.editor.action.reportsplitting.ReportSplittingAction;
 import com.jaspersoft.studio.editor.action.size.MatchSizeAction;
 import com.jaspersoft.studio.editor.action.size.Size2BorderAction;
 import com.jaspersoft.studio.editor.action.snap.KeepUnitsInReportAction;
@@ -907,6 +908,10 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 
 		// ------------
 		action = new DirectEditAction(this);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		action = new ReportSplittingAction(this);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 

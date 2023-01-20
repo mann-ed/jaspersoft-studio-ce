@@ -310,4 +310,9 @@ public class MFrame extends MGraphicElementLineBox implements IPastable, IPastab
 	public ILayout getDefaultLayout() {
 		return LayoutManager.getLayout(FreeLayout.class.getName());
 	}
+	
+	@Override
+	public boolean isReportSplittingSupported() {
+		return false;
+	}
 }
