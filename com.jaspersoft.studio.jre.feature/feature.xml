@@ -2,7 +2,7 @@
 <feature
       id="com.jaspersoft.studio.jre.feature"
       label="JRE for Jaspersoft Studio"
-      version="11.0.8"
+      version="17.0.5"
       provider-name="TIBCO Software Inc.">
 
    <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
