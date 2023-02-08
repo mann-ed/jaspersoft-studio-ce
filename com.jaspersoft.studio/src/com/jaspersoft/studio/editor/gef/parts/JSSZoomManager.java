@@ -6,16 +6,19 @@ package com.jaspersoft.studio.editor.gef.parts;
 
 import java.lang.reflect.Field;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.zoom.AbstractZoomManager;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.swt.widgets.Display;
+
+import com.jaspersoft.studio.JaspersoftStudioPlugin;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 
 /**
@@ -73,10 +76,17 @@ public class JSSZoomManager extends ZoomManager{
 		this.zoomType = style;
 		try {
 			privateStringField = ZoomManager.class.getDeclaredField("zoom");
-			privateStringField.setAccessible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			privateStringField = null;
+		} catch (NoSuchFieldException|SecurityException e) {
+			// additional try with the possible superclass (after GEF 3.11)
+			try {
+				privateStringField = AbstractZoomManager.class.getDeclaredField("zoom");
+			} catch (NoSuchFieldException|SecurityException ex) {
+				JaspersoftStudioPlugin.getInstance().logError("Something went wrong trying to detect the zoom information from the GEF ZoomManager class.", ex);
+			}
+		} finally {
+			if(privateStringField!=null) {
+				privateStringField.setAccessible(true);
+			}
 		}
 	}
 	
