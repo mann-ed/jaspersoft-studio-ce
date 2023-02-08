@@ -11,13 +11,13 @@
 
 	<properties>
 		<jre.product.version>
-			17.0.6
+			11.0.18
 		</jre.product.version>
 		<macosx.cocoa.x86_64.jre.relative.location>
-			macosx/cocoa/x86_64/jaspersoftstudio.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_${jre.product.version}/eclipsetemurin_jre/Contents/Home/bin
+			macosx/cocoa/x86_64/jaspersoftstudio.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_${jre.product.version}/adoptopenjdk_jre/Contents/Home/bin
 		</macosx.cocoa.x86_64.jre.relative.location>
 		<linux.gtk.x86_64.jre.relative.location>
-			linux/gtk/x86_64/jaspersoftstudio/features/jre.linux.gtk.x86_64.feature_${jre.product.version}/eclipsetemurin_jre/bin
+			linux/gtk/x86_64/jaspersoftstudio/features/jre.linux.gtk.x86_64.feature_${jre.product.version}/adoptopenjdk_jre/bin
 		</linux.gtk.x86_64.jre.relative.location>
 	</properties>
 
