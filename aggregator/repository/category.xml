@@ -9,5 +9,6 @@
    </feature>
    <category-def name="com.jaspersoft.studio.category" label="Business Intelligence, Reporting Tools"/>
    <repository-reference location="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/" enabled="true" />
-   <repository-reference location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository" enabled="true" />
+   <repository-reference location="https://download.eclipse.org/tools/orbit/downloads/drops/R20221123021534/repository" enabled="true" />
+   <repository-reference location="https://download.eclipse.org/tools/gef/classic/releases/latest" enabled="true" />
 </site>
