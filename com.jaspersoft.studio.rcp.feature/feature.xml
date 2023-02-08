@@ -100,9 +100,7 @@
       <import plugin="org.eclipse.equinox.p2.engine" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.views.log"/>
       <import plugin="org.eclipse.debug.core" version="3.12.0" match="compatible"/>
-      <import plugin="org.eclipse.jdt.debug" version="3.17.0" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.11.0" match="compatible"/>
-      <import plugin="org.eclipse.jdt.core" version="3.28.0" match="compatible"/>
       <import plugin="org.eclipse.jdt.launching" version="3.19.0" match="compatible"/>
       <import plugin="org.eclipse.jdt.launching" version="3.11.0" match="compatible"/>
       <import plugin="org.eclipse.jface" version="3.5.0" match="compatible"/>
@@ -113,6 +111,8 @@
       <import plugin="org.eclipse.core.net" version="1.0.0" match="compatible"/>
       <import plugin="com.jaspersoft.studio.rcp" version="6.7.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.help" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.debug" version="3.20.0" match="compatible"/>
+      <import plugin="org.eclipse.jdt.core" version="3.32.0" match="compatible"/>
    </requires>
 
    <plugin
