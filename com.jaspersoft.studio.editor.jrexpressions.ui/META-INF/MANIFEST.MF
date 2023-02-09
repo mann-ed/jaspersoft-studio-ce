@@ -18,7 +18,7 @@ Require-Bundle: com.jaspersoft.studio.editor.jrexpressions;bundle-version="8.2.0
  org.eclipse.ui,
  org.eclipse.e4.ui.css.swt.theme
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: com.jaspersoft.studio.editor.jrexpressions.ui.contentassist,
  com.jaspersoft.studio.editor.jrexpressions.ui.contentassist.antlr,
  com.jaspersoft.studio.editor.jrexpressions.ui,

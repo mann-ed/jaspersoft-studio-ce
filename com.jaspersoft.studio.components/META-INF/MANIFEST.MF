@@ -10,7 +10,7 @@ Bundle-Vendor: TIBCO Software Inc.
 Require-Bundle: com.jaspersoft.studio;bundle-version="8.2.0",
  com.jaspersoft.studio.widgets.map;bundle-version="8.2.0"
 Eclipse-RegisterBuddy: com.jaspersoft.studio
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: patch-library.jar,
  .

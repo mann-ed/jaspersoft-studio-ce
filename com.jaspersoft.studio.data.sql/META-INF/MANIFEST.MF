@@ -12,7 +12,7 @@ Require-Bundle: com.jaspersoft.studio.data;bundle-version="8.2.0",
  org.eclipse.emf.ecore,
  org.eclipse.emf.common,
  org.antlr.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: com.jaspersoft.studio.data, com.jaspersoft.studio.data.scoping,
  com.jaspersoft.studio.data.formatting,
  com.jaspersoft.studio.data,
