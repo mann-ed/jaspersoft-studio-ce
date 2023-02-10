@@ -200,21 +200,6 @@
          unpack="false"/>
 
    <plugin
-         id="jaxb-api-import-fragment"
-         download-size="0"
-         install-size="0"
-         version="1.0.0.b01"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.osgi.framework.system.packages.extra"
-         download-size="0"
-         install-size="0"
-         version="1.0.0.b01"
-         fragment="true"/>
-
-   <plugin
          id="org.apache.commons.collections"
          download-size="0"
          install-size="0"

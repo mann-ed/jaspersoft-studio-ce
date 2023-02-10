@@ -77,7 +77,5 @@
 		<module>../../com.jaspersoft.studio.widgets.map</module>
 		<module>../../com.jaspersoft.studio.xtext.jface</module>
 		<module>../../com.jaspersoft.studio.svgimporter</module>
-		<module>../../jaxb-api-import-fragment</module>
-		<module>../../org.osgi.framework.system.packages.extra</module>		
 	</modules>
 </project> 
