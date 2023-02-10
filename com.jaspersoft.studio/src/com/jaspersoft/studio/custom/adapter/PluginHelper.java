@@ -21,8 +21,6 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 
-import net.sf.jasperreports.eclipse.wizard.project.ProjectUtil;
-
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -36,12 +34,15 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.JavaRuntime;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
+
+import net.sf.jasperreports.eclipse.wizard.project.ProjectUtil;
 
 /**
  * Support methods to generate the data adapter plugin project
@@ -119,7 +120,8 @@ public class PluginHelper {
 				}
 			}
 
-			classpathEntries.add(JavaCore.newContainerEntry(new Path(JavaRuntime.JRE_CONTAINER + "/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8")));
+			Path java11ContainerPath = new Path(JavaRuntime.JRE_CONTAINER + "/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11");
+			classpathEntries.add(JavaCore.newContainerEntry(java11ContainerPath, null, new IClasspathAttribute[] {JavaCore.newClasspathAttribute("module", "true")}, false));
 			classpathEntries.add(JavaCore.newContainerEntry(new Path("org.eclipse.pde.core.requiredPlugins")));
 
 			javaProject.setRawClasspath(classpathEntries.toArray(new IClasspathEntry[classpathEntries.size()]), progressMonitor);
@@ -259,7 +261,7 @@ public class PluginHelper {
 		maniContent.append("Bundle-ActivationPolicy: lazy\n");
 		maniContent.append("Eclipse-BuddyPolicy: registered\n");
 		maniContent.append("Eclipse-RegisterBuddy: com.jaspersoft.studio.data\n");		
-		maniContent.append("Bundle-RequiredExecutionEnvironment: JavaSE-1.8\r\n");
+		maniContent.append("Bundle-RequiredExecutionEnvironment: JavaSE-11\r\n");
 		if (!externalLibs.isEmpty()){
 			maniContent.append("Bundle-ClassPath: ");
 			for(IFile lib : externalLibs){
