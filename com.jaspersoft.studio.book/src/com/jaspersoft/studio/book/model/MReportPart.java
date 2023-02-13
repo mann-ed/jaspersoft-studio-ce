@@ -429,8 +429,8 @@ public class MReportPart extends APropertyNode {
 		desc.add(componentExpression);
 
 		JPropertyExpressionsDescriptor propertiesD = new JPropertyExpressionsDescriptor(
-				JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS, "Edit Properties");
-		propertiesD.setDescription("Allows the creation of a dynamic name-value pair property for a report element. The contents of this element is interpreted as a java.lang.String expression, which will be evaluated at fill time, the result being used as property value.");
+				JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS, Messages.MReportPart_partProperties);
+		propertiesD.setDescription(Messages.MReportPart_partPropertiesTooltip);
 		desc.add(propertiesD);
 
 		ButtonsPropertyDescriptor returnDescriptor = new ButtonsPropertyDescriptor(
