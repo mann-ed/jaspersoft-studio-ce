@@ -11,7 +11,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.editor.action.ACachedSelectionAction;
 import com.jaspersoft.studio.messages.Messages;
-import com.jaspersoft.studio.model.MGraphicElement;
+import com.jaspersoft.studio.model.APropertyNode;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
@@ -24,7 +24,7 @@ import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 public class ReportSplittingAction extends ACachedSelectionAction {
 	
 	public static final String ID = "ReportSplittingElementAction"; //$NON-NLS-1$
-	private MGraphicElement element;
+	private APropertyNode element;
 
 	public ReportSplittingAction(IWorkbenchPart part) {
 		super(part);
@@ -43,9 +43,9 @@ public class ReportSplittingAction extends ACachedSelectionAction {
 	
 	@Override
 	protected boolean calculateEnabled() {
-		List<Object> elements = editor.getSelectionCache().getSelectionModelForType(MGraphicElement.class);
+		List<Object> elements = editor.getSelectionCache().getSelectionModelForType(APropertyNode.class);
 		if(elements.size()==1 && isAllowed(elements.get(0))) {
-			element=(MGraphicElement) elements.get(0);
+			element=(APropertyNode) elements.get(0);
 			return true;
 		}
 		else {
@@ -54,13 +54,13 @@ public class ReportSplittingAction extends ACachedSelectionAction {
 		}
 	}
 	
-	/*
+	/**
 	 * Currently we want to show the menu for any type of element
 	 * except frames, subreports, tables and lists.
 	 */
-	private boolean isAllowed(Object object) {
-		return (object instanceof MGraphicElement && 
-				((MGraphicElement)object).isReportSplittingSupported());
+	protected boolean isAllowed(Object object) {
+		return (object instanceof APropertyNode && 
+				((APropertyNode)object).isReportSplittingSupported());
 	}
 	
 	@Override

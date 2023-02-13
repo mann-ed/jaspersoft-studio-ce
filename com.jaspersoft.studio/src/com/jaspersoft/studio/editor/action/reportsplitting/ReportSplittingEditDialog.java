@@ -18,7 +18,7 @@ import org.eclipse.wb.swt.ResourceManager;
 import com.jaspersoft.studio.editor.expression.ExpressionContext;
 import com.jaspersoft.studio.editor.expression.IExpressionContextSetter;
 import com.jaspersoft.studio.messages.Messages;
-import com.jaspersoft.studio.model.MGraphicElement;
+import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.widgets.framework.WItemProperty;
@@ -28,7 +28,6 @@ import com.jaspersoft.studio.widgets.framework.ui.TextPropertyDescription;
 import net.sf.jasperreports.eclipse.ui.util.PersistentLocationDialog;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.PrintPart;
-import net.sf.jasperreports.engine.design.JRDesignElement;
 
 /**
  * Edit dialog to configure the report splitting related properties for the target element.
@@ -45,9 +44,10 @@ public class ReportSplittingEditDialog extends PersistentLocationDialog implemen
 	private static final int REMOVE_ALL_ITEMS_ID = 2000;
 	private static final String TRUE_VALUE = BooleanComboPropertyDescription.TRUE_VALUE;
 	private static final String FALSE_VALUE = BooleanComboPropertyDescription.FALSE_VALUE;
+	private static final String PROPERTY_PROPERTY_EXPRESSIONS = "propertyExpressions";
 	
 	// Model stuff
-	private MGraphicElement element;
+	private APropertyNode element;
 	private ExpressionContext expContext;
 	private PropertyExpressionsDTO propertiesDTO;
 	private ReportSplittingPropertyEditor propertiesEditor;
@@ -57,11 +57,11 @@ public class ReportSplittingEditDialog extends PersistentLocationDialog implemen
 	private WItemProperty enableSplitProperty;
 	private WReportSplittingPropertiesList propertiesList;
 
-	public ReportSplittingEditDialog(MGraphicElement element, JasperReportsConfiguration jconfig, Shell parentShell) {
+	public ReportSplittingEditDialog(APropertyNode element, JasperReportsConfiguration jconfig, Shell parentShell) {
 		super(parentShell);
 		this.element=element;
 		this.propertiesDTO = 
-				((PropertyExpressionsDTO) element.getPropertyValue(JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS)).clone();
+				((PropertyExpressionsDTO) element.getPropertyValue(PROPERTY_PROPERTY_EXPRESSIONS)).clone();
 		this.propertiesEditor = new ReportSplittingPropertyEditor(propertiesDTO, jconfig);
 		this.expContext = propertiesDTO.geteContext();
 	}
@@ -185,7 +185,7 @@ public class ReportSplittingEditDialog extends PersistentLocationDialog implemen
 	
 	@Override
 	protected void okPressed() {
-		element.setPropertyValue(JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS, propertiesDTO);
+		element.setPropertyValue(PROPERTY_PROPERTY_EXPRESSIONS, propertiesDTO);
 		super.okPressed();
 	}
 }

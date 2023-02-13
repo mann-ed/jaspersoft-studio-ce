@@ -1202,15 +1202,10 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		return true;
 	}
 
-	/**
-	 * Checks if the element is supporting the report splitting feature.
-	 * <br/><br/>
-	 * NOTE: default value is <code>true</code>.
-	 * 
-	 * @return <code>true</code> if it supports report splitting,
-	 * 			<code>false</code> otherwise.
-	 */
+	@Override
 	public boolean isReportSplittingSupported() {
+		// We are changing the default APropertyNode behavior.
+		// We are allowing it for any type of element except frames, subreports, tables and lists.
 		return true;
 	}
 	
@@ -1238,5 +1233,6 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		}
 		return new Rectangle(x, y, getValue().getWidth(), getValue().getHeight());
 	}
+
 
 }
