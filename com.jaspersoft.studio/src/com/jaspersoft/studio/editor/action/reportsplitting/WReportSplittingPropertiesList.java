@@ -84,7 +84,7 @@ public class WReportSplittingPropertiesList extends Composite implements IRefres
 		TableViewerColumn tblclmnExpression = new TableViewerColumn(tableViewerSplittingProperties, SWT.NONE);
 		tblclmnExpression.getColumn().setText(getValueColumnLabel());
 		tblclmnExpression.setLabelProvider(getValueColumnLabelProvider());
-		splittingPropertiesTableViewerTCL.setColumnData(tblclmnExpression.getColumn(), new ColumnWeightData(1, ColumnWeightData.MINIMUM_WIDTH, true));
+		splittingPropertiesTableViewerTCL.setColumnData(tblclmnExpression.getColumn(), new ColumnWeightData(2, ColumnWeightData.MINIMUM_WIDTH, true));
 		
 		tableViewerSplittingProperties.setContentProvider(new ArrayContentProvider());
 		tableViewerSplittingProperties.setInput(getFilteredProperties());
@@ -168,6 +168,7 @@ public class WReportSplittingPropertiesList extends Composite implements IRefres
 			String name = p.getName();
 			if (!name.equals(ReportSplittingEditDialog.PART_NAME_PROPERTY) &&
 					!name.equals(ReportSplittingEditDialog.PART_SPLIT_PROPERTY) &&
+					!name.equals(ReportSplittingEditDialog.PART_VISIBLE_PROPERTY) &&
 					name.startsWith(ReportSplittingEditDialog.PART_PREFIX_PROPERTY)) {
 				properties.add(p);
 			}

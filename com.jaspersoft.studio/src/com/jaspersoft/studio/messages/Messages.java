@@ -2063,8 +2063,12 @@ public class Messages extends NLS {
 	public static String ReportSplittingEditDialog_EnableSplitDescLbl;
 	public static String ReportSplittingEditDialog_EnableSplitPropertyLbl;
 	public static String ReportSplittingEditDialog_EssentialInfoTitle;
+	public static String ReportSplittingEditDialog_InnerMessage;
+	public static String ReportSplittingEditDialog_InnerTitle;
 	public static String ReportSplittingEditDialog_PartNamePropertyDesc;
 	public static String ReportSplittingEditDialog_PartNamePropertyLbl;
+	public static String ReportSplittingEditDialog_PartVisibleDesc;
+	public static String ReportSplittingEditDialog_PartVisibleLbl;
 	public static String ReportSplittingEditDialog_ResetBtn;
 	public static String ReportSplittingEditDialog_ResetDialogMsg;
 	public static String ReportSplittingEditDialog_ResetDialogTitle;

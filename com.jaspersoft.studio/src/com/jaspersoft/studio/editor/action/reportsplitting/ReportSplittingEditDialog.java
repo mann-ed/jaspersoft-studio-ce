@@ -4,6 +4,7 @@
  ******************************************************************************/
 package com.jaspersoft.studio.editor.action.reportsplitting;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -25,7 +26,7 @@ import com.jaspersoft.studio.widgets.framework.WItemProperty;
 import com.jaspersoft.studio.widgets.framework.ui.BooleanComboPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.TextPropertyDescription;
 
-import net.sf.jasperreports.eclipse.ui.util.PersistentLocationDialog;
+import net.sf.jasperreports.eclipse.ui.util.PersistentLocationTitleAreaDialog;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.PrintPart;
 
@@ -35,16 +36,17 @@ import net.sf.jasperreports.engine.PrintPart;
  * @author Massimo Rabbi (mrabbi@tibco.com)
  *
  */
-public class ReportSplittingEditDialog extends PersistentLocationDialog implements IExpressionContextSetter {
+public class ReportSplittingEditDialog extends PersistentLocationTitleAreaDialog implements IExpressionContextSetter {
 	
 	public static final String PART_NAME_PROPERTY = PrintPart.ELEMENT_PROPERTY_PART_NAME;
 	public static final String PART_SPLIT_PROPERTY = "net.sf.jasperreports.print.part.split"; //$NON-NLS-1$
+	public static final String PART_VISIBLE_PROPERTY = PrintPart.PROPERTY_VISIBLE;
 	public static final String PART_PREFIX_PROPERTY = "net.sf.jasperreports.print.part."; //$NON-NLS-1$
-	private static final Point DEFAULT_DIALOG_SIZE = new Point(500,500);
+	private static final Point DEFAULT_DIALOG_SIZE = new Point(550,550);
 	private static final int REMOVE_ALL_ITEMS_ID = 2000;
 	private static final String TRUE_VALUE = BooleanComboPropertyDescription.TRUE_VALUE;
 	private static final String FALSE_VALUE = BooleanComboPropertyDescription.FALSE_VALUE;
-	private static final String PROPERTY_PROPERTY_EXPRESSIONS = "propertyExpressions";
+	private static final String PROPERTY_PROPERTY_EXPRESSIONS = "propertyExpressions"; //$NON-NLS-1$
 	
 	// Model stuff
 	private APropertyNode element;
@@ -54,6 +56,7 @@ public class ReportSplittingEditDialog extends PersistentLocationDialog implemen
 	
 	// Widget stuff
 	private WItemProperty partNameProperty;
+	private WItemProperty partVisibleProperty;
 	private WItemProperty enableSplitProperty;
 	private WReportSplittingPropertiesList propertiesList;
 
@@ -74,6 +77,8 @@ public class ReportSplittingEditDialog extends PersistentLocationDialog implemen
 		
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		setTitle(Messages.ReportSplittingEditDialog_InnerTitle);
+		setMessage(Messages.ReportSplittingEditDialog_InnerMessage, IMessageProvider.INFORMATION);
 		Composite area = (Composite) super.createDialogArea(parent);
 		
 		Composite main = new Composite(area,SWT.NONE);
@@ -93,7 +98,6 @@ public class ReportSplittingEditDialog extends PersistentLocationDialog implemen
 		partNameLbl.setText(Messages.ReportSplittingEditDialog_PartNamePropertyLbl);
 		GridData partNameGD = new GridData(SWT.FILL, SWT.TOP, false, false);
 		partNameLbl.setLayoutData(partNameGD);
-		
 		TextPropertyDescription<String> partNameDesc = 
 				new TextPropertyDescription<String>(PART_NAME_PROPERTY, Messages.ReportSplittingEditDialog_PartNamePropertyDesc, true);
 		partNameProperty = new WItemProperty(main, SWT.NONE, partNameDesc, propertiesEditor);
@@ -101,11 +105,24 @@ public class ReportSplittingEditDialog extends PersistentLocationDialog implemen
 		partNameProperty.setExpressionContext(expContext);
 		partNameProperty.updateWidget();
 		
+		Label partVisibleLbl = new Label(main,SWT.NONE);
+		partVisibleLbl.setText(Messages.ReportSplittingEditDialog_PartVisibleLbl);
+		GridData partVisibleGD = new GridData(SWT.FILL, SWT.TOP, false, false);
+		partVisibleLbl.setLayoutData(partVisibleGD);
+		BooleanComboPropertyDescription partVisible =
+				new BooleanComboPropertyDescription(
+						PART_VISIBLE_PROPERTY, Messages.ReportSplittingEditDialog_PartVisibleLbl, Messages.ReportSplittingEditDialog_PartVisibleDesc, false, 
+						false, new String[][]{{TRUE_VALUE,"true"},{FALSE_VALUE, "false"}}); //$NON-NLS-1$ //$NON-NLS-2$
+		partVisible.setFallbackValue(true);
+		partVisibleProperty = new WItemProperty(main, SWT.NONE, partVisible, propertiesEditor);
+		partVisibleProperty.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		partVisibleProperty.setExpressionContext(expContext);
+		partVisibleProperty.updateWidget();
+		
 		Label enableSplitLbl = new Label (main,SWT.NONE);
 		enableSplitLbl.setText(Messages.ReportSplittingEditDialog_EnableSplitPropertyLbl);
 		GridData enableSplitGD = new GridData(SWT.FILL, SWT.TOP, false, false);
 		enableSplitLbl.setLayoutData(enableSplitGD);
-		
 		BooleanComboPropertyDescription enableSplitDesc =
 				new BooleanComboPropertyDescription(
 						PART_SPLIT_PROPERTY, Messages.ReportSplittingEditDialog_EnableSplitDescLbl, Messages.ReportSplittingEditDialog_EnableSplitDescDescription, false, 
@@ -158,6 +175,9 @@ public class ReportSplittingEditDialog extends PersistentLocationDialog implemen
 		if(partNameProperty!=null) {
 			partNameProperty.setExpressionContext(expContext);
 		}
+		if(partVisibleProperty!=null) {
+			partVisibleProperty.setExpressionContext(expContext);
+		}
 		if(enableSplitProperty!=null) {
 			enableSplitProperty.setExpressionContext(expContext);
 		}
@@ -179,6 +199,7 @@ public class ReportSplittingEditDialog extends PersistentLocationDialog implemen
 			propertiesEditor.removeAllSplittingProperties();
 			propertiesList.refreshList();
 			partNameProperty.updateWidget();
+			partVisibleProperty.updateWidget();
 			enableSplitProperty.updateWidget();
 		}
 	}
