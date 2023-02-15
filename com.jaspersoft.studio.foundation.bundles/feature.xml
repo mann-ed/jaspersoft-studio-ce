@@ -28,8 +28,8 @@
 
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi"/>
       <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.osgi"/>
       <import plugin="org.apache.log4j" version="1.2.19" match="greaterOrEqual"/>
    </requires>
 
@@ -67,12 +67,6 @@
          install-size="0"
          version="2.1.0.201709071631"
          unpack="false"/>
-
-   <plugin
-         id="com.jaspersoft.studio.bundles.itext"
-         download-size="0"
-         install-size="0"
-         version="2.1.7.js11_b01"/>
 
    <plugin
          id="joda-time"
@@ -125,12 +119,6 @@
          unpack="false"/>
 
    <plugin
-         id="com.jaspersoft.studio.bundles.batik"
-         download-size="0"
-         install-size="0"
-         version="1.15.0.b01"/>
-
-   <plugin
          id="com.jaspersoft.studio.bundles.jackson"
          download-size="0"
          install-size="0"
@@ -155,7 +143,7 @@
          id="com.jaspersoft.studio.bundles.poi"
          download-size="0"
          install-size="0"
-         version="5.2.2.b01"/>
+         version="5.2.2.b02"/>
 
    <plugin
          id="com.jaspersoft.studio.bundles.cdt-java-client"
