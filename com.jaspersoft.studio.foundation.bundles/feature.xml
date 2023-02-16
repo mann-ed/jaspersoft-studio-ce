@@ -28,8 +28,11 @@
 
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
+      <import plugin="com.google.guava"/>
+      <import plugin="com.sun.activation.javax.activation"/>
       <import plugin="org.eclipse.osgi"/>
+      <import plugin="jaxb-api"/>
+      <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
       <import plugin="org.apache.log4j" version="1.2.19" match="greaterOrEqual"/>
    </requires>
 
@@ -66,13 +69,6 @@
          download-size="0"
          install-size="0"
          version="2.1.0.201709071631"
-         unpack="false"/>
-
-   <plugin
-         id="joda-time"
-         download-size="0"
-         install-size="0"
-         version="2.9.9"
          unpack="false"/>
 
    <plugin
@@ -122,7 +118,7 @@
          id="com.jaspersoft.studio.bundles.jackson"
          download-size="0"
          install-size="0"
-         version="2.13.4.2_b01"
+         version="2.14.2.b01"
          unpack="false"/>
 
    <plugin
@@ -303,6 +299,22 @@
          download-size="0"
          install-size="0"
          version="1.2.19.js01"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="jaxb-api-import-fragment"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.osgi.framework.system.packages.extra"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          fragment="true"
          unpack="false"/>
 

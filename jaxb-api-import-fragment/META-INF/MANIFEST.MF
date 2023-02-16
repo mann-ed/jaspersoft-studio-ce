@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jaxb-api-import-fragment
+Bundle-SymbolicName: jaxb-api-import-fragment
+Bundle-Version: 1.0.0.b02
+Fragment-Host: jaxb-api;bundle-version="2.4.0"
+Import-Package: com.sun.xml.bind.v2
+Automatic-Module-Name: jaxb-api-import-fragment
+Bundle-RequiredExecutionEnvironment: JavaSE-11
