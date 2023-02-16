@@ -49,7 +49,6 @@
       <import plugin="com.jaspersoft.studio.babel.editor" version="8.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="net.sf.jasperreports.samples" version="8.2.0" match="greaterOrEqual"/>
-      <import plugin="org.bouncycastle.bcprov" version="1.69.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.swt"/>
       <import plugin="org.eclipse.pde.ui"/>
       <import plugin="org.eclipse.jetty.util"/>
@@ -115,6 +114,7 @@
       <import plugin="org.apache.commons.discovery" version="0.2.0" match="greaterOrEqual"/>
       <import plugin="com.sun.activation.javax.activation" version="1.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.console"/>
+      <import plugin="bcprov" version="1.72.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.ui.cheatsheets;bundle-version="3.4.0";visibility:=re
  com.jaspersoft.studio.babel.editor;bundle-version="8.2.0";visibility:=reexport,
  org.eclipse.ui.workbench,
  net.sf.jasperreports.samples;bundle-version="8.2.0",
- org.bouncycastle.bcprov;bundle-version="1.69.0";visibility:=reexport,
+ bcprov;bundle-version="1.72.0";visibility:=reexport,
  org.eclipse.swt,
  org.eclipse.pde.ui,
  org.eclipse.jetty.util,

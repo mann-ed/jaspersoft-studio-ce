@@ -28,11 +28,8 @@
 
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="com.google.guava"/>
-      <import plugin="com.sun.activation.javax.activation"/>
-      <import plugin="org.eclipse.osgi"/>
-      <import plugin="jaxb-api"/>
       <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.osgi"/>
       <import plugin="org.apache.log4j" version="1.2.19" match="greaterOrEqual"/>
    </requires>
 
@@ -211,21 +208,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.bouncycastle.bcpg"
-         download-size="0"
-         install-size="0"
-         version="1.72.0.v20221013-1810"
-         unpack="false"/>
-
-   <plugin
          id="org.bouncycastle.bcpkix"
-         download-size="0"
-         install-size="0"
-         version="1.72.0.v20221013-1810"
-         unpack="false"/>
-
-   <plugin
-         id="org.bouncycastle.bcprov"
          download-size="0"
          install-size="0"
          version="1.72.0.v20221013-1810"
@@ -306,7 +289,7 @@
          id="jaxb-api-import-fragment"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0.b02"
          fragment="true"
          unpack="false"/>
 
@@ -314,8 +297,22 @@
          id="org.osgi.framework.system.packages.extra"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0.b02"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="bcpg"
+         download-size="0"
+         install-size="0"
+         version="1.72.0"
+         unpack="false"/>
+
+   <plugin
+         id="bcprov"
+         download-size="0"
+         install-size="0"
+         version="1.72.0"
          unpack="false"/>
 
 </feature>
