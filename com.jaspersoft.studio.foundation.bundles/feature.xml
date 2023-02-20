@@ -315,4 +315,18 @@
          version="1.72.0"
          unpack="false"/>
 
+   <plugin
+         id="org.apache.commons.commons-net"
+         download-size="0"
+         install-size="0"
+         version="3.9.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.commons-validator"
+         download-size="0"
+         install-size="0"
+         version="1.7.0"
+         unpack="false"/>
+
 </feature>
