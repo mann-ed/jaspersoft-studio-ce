@@ -1,3 +1,6 @@
+/*******************************************************************************
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 // Java support variables
 var IS_JAVA_SUPPORTED = false;
 var JAVA_TO_JAVASCRIPT_CALLED = false;

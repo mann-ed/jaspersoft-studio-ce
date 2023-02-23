@@ -1,3 +1,6 @@
+#*******************************************************************************
+# Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+#*******************************************************************************
 # 1. Create a sparse bundle image
 hdiutil create -ov  -size 2500m -type SPARSEBUNDLE -volname "TIBCO Jaspersoft Studio" -fs "Journaled HFS+" -attach jaspersoftstudio.dmg
 

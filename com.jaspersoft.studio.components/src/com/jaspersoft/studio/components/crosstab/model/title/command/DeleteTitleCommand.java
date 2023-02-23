@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.crosstab.model.title.command;
 
 import net.sf.jasperreports.crosstabs.design.DesignCrosstabColumnCell;
