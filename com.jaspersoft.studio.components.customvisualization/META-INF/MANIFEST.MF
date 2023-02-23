@@ -5,7 +5,7 @@ Bundle-Name: Custom Visualization Component
 Bundle-SymbolicName: com.jaspersoft.studio.components.customvisualization;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Activator: com.jaspersoft.studio.components.customvisualization.CustomVisualizationActivator
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Bundle-Localization: plugin
 Require-Bundle: com.jaspersoft.studio;bundle-version="8.2.0",
  com.jaspersoft.studio.server;bundle-version="8.2.0"

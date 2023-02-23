@@ -308,7 +308,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 				if (b == null) {
 					// FIXME - Need to be verified, temporary solve the issue
 					// reported here:
-					// http://community.jaspersoft.com/questions/826441/javalangnullpointerexception-crosstabs
+					// https://community.jaspersoft.com/questions/826441/javalangnullpointerexception-crosstabs
 					return new Rectangle(jr.getX(), jr.getY(), jr.getWidth(), jr.getHeight());
 				} else {
 					b = new Rectangle(b);

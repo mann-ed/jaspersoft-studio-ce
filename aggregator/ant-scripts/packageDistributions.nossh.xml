@@ -53,7 +53,7 @@
 		<nsisant script="${jssRcpProductFolderPath}/resources/JaspersoftStudioInstaller64.nsi">
 			<define name="PRDUCT_ARCH" value="x86_64" />
 			<define name="PRODUCT_VERSION" value="${jss.version}" />
-			<define name="PRODUCT_WEB_SITE" value="http://community.jaspersoft.com/project/jaspersoft-studio" />
+			<define name="PRODUCT_WEB_SITE" value="https://community.jaspersoft.com/project/jaspersoft-studio" />
 			<define name="INSTALLER_FILES_DIR" value="${dirlocation.win32.x86_64}/jaspersoftstudio" />
 			<define name="OUTPUT_FILE_NAME" value="${dist}/${jss.win32.x86_64.installer}" />
 		</nsisant>
@@ -207,13 +207,13 @@ exit 0;</echo>
 				section="editors" 
 				postinst="${dist}/debian/postinst" 
 				architecture="${architecture}"
-				homepage="http://community.jaspersoft.com/project/jaspersoft-studio"
+				homepage="https://community.jaspersoft.com/project/jaspersoft-studio"
 				appname="Jaspersoft Studio Community">
 			<version upstream="${jss.version}" debian="" />
 			<maintainer name="Jaspersoft Studio Team" email="gtoffoli@tibco.com"/>
 			<description synopsis="An open-source Eclipse-based report designer for JasperReports and JasperReports Server.">
-	TIBCO Jaspersoft Studio is a new, free, open source report designer for JasperReports. 
-	TIBCO Jaspersoft Studio is a port of iReport on top of the Eclipse platform and its core is JasperReports.
+	Jaspersoft Studio is a new, free, open source report designer for JasperReports. 
+	Jaspersoft Studio is a port of iReport on top of the Eclipse platform and its core is JasperReports.
 			    </description>
 			<tarfileset dir="${dist}/debian">
 				<include name="usr/**" />
@@ -222,7 +222,7 @@ exit 0;</echo>
 		</deb>
 
 		<delete dir="${dist}/debian" />
-		<!-- rename file to TIBCO compliant policy -->
+		<!-- rename file to compliant policy -->
 		<move file="${dist}/${debpackage}_${jss.version}_${architecture}.deb" tofile="${dist}/${jss.distro.prefix}_${jss.version}_linux_${architecture}.deb" />
 		<!-- END DEB CREATION -->
 	</target>

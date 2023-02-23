@@ -6,7 +6,7 @@ Bundle-SymbolicName: com.jaspersoft.studio.server;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Activator: com.jaspersoft.studio.server.Activator
 Bundle-Localization: plugin
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Require-Bundle: com.jaspersoft.studio;bundle-version="8.2.0";visibility:=reexport,
  org.eclipse.core.net;bundle-version="1.2.100";visibility:=reexport,
  com.jaspersoft.studio.data;bundle-version="8.2.0";visibility:=reexport,

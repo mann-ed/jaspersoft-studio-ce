@@ -6,7 +6,7 @@ Bundle-SymbolicName: com.jaspersoft.studio.svgimporter;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Activator: com.jaspersoft.studio.svimporter.activator.Activator
 Bundle-Localization: plugin
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: patch-library.jar,

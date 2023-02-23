@@ -5,7 +5,7 @@ Bundle-Name: Jaspersoft Studio Properties
 Bundle-SymbolicName: com.jaspersoft.studio.properties;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Activator: com.jaspersoft.studio.properties.Activator
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Require-Bundle: org.eclipse.ui;bundle-version="3.6.0";visibility:=reexport,
  org.eclipse.ui.forms;bundle-version="3.5.0";visibility:=reexport,
  org.eclipse.ui.views;bundle-version="3.5.0";visibility:=reexport,

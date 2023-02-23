@@ -3,17 +3,17 @@
       id="com.jaspersoft.studio.feature"
       label="Jaspersoft Studio feature"
       version="8.2.0.qualifier"
-      provider-name="TIBCO Software Inc."
+      provider-name="Cloud Software Group, Inc."
       plugin="com.jaspersoft.studio"
       os="linux,macosx,win32"
       ws="cocoa,gtk,win32">
 
-   <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
-      TIBCO Jaspersoft Studio Community Edition
+   <description url="https://community.jaspersoft.com/project/jaspersoft-studio">
+      Jaspersoft Studio Community Edition
    </description>
 
    <copyright>
-      Copyright (C) 2010 - 2022. TIBCO Software Inc.
+      Copyright (C) 2010 - 2023. Cloud Software Group, Inc.
    </copyright>
 
    <license url="%licenseURL">
@@ -21,8 +21,8 @@
    </license>
 
    <url>
-      <update label="TIBCO Jaspersoft Studio update site" url="http://jasperstudio.sf.net/updates"/>
-      <discovery label="TIBCO Jaspersoft Studio Community Edition" url="http://community.jaspersoft.com/project/jaspersoft-studio"/>
+      <update label="Jaspersoft Studio update site" url="https://jasperstudio.sf.net/updates"/>
+      <discovery label="Jaspersoft Studio Community Edition" url="https://community.jaspersoft.com/project/jaspersoft-studio"/>
    </url>
 
    <includes

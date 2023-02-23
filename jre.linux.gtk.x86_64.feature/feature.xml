@@ -3,7 +3,7 @@
       id="jre.linux.gtk.x86_64.feature"
       label="JRE for Linux 64-bit systems"
       version="11.0.18"
-      provider-name="TIBCO Software Inc."
+      provider-name="Cloud Software Group, Inc."
       os="linux"
       ws="gtk"
       arch="x86_64">

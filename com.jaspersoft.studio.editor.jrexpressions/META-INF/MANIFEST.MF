@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Eclipse-ExtensibleAPI: true
 Bundle-ManifestVersion: 2
 Bundle-Name: com.jaspersoft.studio.editor.jrexpressions
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Bundle-Version: 8.2.0.qualifier
 Bundle-SymbolicName: com.jaspersoft.studio.editor.jrexpressions; singleton:=true
 Bundle-ActivationPolicy: lazy

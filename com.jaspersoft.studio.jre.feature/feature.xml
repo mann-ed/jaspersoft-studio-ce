@@ -3,18 +3,18 @@
       id="com.jaspersoft.studio.jre.feature"
       label="JRE for Jaspersoft Studio"
       version="11.0.18"
-      provider-name="TIBCO Software Inc.">
+      provider-name="Cloud Software Group, Inc.">
 
-   <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
+   <description url="https://community.jaspersoft.com/project/jaspersoft-studio">
       JRE feature for Jaspersoft Studio product
    </description>
 
    <copyright>
-      Copyright (C) 2010 - 2022. TIBCO Software Inc.
+      Copyright (C) 2010 - 2023. Cloud Software Group, Inc.
    </copyright>
 
    <url>
-      <discovery label="TIBCO Jaspersoft Studio Community Edition" url="http://community.jaspersoft.com/project/jaspersoft-studio"/>
+      <discovery label="Jaspersoft Studio Community Edition" url="https://community.jaspersoft.com/project/jaspersoft-studio"/>
    </url>
 
    <includes
