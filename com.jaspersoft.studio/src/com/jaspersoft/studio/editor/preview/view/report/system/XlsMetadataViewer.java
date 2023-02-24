@@ -14,6 +14,7 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import net.sf.jasperreports.eclipse.viewer.ReportViewer;
 import net.sf.jasperreports.engine.JasperPrint;
 
+@Deprecated
 public class XlsMetadataViewer extends ASystemViewer {
 
 	public XlsMetadataViewer(Composite parent, JasperReportsConfiguration jContext) {

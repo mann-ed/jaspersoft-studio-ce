@@ -11,6 +11,7 @@ import net.sf.jasperreports.engine.export.ooxml.JRPptxExporter;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePptxReportConfiguration;
 
+import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 public class ExportAsPptxAction extends AExportAction {
@@ -18,11 +19,11 @@ public class ExportAsPptxAction extends AExportAction {
 	public ExportAsPptxAction(IReportViewer viewer, JasperReportsConfiguration jContext, ExportMenuAction parentMenu) {
 		super(viewer, jContext, parentMenu);
 
-		setText("Export As PowerPoint");
-		setToolTipText("Export as PowerPoint");
+		setText(Messages.ExportAsPptxAction_Text);
+		setToolTipText(Messages.ExportAsPptxAction_Tooltip);
 
 		setFileExtensions(new String[] { "*.pptx" }); //$NON-NLS-1$
-		setFilterNames(new String[] { "PowerPoint (*.pptx)" });
+		setFilterNames(new String[] { Messages.ExportAsPptxAction_FilterNamePPTX });
 		setDefaultFileExtension("pptx"); //$NON-NLS-1$
 	}
 

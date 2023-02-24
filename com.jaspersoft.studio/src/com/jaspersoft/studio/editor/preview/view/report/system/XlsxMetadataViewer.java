@@ -1,35 +1,40 @@
 /*******************************************************************************
- * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
- *******************************************************************************/
+ * Copyright (C) 2010 - 2022. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
+ ******************************************************************************/
 package com.jaspersoft.studio.editor.preview.view.report.system;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.widgets.Composite;
 
 import com.jaspersoft.studio.editor.preview.actions.export.AExportAction;
-import com.jaspersoft.studio.editor.preview.actions.export.xls.ExportAsXlsAction;
+import com.jaspersoft.studio.editor.preview.actions.export.xls.ExportAsXlsxMetadataAction;
 import com.jaspersoft.studio.preferences.exporter.ExcelExporterPreferencePage;
-import com.jaspersoft.studio.preferences.exporter.JRExporterPreferencePage;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.viewer.ReportViewer;
 import net.sf.jasperreports.engine.JasperPrint;
 
-@Deprecated
-public class XlsViewer extends ASystemViewer {
+/**
+ * Viewer for the XLSX Metadata format. 
+ * 
+ * @author mrabbi (mrabbi@tibco.com)
+ *
+ */
+public class XlsxMetadataViewer extends ASystemViewer {
 
-	public XlsViewer(Composite parent, JasperReportsConfiguration jContext) {
+	public XlsxMetadataViewer(Composite parent, JasperReportsConfiguration jContext) {
 		super(parent, jContext);
 	}
 
 	@Override
 	protected AExportAction createExporter(ReportViewer rptv) {
-		return new ExportAsXlsAction(rptv, jContext, null);
+		return new ExportAsXlsxMetadataAction(rptv, jContext, null);
 	}
 
 	@Override
 	protected String getExtension(JasperPrint jrprint) {
-		return ".xls";
+		return ".xlsx";
 	}
 
 	@Override

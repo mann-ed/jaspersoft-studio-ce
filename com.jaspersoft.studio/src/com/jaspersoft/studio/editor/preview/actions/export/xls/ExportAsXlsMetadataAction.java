@@ -12,6 +12,7 @@ import net.sf.jasperreports.engine.export.JRExportProgressMonitor;
 import net.sf.jasperreports.engine.export.JRXlsMetadataExporter;
 import net.sf.jasperreports.export.SimpleXlsMetadataReportConfiguration;
 
+@Deprecated
 public class ExportAsXlsMetadataAction extends AExportXlsAction {
 
 	public ExportAsXlsMetadataAction(IReportViewer viewer, JasperReportsConfiguration jContext, ExportMenuAction parentMenu) {
