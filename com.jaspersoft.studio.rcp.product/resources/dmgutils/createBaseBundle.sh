@@ -2,29 +2,30 @@
 # Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
 #*******************************************************************************
 # 1. Create a sparse bundle image
-hdiutil create -ov  -size 2500m -type SPARSEBUNDLE -volname "TIBCO Jaspersoft Studio" -fs "Journaled HFS+" -attach jaspersoftstudio.dmg
+hdiutil create -ov  -size 2500m -type SPARSEBUNDLE -volname "Jaspersoft Studio" -fs "Journaled HFS+" -attach jaspersoftstudio.dmg
 
 ## 2. Copy the icon of the volume (jssbox.icns)
-cp jssbox.icns "/Volumes/TIBCO Jaspersoft Studio/.VolumeIcon.icns"
+cp jssbox.icns "/Volumes/Jaspersoft Studio/.VolumeIcon.icns"
 
 ## 3. Create the application directory
-mkdir "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio"
+mkdir "/Volumes/Jaspersoft Studio/Jaspersoft Studio"
 
 ## 4. Link the Application directory
-ln -s /Applications "/Volumes/TIBCO Jaspersoft Studio/Applications"
+ln -s /Applications "/Volumes/Jaspersoft Studio/Applications"
 
 ## 5. Set the icon for the volume (SetFile is an XCode command)
-SetFile -a C "/Volumes/TIBCO Jaspersoft Studio/"
+SetFile -a C "/Volumes/Jaspersoft Studio/"
 
 ## 6. Set the icon for the Jaspersoft Studio folder... (SetIcon is a self made command)
 ## Might need to get the package from https://github.com/sveinbjornt/osxiconutils
 ## seticon jssfolder.icns "/Volumes/Jaspersoft Studio/Jaspersoft Studio/"
-seticon jaspersoftstudio.icns "/Volumes/TIBCO Jaspersoft Studio/TIBCO Jaspersoft Studio/"
+seticon jaspersoftstudio.icns "/Volumes/Jaspersoft Studio/Jaspersoft Studio/"
 
 ## 7. Copy the background to the volume
-cp -Rf jss-package-background.png  "/Volumes/TIBCO Jaspersoft Studio/"
+cp -Rf jss-package-background.png  "/Volumes/Jaspersoft Studio/"
 
-## 8. Copy the license file to the volume License NO longer in the main folder!
+## 8. Copy the license file to the volume
+## NOT NEEDED ANYMORE - directly bundled in the product
 #cp LICENSE.txt  "/Volumes/Jaspersoft Studio/"
 
 ## 9. Now before unmount everything, use the Finder to customize the look and feel
@@ -32,7 +33,7 @@ cp -Rf jss-package-background.png  "/Volumes/TIBCO Jaspersoft Studio/"
 
 echo '
    tell application "Finder"
-     tell disk "'TIBCO Jaspersoft Studio'"
+     tell disk "'Jaspersoft Studio'"
            open
             set current view of container window to icon view
             set toolbar visible of container window to false
@@ -43,7 +44,7 @@ echo '
             set icon size of theViewOptions to 128
             set background picture of theViewOptions to file "jss-package-background.png"
 #            make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
-            set position of item "TIBCO Jaspersoft Studio" of container window to {200, 205}
+            set position of item "Jaspersoft Studio" of container window to {200, 205}
             set position of item "Applications" of container window to {420,205}
 #           set position of item "LICENSE.txt" of container window to {300, 450}
            close
@@ -58,10 +59,10 @@ echo '
 
 
 ## 10. Hide the background image...
-SetFile -a V "/Volumes/TIBCO Jaspersoft Studio/jss-package-background.png"
+SetFile -a V "/Volumes/Jaspersoft Studio/jss-package-background.png"
 
 ## 11. unmount the volume
-hdiutil unmount "/Volumes/TIBCO Jaspersoft Studio"
+hdiutil unmount "/Volumes/Jaspersoft Studio"
 
 ## 12. targz the template...
 tar -czvf jss-package-template.tgz jaspersoftstudio.dmg.sparsebundle
