@@ -24,6 +24,7 @@ import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.preferences.GlobalPreferencePage;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.HttpUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.eclipse.viewer.BrowserUtils;
@@ -70,10 +71,9 @@ public class ABrowserViewer extends APreview implements IURLViewable {
 		if (!useExternalBrowser()) {
 			if (urlBar == null)
 				urlBar = new URLContributionItem(Misc.nvl(url, "")) { //$NON-NLS-1$
-
 					@Override
 					protected int computeWidth(Control control) {
-						return Math.max(200, getUrlWidth(control.getParent()) - 320);
+						return Math.max(UIUtils.getScaledWidth(200), getUrlWidth(control.getParent()) - UIUtils.getScaledWidth(320));
 					}
 				};
 			tmanager.add(urlBar);
@@ -96,7 +96,7 @@ public class ABrowserViewer extends APreview implements IURLViewable {
 		// Add the calculation of the toolbar width depending on the available
 		// size on the parent
 		// minus 80 to leave space to the refresh and external open actions
-		return control.getParent().getSize().x - 80;
+		return control.getParent().getSize().x - UIUtils.getScaledWidth(80);
 	}
 
 	public void setURL(String url, String urlcookie, String scookie) throws Exception {
