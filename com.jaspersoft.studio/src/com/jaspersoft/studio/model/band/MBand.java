@@ -403,7 +403,8 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	protected Map<String, DefaultValue> createDefaultsMap() {
 		Map<String, DefaultValue> defaultsMap = super.createDefaultsMap();
 		defaultsMap.put(JRDesignBand.PROPERTY_HEIGHT, new DefaultValue(CONST_HEIGHT, false));
-		defaultsMap.put(JRDesignBand.PROPERTY_SPLIT_TYPE, new DefaultValue(null, true));
+		int splitTypeDef = NamedEnumPropertyDescriptor.getIntValue(SplitTypeEnum.PREVENT, NullEnum.NULL,null);
+		defaultsMap.put(JRBaseBand.PROPERTY_splitType, new DefaultValue(splitTypeDef, true));
 		defaultsMap.put(JRDesignBand.PROPERTY_PRINT_WHEN_EXPRESSION, new DefaultValue(null, true));
 		return defaultsMap;
 	}
