@@ -5,7 +5,7 @@ package com.jaspersoft.studio.components.table.properties;
 
 import org.eclipse.swt.widgets.Composite;
 
-import com.jaspersoft.studio.messages.Messages;
+import com.jaspersoft.studio.components.table.messages.Messages;
 import com.jaspersoft.studio.properties.view.TabbedPropertySheetPage;
 import com.jaspersoft.studio.property.section.AbstractSection;
 
@@ -16,15 +16,17 @@ public class TableRowSection extends AbstractSection {
 	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
 
-		parent = getWidgetFactory().createSection(parent, "Row Properties", false, 2);
+		parent = getWidgetFactory().createSection(parent, Messages.TableRowSection_Title, false, 2);
 
 		createWidget4Property(parent, StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION);
+		createWidget4Property(parent, StandardRow.PROPERTY_splitType);
 	}
 
 	@Override
 	protected void initializeProvidedProperties() {
 		super.initializeProvidedProperties();
-		addProvidedProperties(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION, Messages.common_print_when_expression);
+		addProvidedProperties(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION, Messages.Common_PrintWhenExpr);
+		addProvidedProperties(StandardRow.PROPERTY_splitType, Messages.Common_SplitType);
 	}
 
 }
