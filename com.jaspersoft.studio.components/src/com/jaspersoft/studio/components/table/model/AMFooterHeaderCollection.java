@@ -9,21 +9,23 @@ import java.util.Map;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
+import com.jaspersoft.studio.components.table.messages.Messages;
 import com.jaspersoft.studio.help.HelpReferenceBuilder;
-import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.ANode;
 import com.jaspersoft.studio.model.DefaultValue;
 import com.jaspersoft.studio.model.INode;
+import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
 import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
+import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
 
-import net.sf.jasperreports.components.table.Row;
 import net.sf.jasperreports.components.table.StandardBaseColumn;
 import net.sf.jasperreports.components.table.StandardRow;
 import net.sf.jasperreports.components.table.StandardTable;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
 import net.sf.jasperreports.engine.design.events.CollectionElementAddedEvent;
 import net.sf.jasperreports.engine.design.events.JRChangeEventsSupport;
+import net.sf.jasperreports.engine.type.SplitTypeEnum;
 
 /**
  * Class implemented by the header and the footer sections of the table. This is
@@ -35,6 +37,7 @@ import net.sf.jasperreports.engine.design.events.JRChangeEventsSupport;
 public abstract class AMFooterHeaderCollection extends AMCollection {
 
 	private static final long serialVersionUID = -1026904833107804569L;
+	private static NamedEnumPropertyDescriptor<SplitTypeEnum> splitStyleD;
 
 	public AMFooterHeaderCollection(ANode parent, JRDesignComponentElement jrDataset, String property) {
 		super(parent, jrDataset, property);
@@ -87,19 +90,27 @@ public abstract class AMFooterHeaderCollection extends AMCollection {
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
+		splitStyleD = new NamedEnumPropertyDescriptor<>(StandardRow.PROPERTY_splitType, Messages.Common_SplitType,
+				SplitTypeEnum.PREVENT, NullEnum.NULL);
+		splitStyleD.setDescription(Messages.Common_TableRowSplitTypeDesc);
+		splitStyleD.setHelpRefBuilder(
+				new HelpReferenceBuilder("net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#_splitType")); //$NON-NLS-1$
+		desc.add(splitStyleD);
+		
 		JRExpressionPropertyDescriptor printWhenExprD = new JRExpressionPropertyDescriptor(
-				StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION, Messages.common_print_when_expression);
-		printWhenExprD.setDescription("Print When Expression for Table Row");
-		printWhenExprD.setCategory(Messages.MGraphicElement_print_when);
-		desc.add(printWhenExprD);
+				StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION, Messages.Common_PrintWhenExpr);
+		printWhenExprD.setDescription(Messages.Common_TableRowPrintWhenDesc);
 		printWhenExprD.setHelpRefBuilder(new HelpReferenceBuilder(
-				"net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#printWhenExpression"));
+				"net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#printWhenExpression")); //$NON-NLS-1$
+		desc.add(printWhenExprD);
 	}
 
 	@Override
 	protected Map<String, DefaultValue> createDefaultsMap() {
 		Map<String, DefaultValue> defaultsMap = super.createDefaultsMap();
 		defaultsMap.put(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION, new DefaultValue(null, true));
+		int splitTypeDef = NamedEnumPropertyDescriptor.getIntValue(SplitTypeEnum.PREVENT, NullEnum.NULL,null);
+		defaultsMap.put(StandardRow.PROPERTY_splitType, new DefaultValue(splitTypeDef,true));
 		return defaultsMap;
 	}
 
@@ -109,8 +120,12 @@ public abstract class AMFooterHeaderCollection extends AMCollection {
 	public Object getPropertyValue(Object id) {
 		StandardRow r = getRow(false);
 		if (r != null) {
-			if (id.equals(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION))
+			if (id.equals(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION)) {
 				return ExprUtil.getExpression(r.getPrintWhenExpression());
+			}
+			if (id.equals(StandardRow.PROPERTY_splitType)) {
+				return splitStyleD.getIntValue(r.getSplitType());
+			}
 		}
 		return null;
 	}
@@ -118,8 +133,12 @@ public abstract class AMFooterHeaderCollection extends AMCollection {
 	@Override
 	public void setPropertyValue(Object id, Object value) {
 		StandardRow r = getRow(true);
-		if (id.equals(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION))
+		if (id.equals(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION)) {
 			r.setPrintWhenExpression(ExprUtil.setValues(r.getPrintWhenExpression(), value));
+		}
+		if (id.equals(StandardRow.PROPERTY_splitType)) {
+			r.setSplitType(splitStyleD.getEnumValue(value));
+		}
 	}
 
 }
