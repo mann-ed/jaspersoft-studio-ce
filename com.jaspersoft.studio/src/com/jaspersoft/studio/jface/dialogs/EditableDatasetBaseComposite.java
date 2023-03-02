@@ -269,9 +269,9 @@ public abstract class EditableDatasetBaseComposite extends Composite implements 
 	 * Updates the dataset information with the reset type data.
 	 */
 	private void updateResetTypeInformation(int selIndex) {
-		ResetTypeEnum selectedResType = EnumHelper.getEnumByObjectValue(ResetTypeEnum.values(),
+		DatasetResetTypeEnum selectedResType = EnumHelper.getEnumByObjectValue(DatasetResetTypeEnum.values(),
 				comboResetType.getText());
-		if (selectedResType == ResetTypeEnum.GROUP) {
+		if (selectedResType == DatasetResetTypeEnum.GROUP) {
 			if (fillGroupCombo(comboResetGroup)) {
 				// force the selection of the first group
 				comboResetGroup.select(0);
