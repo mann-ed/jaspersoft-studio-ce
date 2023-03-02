@@ -162,6 +162,10 @@ public class Messages extends NLS {
 	public static String MMap_MapPathsDescription;
 	public static String MMap_MapStyles;
 	public static String MMap_MapStylesDescription;
+	public static String MMap_MarkerClustering;
+	public static String MMap_MarkerClusteringDesc;
+	public static String MMap_MarkerSpidering;
+	public static String MMap_MarkerSpideringDesc;
 	public static String MMap_mapScaleDescription;
 	public static String MMap_mapScaleTitle;
 	public static String MMap_mapTypeDescription;
