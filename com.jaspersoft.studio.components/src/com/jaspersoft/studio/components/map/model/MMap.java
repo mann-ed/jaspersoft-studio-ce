@@ -28,6 +28,7 @@ import com.jaspersoft.studio.model.dataset.MDatasetRun;
 import com.jaspersoft.studio.model.util.IIconDescriptor;
 import com.jaspersoft.studio.properties.view.validation.ValidationError;
 import com.jaspersoft.studio.property.descriptor.NullEnum;
+import com.jaspersoft.studio.property.descriptor.checkbox.NullCheckBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.combo.RComboBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
 import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
@@ -211,6 +212,16 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		desc.add(langExprD);
 		langExprD.setHelpRefBuilder(new HelpReferenceBuilder(
 				"net.sf.jasperreports.doc/docs/components.schema.reference.html#languageExpression")); //$NON-NLS-1$
+		
+		NullCheckBoxPropertyDescriptor markerClusteringD = new NullCheckBoxPropertyDescriptor(
+				StandardMapComponent.PROPERTY_MARKER_CLUSTERING, Messages.MMap_MarkerClustering);
+		markerClusteringD.setDescription(Messages.MMap_MarkerClusteringDesc);
+		desc.add(markerClusteringD);
+		
+		NullCheckBoxPropertyDescriptor markerSpideringD = new NullCheckBoxPropertyDescriptor(
+				StandardMapComponent.PROPERTY_MARKER_SPIDERING, Messages.MMap_MarkerSpidering);
+		markerSpideringD.setDescription(Messages.MMap_MarkerSpideringDesc);
+		desc.add(markerSpideringD);
 
 		getMapTypeD();
 		desc.add(mapTypeD);
@@ -254,6 +265,8 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		longitudeExprD.setCategory(Messages.MMap_common_map_properties);
 		addressExprD.setCategory(Messages.MMap_common_map_properties);
 		zoomExprD.setCategory(Messages.MMap_common_map_properties);
+		markerClusteringD.setCategory(Messages.MMap_common_map_properties);
+		markerSpideringD.setCategory(Messages.MMap_common_map_properties);
 
 		mapKeyD.setCategory(Messages.MMap_Category_Authentication);
 		mapClientIdD.setCategory(Messages.MMap_Category_Authentication);
@@ -285,9 +298,10 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		defaultsMap.put(StandardMapComponent.PROPERTY_ON_ERROR_TYPE, new DefaultValue(onErrorValue, true));
 
 		defaultsMap.put(StandardMapComponent.PROPERTY_EVALUATION_TIME, new DefaultValue(EvaluationTimeEnum.NOW, false));
-		defaultsMap.put(StandardMapComponent.PROPERTY_ZOOM_EXPRESSION,
-				new DefaultValue(MapComponent.DEFAULT_ZOOM, false));
-
+		defaultsMap.put(StandardMapComponent.PROPERTY_ZOOM_EXPRESSION, new DefaultValue(MapComponent.DEFAULT_ZOOM, false));
+		defaultsMap.put(StandardMapComponent.PROPERTY_MARKER_CLUSTERING, new DefaultValue(Boolean.FALSE, true));
+		defaultsMap.put(StandardMapComponent.PROPERTY_MARKER_SPIDERING, new DefaultValue(Boolean.FALSE, true));
+		
 		return defaultsMap;
 	}
 
@@ -351,6 +365,13 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 			if (ids == null)
 				return new ArrayList<ItemData>();
 			return new ArrayList<ItemData>(ids);
+		}
+		
+		if (id.equals(StandardMapComponent.PROPERTY_MARKER_CLUSTERING)) {
+			return component.getMarkerClustering();
+		}
+		if (id.equals(StandardMapComponent.PROPERTY_MARKER_SPIDERING)) {
+			return component.getMarkerSpidering();
 		}
 
 		return super.getPropertyValue(id);
@@ -447,8 +468,13 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 				for (ItemData n : itemDatas)
 					component.addPathStyle(n);
 			}
-		} else
+		} else if (id.equals(StandardMapComponent.PROPERTY_MARKER_CLUSTERING)) {
+			component.setMarkerClustering((Boolean) value);
+		} else if (id.equals(StandardMapComponent.PROPERTY_MARKER_SPIDERING)) {
+			component.setMarkerSpidering((Boolean) value);
+		} else {
 			super.setPropertyValue(id, value);
+		}
 	}
 
 	@Override
@@ -596,7 +622,7 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		component.setLatitudeExpression(exp1);
 		component.setLongitudeExpression(exp2);
 		JRDesignExpression exp3 = new JRDesignExpression();
-		exp3.setText("8");
+		exp3.setText("8"); //$NON-NLS-1$
 		component.setZoomExpression(exp3);
 		designMap.setComponent(component);
 		designMap.setComponentKey(new ComponentKey("http://jasperreports.sourceforge.net/jasperreports/components", "c", //$NON-NLS-1$ //$NON-NLS-2$
