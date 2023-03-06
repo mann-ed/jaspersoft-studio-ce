@@ -185,21 +185,21 @@
 		<taskdef name="desktopEntry" classname="com.googlecode.ant_deb_task.DesktopEntry" classpathref="ant-deb.classpath"/>
 
 		<mkdir dir="${dist}/debian/usr/share/applications" />
-		<mkdir dir="${dist}/debian/opt/tibco" />
-		<copy todir="${dist}/debian/opt/tibco" >
+		<mkdir dir="${dist}/debian/opt/jaspersoft" />
+		<copy todir="${dist}/debian/opt/jaspersoft" >
 			<fileset dir="${zipdir.linux}" includes="**"/>
 		</copy>
 		<echo file="${dist}/debian/postinst" append="false">#! /bin/sh
-chmod +x "/opt/tibco/${jss.distro.folder}/Jaspersoft Studio"
-chmod +x "/opt/tibco/${jss.distro.folder}/runjss.sh"
-chmod -R +x "/opt/tibco/${jss.distro.folder}/${jre.feature.location}/"
+chmod +x "/opt/jaspersoft/${jss.distro.folder}/Jaspersoft Studio"
+chmod +x "/opt/jaspersoft/${jss.distro.folder}/runjss.sh"
+chmod -R +x "/opt/jaspersoft/${jss.distro.folder}/${jre.feature.location}/"
 exit 0;</echo>
 		<desktopEntry 
 				toFile="${dist}/debian/usr/share/applications/jasperstudio.desktop" 
-				path="/opt/tibco/${jss.distro.folder}" 
-				icon="/opt/tibco/${jss.distro.folder}/icon.xpm" 
+				path="/opt/jaspersoft/${jss.distro.folder}" 
+				icon="/opt/jaspersoft/${jss.distro.folder}/icon.xpm" 
 				name="Jaspersoft Studio Community" 
-				exec="&quot;/opt/tibco/${jss.distro.folder}/Jaspersoft Studio&quot;"
+				exec="&quot;/opt/jaspersoft/${jss.distro.folder}/Jaspersoft Studio&quot;"
 				categories="Office"/>
 		<deb 
 				todir="${dist}" 
@@ -210,7 +210,7 @@ exit 0;</echo>
 				homepage="https://community.jaspersoft.com/project/jaspersoft-studio"
 				appname="Jaspersoft Studio Community">
 			<version upstream="${jss.version}" debian="" />
-			<maintainer name="Jaspersoft Studio Team" email="gtoffoli@tibco.com"/>
+			<maintainer name="Jaspersoft Studio Team" email="dev-jss@jaspersoft.com"/>
 			<description synopsis="An open-source Eclipse-based report designer for JasperReports and JasperReports Server.">
 	Jaspersoft Studio is a new, free, open source report designer for JasperReports. 
 	Jaspersoft Studio is a port of iReport on top of the Eclipse platform and its core is JasperReports.
