@@ -44,7 +44,6 @@ import com.jaspersoft.studio.server.publish.PublishUtil;
 import com.jaspersoft.studio.server.publish.imp.da.AImpJdbcDataAdapter;
 import com.jaspersoft.studio.server.publish.imp.da.ImpBigQueryDataAdapter;
 import com.jaspersoft.studio.server.publish.imp.da.ImpMongoDbDataAdapter;
-import com.jaspersoft.studio.server.publish.imp.da.ImpSimbaBigQueryDataAdapter;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.data.DataAdapter;
@@ -307,7 +306,6 @@ public class ImpDataAdapter extends AImpObject {
 	private static Set<AImpJdbcDataAdapter> jdbcFiles = new HashSet<>();
 	static {
 		jdbcFiles.add(new ImpBigQueryDataAdapter());
-		jdbcFiles.add(new ImpSimbaBigQueryDataAdapter());
 		jdbcFiles.add(new ImpMongoDbDataAdapter());
 	}
 
