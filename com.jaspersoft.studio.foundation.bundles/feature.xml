@@ -31,6 +31,11 @@
       <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="org.apache.log4j" version="1.2.19" match="greaterOrEqual"/>
+      <import plugin="org.apache.xmlgraphics" version="2.7.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.servicemix.bundles.rhino"/>
+      <import plugin="org.w3c.css.sac"/>
+      <import plugin="org.w3c.dom.events"/>
+      <import plugin="org.w3c.dom.smil"/>
    </requires>
 
    <plugin
@@ -328,5 +333,11 @@
          install-size="0"
          version="1.7.0"
          unpack="false"/>
+
+   <plugin
+         id="com.jaspersoft.studio.bundles.batik"
+         download-size="0"
+         install-size="0"
+         version="1.16.0.b01"/>
 
 </feature>
