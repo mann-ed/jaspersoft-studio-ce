@@ -19,6 +19,7 @@ import com.jaspersoft.studio.components.map.messages.Messages;
 import com.jaspersoft.studio.components.map.model.MMap;
 import com.jaspersoft.studio.properties.view.TabbedPropertySheetPage;
 import com.jaspersoft.studio.property.section.AbstractSection;
+import com.jaspersoft.studio.property.section.widgets.ASPropertyWidget;
 import com.jaspersoft.studio.property.section.widgets.SPEvaluationTime;
 import com.jaspersoft.studio.widgets.map.core.LatLng;
 import com.jaspersoft.studio.widgets.map.core.MapType;
@@ -58,6 +59,10 @@ public class MapSection extends AbstractSection {
 		widgets.put(pd.getId(), new SPEvaluationTime(parent, this, pd, gpd));
 		createWidget4Property(parent, StandardMapComponent.PROPERTY_IMAGE_TYPE);
 		createWidget4Property(parent, StandardMapComponent.PROPERTY_ON_ERROR_TYPE);
+		ASPropertyWidget<?> clusteringCheck = createWidget4Property(parent, StandardMapComponent.PROPERTY_MARKER_CLUSTERING, false);
+		clusteringCheck.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		ASPropertyWidget<?> spideringCheck = createWidget4Property(parent, StandardMapComponent.PROPERTY_MARKER_SPIDERING, false);
+		spideringCheck.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		createEditButton(parent);
 	}
@@ -130,6 +135,8 @@ public class MapSection extends AbstractSection {
 		addProvidedProperties(StandardMapComponent.PROPERTY_MAP_SCALE, Messages.MMap_mapScaleTitle);
 		addProvidedProperties(StandardMapComponent.PROPERTY_IMAGE_TYPE, Messages.MMap_imageTypeTitle);
 		addProvidedProperties(StandardMapComponent.PROPERTY_ON_ERROR_TYPE, Messages.MMap_OnErrorType);
+		addProvidedProperties(StandardMapComponent.PROPERTY_MARKER_CLUSTERING, Messages.MMap_MarkerClustering);
+		addProvidedProperties(StandardMapComponent.PROPERTY_MARKER_SPIDERING, Messages.MMap_MarkerSpidering);
 	}
 
 }
