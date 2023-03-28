@@ -47,7 +47,6 @@ import net.sf.jasperreports.components.items.StandardItem;
 import net.sf.jasperreports.components.items.StandardItemData;
 import net.sf.jasperreports.components.items.StandardItemProperty;
 import net.sf.jasperreports.components.map.MapComponent;
-import net.sf.jasperreports.components.map.MarkerItemData;
 import net.sf.jasperreports.components.map.MarkerStandardItemData;
 import net.sf.jasperreports.components.map.StandardMapComponent;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
