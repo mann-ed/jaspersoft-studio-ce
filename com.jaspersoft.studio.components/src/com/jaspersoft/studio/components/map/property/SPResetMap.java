@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
+import com.jaspersoft.studio.components.map.messages.Messages;
 import com.jaspersoft.studio.model.APropertyNode;
 import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.property.section.widgets.ASPropertyWidget;
@@ -54,8 +55,8 @@ public class SPResetMap extends ASPropertyWidget<ResetMapPropertyDescriptor> {
 		infoTxt.setLayoutData(infoTxtGD);
 		
 		editBtn = new Button(cmp,SWT.FLAT);
-		editBtn.setText("...");
-		editBtn.setToolTipText("Edit Reset Map settings");
+		editBtn.setText("..."); //$NON-NLS-1$
+		editBtn.setToolTipText(Messages.SPResetMap_EditTooltip);
 		editBtn.setLayoutData(new GridData(SWT.FILL,SWT.FILL,false,false));
 		editBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -76,13 +77,13 @@ public class SPResetMap extends ASPropertyWidget<ResetMapPropertyDescriptor> {
 		});
 		
 		delBtn = new Button(cmp,SWT.FLAT);
-		delBtn.setImage(JaspersoftStudioPlugin.getInstance().getImage("/icons/delete_element.gif"));
-		delBtn.setToolTipText("Remove Reset Map settings");
+		delBtn.setImage(JaspersoftStudioPlugin.getInstance().getImage("/icons/delete_element.gif")); //$NON-NLS-1$
+		delBtn.setToolTipText(Messages.SPResetMap_DeleteTooltip);
 		delBtn.setLayoutData(new GridData(SWT.FILL,SWT.FILL,false,false));
 		delBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				boolean reply = MessageDialog.openQuestion(UIUtils.getShell(), "Reset Map", "Do you want to remove the settings?");
+				boolean reply = MessageDialog.openQuestion(UIUtils.getShell(), Messages.SPResetMap_ConfirmDeleteTitle, Messages.SPResetMap_ConfirmDeleteMsg);
 				if(reply) {
 					section.changeProperty(StandardMapComponent.PROPERTY_RESET_MAP, null);
 					delBtn.setEnabled(false);
@@ -98,7 +99,7 @@ public class SPResetMap extends ASPropertyWidget<ResetMapPropertyDescriptor> {
 			infoTxt.setText(LegendOrResetMapLabelProvider.getLabelText((Item) value));
 		}
 		else {
-			infoTxt.setText("<NOT SET>");
+			infoTxt.setText(Messages.SPResetMap_NotSet);
 		}
 	}
 

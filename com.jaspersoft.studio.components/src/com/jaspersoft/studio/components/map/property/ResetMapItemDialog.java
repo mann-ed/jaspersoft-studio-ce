@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Shell;
 
+import com.jaspersoft.studio.components.map.messages.Messages;
 import com.jaspersoft.studio.utils.EnumHelper;
 import com.jaspersoft.studio.widgets.framework.ui.ItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.SelectableComboItemPropertyDescription;
@@ -27,8 +28,8 @@ public class ResetMapItemDialog extends ItemElementDialog {
 
 	protected ResetMapItemDialog(Shell parentShell, Item itemElement) {
 		super(parentShell, itemElement);
-		setTitle("Reset Map");
-		setDescription("Configure the details related to the reset map feature");
+		setTitle(Messages.ResetMapItemDialog_Title);
+		setDescription(Messages.ResetMapItemDialog_Description);
 	}
 
 	@Override
@@ -37,14 +38,14 @@ public class ResetMapItemDialog extends ItemElementDialog {
 		
 		SelectableComboItemPropertyDescription<Boolean> legendEnabledDesc = 
 				new SelectableComboItemPropertyDescription<Boolean>(
-						MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_enabled, "Enabled", "Flag to decide is the reset button is enabled or not", false, Boolean.FALSE, new String[] {"false","true"});
+						MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_enabled, Messages.ResetMapItemDialog_PropertyEnabledLbl, Messages.ResetMapItemDialog_PropertyEnabledDesc, false, Boolean.FALSE, new String[] {"false","true"}); //$NON-NLS-3$ //$NON-NLS-4$
 		
 		TextPropertyDescription<String> legendLabelDesc = 
-				new TextPropertyDescription<String>(MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_label, "Label", "Label for the reset button", true, "Reset map");
+				new TextPropertyDescription<String>(MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_label, Messages.ResetMapItemDialog_PropertyLabelLbl, Messages.ResetMapItemDialog_PropertyLabelDesc, true, Messages.ResetMapItemDialog_PropertyLabelDefaultValue);
 		
 		SelectableComboItemPropertyDescription<CustomMapControlPositionEnum> legendPositionDesc = 
 				new SelectableComboItemPropertyDescription<CustomMapControlPositionEnum>(
-						MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_position, "Position", "Specify the position of the reset button", false, 
+						MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_position, Messages.ResetMapItemDialog_PropertyPositionLbl, Messages.ResetMapItemDialog_PropertyPositionDesc, false, 
 						CustomMapControlPositionEnum.RIGHT_TOP, EnumHelper.getEnumLabelsAndValues(CustomMapControlPositionEnum.class));
 
 		descriptions.add(legendEnabledDesc);

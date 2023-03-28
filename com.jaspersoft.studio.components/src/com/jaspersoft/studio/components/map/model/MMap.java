@@ -227,12 +227,12 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		markerSpideringD.setDescription(Messages.MMap_MarkerSpideringDesc);
 		desc.add(markerSpideringD);
 		
-		ResetMapPropertyDescriptor resetMapPropertyD = new ResetMapPropertyDescriptor(StandardMapComponent.PROPERTY_RESET_MAP, "Reset Map", this);
-		resetMapPropertyD.setDescription("Reset Map");
+		ResetMapPropertyDescriptor resetMapPropertyD = new ResetMapPropertyDescriptor(StandardMapComponent.PROPERTY_RESET_MAP, Messages.MMap_ResetMap, this);
+		resetMapPropertyD.setDescription(Messages.MMap_ResetMapDesc);
 		desc.add(resetMapPropertyD);
 		
-		LegendPropertyDescriptor legendPropertyD = new LegendPropertyDescriptor(StandardMapComponent.PROPERTY_LEGEND, "Legend", this);
-		legendPropertyD.setDescription("Legend");
+		LegendPropertyDescriptor legendPropertyD = new LegendPropertyDescriptor(StandardMapComponent.PROPERTY_LEGEND, Messages.MMap_Legend, this);
+		legendPropertyD.setDescription(Messages.MMap_LegendDesc);
 		desc.add(legendPropertyD);
 
 		getMapTypeD();

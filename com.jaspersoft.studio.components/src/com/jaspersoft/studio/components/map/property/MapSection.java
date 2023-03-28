@@ -132,8 +132,8 @@ public class MapSection extends AbstractSection {
 		addProvidedProperties(StandardMapComponent.PROPERTY_MAP_SCALE, Messages.MMap_mapScaleTitle);
 		addProvidedProperties(StandardMapComponent.PROPERTY_IMAGE_TYPE, Messages.MMap_imageTypeTitle);
 		addProvidedProperties(StandardMapComponent.PROPERTY_ON_ERROR_TYPE, Messages.MMap_OnErrorType);
-		addProvidedProperties(StandardMapComponent.PROPERTY_RESET_MAP, "Reset Map");
-		addProvidedProperties(StandardMapComponent.PROPERTY_LEGEND, "Legend");
+		addProvidedProperties(StandardMapComponent.PROPERTY_RESET_MAP, Messages.MMap_ResetMap);
+		addProvidedProperties(StandardMapComponent.PROPERTY_LEGEND, Messages.MMap_Legend);
 	}
 
 }

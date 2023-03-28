@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.eclipse.jface.viewers.LabelProvider;
 
+import com.jaspersoft.studio.components.map.messages.Messages;
+
 import net.sf.jasperreports.components.items.Item;
 import net.sf.jasperreports.components.items.ItemProperty;
 import net.sf.jasperreports.components.map.StandardMapComponent;
@@ -26,7 +28,7 @@ public class LegendOrResetMapLabelProvider extends LabelProvider {
 				i -> StandardMapComponent.LEGEND_OR_RESET_MAP_PROPERTY_label.equals(i.getName())).findFirst();
 		if(found.isPresent()) {
 			ItemProperty labelProperty = found.get();
-			String txt = "INVALID LABEL SET";
+			String txt = Messages.LegendOrResetMapLabelProvider_WarningInvalidLabel;
 			if(labelProperty.getValue()!=null) {
 				txt = labelProperty.getValue();
 			}						
@@ -37,7 +39,7 @@ public class LegendOrResetMapLabelProvider extends LabelProvider {
 			
 		}
 		else {
-			return "<NOT SET>";
+			return Messages.LegendOrResetMapLabelProvider_WarningNotSet;
 		}
 	}
 	
@@ -46,6 +48,6 @@ public class LegendOrResetMapLabelProvider extends LabelProvider {
 		if(element instanceof Item) {
 			return LegendOrResetMapLabelProvider.getLabelText((Item) element);
 		}
-		return "<NOT SET>";
+		return Messages.LegendOrResetMapLabelProvider_WarningNotSet;
 	}	
 }
