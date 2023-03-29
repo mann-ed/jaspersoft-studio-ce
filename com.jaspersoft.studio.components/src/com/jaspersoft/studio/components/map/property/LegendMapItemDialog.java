@@ -46,32 +46,42 @@ public class LegendMapItemDialog extends ItemElementDialog {
 		SelectableComboItemPropertyDescription<Boolean> legendEnabledDesc = 
 				new SelectableComboItemPropertyDescription<Boolean>(
 						MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_enabled, Messages.LegendMapItemDialog_PropertyEnabledLbl, Messages.LegendMapItemDialog_PropertyEnabledDesc, false, Boolean.FALSE, new String[] {"false","true"}); //$NON-NLS-3$ //$NON-NLS-4$
+		legendEnabledDesc.setFallbackValue(Boolean.FALSE);		
 		TextPropertyDescription<String> legendLabelDesc = 
 				new TextPropertyDescription<String>(MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_label, Messages.LegendMapItemDialog_PropertyLabelLbl, Messages.LegendMapItemDialog_PropertyLabelDesc, true, Messages.LegendMapItemDialog_PropertyLabelDefaultValue);
-		SelectableComboItemPropertyDescription<CustomMapControlPositionEnum> legendPositionDesc = 
-				new SelectableComboItemPropertyDescription<CustomMapControlPositionEnum>(
+		legendLabelDesc.setFallbackValue(Messages.LegendMapItemDialog_PropertyLabelDefaultValue);
+		SelectableComboItemPropertyDescription<String> legendPositionDesc = 
+				new SelectableComboItemPropertyDescription<String>(
 						MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_position, Messages.LegendMapItemDialog_PropertyPositionLbl, Messages.LegendMapItemDialog_PropertyPositionDesc, false, 
-						CustomMapControlPositionEnum.RIGHT_CENTER, EnumHelper.getEnumLabelsAndValues(CustomMapControlPositionEnum.class));
-		SelectableComboItemPropertyDescription<CustomMapControlOrientationEnum> legendOrientationDesc = 
-				new SelectableComboItemPropertyDescription<CustomMapControlOrientationEnum>(
+						CustomMapControlPositionEnum.RIGHT_CENTER.getName(), EnumHelper.getEnumValues(CustomMapControlPositionEnum.class));
+		legendPositionDesc.setFallbackValue(CustomMapControlPositionEnum.RIGHT_CENTER.getName());
+		SelectableComboItemPropertyDescription<String> legendOrientationDesc = 
+				new SelectableComboItemPropertyDescription<String>(
 						MapComponent.LEGEND_PROPERTY_orientation, Messages.LegendMapItemDialog_PropertyOrientationLbl, Messages.LegendMapItemDialog_PropertyOrientationDesc, false, 
-						CustomMapControlOrientationEnum.VERTICAL, EnumHelper.getEnumLabelsAndValues(CustomMapControlOrientationEnum.class));
+						CustomMapControlOrientationEnum.VERTICAL.getName(), EnumHelper.getEnumValues(CustomMapControlOrientationEnum.class));
+		legendOrientationDesc.setFallbackValue(CustomMapControlOrientationEnum.VERTICAL.getName());
 		FixedMeasurePropertyDescription legendMaxWidthDesc = 
 				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxWidth, Messages.LegendMapItemDialog_PropertyLegendMaxWidthLbl, Messages.LegendMapItemDialog_PropertyLegendMaxWidthDesc, false, "100", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		legendMaxWidthDesc.setFallbackValue("100");
 		FixedMeasurePropertyDescription legendMaxWidthFullScrDesc = 
 				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxWidth_fullscreen, Messages.LegendMapItemDialog_PropertyLegendMaxWidthFullLbl, Messages.LegendMapItemDialog_PropertyLegendMaxWidthFullDesc, false, "150", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		legendMaxWidthFullScrDesc.setFallbackValue("150");
 		FixedMeasurePropertyDescription seriesMaxWidthDesc = 
 				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_seriesMaxWidth, Messages.LegendMapItemDialog_PropertySeriesMaxWidthLbl, Messages.LegendMapItemDialog_PropertySeriesMaxWidthDesc, false, "200", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		seriesMaxWidthDesc.setFallbackValue("200");
 		FixedMeasurePropertyDescription seriesMaxWidthFullScrDesc = 
 				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_seriesMaxWidth_fullscreen, Messages.LegendMapItemDialog_PropertySeriesMaxWidthFullLbl, Messages.LegendMapItemDialog_PropertySeriesMaxWidthFullDesc, false, "300", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		seriesMaxWidthFullScrDesc.setFallbackValue("300");
 		FixedMeasurePropertyDescription seriesMaxHeightDesc = 
 				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_seriesMaxHeight, Messages.LegendMapItemDialog_PropertySeriesMaxHeightLbl, Messages.LegendMapItemDialog_PropertySeriesMaxHeightDesc, false, "150", -1, -1, pixelsDefMap); //$NON-NLS-3$
-		
+		seriesMaxHeightDesc.setFallbackValue("150");
 		FixedMeasurePropertyDescription seriesMaxHeightFullScrDesc = 
 				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_seriesMaxHeight_fullscreen, Messages.LegendMapItemDialog_PropertySeriesMaxHeightFullLbl, Messages.LegendMapItemDialog_PropertySeriesMaxHeightFullDesc, false, "600", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		seriesMaxHeightFullScrDesc.setFallbackValue("600");
 		SelectableComboItemPropertyDescription<Boolean> useMarkerIconsDesc = 
 				new SelectableComboItemPropertyDescription<Boolean>(
 						MapComponent.LEGEND_PROPERTY_useMarkerIcons, Messages.LegendMapItemDialog_PropertyUseMarkerIconsLbl, Messages.LegendMapItemDialog_PropertyUseMarkerIconsDesc, false, Boolean.TRUE, new String[] {"false","true"}); //$NON-NLS-3$ //$NON-NLS-4$
+		useMarkerIconsDesc.setFallbackValue(Boolean.TRUE);
 		
 		descriptions.add(legendEnabledDesc);
 		descriptions.add(legendLabelDesc);
@@ -92,7 +102,7 @@ public class LegendMapItemDialog extends ItemElementDialog {
 	@Override
 	protected void createItemPropertiesWidgets() {
 		createItemProperty(containerCmp,MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_enabled);
-		createItemProperty(containerCmp,MapComponent.ITEM_PROPERTY_MARKER_label);
+		createItemProperty(containerCmp,MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_label);
 		createItemProperty(containerCmp,MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_position);
 		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_orientation);
 		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_legendMaxWidth);

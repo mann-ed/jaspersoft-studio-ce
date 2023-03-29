@@ -36,10 +36,9 @@ public class LegendOrResetMapLabelProvider extends LabelProvider {
 				txt = labelProperty.getValueExpression().getText();
 			}
 			return txt; 
-			
 		}
 		else {
-			return Messages.LegendOrResetMapLabelProvider_WarningNotSet;
+			return Messages.LegendOrResetMapLabelProvider_DefaultLabelTxt;
 		}
 	}
 	

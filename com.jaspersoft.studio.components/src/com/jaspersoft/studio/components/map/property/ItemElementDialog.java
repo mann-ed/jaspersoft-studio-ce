@@ -6,6 +6,7 @@ package com.jaspersoft.studio.components.map.property;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -205,6 +206,10 @@ public abstract class ItemElementDialog extends ATitledDialog implements IExpres
 	 * @return the modified {@link Item} element
 	 */
 	public Item getModifiedItem() {
-		return this.item;
+		// clean-up "useless" properties
+		Predicate<ItemProperty> isEmpty = item -> item.getValue()==null && item.getValueExpression()==null;
+		this.item.getProperties().removeIf(isEmpty);
+		// return the item only if it contains properties
+		return this.item.getProperties().isEmpty() ? null : this.item;
 	}
 }

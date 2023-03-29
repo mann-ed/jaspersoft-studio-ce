@@ -70,8 +70,9 @@ public class SPResetMap extends ASPropertyWidget<ResetMapPropertyDescriptor> {
 				ResetMapItemDialog d = new ResetMapItemDialog(UIUtils.getShell(),toEdit);
 				int dResult = d.open();
 				if(dResult==Dialog.OK) {
-					section.changeProperty(StandardMapComponent.PROPERTY_RESET_MAP, d.getModifiedItem());
-					delBtn.setEnabled(true);
+					Item modifiedItem = d.getModifiedItem();
+					section.changeProperty(StandardMapComponent.PROPERTY_RESET_MAP, modifiedItem);
+					delBtn.setEnabled(modifiedItem!=null);
 				}
 			}
 		});

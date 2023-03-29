@@ -70,8 +70,9 @@ public class SPLegendMap extends ASPropertyWidget<LegendPropertyDescriptor> {
 				LegendMapItemDialog d = new LegendMapItemDialog(UIUtils.getShell(),toEdit);
 				int dResult = d.open();
 				if(dResult==Dialog.OK) {
-					section.changeProperty(StandardMapComponent.PROPERTY_LEGEND, d.getModifiedItem());
-					delBtn.setEnabled(true);
+					Item modifiedItem = d.getModifiedItem();
+					section.changeProperty(StandardMapComponent.PROPERTY_LEGEND, modifiedItem);
+					delBtn.setEnabled(modifiedItem!=null);
 				}
 			}
 		});

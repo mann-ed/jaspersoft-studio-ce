@@ -36,21 +36,24 @@ public class ResetMapItemDialog extends ItemElementDialog {
 	protected List<ItemPropertyDescription<?>> initItemPropertiesDescriptions() {
 		List<ItemPropertyDescription<?>> descriptions=new ArrayList<>();
 		
-		SelectableComboItemPropertyDescription<Boolean> legendEnabledDesc = 
+		SelectableComboItemPropertyDescription<Boolean> resetMapEnabledDesc = 
 				new SelectableComboItemPropertyDescription<Boolean>(
 						MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_enabled, Messages.ResetMapItemDialog_PropertyEnabledLbl, Messages.ResetMapItemDialog_PropertyEnabledDesc, false, Boolean.FALSE, new String[] {"false","true"}); //$NON-NLS-3$ //$NON-NLS-4$
+		resetMapEnabledDesc.setFallbackValue(Boolean.FALSE);
 		
-		TextPropertyDescription<String> legendLabelDesc = 
+		TextPropertyDescription<String> resetMapLabelDesc = 
 				new TextPropertyDescription<String>(MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_label, Messages.ResetMapItemDialog_PropertyLabelLbl, Messages.ResetMapItemDialog_PropertyLabelDesc, true, Messages.ResetMapItemDialog_PropertyLabelDefaultValue);
+		resetMapLabelDesc.setFallbackValue(Messages.ResetMapItemDialog_PropertyLabelDefaultValue);
 		
-		SelectableComboItemPropertyDescription<CustomMapControlPositionEnum> legendPositionDesc = 
-				new SelectableComboItemPropertyDescription<CustomMapControlPositionEnum>(
+		SelectableComboItemPropertyDescription<String> resetMapPositionDesc = 
+				new SelectableComboItemPropertyDescription<String>(
 						MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_position, Messages.ResetMapItemDialog_PropertyPositionLbl, Messages.ResetMapItemDialog_PropertyPositionDesc, false, 
-						CustomMapControlPositionEnum.RIGHT_TOP, EnumHelper.getEnumLabelsAndValues(CustomMapControlPositionEnum.class));
+						CustomMapControlPositionEnum.RIGHT_TOP.getName(), EnumHelper.getEnumValues(CustomMapControlPositionEnum.class));
+		resetMapPositionDesc.setFallbackValue(CustomMapControlPositionEnum.RIGHT_TOP.getName());
 
-		descriptions.add(legendEnabledDesc);
-		descriptions.add(legendLabelDesc);
-		descriptions.add(legendPositionDesc);
+		descriptions.add(resetMapEnabledDesc);
+		descriptions.add(resetMapLabelDesc);
+		descriptions.add(resetMapPositionDesc);
 		
 		return descriptions;
 	}
@@ -59,7 +62,7 @@ public class ResetMapItemDialog extends ItemElementDialog {
 	@Override
 	protected void createItemPropertiesWidgets() {
 		createItemProperty(containerCmp,MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_enabled);
-		createItemProperty(containerCmp,MapComponent.ITEM_PROPERTY_MARKER_label);
+		createItemProperty(containerCmp,MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_label);
 		createItemProperty(containerCmp,MapComponent.LEGEND_OR_RESET_MAP_PROPERTY_position);
 	}
 

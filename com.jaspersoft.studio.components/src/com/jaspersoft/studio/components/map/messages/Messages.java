@@ -52,6 +52,7 @@ public class Messages extends NLS {
 	public static String LegendMapItemDialog_PropertyUseMarkerIconsDesc;
 	public static String LegendMapItemDialog_PropertyUseMarkerIconsLbl;
 	public static String LegendMapItemDialog_Title;
+	public static String LegendOrResetMapLabelProvider_DefaultLabelTxt;
 	public static String LegendOrResetMapLabelProvider_WarningInvalidLabel;
 	public static String LegendOrResetMapLabelProvider_WarningNotSet;
 	public static String MapAuthenticationSection_ApiKeyText;
