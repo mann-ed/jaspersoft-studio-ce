@@ -60,24 +60,18 @@ public class LegendMapItemDialog extends ItemElementDialog {
 						MapComponent.LEGEND_PROPERTY_orientation, Messages.LegendMapItemDialog_PropertyOrientationLbl, Messages.LegendMapItemDialog_PropertyOrientationDesc, false, 
 						CustomMapControlOrientationEnum.VERTICAL.getName(), EnumHelper.getEnumValues(CustomMapControlOrientationEnum.class));
 		legendOrientationDesc.setFallbackValue(CustomMapControlOrientationEnum.VERTICAL.getName());
-		FixedMeasurePropertyDescription legendMaxWidthDesc = 
+		FixedMeasurePropertyDescription legendMaxWidthDesc =
 				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxWidth, Messages.LegendMapItemDialog_PropertyLegendMaxWidthLbl, Messages.LegendMapItemDialog_PropertyLegendMaxWidthDesc, false, "100", -1, -1, pixelsDefMap); //$NON-NLS-3$
 		legendMaxWidthDesc.setFallbackValue("100");
-		FixedMeasurePropertyDescription legendMaxWidthFullScrDesc = 
+		FixedMeasurePropertyDescription legendMaxWidthFullScrDesc =
 				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxWidth_fullscreen, Messages.LegendMapItemDialog_PropertyLegendMaxWidthFullLbl, Messages.LegendMapItemDialog_PropertyLegendMaxWidthFullDesc, false, "150", -1, -1, pixelsDefMap); //$NON-NLS-3$
 		legendMaxWidthFullScrDesc.setFallbackValue("150");
-		FixedMeasurePropertyDescription seriesMaxWidthDesc = 
-				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_seriesMaxWidth, Messages.LegendMapItemDialog_PropertySeriesMaxWidthLbl, Messages.LegendMapItemDialog_PropertySeriesMaxWidthDesc, false, "200", -1, -1, pixelsDefMap); //$NON-NLS-3$
-		seriesMaxWidthDesc.setFallbackValue("200");
-		FixedMeasurePropertyDescription seriesMaxWidthFullScrDesc = 
-				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_seriesMaxWidth_fullscreen, Messages.LegendMapItemDialog_PropertySeriesMaxWidthFullLbl, Messages.LegendMapItemDialog_PropertySeriesMaxWidthFullDesc, false, "300", -1, -1, pixelsDefMap); //$NON-NLS-3$
-		seriesMaxWidthFullScrDesc.setFallbackValue("300");
-		FixedMeasurePropertyDescription seriesMaxHeightDesc = 
-				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_seriesMaxHeight, Messages.LegendMapItemDialog_PropertySeriesMaxHeightLbl, Messages.LegendMapItemDialog_PropertySeriesMaxHeightDesc, false, "150", -1, -1, pixelsDefMap); //$NON-NLS-3$
-		seriesMaxHeightDesc.setFallbackValue("150");
-		FixedMeasurePropertyDescription seriesMaxHeightFullScrDesc = 
-				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_seriesMaxHeight_fullscreen, Messages.LegendMapItemDialog_PropertySeriesMaxHeightFullLbl, Messages.LegendMapItemDialog_PropertySeriesMaxHeightFullDesc, false, "600", -1, -1, pixelsDefMap); //$NON-NLS-3$
-		seriesMaxHeightFullScrDesc.setFallbackValue("600");
+		FixedMeasurePropertyDescription legendMaxHeightDesc =
+				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxHeight, Messages.LegendMapItemDialog_PropertyLegendMaxHeightLbl, Messages.LegendMapItemDialog_PropertyLegendMaxHeightDesc, false, "150", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		legendMaxHeightDesc.setFallbackValue("150");
+		FixedMeasurePropertyDescription legendMaxHeightFullScrDesc =
+				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxHeight_fullscreen, Messages.LegendMapItemDialog_PropertyLegendMaxHeightFullLbl, Messages.LegendMapItemDialog_PropertyLegendMaxHeightFullDesc, false, "300", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		legendMaxHeightFullScrDesc.setFallbackValue("300");
 		SelectableComboItemPropertyDescription<Boolean> useMarkerIconsDesc = 
 				new SelectableComboItemPropertyDescription<Boolean>(
 						MapComponent.LEGEND_PROPERTY_useMarkerIcons, Messages.LegendMapItemDialog_PropertyUseMarkerIconsLbl, Messages.LegendMapItemDialog_PropertyUseMarkerIconsDesc, false, Boolean.TRUE, new String[] {"false","true"}); //$NON-NLS-3$ //$NON-NLS-4$
@@ -89,10 +83,8 @@ public class LegendMapItemDialog extends ItemElementDialog {
 		descriptions.add(legendOrientationDesc);
 		descriptions.add(legendMaxWidthDesc);
 		descriptions.add(legendMaxWidthFullScrDesc);
-		descriptions.add(seriesMaxWidthDesc);
-		descriptions.add(seriesMaxWidthFullScrDesc);
-		descriptions.add(seriesMaxHeightDesc);
-		descriptions.add(seriesMaxHeightFullScrDesc);
+		descriptions.add(legendMaxHeightDesc);
+		descriptions.add(legendMaxHeightFullScrDesc);
 		descriptions.add(useMarkerIconsDesc);
 		
 		return descriptions;
@@ -107,10 +99,8 @@ public class LegendMapItemDialog extends ItemElementDialog {
 		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_orientation);
 		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_legendMaxWidth);
 		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_legendMaxWidth_fullscreen);
-		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_seriesMaxWidth);
-		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_seriesMaxWidth_fullscreen);
-		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_seriesMaxHeight);
-		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_seriesMaxHeight_fullscreen);
+		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_legendMaxHeight);
+		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_legendMaxHeight_fullscreen);
 		createItemProperty(containerCmp, MapComponent.LEGEND_PROPERTY_useMarkerIcons);
 	}
 
