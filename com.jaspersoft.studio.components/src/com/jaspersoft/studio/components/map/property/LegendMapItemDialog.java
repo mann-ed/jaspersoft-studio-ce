@@ -4,15 +4,14 @@
 package com.jaspersoft.studio.components.map.property;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Shell;
 
 import com.jaspersoft.studio.components.map.messages.Messages;
 import com.jaspersoft.studio.utils.EnumHelper;
-import com.jaspersoft.studio.widgets.framework.ui.FixedMeasurePropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.ItemPropertyDescription;
+import com.jaspersoft.studio.widgets.framework.ui.PixelPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.SelectableComboItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.TextPropertyDescription;
 
@@ -40,8 +39,6 @@ public class LegendMapItemDialog extends ItemElementDialog {
 	@Override
 	protected List<ItemPropertyDescription<?>> initItemPropertiesDescriptions() {
 		List<ItemPropertyDescription<?>> descriptions=new ArrayList<>();
-		HashMap<String, String> pixelsDefMap = new HashMap<>();
-		pixelsDefMap.put("px", "px"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		SelectableComboItemPropertyDescription<Boolean> legendEnabledDesc = 
 				new SelectableComboItemPropertyDescription<Boolean>(
@@ -60,17 +57,17 @@ public class LegendMapItemDialog extends ItemElementDialog {
 						MapComponent.LEGEND_PROPERTY_orientation, Messages.LegendMapItemDialog_PropertyOrientationLbl, Messages.LegendMapItemDialog_PropertyOrientationDesc, false, 
 						CustomMapControlOrientationEnum.VERTICAL.getName(), EnumHelper.getEnumValues(CustomMapControlOrientationEnum.class));
 		legendOrientationDesc.setFallbackValue(CustomMapControlOrientationEnum.VERTICAL.getName());
-		FixedMeasurePropertyDescription legendMaxWidthDesc =
-				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxWidth, Messages.LegendMapItemDialog_PropertyLegendMaxWidthLbl, Messages.LegendMapItemDialog_PropertyLegendMaxWidthDesc, false, "100", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		PixelPropertyDescription legendMaxWidthDesc =
+				new PixelPropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxWidth, Messages.LegendMapItemDialog_PropertyLegendMaxWidthLbl, Messages.LegendMapItemDialog_PropertyLegendMaxWidthDesc, false, "100", -1, -1); //$NON-NLS-3$
 		legendMaxWidthDesc.setFallbackValue("100");
-		FixedMeasurePropertyDescription legendMaxWidthFullScrDesc =
-				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxWidth_fullscreen, Messages.LegendMapItemDialog_PropertyLegendMaxWidthFullLbl, Messages.LegendMapItemDialog_PropertyLegendMaxWidthFullDesc, false, "150", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		PixelPropertyDescription legendMaxWidthFullScrDesc =
+				new PixelPropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxWidth_fullscreen, Messages.LegendMapItemDialog_PropertyLegendMaxWidthFullLbl, Messages.LegendMapItemDialog_PropertyLegendMaxWidthFullDesc, false, "150", -1, -1); //$NON-NLS-3$
 		legendMaxWidthFullScrDesc.setFallbackValue("150");
-		FixedMeasurePropertyDescription legendMaxHeightDesc =
-				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxHeight, Messages.LegendMapItemDialog_PropertyLegendMaxHeightLbl, Messages.LegendMapItemDialog_PropertyLegendMaxHeightDesc, false, "150", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		PixelPropertyDescription legendMaxHeightDesc =
+				new PixelPropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxHeight, Messages.LegendMapItemDialog_PropertyLegendMaxHeightLbl, Messages.LegendMapItemDialog_PropertyLegendMaxHeightDesc, false, "150", -1, -1); //$NON-NLS-3$
 		legendMaxHeightDesc.setFallbackValue("150");
-		FixedMeasurePropertyDescription legendMaxHeightFullScrDesc =
-				new FixedMeasurePropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxHeight_fullscreen, Messages.LegendMapItemDialog_PropertyLegendMaxHeightFullLbl, Messages.LegendMapItemDialog_PropertyLegendMaxHeightFullDesc, false, "300", -1, -1, pixelsDefMap); //$NON-NLS-3$
+		PixelPropertyDescription legendMaxHeightFullScrDesc =
+				new PixelPropertyDescription(MapComponent.LEGEND_PROPERTY_legendMaxHeight_fullscreen, Messages.LegendMapItemDialog_PropertyLegendMaxHeightFullLbl, Messages.LegendMapItemDialog_PropertyLegendMaxHeightFullDesc, false, "300", -1, -1); //$NON-NLS-3$
 		legendMaxHeightFullScrDesc.setFallbackValue("300");
 		SelectableComboItemPropertyDescription<Boolean> useMarkerIconsDesc = 
 				new SelectableComboItemPropertyDescription<Boolean>(
