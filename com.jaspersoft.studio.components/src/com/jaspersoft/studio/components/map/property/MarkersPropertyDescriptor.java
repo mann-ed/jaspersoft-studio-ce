@@ -4,9 +4,12 @@
  ******************************************************************************/
 package com.jaspersoft.studio.components.map.property;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -55,6 +58,7 @@ import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.util.JRCloneUtils;
 
 /**
  * 
@@ -68,7 +72,17 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 				AItemDataListPropertyDescriptor pDescriptor, boolean showElements) {
 			super(parent, section, pDescriptor, showElements);
 		}
+		
+		@Override
+		protected void handleNewElement(TreeViewer tviewer) {
+			List<ItemData> clones = JRCloneUtils.cloneList(itemDatas);
+			MarkerStandardItemData itemData = new MarkerStandardItemData();
+			clones.add(itemData);
+			if (createItemDataDialog(clones, itemData).open() == Dialog.OK)
+				postCreateItemDialog(new ArrayList<ItemData>(clones));
 
+		}
+		
 		@Override
 		protected ItemDataDialog createItemDataDialog(List<ItemData> clones, StandardItemData itemData) {
 			return new ItemDataDialog(UIUtils.getShell(), Messages.MMap_markersDescription,
