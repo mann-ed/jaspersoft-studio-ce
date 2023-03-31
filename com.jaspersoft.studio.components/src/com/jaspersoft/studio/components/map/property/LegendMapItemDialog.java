@@ -33,7 +33,7 @@ public class LegendMapItemDialog extends ItemElementDialog {
 		super(parentShell, itemElement);
 		setTitle(Messages.LegendMapItemDialog_Title);
 		setDescription(Messages.LegendMapItemDialog_Description);
-		setDefaultSize(UIUtils.getScaledWidth(500), UIUtils.getScaledHeight(600));
+		setDefaultSize(UIUtils.getScaledWidth(450), UIUtils.getScaledHeight(500));
 	}
 
 	@Override

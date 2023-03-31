@@ -17,6 +17,7 @@ import com.jaspersoft.studio.widgets.framework.ui.TextPropertyDescription;
 import net.sf.jasperreports.components.items.Item;
 import net.sf.jasperreports.components.map.MapComponent;
 import net.sf.jasperreports.components.map.fill.CustomMapControlPositionEnum;
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 /**
  * Configuration dialog to setup the reset map details.
@@ -30,6 +31,7 @@ public class ResetMapItemDialog extends ItemElementDialog {
 		super(parentShell, itemElement);
 		setTitle(Messages.ResetMapItemDialog_Title);
 		setDescription(Messages.ResetMapItemDialog_Description);
+		setDefaultSize(UIUtils.getScaledWidth(450), UIUtils.getScaledHeight(300));
 	}
 
 	@Override
