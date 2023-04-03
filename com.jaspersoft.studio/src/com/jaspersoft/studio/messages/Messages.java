@@ -655,6 +655,7 @@ public class Messages extends NLS {
 	public static String EditorContextUtil_1;
 	public static String EditorContextUtil_2;
 	public static String EditorContextUtil_6;
+	public static String EditorContextUtil_EdgeWarningMsg;
 	public static String EditToolAction_name;
 	public static String ElementContextualMenu_contextualResetPlural;
 	public static String ElementContextualMenu_econtextualResetSingular;
