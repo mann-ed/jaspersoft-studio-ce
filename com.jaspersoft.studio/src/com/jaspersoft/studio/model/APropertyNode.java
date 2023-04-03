@@ -347,4 +347,17 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 			return JSSStyleResolver.DEFAULT_INSTANCE;
 		}
 	}
+	
+	/**
+	 * Checks if the element is supporting the report splitting feature.
+	 * <br/><br/>
+	 * NOTE: default value is <code>false</code>.
+	 * 
+	 * @return <code>true</code> if it supports report splitting,
+	 * 			<code>false</code> otherwise.
+	 */
+	public boolean isReportSplittingSupported() {
+		return false;
+	}
+	
 }

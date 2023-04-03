@@ -587,4 +587,9 @@ public class MList extends MGraphicElement implements IPastable, IPastableGraphi
 		}
 		return 0;
 	}
+	
+	@Override
+	public boolean isReportSplittingSupported() {
+		return false;
+	}
 }

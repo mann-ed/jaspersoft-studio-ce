@@ -1203,6 +1203,13 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	}
 
 	@Override
+	public boolean isReportSplittingSupported() {
+		// We are changing the default APropertyNode behavior.
+		// We are allowing it for any type of element except frames, subreports, tables and lists.
+		return true;
+	}
+	
+	@Override
 	public Rectangle getAbsoluteBounds() {
 		int x = getValue().getX();
 		int y = getValue().getY();
@@ -1226,5 +1233,6 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		}
 		return new Rectangle(x, y, getValue().getWidth(), getValue().getHeight());
 	}
+
 
 }

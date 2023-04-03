@@ -661,4 +661,9 @@ public class MCrosstab extends MGraphicElementLineBox
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean isReportSplittingSupported() {
+		return false;
+	}
 }

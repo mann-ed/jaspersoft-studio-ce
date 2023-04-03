@@ -6,7 +6,6 @@ package com.jaspersoft.studio.property.section.obj;
 import java.text.MessageFormat;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
 import com.jaspersoft.studio.messages.Messages;
@@ -32,13 +31,6 @@ public class GroupSection extends AbstractSection {
 		nameWidget = createWidget4Property(parent, JRDesignGroup.PROPERTY_NAME);
 
 		createWidget4Property(parent, JRDesignGroup.PROPERTY_EXPRESSION);
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		createWidget4Property(parent, JRDesignGroup.PROPERTY_REPRINT_HEADER_ON_EACH_PAGE, false).getControl()
-				.setLayoutData(gd);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		createWidget4Property(parent, JRDesignGroup.PROPERTY_KEEP_TOGETHER, false).getControl().setLayoutData(gd);
 	}
 
 	@Override
@@ -46,8 +38,6 @@ public class GroupSection extends AbstractSection {
 		super.initializeProvidedProperties();
 		addProvidedProperties(JRDesignGroup.PROPERTY_NAME, Messages.common_name);
 		addProvidedProperties(JRDesignGroup.PROPERTY_EXPRESSION, Messages.common_expression);
-		addProvidedProperties(JRDesignGroup.PROPERTY_REPRINT_HEADER_ON_EACH_PAGE, Messages.MGroup_reprintTitle);
-		addProvidedProperties(JRDesignGroup.PROPERTY_KEEP_TOGETHER, Messages.MGroup_keepTitle);
 	}
 
 	@Override

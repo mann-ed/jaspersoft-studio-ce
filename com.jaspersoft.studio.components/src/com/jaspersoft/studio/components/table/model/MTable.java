@@ -644,4 +644,9 @@ public class MTable extends MGraphicElement
 		else
 			return super.getAdapter(adapter);
 	}
+	
+	@Override
+	public boolean isReportSplittingSupported() {
+		return false;
+	}
 }
