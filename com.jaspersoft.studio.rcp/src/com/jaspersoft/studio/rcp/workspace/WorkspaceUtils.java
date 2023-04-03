@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.rcp.workspace;
 
 import java.io.File;
@@ -88,7 +87,7 @@ public class WorkspaceUtils {
 				new String[] {IDialogConstants.OK_LABEL, IDialogConstants.NO_LABEL}, 0){
 			@Override
 			protected Control createCustomArea(Composite parent) {
-				final String articleLink = "http://community.jaspersoft.com/wiki/import-projects-and-settings-previous-version-jaspersoft-studio"; //$NON-NLS-1$
+				final String articleLink = "https://community.jaspersoft.com/wiki/import-projects-and-settings-previous-version-jaspersoft-studio"; //$NON-NLS-1$
 				final String articleText = Messages.WorkspaceUtils_LinkText;
 				final StyledText link = new StyledText(parent, SWT.READ_ONLY);
 				link.setText(articleText);

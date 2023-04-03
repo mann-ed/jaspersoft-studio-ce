@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Eclipse-ExtensibleAPI: true
 Bundle-ManifestVersion: 2
 Bundle-Name: com.jaspersoft.studio.editor.jrexpressions.ui
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Bundle-Version: 8.2.0.qualifier
 Bundle-SymbolicName: com.jaspersoft.studio.editor.jrexpressions.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
@@ -18,7 +18,7 @@ Require-Bundle: com.jaspersoft.studio.editor.jrexpressions;bundle-version="8.2.0
  org.eclipse.ui,
  org.eclipse.e4.ui.css.swt.theme
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: com.jaspersoft.studio.editor.jrexpressions.ui.contentassist,
  com.jaspersoft.studio.editor.jrexpressions.ui.contentassist.antlr,
  com.jaspersoft.studio.editor.jrexpressions.ui,

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.dataset;
 
 import net.sf.jasperreports.engine.JRDatasetRun;
@@ -9,8 +8,8 @@ import net.sf.jasperreports.engine.JRElementDataset;
 import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.JRGroup;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.DatasetResetTypeEnum;
 import net.sf.jasperreports.engine.type.IncrementTypeEnum;
-import net.sf.jasperreports.engine.type.ResetTypeEnum;
 
 /**
  * This interface gives the ability to change the information regarding a dataset (usually a {@link JRElementDataset} instance).
@@ -63,7 +62,7 @@ public interface IEditableDataset {
 	 * 
 	 * @param newResetType
 	 */
-	void setResetType(ResetTypeEnum newResetType);
+	void setResetType(DatasetResetTypeEnum newResetType);
 	
 	/**
 	 * Returns the instance of the element dataset we are modifying.

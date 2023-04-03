@@ -1178,14 +1178,11 @@
             </input>
          </propertySection>
          <propertySection
-               class="com.jaspersoft.studio.property.section.band.BandGroupSection"
+               class="com.jaspersoft.studio.property.section.obj.GroupArrangementSection"
                id="com.jaspersoft.studio.property.section.band.BandGroupSection"
                tab="com.jaspersoft.studio.editor.JrxmlEditor.Appearance">
             <input
-                  type="com.jaspersoft.studio.model.band.MBandGroupHeader">
-            </input>
-            <input
-                  type="com.jaspersoft.studio.model.band.MBandGroupFooter">
+                  type="com.jaspersoft.studio.model.band.MBandGroup">
             </input>
          </propertySection>
          <propertySection
@@ -1307,6 +1304,15 @@
             </input>
          </propertySection>
          <propertySection
+               class="com.jaspersoft.studio.property.section.obj.GroupArrangementSection"
+               id="com.jaspersoft.studio.property.section.obj.GroupLayoutingSection"
+               afterSection="com.jaspersoft.studio.property.section.obj.GroupSection"
+               tab="com.jaspersoft.studio.editor.section.GROUP">
+            <input
+                  type="com.jaspersoft.studio.model.group.MGroup">
+            </input>
+         </propertySection>         
+         <propertySection
                class="com.jaspersoft.studio.property.section.obj.SortFieldSection"
                id="com.jaspersoft.studio.property.section.obj.SortFieldSection"
                tab="com.jaspersoft.studio.editor.JrxmlEditor.Element">
@@ -1354,7 +1360,7 @@
                id="com.jaspersoft.studio.property.section.obj.GroupSectionBand"
                tab="com.jaspersoft.studio.editor.JrxmlEditor.Appearance">
             <input
-                  type="com.jaspersoft.studio.model.band.MBandGroupHeader">
+                  type="com.jaspersoft.studio.model.band.MBandGroup">
             </input>
          </propertySection>
          <propertySection
@@ -2008,7 +2014,7 @@
         locationURI="popup:com.jaspersoft.studio.editor.context.type">
      <command
            commandId="com.jaspersoft.studio.editor.context.type"
-           label="Reset To Parent"
+           label="Default - No setting"
            style="radio">
         <parameter
               name="org.eclipse.ui.commands.radioStateParameter"

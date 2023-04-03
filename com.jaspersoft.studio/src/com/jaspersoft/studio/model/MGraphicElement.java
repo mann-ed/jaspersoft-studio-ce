@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model;
 
 import java.awt.Color;
@@ -308,7 +308,7 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 				if (b == null) {
 					// FIXME - Need to be verified, temporary solve the issue
 					// reported here:
-					// http://community.jaspersoft.com/questions/826441/javalangnullpointerexception-crosstabs
+					// https://community.jaspersoft.com/questions/826441/javalangnullpointerexception-crosstabs
 					return new Rectangle(jr.getX(), jr.getY(), jr.getWidth(), jr.getHeight());
 				} else {
 					b = new Rectangle(b);
@@ -1203,6 +1203,13 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 	}
 
 	@Override
+	public boolean isReportSplittingSupported() {
+		// We are changing the default APropertyNode behavior.
+		// We are allowing it for any type of element except frames, subreports, tables and lists.
+		return true;
+	}
+	
+	@Override
 	public Rectangle getAbsoluteBounds() {
 		int x = getValue().getX();
 		int y = getValue().getY();
@@ -1226,5 +1233,6 @@ public class MGraphicElement extends APropertyNode implements IGraphicElement, I
 		}
 		return new Rectangle(x, y, getValue().getWidth(), getValue().getHeight());
 	}
+
 
 }

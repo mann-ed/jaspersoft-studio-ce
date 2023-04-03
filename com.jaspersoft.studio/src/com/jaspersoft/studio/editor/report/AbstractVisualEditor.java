@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.report;
 
 import java.util.ArrayList;
@@ -104,6 +103,7 @@ import com.jaspersoft.studio.editor.action.order.BringBackwardAction;
 import com.jaspersoft.studio.editor.action.order.BringForwardAction;
 import com.jaspersoft.studio.editor.action.order.BringToBackAction;
 import com.jaspersoft.studio.editor.action.order.BringToFrontAction;
+import com.jaspersoft.studio.editor.action.reportsplitting.ReportSplittingAction;
 import com.jaspersoft.studio.editor.action.size.MatchSizeAction;
 import com.jaspersoft.studio.editor.action.size.Size2BorderAction;
 import com.jaspersoft.studio.editor.action.snap.KeepUnitsInReportAction;
@@ -907,6 +907,10 @@ public abstract class AbstractVisualEditor extends J2DGraphicalEditorWithFlyoutP
 
 		// ------------
 		action = new DirectEditAction(this);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
+		
+		action = new ReportSplittingAction(this);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 

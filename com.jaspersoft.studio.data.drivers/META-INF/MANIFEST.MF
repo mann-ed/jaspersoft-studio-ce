@@ -5,9 +5,9 @@ Bundle-Name: Drivers
 Bundle-SymbolicName: com.jaspersoft.studio.data.drivers;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Activator: com.jaspersoft.studio.data.drivers.Activator
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Require-Bundle: com.jaspersoft.studio.data;bundle-version="8.2.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: com.jaspersoft.studio.data
 Bundle-ClassPath: patch-library.jar,

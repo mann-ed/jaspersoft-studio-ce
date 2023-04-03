@@ -6,11 +6,11 @@ Bundle-SymbolicName: com.jaspersoft.studio.components; singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: com.jaspersoft.studio.components.Activator
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Require-Bundle: com.jaspersoft.studio;bundle-version="8.2.0",
  com.jaspersoft.studio.widgets.map;bundle-version="8.2.0"
 Eclipse-RegisterBuddy: com.jaspersoft.studio
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: patch-library.jar,
  .

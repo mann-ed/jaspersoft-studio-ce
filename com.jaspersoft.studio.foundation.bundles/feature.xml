@@ -2,20 +2,20 @@
 <feature
       id="com.jaspersoft.studio.foundation.bundles"
       label="Jaspersoft Studio Required Bundles Feature"
-      version="1.0.21"
-      provider-name="TIBCO Software Inc.">
+      version="1.0.22"
+      provider-name="Cloud Software Group, Inc.">
 
-   <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
-      Required bundles to run correctly TIBCO Jaspersoft Studio
+   <description url="https://community.jaspersoft.com/project/jaspersoft-studio">
+      Required bundles to run correctly Jaspersoft Studio
    </description>
 
    <copyright>
-      Copyright (C) 2010 - 2022. TIBCO Software Inc.
+      Copyright (C) 2010 - 2023. Cloud Software Group, Inc.
    </copyright>
 
    <url>
-      <update label="TIBCO Jaspersoft Studio update site" url="http://jasperstudio.sf.net/updates"/>
-      <discovery label="TIBCO Jaspersoft Studio Community Edition" url="http://community.jaspersoft.com/project/jaspersoft-studio"/>
+      <update label="Jaspersoft Studio update site" url="https://jasperstudio.sf.net/updates"/>
+      <discovery label="Jaspersoft Studio Community Edition" url="https://community.jaspersoft.com/project/jaspersoft-studio"/>
    </url>
 
    <includes
@@ -28,8 +28,14 @@
 
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.slf4j.api" version="1.7.2" match="greaterOrEqual"/>
+      <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.apache.log4j" version="1.2.19" match="greaterOrEqual"/>
+      <import plugin="org.apache.xmlgraphics" version="2.7.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.servicemix.bundles.rhino"/>
+      <import plugin="org.w3c.css.sac"/>
+      <import plugin="org.w3c.dom.events"/>
+      <import plugin="org.w3c.dom.smil"/>
    </requires>
 
    <plugin
@@ -68,30 +74,10 @@
          unpack="false"/>
 
    <plugin
-         id="com.jaspersoft.studio.bundles.itext"
-         download-size="0"
-         install-size="0"
-         version="2.1.7.js10_b01"/>
-
-   <plugin
-         id="joda-time"
-         download-size="0"
-         install-size="0"
-         version="2.9.9"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.servicemix.bundles.antlr"
          download-size="0"
          install-size="0"
          version="2.7.7.5"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.jaxen"
-         download-size="0"
-         install-size="0"
-         version="1.1.6.1"
          unpack="false"/>
 
    <plugin
@@ -127,20 +113,14 @@
          id="groovy"
          download-size="0"
          install-size="0"
-         version="3.0.7"
+         version="4.0.8"
          unpack="false"/>
-
-   <plugin
-         id="com.jaspersoft.studio.bundles.batik"
-         download-size="0"
-         install-size="0"
-         version="1.14.0.b03"/>
 
    <plugin
          id="com.jaspersoft.studio.bundles.jackson"
          download-size="0"
          install-size="0"
-         version="2.13.3.b01"
+         version="2.14.2.b01"
          unpack="false"/>
 
    <plugin
@@ -161,7 +141,7 @@
          id="com.jaspersoft.studio.bundles.poi"
          download-size="0"
          install-size="0"
-         version="5.1.0.b01"/>
+         version="5.2.2.b02"/>
 
    <plugin
          id="com.jaspersoft.studio.bundles.cdt-java-client"
@@ -206,32 +186,17 @@
          unpack="false"/>
 
    <plugin
-         id="jaxb-api-import-fragment"
-         download-size="0"
-         install-size="0"
-         version="1.0.0.b01"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.osgi.framework.system.packages.extra"
-         download-size="0"
-         install-size="0"
-         version="1.0.0.b01"
-         fragment="true"/>
-
-   <plugin
          id="org.apache.commons.collections"
          download-size="0"
          install-size="0"
-         version="3.2.2.v201511171945"
+         version="3.2.2.v20220405-1659"
          unpack="false"/>
 
    <plugin
          id="org.apache.commons.codec"
          download-size="0"
          install-size="0"
-         version="1.14.0.v20200818-1422"
+         version="1.14.0.v20221112-0806"
          unpack="false"/>
 
    <plugin
@@ -248,52 +213,38 @@
          unpack="false"/>
 
    <plugin
-         id="org.bouncycastle.bcpg"
-         download-size="0"
-         install-size="0"
-         version="1.70.0.v20220105-1522"
-         unpack="false"/>
-
-   <plugin
          id="org.bouncycastle.bcpkix"
          download-size="0"
          install-size="0"
-         version="1.70.0.v20220105-1522"
-         unpack="false"/>
-
-   <plugin
-         id="org.bouncycastle.bcprov"
-         download-size="0"
-         install-size="0"
-         version="1.70.0.v20220105-1522"
+         version="1.72.0.v20221013-1810"
          unpack="false"/>
 
    <plugin
          id="org.bouncycastle.bcutil"
          download-size="0"
          install-size="0"
-         version="1.70.0.v20220105-1522"
+         version="1.72.0.v20221013-1810"
          unpack="false"/>
 
    <plugin
          id="org.apache.servicemix.bundles.xmlbeans"
          download-size="0"
          install-size="0"
-         version="5.0.2.1"
+         version="5.0.3.1"
          unpack="false"/>
 
    <plugin
          id="org.apache.commons.collections4"
          download-size="0"
          install-size="0"
-         version="4.4.0.v20200420-1700"
+         version="4.4.0.v20221112-0806"
          unpack="false"/>
 
    <plugin
          id="org.apache.santuario.xmlsec"
          download-size="0"
          install-size="0"
-         version="2.2.3"
+         version="2.3.0"
          unpack="false"/>
 
    <plugin
@@ -323,5 +274,70 @@
          install-size="0"
          version="2.17.1"
          unpack="false"/>
+
+   <plugin
+         id="jaxen"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.jaspersoft.studio.logging.log4j"
+         download-size="0"
+         install-size="0"
+         version="1.2.19.js01"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="jaxb-api-import-fragment"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.b02"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.osgi.framework.system.packages.extra"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.b02"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="bcpg"
+         download-size="0"
+         install-size="0"
+         version="1.72.0"
+         unpack="false"/>
+
+   <plugin
+         id="bcprov"
+         download-size="0"
+         install-size="0"
+         version="1.72.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.commons-net"
+         download-size="0"
+         install-size="0"
+         version="3.9.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.commons-validator"
+         download-size="0"
+         install-size="0"
+         version="1.7.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.jaspersoft.studio.bundles.batik"
+         download-size="0"
+         install-size="0"
+         version="1.16.0.b01"/>
 
 </feature>

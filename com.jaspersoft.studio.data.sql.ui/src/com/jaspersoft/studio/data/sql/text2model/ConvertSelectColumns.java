@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.sql.text2model;
 
 import org.apache.xpath.operations.Div;
@@ -89,11 +88,22 @@ public class ConvertSelectColumns {
 
 	public static String operands2String(SQLQueryDesigner designer, ANode qroot, ANode parent, Operands ops,
 			MSelect msel) {
-		Operand op = ops.getOp1();
-		if (op == null && ops.getLeft() != null)
-			op = ops.getLeft().getOp1();
 
-		String str = operand2String(designer, qroot, parent, op, msel);
+		String str = "";
+		if (ops.getLeft() != null) {
+			Operand op = ops.getOp1();
+			if (op != null) {
+				op = ops.getLeft().getOp1();
+				str += operand2String(designer, qroot, parent, op, msel);
+			} else {
+				if (ops.getLeft() instanceof Operands)
+					str += operands2String(designer, qroot, parent, ops.getLeft(), msel);
+				else {
+					ops.getLeft().toString();
+				}
+			}
+		}
+
 		if (ops instanceof Plus)
 			str += " + ";
 		else if (ops instanceof Minus)
@@ -107,6 +117,10 @@ public class ConvertSelectColumns {
 
 		if (ops.getRight() != null)
 			str += operand2String(designer, qroot, parent, ops.getRight(), msel);
+
+		if (ops.getOp1() != null)
+			str += operand2String(designer, qroot, parent, ops.getOp1(), msel);
+
 		return str;
 	}
 
@@ -166,22 +180,24 @@ public class ConvertSelectColumns {
 
 	protected static String operand2String(SQLQueryDesigner designer, ANode qroot, ANode parent, Operand oper,
 			MSelect msel) {
-		if (oper.getColumn() != null)
-			return getColumn(oper.getColumn().getCfull(), msel, designer);
-		if (oper.getFunc() != null)
-			return getFunctionString(designer, qroot, parent, oper.getFunc(), msel);
-		if (oper.getFcast() != null)
-			return getFunctionString(designer, qroot, parent, oper.getFcast(), msel);
-		if (oper.getParam() != null)
-			return oper.getParam().getPrm();
-		if (oper.getEparam() != null)
-			return oper.getEparam().getPrm();
-		if (oper.getScalar() != null)
-			return getScalarString(oper.getScalar());
-		if (oper.getSqlcase() != null)
-			return case2string(designer, qroot, parent, oper.getSqlcase(), msel);
-		if (oper.getXop() != null)
-			return operand2String(designer, qroot, parent, oper.getXop(), msel);
+		if(oper!=null) {
+			if (oper.getColumn() != null)
+				return getColumn(oper.getColumn().getCfull(), msel, designer);
+			if (oper.getFunc() != null)
+				return getFunctionString(designer, qroot, parent, oper.getFunc(), msel);
+			if (oper.getFcast() != null)
+				return getFunctionString(designer, qroot, parent, oper.getFcast(), msel);
+			if (oper.getParam() != null)
+				return oper.getParam().getPrm();
+			if (oper.getEparam() != null)
+				return oper.getEparam().getPrm();
+			if (oper.getScalar() != null)
+				return getScalarString(oper.getScalar());
+			if (oper.getSqlcase() != null)
+				return case2string(designer, qroot, parent, oper.getSqlcase(), msel);
+			if (oper.getXop() != null)
+				return operand2String(designer, qroot, parent, oper.getXop(), msel);
+		}
 		return "";
 	}
 

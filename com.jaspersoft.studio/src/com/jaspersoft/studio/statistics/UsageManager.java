@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.statistics;
 
 import java.io.BufferedReader;
@@ -80,7 +79,7 @@ public class UsageManager {
 	/**
 	 * URL of the server where the heartbeat is sent
 	 */
-	private static final String HEARTBEAT_SERVER_URL = "http://jasperstudio.sf.net/jsslastversion.php";//$NON-NLS-1$
+	private static final String HEARTBEAT_SERVER_URL = "https://jasperstudio.sf.net/jsslastversion.php";//$NON-NLS-1$
 
 	/**
 	 * Property name used in the preferences in the old version of Jaspersoft Studio to store a UUID of the application.

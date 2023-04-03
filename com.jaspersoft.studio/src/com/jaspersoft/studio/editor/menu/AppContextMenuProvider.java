@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.menu;
 
 import java.util.List;
@@ -49,6 +48,7 @@ import com.jaspersoft.studio.editor.action.order.BringBackwardAction;
 import com.jaspersoft.studio.editor.action.order.BringForwardAction;
 import com.jaspersoft.studio.editor.action.order.BringToBackAction;
 import com.jaspersoft.studio.editor.action.order.BringToFrontAction;
+import com.jaspersoft.studio.editor.action.reportsplitting.ReportSplittingAction;
 import com.jaspersoft.studio.editor.action.size.MatchSizeAction;
 import com.jaspersoft.studio.editor.action.size.Size2BorderAction;
 import com.jaspersoft.studio.editor.action.text.AdjustTextFontSize;
@@ -267,6 +267,10 @@ public class AppContextMenuProvider extends AContextMenuProvider {
 		action = getActionRegistry().getAction(UnBindElementsAction.ID);
 		if (action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_COPY, action);
+		
+		action = getActionRegistry().getAction(ReportSplittingAction.ID);
+		if (action.isEnabled())
+			menu.appendToGroup(GEFActionConstants.GROUP_COPY, action);
 
 		menu.appendToGroup(GEFActionConstants.GROUP_COPY, new Separator());
 
@@ -277,6 +281,7 @@ public class AppContextMenuProvider extends AContextMenuProvider {
 		action = getActionRegistry().getAction(SetDefaultsAction.ID);
 		if (action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_COPY, action);
+		
 
 		// -----------------------------------------------------------
 

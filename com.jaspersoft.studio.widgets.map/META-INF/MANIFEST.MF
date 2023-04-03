@@ -5,9 +5,9 @@ Bundle-Name: Google Map Widget
 Bundle-SymbolicName: com.jaspersoft.studio.widgets.map
 Bundle-Version: 8.2.0.qualifier
 Bundle-Activator: com.jaspersoft.studio.widgets.map.MapActivator
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Require-Bundle: com.jaspersoft.studio;bundle-version="8.2.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: com.jaspersoft.studio.widgets.map;uses:="org.eclipse.ui.plugin,org.osgi.framework",
  com.jaspersoft.studio.widgets.map.browserfunctions;uses:="com.jaspersoft.studio.widgets.map.support,org.eclipse.swt.browser",

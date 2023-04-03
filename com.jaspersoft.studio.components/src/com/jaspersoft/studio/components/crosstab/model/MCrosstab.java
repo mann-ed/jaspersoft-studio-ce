@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.crosstab.model;
 
 import java.beans.PropertyChangeEvent;
@@ -660,6 +659,11 @@ public class MCrosstab extends MGraphicElementLineBox
 		if (evt.getPropertyName().equals(MTable.PROPERTY_COLUMNS_AUTORESIZE_PROPORTIONAL)) {
 			return true;
 		}
+		return false;
+	}
+	
+	@Override
+	public boolean isReportSplittingSupported() {
 		return false;
 	}
 }

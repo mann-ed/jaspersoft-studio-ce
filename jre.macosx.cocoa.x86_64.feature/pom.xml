@@ -12,7 +12,7 @@
 	<groupId>com.jaspersoft.studio.community-edition</groupId>
 	<artifactId>jre.macosx.cocoa.x86_64.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
-	<version>11.0.8</version>
+	<version>11.0.18</version>
 
 	<build>
 		<plugins>
@@ -28,7 +28,7 @@
 							<tasks>
 								<exec executable="tar">
 									<arg
-										line="-xzf ${jre.packages.location}/jre-11.0.8-macosx-x64.tar.gz -C ${project.build.directory}/../" />
+										line="-xzf ${jre.packages.location}/jre-11.0.18-macosx-x64.tar.gz -C ${project.build.directory}/../" />
 								</exec>
 							</tasks>
 						</configuration>

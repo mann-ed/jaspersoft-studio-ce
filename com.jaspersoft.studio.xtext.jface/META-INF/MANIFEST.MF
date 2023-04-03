@@ -5,7 +5,7 @@ Bundle-Name: Xtext JFace Integration
 Bundle-SymbolicName: com.jaspersoft.studio.xtext.jface;singleton:=true
 Bundle-Version: 8.2.0.qualifier
 Bundle-Activator: com.jaspersoft.studio.xtext.jface.XJIActivator
-Bundle-Vendor: TIBCO Software Inc.
+Bundle-Vendor: Cloud Software Group, Inc.
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.6.0,4.0.0)",
  org.eclipse.core.expressions;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.ui.ide;bundle-version="[3.6.0,4.0.0)",
@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.6.0,4.0.0)",
  org.eclipse.emf.common;bundle-version="[2.6.0,3.0.0)",
  org.eclipse.xtext.ui;bundle-version="[2.0.0,3.0.0)",
  org.eclipse.help;bundle-version="3.5.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: de.itemis.utils.jface.viewers,
  de.itemis.utils.jface.viewers.help,

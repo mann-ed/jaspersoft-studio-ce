@@ -7,7 +7,7 @@ Bundle-Version: 5.4.24.final
 Bundle-Activator: com.jaspersoft.studio.hibernate.HibernateActivator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.jaspersoft.studio;bundle-version="8.2.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: com.jaspersoft.studio.hibernate
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: patch-library.jar,
@@ -29,6 +29,7 @@ Bundle-ClassPath: patch-library.jar,
  lib/jboss-transaction-api_1.2_spec-1.1.1.Final.jar,
  lib/stax-ex-1.8.jar,
  lib/txw2-2.3.1.jar,
+ lib/validation-api-1.1.0.Final.jar,
  .
 Eclipse-RegisterBuddy: com.jaspersoft.studio
 Eclipse-BuddyPolicy: registered

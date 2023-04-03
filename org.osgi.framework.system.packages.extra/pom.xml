@@ -12,5 +12,5 @@
 	<groupId>com.jaspersoft.studio.community-edition</groupId>
 	<artifactId>org.osgi.framework.system.packages.extra</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>1.0.0.b01</version>
+	<version>1.0.0.b02</version>
 </project> 
