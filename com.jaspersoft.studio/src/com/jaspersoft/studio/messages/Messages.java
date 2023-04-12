@@ -180,6 +180,7 @@ public class Messages extends NLS {
 	public static String AdjustTextFontSize_action_name;
 	public static String AdjustTextFontSize_action_tooltip;
 	public static String AEditorContext_2;
+	public static String AExportAction_ExportErrorMsg;
 	public static String AExportAction_exportreport;
 	public static String AExportAction_overwriteCheckbox;
 	public static String AExportAction_overwriteMessage;

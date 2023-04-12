@@ -57,6 +57,8 @@ public class MapSection extends AbstractSection {
 		widgets.put(pd.getId(), new SPEvaluationTime(parent, this, pd, gpd));
 		createWidget4Property(parent, StandardMapComponent.PROPERTY_IMAGE_TYPE);
 		createWidget4Property(parent, StandardMapComponent.PROPERTY_ON_ERROR_TYPE);
+		createWidget4Property(parent, StandardMapComponent.PROPERTY_RESET_MAP);
+		createWidget4Property(parent, StandardMapComponent.PROPERTY_LEGEND);
 		
 		createEditButton(parent);
 	}
@@ -129,6 +131,8 @@ public class MapSection extends AbstractSection {
 		addProvidedProperties(StandardMapComponent.PROPERTY_MAP_SCALE, Messages.MMap_mapScaleTitle);
 		addProvidedProperties(StandardMapComponent.PROPERTY_IMAGE_TYPE, Messages.MMap_imageTypeTitle);
 		addProvidedProperties(StandardMapComponent.PROPERTY_ON_ERROR_TYPE, Messages.MMap_OnErrorType);
+		addProvidedProperties(StandardMapComponent.PROPERTY_RESET_MAP, Messages.MMap_ResetMap);
+		addProvidedProperties(StandardMapComponent.PROPERTY_LEGEND, Messages.MMap_Legend);
 	}
 
 }

@@ -21,6 +21,7 @@ import com.jaspersoft.studio.statistics.UsageStatisticsIDs;
 import com.jaspersoft.studio.utils.Callback;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.data.AbstractClasspathAwareDataAdapterService;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.eclipse.viewer.IReportViewer;
@@ -212,8 +213,21 @@ public abstract class AExportAction extends AReportViewerAction {
 	protected void exportWithProgress(File file, JRExportProgressMonitor monitor) throws Throwable {
 		JRAbstractExporter<?, ?, ?, ?> exporter = getExporter(jContext, monitor, file);
 		exporter.setExporterInput(new SimpleExporterInput(getReportViewer().getReport()));
-
-		exporter.exportReport();
+		// Trying to prevent possible issues related to a "wrong" class loader set
+		// during some of the core operations related to report rendering/previewing/exporting
+		ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+		try {
+			Object contextCL = jContext.getValue(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER);
+			if(contextCL instanceof ClassLoader) {
+				Thread.currentThread().setContextClassLoader((ClassLoader) contextCL);
+			}
+			exporter.exportReport();
+		} catch (Throwable e) {
+			UIUtils.showError(e);
+			JaspersoftStudioPlugin.getInstance().logError(Messages.AExportAction_ExportErrorMsg, e);
+		} finally {
+			Thread.currentThread().setContextClassLoader(oldLoader);
+		}
 	}
 
 	protected void setupReportConfiguration(SimpleReportExportConfiguration conf, JRExportProgressMonitor monitor) {

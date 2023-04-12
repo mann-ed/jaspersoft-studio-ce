@@ -15,8 +15,10 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import com.jaspersoft.studio.components.map.MapNodeIconDescriptor;
 import com.jaspersoft.studio.components.map.figure.MapDesignConverter;
 import com.jaspersoft.studio.components.map.messages.Messages;
+import com.jaspersoft.studio.components.map.property.LegendPropertyDescriptor;
 import com.jaspersoft.studio.components.map.property.MarkersPropertyDescriptor;
 import com.jaspersoft.studio.components.map.property.PathPropertyDescriptor;
+import com.jaspersoft.studio.components.map.property.ResetMapPropertyDescriptor;
 import com.jaspersoft.studio.components.map.property.StylePropertyDescriptor;
 import com.jaspersoft.studio.editor.defaults.DefaultManager;
 import com.jaspersoft.studio.help.HelpReferenceBuilder;
@@ -38,6 +40,7 @@ import com.jaspersoft.studio.utils.EnumHelper;
 import com.jaspersoft.studio.utils.ExpressionInterpreter;
 import com.jaspersoft.studio.utils.ModelUtils;
 
+import net.sf.jasperreports.components.items.Item;
 import net.sf.jasperreports.components.items.ItemData;
 import net.sf.jasperreports.components.map.MapComponent;
 import net.sf.jasperreports.components.map.StandardMapComponent;
@@ -222,6 +225,14 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 				StandardMapComponent.PROPERTY_MARKER_SPIDERING, Messages.MMap_MarkerSpidering);
 		markerSpideringD.setDescription(Messages.MMap_MarkerSpideringDesc);
 		desc.add(markerSpideringD);
+		
+		ResetMapPropertyDescriptor resetMapPropertyD = new ResetMapPropertyDescriptor(StandardMapComponent.PROPERTY_RESET_MAP, Messages.MMap_ResetMap, this);
+		resetMapPropertyD.setDescription(Messages.MMap_ResetMapDesc);
+		desc.add(resetMapPropertyD);
+		
+		LegendPropertyDescriptor legendPropertyD = new LegendPropertyDescriptor(StandardMapComponent.PROPERTY_LEGEND, Messages.MMap_Legend, this);
+		legendPropertyD.setDescription(Messages.MMap_LegendDesc);
+		desc.add(legendPropertyD);
 
 		getMapTypeD();
 		desc.add(mapTypeD);
@@ -267,6 +278,8 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		zoomExprD.setCategory(Messages.MMap_common_map_properties);
 		markerClusteringD.setCategory(Messages.MMap_common_map_properties);
 		markerSpideringD.setCategory(Messages.MMap_common_map_properties);
+		resetMapPropertyD.setCategory(Messages.MMap_common_map_properties);
+		legendPropertyD.setCategory(Messages.MMap_common_map_properties);
 
 		mapKeyD.setCategory(Messages.MMap_Category_Authentication);
 		mapClientIdD.setCategory(Messages.MMap_Category_Authentication);
@@ -301,6 +314,8 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		defaultsMap.put(StandardMapComponent.PROPERTY_ZOOM_EXPRESSION, new DefaultValue(MapComponent.DEFAULT_ZOOM, false));
 		defaultsMap.put(StandardMapComponent.PROPERTY_MARKER_CLUSTERING, new DefaultValue(Boolean.FALSE, true));
 		defaultsMap.put(StandardMapComponent.PROPERTY_MARKER_SPIDERING, new DefaultValue(Boolean.FALSE, true));
+		defaultsMap.put(StandardMapComponent.PROPERTY_RESET_MAP, new DefaultValue(null, true));
+		defaultsMap.put(StandardMapComponent.PROPERTY_LEGEND, new DefaultValue(null, true));
 		
 		return defaultsMap;
 	}
@@ -372,6 +387,12 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 		}
 		if (id.equals(StandardMapComponent.PROPERTY_MARKER_SPIDERING)) {
 			return component.getMarkerSpidering();
+		}
+		if (id.equals(StandardMapComponent.PROPERTY_RESET_MAP)) {
+			return component.getResetMapItem();
+		}
+		if (id.equals(StandardMapComponent.PROPERTY_LEGEND)) {
+			return component.getLegendItem();
 		}
 
 		return super.getPropertyValue(id);
@@ -472,6 +493,10 @@ public class MMap extends MGraphicElement implements IDatasetContainer {
 			component.setMarkerClustering((Boolean) value);
 		} else if (id.equals(StandardMapComponent.PROPERTY_MARKER_SPIDERING)) {
 			component.setMarkerSpidering((Boolean) value);
+		} else if (id.equals(StandardMapComponent.PROPERTY_RESET_MAP)) {
+			component.setResetMap((Item) value);
+		} else if(id.equals(StandardMapComponent.PROPERTY_LEGEND)) {
+			component.setLegend((Item)value);
 		} else {
 			super.setPropertyValue(id, value);
 		}

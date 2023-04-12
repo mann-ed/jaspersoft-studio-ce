@@ -119,10 +119,10 @@ public abstract class ItemDataDialog extends ElementDatasetDialog {
 		itTabItem = new CTabItem(tabFolder, SWT.NONE);
 		itTabItem.setText(getItemName());
 
-		Composite cmp = new Composite(tabFolder, SWT.NONE);
-		cmp.setLayout(new GridLayout(2, false));
+		Composite containerCmp = new Composite(tabFolder, SWT.NONE);
+		containerCmp.setLayout(new GridLayout(2, false));
 
-		itemsViewer = new TableViewer(cmp, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		itemsViewer = new TableViewer(containerCmp, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		itemsViewer.setContentProvider(ArrayContentProvider.getInstance());
 		itemsViewer.setLabelProvider(new ItemLabelProvider(descriptor) {
 			@Override
@@ -134,7 +134,7 @@ public abstract class ItemDataDialog extends ElementDatasetDialog {
 		gd.widthHint = 600;
 		itemsViewer.getTable().setLayoutData(gd);
 
-		Composite c = new Composite(cmp, SWT.NONE);
+		Composite c = new Composite(containerCmp, SWT.NONE);
 		c.setLayout(new GridLayout());
 		c.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 		new NewButton().createNewButtons(c, itemsViewer, new INewElement() {
@@ -214,10 +214,24 @@ public abstract class ItemDataDialog extends ElementDatasetDialog {
 		eb.editOnDoubleClick();
 		new DeleteButton().createDeleteButton(c, itemsViewer, true);
 		new ListOrderButtons().createOrderButtons(c, itemsViewer);
+		
+		// possible additional panel
+		createAdditionalPanel(containerCmp);
 
-		itTabItem.setControl(cmp);
-
+		itTabItem.setControl(containerCmp);
 		itemsViewer.setInput(itemData.getItems());
+		
+	}
+
+	/**
+	 * Create an additional panel below the actual table/list widget 
+	 * for editing the items.
+	 * <p>
+	 * Default behavior: no additional stuff.
+	 * 
+	 * @param parent the container
+	 */
+	protected void createAdditionalPanel(Composite parent) {
 	}
 
 	protected String getItemName() {

@@ -3,14 +3,18 @@
  *******************************************************************************/
 package com.jaspersoft.studio.components.map.property;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -26,6 +30,9 @@ import com.jaspersoft.studio.property.itemproperty.dialog.FormItemDialog;
 import com.jaspersoft.studio.property.itemproperty.dialog.ItemDataDialog;
 import com.jaspersoft.studio.property.itemproperty.sp.SPItemDataList;
 import com.jaspersoft.studio.property.section.AbstractSection;
+import com.jaspersoft.studio.swt.events.ExpressionModifiedEvent;
+import com.jaspersoft.studio.swt.events.ExpressionModifiedListener;
+import com.jaspersoft.studio.swt.widgets.WTextExpression;
 import com.jaspersoft.studio.utils.ExpressionInterpreter;
 import com.jaspersoft.studio.utils.ExpressionUtil;
 import com.jaspersoft.studio.utils.ModelUtils;
@@ -42,6 +49,7 @@ import net.sf.jasperreports.components.items.StandardItem;
 import net.sf.jasperreports.components.items.StandardItemData;
 import net.sf.jasperreports.components.items.StandardItemProperty;
 import net.sf.jasperreports.components.map.MapComponent;
+import net.sf.jasperreports.components.map.MarkerStandardItemData;
 import net.sf.jasperreports.components.map.StandardMapComponent;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.BasicMapInfoData;
@@ -49,6 +57,7 @@ import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.util.JRCloneUtils;
 
 /**
  * 
@@ -62,13 +71,24 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 				AItemDataListPropertyDescriptor pDescriptor, boolean showElements) {
 			super(parent, section, pDescriptor, showElements);
 		}
+		
+		@Override
+		protected void handleNewElement(TreeViewer tviewer) {
+			List<ItemData> clones = JRCloneUtils.cloneList(itemDatas);
+			MarkerStandardItemData itemData = new MarkerStandardItemData();
+			clones.add(itemData);
+			if (createItemDataDialog(clones, itemData).open() == Dialog.OK)
+				postCreateItemDialog(new ArrayList<ItemData>(clones));
 
+		}
+		
 		@Override
 		protected ItemDataDialog createItemDataDialog(List<ItemData> clones, StandardItemData itemData) {
 			return new ItemDataDialog(UIUtils.getShell(), Messages.MMap_markersDescription,
 					Messages.SPMarker_MarkersListBtn, clones, itemData,
 					(JasperReportsConfiguration) section.getJasperReportsContext(), getDescriptor(), expContext,
 					pnode) {
+				private GMapsMarkersPanel pmap;
 
 				@Override
 				protected AItemDialog createItemDialog() {
@@ -80,12 +100,85 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 					return Messages.MMap_markersDescription;
 				}
 
-				private GMapsMarkersPanel pmap;
+				@Override
+				protected void createAdditionalPanel(Composite parent) {
+					MarkerStandardItemData mItemData = (MarkerStandardItemData)itemData;
+					
+					Composite container = new Composite(parent,SWT.NONE);
+					container.setLayout(new GridLayout(2,false));
+					container.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false,2,1));
+					
+					Label seriesNameExprLbl = new Label(container,SWT.NONE);
+					seriesNameExprLbl.setText("Series Name Expression:");
+					seriesNameExprLbl.setLayoutData(new GridData(SWT.FILL,SWT.FILL,false,false));
+					WTextExpression seriesNameExpr = new WTextExpression(container,SWT.NONE);
+					seriesNameExpr.setExpressionContext(expContext);
+					seriesNameExpr.setExpression((JRDesignExpression) mItemData.getSeriesNameExpression());
+					seriesNameExpr.addModifyListener(new ExpressionModifiedListener() {
+						@Override
+						public void expressionModified(ExpressionModifiedEvent event) {
+							mItemData.setSeriesNameExpression(event.modifiedExpression);
+						}
+					});
+					GridData seriesNameExprGD = new GridData(SWT.FILL,SWT.FILL,true,false);
+					seriesNameExprGD.widthHint = 300;
+					seriesNameExpr.setLayoutData(seriesNameExprGD);	
+					
+					Label clusteringExprLbl = new Label(container,SWT.NONE);
+					clusteringExprLbl.setText("Clustering Expression:");
+					clusteringExprLbl.setLayoutData(new GridData(SWT.FILL,SWT.FILL,false,false));
+					WTextExpression clusteringExpr = new WTextExpression(container, SWT.NONE);
+					clusteringExpr.setExpressionContext(expContext);
+					clusteringExpr.setExpression((JRDesignExpression) mItemData.getMarkerClusteringExpression());
+					clusteringExpr.addModifyListener(new ExpressionModifiedListener() {
+						@Override
+						public void expressionModified(ExpressionModifiedEvent event) {
+							mItemData.setMarkerClusteringExpression(event.modifiedExpression);
+						}
+					});
+					GridData clusteringExprGD = new GridData(SWT.FILL,SWT.FILL,true,false);
+					clusteringExprGD.widthHint = 300;
+					clusteringExpr.setLayoutData(clusteringExprGD);
+
+					Label spideringExprLbl = new Label(container,SWT.NONE);
+					spideringExprLbl.setText("Spidering Expression:");
+					spideringExprLbl.setLayoutData(new GridData(SWT.FILL,SWT.FILL,false,false));
+					WTextExpression spideringExpr = new WTextExpression(container, SWT.NONE);
+					spideringExpr.setExpressionContext(expContext);
+					spideringExpr.setExpression((JRDesignExpression) mItemData.getMarkerSpideringExpression());
+					spideringExpr.addModifyListener(new ExpressionModifiedListener() {
+						@Override
+						public void expressionModified(ExpressionModifiedEvent event) {
+							mItemData.setMarkerSpideringExpression(event.modifiedExpression);
+						}
+					});
+					GridData spideringExprGD = new GridData(SWT.FILL,SWT.FILL,true,false);
+					spideringExprGD.widthHint = 300;
+					spideringExpr.setLayoutData(spideringExprGD);
+
+					Label legendIconExprLbl = new Label(container,SWT.NONE);
+					legendIconExprLbl.setText("Legend Icon Expression:");
+					legendIconExprLbl.setLayoutData(new GridData(SWT.FILL,SWT.FILL,false,false));
+					WTextExpression legendIconExpr = new WTextExpression(container, SWT.NONE);
+					legendIconExpr.setExpressionContext(expContext);
+					legendIconExpr.setExpression((JRDesignExpression) mItemData.getLegendIconExpression());
+					legendIconExpr.addModifyListener(new ExpressionModifiedListener() {
+						@Override
+						public void expressionModified(ExpressionModifiedEvent event) {
+							mItemData.setLegendIconExpression(event.modifiedExpression);
+						}
+					});
+					GridData legendIconExprGD = new GridData(SWT.FILL,SWT.FILL,true,false);
+					legendIconExprGD.widthHint = 300;
+					legendIconExpr.setLayoutData(legendIconExprGD);
+
+				}
 
 				@Override
 				protected void createItems(final CTabFolder tabFolder) {
 					super.createItems(tabFolder);
 
+					// Creates the "Map" tab containing the Google Maps panel
 					final CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
 					tabItem.setText(Messages.MarkersPropertyDescriptor_3);
 					tabFolder.addSelectionListener(new SelectionAdapter() {
@@ -350,6 +443,7 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 						return;
 					}
 					tabItem.setControl(cmp);
+					
 				}
 
 			};

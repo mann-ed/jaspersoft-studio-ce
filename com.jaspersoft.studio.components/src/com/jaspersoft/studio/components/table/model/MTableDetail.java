@@ -15,16 +15,14 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import com.jaspersoft.studio.components.table.TableComponentFactory;
 import com.jaspersoft.studio.components.table.TableManager;
 import com.jaspersoft.studio.components.table.TableNodeIconDescriptor;
-import com.jaspersoft.studio.components.table.messages.Messages;
 import com.jaspersoft.studio.help.HelpReferenceBuilder;
+import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.ANode;
 import com.jaspersoft.studio.model.DefaultValue;
 import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.model.util.IIconDescriptor;
-import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptor.expression.ExprUtil;
 import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
-import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
 
 import net.sf.jasperreports.components.table.BaseColumn;
 import net.sf.jasperreports.components.table.Row;
@@ -38,12 +36,9 @@ import net.sf.jasperreports.engine.JRConstants;
 import net.sf.jasperreports.engine.design.JRDesignComponentElement;
 import net.sf.jasperreports.engine.design.events.CollectionElementAddedEvent;
 import net.sf.jasperreports.engine.design.events.JRChangeEventsSupport;
-import net.sf.jasperreports.engine.type.SplitTypeEnum;
 
 public class MTableDetail extends AMCollection {
 	public static final long serialVersionUID = JRConstants.SERIAL_VERSION_UID;
-	private static NamedEnumPropertyDescriptor<SplitTypeEnum> splitStyleD;
-	
 	/** The icon descriptor. */
 	private static IIconDescriptor iconDescriptor;
 
@@ -163,25 +158,19 @@ public class MTableDetail extends AMCollection {
 	 */
 	@Override
 	public void createPropertyDescriptors(List<IPropertyDescriptor> desc) {
-		splitStyleD = new NamedEnumPropertyDescriptor<>(StandardRow.PROPERTY_splitType, Messages.Common_SplitType,
-				SplitTypeEnum.PREVENT, NullEnum.NULL);
-		splitStyleD.setDescription(Messages.Common_TableRowSplitTypeDesc);
-		desc.add(splitStyleD);
-		
 		JRExpressionPropertyDescriptor printWhenExprD = new JRExpressionPropertyDescriptor(
-				StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION, Messages.Common_PrintWhenExpr);
-		printWhenExprD.setDescription(Messages.Common_TableRowPrintWhenDesc);
-		printWhenExprD.setHelpRefBuilder(new HelpReferenceBuilder(
-				"net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#printWhenExpression")); //$NON-NLS-1$
+				StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION, Messages.common_print_when_expression);
+		printWhenExprD.setDescription("Print When Expression for Table Row");
+		printWhenExprD.setCategory(Messages.MGraphicElement_print_when);
 		desc.add(printWhenExprD);
+		printWhenExprD.setHelpRefBuilder(new HelpReferenceBuilder(
+				"net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#printWhenExpression"));
 	}
 
 	@Override
 	protected Map<String, DefaultValue> createDefaultsMap() {
 		Map<String, DefaultValue> defaultsMap = super.createDefaultsMap();
 		defaultsMap.put(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION, new DefaultValue(null, true));
-		int splitTypeDef = NamedEnumPropertyDescriptor.getIntValue(SplitTypeEnum.PREVENT, NullEnum.NULL,null);
-		defaultsMap.put(StandardRow.PROPERTY_splitType, new DefaultValue(splitTypeDef,true));
 		return defaultsMap;
 	}
 
@@ -191,12 +180,8 @@ public class MTableDetail extends AMCollection {
 		StandardTable st = (StandardTable) jrElement.getComponent();
 		Row r = st.getDetail();
 		if (r != null) {
-			if (id.equals(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION)) {
+			if (id.equals(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION))
 				return ExprUtil.getExpression(r.getPrintWhenExpression());
-			}
-			if (id.equals(StandardRow.PROPERTY_splitType)) {
-				return splitStyleD.getIntValue(r.getSplitType());
-			}
 		}
 		return null;
 	}
@@ -210,12 +195,8 @@ public class MTableDetail extends AMCollection {
 			r = new StandardRow();
 			st.setDetail(r);
 		}
-		if (id.equals(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION)) {
+		if (id.equals(StandardRow.PROPERTY_PRINT_WHEN_EXPRESSION))
 			r.setPrintWhenExpression(ExprUtil.setValues(r.getPrintWhenExpression(), value));
-		}
-		if (id.equals(StandardRow.PROPERTY_splitType)) {
-			r.setSplitType(splitStyleD.getEnumValue(value));
-		}
 	}
 
 	@Override
