@@ -69,5 +69,10 @@ public class SaveConfirmationDialog extends PersistentLocationDialog {
 		if (IDialogConstants.NO_ID == buttonId)
 			cancelPressed();
 	}
+	
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
 
 }
