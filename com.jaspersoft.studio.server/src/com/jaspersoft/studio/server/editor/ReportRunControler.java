@@ -301,7 +301,7 @@ public class ReportRunControler {
 						APreview pv = pcontainer.getDefaultViewer();
 						if (pv instanceof ABrowserViewer)
 							try {
-								String urlcookie = re.getBaseUrl();
+								String urlcookie = cli.getServerProfile().getUrl();
 								StringBuilder scookie = new StringBuilder();
 								String del = "";
 								for (Cookie co : re.getReportOutputCookie()) {
