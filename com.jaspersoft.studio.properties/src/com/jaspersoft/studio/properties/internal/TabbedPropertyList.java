@@ -140,6 +140,7 @@ public class TabbedPropertyList {
 	}
 
 	private void calcSize(CoolItem item) {
+		cBar.pack();
 		toolBarManager.update(true);
 	}
 
