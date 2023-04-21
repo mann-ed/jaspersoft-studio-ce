@@ -3,7 +3,7 @@ Eclipse-ExtensibleAPI: true
 Bundle-ManifestVersion: 2
 Bundle-Name: SQL Query Editor Grammar
 Bundle-Vendor: Cloud Software Group, Inc.
-Bundle-Version: 8.2.0.qualifier
+Bundle-Version: 8.2.0.final
 Bundle-SymbolicName: com.jaspersoft.studio.data.sql;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.jaspersoft.studio.data;bundle-version="8.2.0",

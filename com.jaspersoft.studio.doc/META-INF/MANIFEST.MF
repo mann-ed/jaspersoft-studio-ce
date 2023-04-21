@@ -3,7 +3,7 @@ Eclipse-ExtensibleAPI: true
 Bundle-ManifestVersion: 2
 Bundle-Name: Jaspersoft Studio Documentation
 Bundle-SymbolicName: com.jaspersoft.studio.doc; singleton:=true
-Bundle-Version: 8.2.0.qualifier
+Bundle-Version: 8.2.0.final
 Bundle-Vendor: Cloud Software Group, Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.ui.cheatsheets;bundle-version="3.4.0",
