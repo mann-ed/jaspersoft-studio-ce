@@ -240,7 +240,7 @@ SELECT * FROM orders WHERE shipcountry = $P{country} ORDER BY shipcity
 		</listitem>
 		<listitem>
 			<para>
-				<ulink url="http://community.jaspersoft.com/documentation?version=29351">Jaspersoft Studio User Guide - Report Books</ulink>
+				<ulink url="https://community.jaspersoft.com/documentation?version=29351">Jaspersoft Studio User Guide - Report Books</ulink>
 			</para>
 		</listitem>
 	</itemizedlist>

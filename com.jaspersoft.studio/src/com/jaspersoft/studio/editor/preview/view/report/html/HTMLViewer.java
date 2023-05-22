@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.preview.view.report.html;
 
 import java.io.File;
@@ -64,7 +64,7 @@ public class HTMLViewer extends ABrowserViewer implements IJRPrintable, IPrefere
 	protected int getUrlWidth(Control control) {
 		// Add the calculation of the toolbar width depending on the available size on the parent
 		// minus 130 to leave space to the refresh action and export action
-		return control.getParent().getSize().x - 130;
+		return control.getParent().getSize().x - UIUtils.getScaledWidth(110);
 	}
 
 	public void setJRPRint(Statistics stats, JasperPrint jrprint) throws Exception {

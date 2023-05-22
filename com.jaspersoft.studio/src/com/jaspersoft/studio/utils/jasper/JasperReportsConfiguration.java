@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.utils.jasper;
 
 import java.beans.PropertyChangeEvent;
@@ -241,10 +240,11 @@ public class JasperReportsConfiguration extends SimpleJasperReportsContext {
 	public void changeContext(String c, boolean reset) {
 		IFile oldFile = (IFile) get(FileUtils.KEY_FILE);
 		try {
-			if (oldFile.exists())
+			if (oldFile.exists()) {
 				oldFile.setPersistentProperty(
 						new QualifiedName(JaspersoftStudioPlugin.getUniqueIdentifier(), AEditorContext.EDITOR_CONTEXT),
 						reset ? null : c);
+			}
 		} catch (CoreException e) {
 			UIUtils.showError(e);
 		}

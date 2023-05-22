@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.table.messages;
 
 import org.eclipse.osgi.util.NLS;
@@ -18,6 +17,10 @@ public class Messages extends NLS {
 	public static String ColumnsEqualWidthAction_actionTooltip;
 	public static String ColumnsStretchToTableAction_actionDescription;
 	public static String ColumnsStretchToTableAction_actionName;
+	public static String Common_PrintWhenExpr;
+	public static String Common_SplitType;
+	public static String Common_TableRowPrintWhenDesc;
+	public static String Common_TableRowSplitTypeDesc;
 	public static String CreateColumnAction_create_column;
 	public static String CreateColumnAction_create_column_group;
 	public static String CreateColumnAction_create_column_group_tool_tip;
@@ -63,6 +66,7 @@ public class Messages extends NLS {
 	public static String ReorderColumnCommand_reorder_columns;
 	public static String ReorderColumnGroupCommand_reorder_column_group;
 	public static String TableEditor_table;
+	public static String TableRowSection_Title;
 	public static String TableStyle_overlappingMessage;
 	public static String TableStyle_overlappingTitle;
 	public static String TableStyleView_labelText;

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.publish.wizard;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -69,6 +68,11 @@ public class SaveConfirmationDialog extends PersistentLocationDialog {
 		super.buttonPressed(buttonId);
 		if (IDialogConstants.NO_ID == buttonId)
 			cancelPressed();
+	}
+	
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 
 }

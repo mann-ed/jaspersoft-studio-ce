@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2013 - 2020. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.font;
 
 import java.io.ByteArrayInputStream;
@@ -680,7 +679,7 @@ public class FontEditor extends ABasicEditor {
 
 	protected void addURLPressed() {
 		FontURLWizard wiz = new FontURLWizard(new ArrayList<>(container.getFontFamilies()));
-		WizardDialog d = new WizardDialog(UIUtils.getShell(), wiz);
+		WizardDialog d = new WizardDialog(UIUtils.getShellForWizardDialog(), wiz);
 		d.setPageSize(800, 50);
 		if (d.open() == Dialog.OK) {
 			if (container == null) {
@@ -877,7 +876,7 @@ public class FontEditor extends ABasicEditor {
 
 	public static FontFamily runDialog(FontFamily font) {
 		FontConfigWizard wizard = new FontConfigWizard();
-		WizardDialog dialog = new WizardDialog(UIUtils.getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(UIUtils.getShellForWizardDialog(), wizard);
 		wizard.setFont(font);
 		dialog.create();
 		if (dialog.open() == Dialog.OK)

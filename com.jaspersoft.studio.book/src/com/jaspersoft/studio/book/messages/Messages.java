@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.book.messages;
 
 import org.eclipse.osgi.util.NLS;
@@ -41,6 +40,8 @@ public class Messages extends NLS {
 	public static String MReportPart_parametersDescription;
 	public static String MReportPart_partName;
 	public static String MReportPart_partNameTooltip;
+	public static String MReportPart_partProperties;
+	public static String MReportPart_partPropertiesTooltip;
 	public static String MReportPart_printWhen;
 	public static String MReportPart_printWhenTooltip;
 	public static String MReportPart_returnDescription;

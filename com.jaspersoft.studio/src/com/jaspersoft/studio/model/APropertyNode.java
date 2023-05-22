@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model;
 
 import java.util.ArrayList;
@@ -348,4 +347,17 @@ public abstract class APropertyNode extends ANode implements IJSSPropertySource,
 			return JSSStyleResolver.DEFAULT_INSTANCE;
 		}
 	}
+	
+	/**
+	 * Checks if the element is supporting the report splitting feature.
+	 * <br/><br/>
+	 * NOTE: default value is <code>false</code>.
+	 * 
+	 * @return <code>true</code> if it supports report splitting,
+	 * 			<code>false</code> otherwise.
+	 */
+	public boolean isReportSplittingSupported() {
+		return false;
+	}
+	
 }

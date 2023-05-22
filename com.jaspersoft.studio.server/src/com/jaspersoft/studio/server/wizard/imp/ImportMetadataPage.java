@@ -1,13 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.wizard.imp;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -139,7 +137,7 @@ public class ImportMetadataPage extends JSSHelpWizardPage {
 
 		Binding binding = bindingContext.bindValue(
 				WidgetProperties.text(SWT.Modify).observe(tfile),
-				PojoObservables.observeValue(value, "file"), //$NON-NLS-1$
+				PojoProperties.value("file").observe(value),
 				new UpdateValueStrategy().setAfterConvertValidator(new NotEmptyFileValidator(null)), null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT, null, new ControlDecorationUpdater());
 

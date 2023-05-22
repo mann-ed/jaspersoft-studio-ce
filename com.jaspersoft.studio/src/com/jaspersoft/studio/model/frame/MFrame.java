@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.frame;
 
 import java.util.HashSet;
@@ -309,5 +308,10 @@ public class MFrame extends MGraphicElementLineBox implements IPastable, IPastab
 	@Override
 	public ILayout getDefaultLayout() {
 		return LayoutManager.getLayout(FreeLayout.class.getName());
+	}
+	
+	@Override
+	public boolean isReportSplittingSupported() {
+		return false;
 	}
 }

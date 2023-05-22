@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.preview.actions.export.xls;
 
 import net.sf.jasperreports.eclipse.viewer.IReportViewer;
@@ -13,6 +12,7 @@ import com.jaspersoft.studio.editor.preview.actions.export.ExportMenuAction;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+@Deprecated
 public class ExportAsXlsAction extends AExportXlsAction {
 
 	public ExportAsXlsAction(IReportViewer viewer, JasperReportsConfiguration jContext, ExportMenuAction parentMenu) {

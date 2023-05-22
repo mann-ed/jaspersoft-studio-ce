@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.book.editors;
 
 import java.util.Arrays;
@@ -22,6 +21,7 @@ import com.jaspersoft.studio.editor.AContextMenuProvider;
 import com.jaspersoft.studio.editor.action.ACachedSelectionAction;
 import com.jaspersoft.studio.editor.action.ActionUtils;
 import com.jaspersoft.studio.editor.action.ShowPropertyViewAction;
+import com.jaspersoft.studio.editor.action.reportsplitting.ReportSplittingAction;
 import com.jaspersoft.studio.editor.outline.actions.CreateParameterAction;
 import com.jaspersoft.studio.editor.outline.actions.CreateParameterSetAction;
 import com.jaspersoft.studio.editor.outline.actions.CreateScriptletAction;
@@ -107,7 +107,7 @@ public class BookEditorContextMenuProvider extends AContextMenuProvider {
 			menu.appendToGroup(GEFActionConstants.GROUP_EDIT, action);
 
 		ActionUtils.appendActionToGroup(menu,
-				Arrays.asList(new String[] { CreateNewGroupAction.ID, CreateNewBookPartAction.ID,
+				Arrays.asList(new String[] {ReportSplittingAction.ID, CreateNewGroupAction.ID, CreateNewBookPartAction.ID,
 						CreateParameterAction.ID, CreateParameterSetAction.ID, CreateFieldAction.ID,
 						CreateFieldsContainerAction.ID, CreateSortFieldAction.ID, CreateVariableAction.ID,
 						CreateScriptletAction.ID, DatasetAction.ID }),

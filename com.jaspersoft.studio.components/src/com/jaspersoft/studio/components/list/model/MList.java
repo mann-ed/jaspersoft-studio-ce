@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.list.model;
 
 import java.beans.PropertyChangeEvent;
@@ -587,5 +586,10 @@ public class MList extends MGraphicElement implements IPastable, IPastableGraphi
 			return style.getLineBox().getPadding();
 		}
 		return 0;
+	}
+	
+	@Override
+	public boolean isReportSplittingSupported() {
+		return false;
 	}
 }

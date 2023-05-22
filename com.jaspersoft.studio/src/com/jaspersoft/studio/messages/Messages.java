@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.messages;
 
 import org.eclipse.osgi.util.NLS;
@@ -181,6 +180,7 @@ public class Messages extends NLS {
 	public static String AdjustTextFontSize_action_name;
 	public static String AdjustTextFontSize_action_tooltip;
 	public static String AEditorContext_2;
+	public static String AExportAction_ExportErrorMsg;
 	public static String AExportAction_exportreport;
 	public static String AExportAction_overwriteCheckbox;
 	public static String AExportAction_overwriteMessage;
@@ -656,6 +656,7 @@ public class Messages extends NLS {
 	public static String EditorContextUtil_1;
 	public static String EditorContextUtil_2;
 	public static String EditorContextUtil_6;
+	public static String EditorContextUtil_EdgeWarningMsg;
 	public static String EditToolAction_name;
 	public static String ElementContextualMenu_contextualResetPlural;
 	public static String ElementContextualMenu_econtextualResetSingular;
@@ -750,6 +751,9 @@ public class Messages extends NLS {
 	public static String ExportAsJasperReportsAction_filtername;
 	public static String ExportAsJasperReportsAction_title;
 	public static String ExportAsJasperReportsAction_tooltip;
+	public static String ExportAsJsonMetadataAction_FilterNameJSON;
+	public static String ExportAsJsonMetadataAction_Text;
+	public static String ExportAsJsonMetadataAction_Tooltip;
 	public static String ExportAsLHtmlAction_title;
 	public static String ExportAsOdsAction_filtername;
 	public static String ExportAsOdsAction_title;
@@ -760,6 +764,9 @@ public class Messages extends NLS {
 	public static String ExportAsPdfAction_filtername;
 	public static String ExportAsPdfAction_title;
 	public static String ExportAsPdfAction_tooltip;
+	public static String ExportAsPptxAction_FilterNamePPTX;
+	public static String ExportAsPptxAction_Text;
+	public static String ExportAsPptxAction_Tooltip;
 	public static String ExportAsRtfAction_filtername;
 	public static String ExportAsRtfAction_title;
 	public static String ExportAsRtfAction_tooltip;
@@ -780,6 +787,9 @@ public class Messages extends NLS {
 	public static String ExportAsXlsMetadataAction_tooltip;
 	public static String ExportAsXlsxAction_title;
 	public static String ExportAsXlsxAction_tooltip;
+	public static String ExportAsXlsxMetadataAction_FilterNameXLSX;
+	public static String ExportAsXlsxMetadataAction_Text;
+	public static String ExportAsXlsxMetadataAction_Tooltip;
 	public static String ExportAsXmlAction_ext1;
 	public static String ExportAsXmlAction_ext2;
 	public static String ExportAsXmlAction_title;
@@ -950,6 +960,7 @@ public class Messages extends NLS {
 	public static String GlobalPreferencePage_title;
 	public static String GlobalPreferencePage_UseExternalBrowserCheckbox;
 	public static String GraphicSection_Detail_Section_Title;
+	public static String GroupArrangementSection_SectionTitle;
 	public static String GroupSection_SameNameErrorMsg;
 	public static String GroupSection_SameNameErrorTitle;
 	public static String GroupSection_SectionTitle;
@@ -1393,9 +1404,9 @@ public class Messages extends NLS {
 	public static String MGraphicElement_width_description;
 	public static String MGraphicElementLineBox_line_box_description;
 	public static String MGraphicElementLinePen_line_pen_description;
-	public static String MGroup_0;
-	public static String MGroup_1;
-	public static String MGroup_2;
+	public static String MGroup_PreventOrphanFooterTitle;
+	public static String MGroup_MinDetailsTSFTTitle;
+	public static String MGroup_MinDetailsTSFTDescription;
 	public static String MGroup_expression_description;
 	public static String MGroup_footerPosDescription;
 	public static String MGroup_footerPosTitle;
@@ -1410,8 +1421,10 @@ public class Messages extends NLS {
 	public static String MGroup_newPageTitle;
 	public static String MGroup_pageNumberDescription;
 	public static String MGroup_pageNumberTitle;
-	public static String MGroup_reprintPosition;
-	public static String MGroup_reprintTitle;
+	public static String MGroup_ReprintHeaderECDescription;
+	public static String MGroup_ReprintHeaderECTitle;
+	public static String MGroup_reprintHeaderEPDescription;
+	public static String MGroup_reprintHeaderEPTitle;
 	public static String MHyperLink_hyperlink_anchor_expression;
 	public static String MHyperLink_hyperlink_anchor_expression_description;
 	public static String MHyperLink_hyperlink_category;
@@ -2053,6 +2066,31 @@ public class Messages extends NLS {
 	public static String ReportRunControler_22;
 	public static String ReportRunControler_3;
 	public static String ReportSection_Dataset_Label;
+	public static String ReportSplittingAction_Text;
+	public static String ReportSplittingAction_Tooltip;
+	public static String ReportSplittingEditDialog_AdditionalPropertiesTitle;
+	public static String ReportSplittingEditDialog_EnableSplitDescDescription;
+	public static String ReportSplittingEditDialog_EnableSplitDescLbl;
+	public static String ReportSplittingEditDialog_EnableSplitPropertyLbl;
+	public static String ReportSplittingEditDialog_EssentialInfoTitle;
+	public static String ReportSplittingEditDialog_InnerMessage;
+	public static String ReportSplittingEditDialog_InnerTitle;
+	public static String ReportSplittingEditDialog_PartNamePropertyDesc;
+	public static String ReportSplittingEditDialog_PartNamePropertyLbl;
+	public static String ReportSplittingEditDialog_PartVisibleDesc;
+	public static String ReportSplittingEditDialog_PartVisibleLbl;
+	public static String ReportSplittingEditDialog_ResetBtn;
+	public static String ReportSplittingEditDialog_ResetDialogMsg;
+	public static String ReportSplittingEditDialog_ResetDialogTitle;
+	public static String ReportSplittingEditDialog_Title;
+	public static String ReportSplittingPropertyDialog_ErrorEmptyMsg;
+	public static String ReportSplittingPropertyDialog_ErrorTitle;
+	public static String ReportSplittingPropertyDialog_InfoMsgText;
+	public static String ReportSplittingPropertyDialog_PropertyNameLbl;
+	public static String ReportSplittingPropertyDialog_PropertyValueLbl;
+	public static String ReportSplittingPropertyDialog_Title;
+	public static String ReportSplittingPropertyDialog_UseExprCheckbox;
+	public static String ReportSplittingPropertyEditor_RuntimeExceptionMsg;
 	public static String ReportTemplatesWizardPage_categories;
 	public static String ReportTemplatesWizardPage_description;
 	public static String ReportTemplatesWizardPage_loadtemplates;
@@ -2491,14 +2529,24 @@ public class Messages extends NLS {
 	public static String ViewExecutionInfoAction_tooltip;
 	public static String ViewSettingsDropDownAction_previewFormatMenu;
 	public static String ViewSettingsDropDownAction_settingsName;
-	public static String ViewsFactory_2;
-	public static String ViewsFactory_4;
-	public static String ViewsFactory_5;
-	public static String ViewsFactory_6;
-	public static String ViewsFactory_7;
-	public static String ViewsFactory_8;
+	public static String ViewsFactory_CsvMetadataViewer_LabelKey;
+	public static String ViewsFactory_CsvViewer_LabelKey;
+	public static String ViewsFactory_DocxViewer_LabelKey;
 	public static String ViewsFactory_errorExporterDuplicated;
 	public static String ViewsFactory_errorExporterNull;
+	public static String ViewsFactory_HtmlViewer_LabelKey;
+	public static String ViewsFactory_HtmlNoInteractiveViewer_LabelKey;
+	public static String ViewsFactory_JsonMetadataViewer_LabelKey;
+	public static String ViewsFactory_OdsViewer_LabelKey;
+	public static String ViewsFactory_OdtViewer_LabelKey;
+	public static String ViewsFactory_PdfViewer_LabelKey;
+	public static String ViewsFactory_PptxViewer_LabelKey;
+	public static String ViewsFactory_RtfViewer_LabelKey;
+	public static String ViewsFactory_TxtViewer_LabelKey;
+	public static String ViewsFactory_XlsxMetadataViewer_LabelKey;
+	public static String ViewsFactory_XlsxViewer_LabelKey;
+	public static String ViewsFactory_XmlImagesViewer_LabelKey;
+	public static String ViewsFactory_XmlViewer_LabelKey;
 	public static String VInputControls_0;
 	public static String VParameters_calculate_default_values;
 	public static String VParameters_resetparameters;
@@ -2518,6 +2566,15 @@ public class Messages extends NLS {
 	public static String WizardSortFieldPage_Col1;
 	public static String WizardSortFieldPage_Description;
 	public static String WizardSortFieldPage_Title;
+	public static String WReportSplittingPropertiesList_AddBtn;
+	public static String WReportSplittingPropertiesList_AddErrorMsg;
+	public static String WReportSplittingPropertiesList_AddErrorTitle;
+	public static String WReportSplittingPropertiesList_EditErrorMsg;
+	public static String WReportSplittingPropertiesList_EditErrorTitle;
+	public static String WReportSplittingPropertiesList_ModifyBtn;
+	public static String WReportSplittingPropertiesList_NameCol;
+	public static String WReportSplittingPropertiesList_RemoveBtn;
+	public static String WReportSplittingPropertiesList_ValueCol;
 	public static String NewFileDataAdapterWizard_1;
 	public static String NewFileDataAdapterWizard_2;
 	public static String NewFileDataAdapterWizard_VirtualFolderError;

@@ -1,30 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.book.model;
 
+import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.jasperreports.engine.JRConstants;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExpression;
-import net.sf.jasperreports.engine.JRPart;
-import net.sf.jasperreports.engine.JRPropertiesMap;
-import net.sf.jasperreports.engine.JRSubreportParameter;
-import net.sf.jasperreports.engine.base.JRBaseSubreport;
-import net.sf.jasperreports.engine.component.ComponentKey;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
-import net.sf.jasperreports.engine.design.JRDesignPart;
-import net.sf.jasperreports.engine.design.JRDesignSubreport;
-import net.sf.jasperreports.engine.design.JRDesignSubreportParameter;
-import net.sf.jasperreports.engine.part.PartComponent;
-import net.sf.jasperreports.engine.part.PartEvaluationTime;
-import net.sf.jasperreports.engine.part.StandardPartEvaluationTime;
-import net.sf.jasperreports.engine.type.PartEvaluationTimeType;
-import net.sf.jasperreports.parts.subreport.StandardSubreportPartComponent;
-import net.sf.jasperreports.parts.subreport.SubreportPartComponent;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
@@ -47,7 +28,32 @@ import com.jaspersoft.studio.property.descriptor.ButtonsPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.checkbox.CheckBoxPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.expression.JRExpressionPropertyDescriptor;
 import com.jaspersoft.studio.property.descriptor.expression.JRSubreportExpressionPropertyDescriptor;
-import com.jaspersoft.studio.property.descriptor.properties.JPropertiesPropertyDescriptor;
+import com.jaspersoft.studio.property.descriptor.propexpr.JPropertyExpressionsDescriptor;
+import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionDTO;
+import com.jaspersoft.studio.property.descriptor.propexpr.PropertyExpressionsDTO;
+import com.jaspersoft.studio.utils.ModelUtils;
+
+import net.sf.jasperreports.engine.JRConstants;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExpression;
+import net.sf.jasperreports.engine.JRPart;
+import net.sf.jasperreports.engine.JRPropertiesMap;
+import net.sf.jasperreports.engine.JRPropertyExpression;
+import net.sf.jasperreports.engine.JRSubreportParameter;
+import net.sf.jasperreports.engine.base.JRBaseSubreport;
+import net.sf.jasperreports.engine.component.ComponentKey;
+import net.sf.jasperreports.engine.design.JRDesignElement;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
+import net.sf.jasperreports.engine.design.JRDesignPart;
+import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
+import net.sf.jasperreports.engine.design.JRDesignSubreport;
+import net.sf.jasperreports.engine.design.JRDesignSubreportParameter;
+import net.sf.jasperreports.engine.part.PartComponent;
+import net.sf.jasperreports.engine.part.PartEvaluationTime;
+import net.sf.jasperreports.engine.part.StandardPartEvaluationTime;
+import net.sf.jasperreports.engine.type.PartEvaluationTimeType;
+import net.sf.jasperreports.parts.subreport.StandardSubreportPartComponent;
+import net.sf.jasperreports.parts.subreport.SubreportPartComponent;
 
 /**
  * Model element for the JRDesignPart objects
@@ -154,6 +160,13 @@ public class MReportPart extends APropertyNode {
 			if (id.equals(PROPERTY_MAP)) {
 				return jrpart.getPropertiesMap().cloneProperties();
 			}
+			if (id.equals(JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS)) {
+				JRPropertyExpression[] propertyExpressions = jrpart.getPropertyExpressions();
+				if (propertyExpressions != null)
+					propertyExpressions = propertyExpressions.clone();
+				return new PropertyExpressionsDTO(propertyExpressions, getPropertiesMapClone(jrpart), getValue(),
+						ModelUtils.getExpressionContext(this));
+			}
 			if (id.equals(COMPONENT_PARAMETERS)) {
 				PartComponent component = jrpart.getComponent();
 				if (component != null && component instanceof StandardSubreportPartComponent) {
@@ -209,6 +222,7 @@ public class MReportPart extends APropertyNode {
 					this.getPropertyChangeSupport().firePropertyChange(COMPONENT_EXPRESSION, false, true);
 				}
 			} else if (id.equals(PROPERTY_MAP)) {
+				JRPropertiesMap originalMap = jrpart.getPropertiesMap().cloneProperties();
 				JRPropertiesMap v = (JRPropertiesMap) value;
 				String[] names = jrpart.getPropertiesMap().getPropertyNames();
 				for (int i = 0; i < names.length; i++) {
@@ -218,7 +232,53 @@ public class MReportPart extends APropertyNode {
 				for (int i = 0; i < names.length; i++) {
 					jrpart.getPropertiesMap().setProperty(names[i], v.getProperty(names[i]));
 				}
-				this.getPropertyChangeSupport().firePropertyChange(PROPERTY_MAP, false, true);
+				// really important to trigger the property with source the JR
+				// object and not
+				// the node
+				// using the node could cause problem with the refresh of the
+				// advanced
+				// properties view
+				firePropertyChange(
+						new PropertyChangeEvent(jrpart, PROPERTY_MAP, originalMap, jrpart.getPropertiesMap()));
+			} else if (id.equals(JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS)) {
+				if (value instanceof PropertyExpressionsDTO) {
+					PropertyExpressionsDTO dto = (PropertyExpressionsDTO) value;
+					JRPropertyExpression[] expr = jrpart.getPropertyExpressions();
+					// Remove the old expression properties if any
+					if (expr != null) {
+						for (JRPropertyExpression ex : expr)
+							jrpart.removePropertyExpression(ex);
+					}
+					// Add the new expression properties
+					for (PropertyExpressionDTO p : dto.getProperties()) {
+						if (p.isExpression()) {
+							JRDesignPropertyExpression newExp = new JRDesignPropertyExpression();
+							newExp.setName(p.getName());
+							newExp.setValueExpression(p.getValueAsExpression());
+							jrpart.addPropertyExpression(newExp);
+						}
+					}
+					// now change properties, first remove the old ones if any
+					JRPropertiesMap originalMap = jrpart.getPropertiesMap().cloneProperties();
+					String[] names = jrpart.getPropertiesMap().getPropertyNames();
+					for (int i = 0; i < names.length; i++) {
+						jrpart.getPropertiesMap().removeProperty(names[i]);
+					}
+					// now add the new properties
+					for (PropertyExpressionDTO p : dto.getProperties()) {
+						if (!p.isExpression()) {
+							jrpart.getPropertiesMap().setProperty(p.getName(), p.getValue());
+						}
+					}
+					// really important to trigger the property with source the JR
+					// object and not
+					// the node
+					// using the node could cause problem with the refresh of the
+					// advanced
+					// properties view
+					firePropertyChange(
+							new PropertyChangeEvent(jrpart, PROPERTY_MAP, originalMap, jrpart.getPropertiesMap()));
+				}
 			} else if (id.equals(COMPONENT_PARAMETERS)) {
 				PartComponent component = jrpart.getComponent();
 				if (component != null && component instanceof StandardSubreportPartComponent) {
@@ -367,10 +427,10 @@ public class MReportPart extends APropertyNode {
 				"net.sf.jasperreports.doc/docs/schema.reference.html?cp=0_1#partNameExpression")); //$NON-NLS-1$
 		desc.add(componentExpression);
 
-		JPropertiesPropertyDescriptor propertiesMapD = new JPropertiesPropertyDescriptor(PROPERTY_MAP,
-				com.jaspersoft.studio.messages.Messages.common_properties, getJasperConfiguration(), getValue());
-		propertiesMapD.setDescription(com.jaspersoft.studio.messages.Messages.common_properties);
-		desc.add(propertiesMapD);
+		JPropertyExpressionsDescriptor propertiesD = new JPropertyExpressionsDescriptor(
+				JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS, Messages.MReportPart_partProperties);
+		propertiesD.setDescription(Messages.MReportPart_partPropertiesTooltip);
+		desc.add(propertiesD);
 
 		ButtonsPropertyDescriptor returnDescriptor = new ButtonsPropertyDescriptor(
 				JRDesignSubreport.PROPERTY_RETURN_VALUES, SPPartReturnValuesButton.class);
@@ -432,5 +492,17 @@ public class MReportPart extends APropertyNode {
 			return ExpressionEditorSupportUtil.getReportExpressionContext();
 		}
 		return super.getAdapter(adapter);
+	}
+
+	protected JRPropertiesMap getPropertiesMapClone(JRDesignPart jrPart) {
+		JRPropertiesMap propertiesMap = jrPart.getPropertiesMap();
+		if (propertiesMap != null)
+			propertiesMap = propertiesMap.cloneProperties();
+		return propertiesMap;
+	}
+	
+	@Override
+	public boolean isReportSplittingSupported() {
+		return true;
 	}
 }
