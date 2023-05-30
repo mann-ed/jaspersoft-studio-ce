@@ -25,6 +25,7 @@ import com.jaspersoft.studio.widgets.map.core.MapType;
 import com.jaspersoft.studio.widgets.map.support.BaseJavaMapSupport;
 import com.jaspersoft.studio.widgets.map.support.GMapUtils;
 import com.jaspersoft.studio.widgets.map.support.JavaMapSupport;
+import com.jaspersoft.studio.widgets.map.support.MapCredentials;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
@@ -49,6 +50,7 @@ public class GMapsCenterPanel {
 	protected MapType mapType = MapType.ROADMAP;
 	protected String address;
 	protected Text addressBar;
+	protected MapCredentials mapCredentials;
 
 	/**
 	 * Creates a new panel containing the controls to work with a Google Maps
@@ -59,8 +61,10 @@ public class GMapsCenterPanel {
 	 *            (cannot be null)
 	 * @param style
 	 *            the style of widget to construct
+	 * @param mapCredentials credentials (api key) for the Google Map component
 	 */
-	public GMapsCenterPanel(Composite parent, int style) {
+	public GMapsCenterPanel(Composite parent, int style, MapCredentials mapCredentials) {
+		this.mapCredentials = mapCredentials;
 		createContent(parent, style);
 	}
 
@@ -78,7 +82,7 @@ public class GMapsCenterPanel {
 	}
 
 	protected void createMap(Composite parent) {
-		map = new MapTile(parent, SWT.NONE, MapActivator.getFileLocation("mapfiles/gmaps_library/map2.html"));
+		map = new MapTile(parent, SWT.NONE, MapActivator.getFileLocation("mapfiles/gmaps_library/map2.html"), mapCredentials);
 		map.configureJavaSupport(new DetailsPanelMapSupport(map.getMapControl()));
 		map.getFunctions().add(new InitialConfigurationFunction(map.getMapControl(),
 				MapWidgetConstants.BROWSER_FUNCTION_INITIAL_CONFIGURATION, map.getJavaMapSupport()));
@@ -367,7 +371,7 @@ public class GMapsCenterPanel {
 				map.getJavascriptMapSupport().setMapType(mapType != null ? mapType : MapType.ROADMAP);
 				if ((mapCenter == null || mapCenter.getLat() == null || mapCenter.getLng() == null)) {
 					if (address != null && !address.isEmpty()) {
-						LatLng coords = GMapUtils.getAddressCoordinates(address);
+						LatLng coords = GMapUtils.getAddressCoordinates(address, mapCredentials);
 						if (coords != null)
 							centerMap(coords);
 					}
@@ -388,7 +392,7 @@ public class GMapsCenterPanel {
 	protected void doAddressChanged(final Text tadr) {
 		refreshing = true;
 		try {
-			LatLng coords = GMapUtils.getAddressCoordinates(tadr.getText());
+			LatLng coords = GMapUtils.getAddressCoordinates(tadr.getText(), mapCredentials);
 			if (coords != null)
 				centerMap(coords);
 		} finally {
@@ -427,6 +431,12 @@ public class GMapsCenterPanel {
 			tadr.setText("");
 		} finally {
 			refreshing = false;
+		}
+	}
+	
+	public void dispose() {
+		if(map!=null) {
+			map.dispose();
 		}
 	}
 }

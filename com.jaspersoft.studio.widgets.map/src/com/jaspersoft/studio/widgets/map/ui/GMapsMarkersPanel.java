@@ -41,6 +41,7 @@ import com.jaspersoft.studio.widgets.map.browserfunctions.UpdateMarkerPosition;
 import com.jaspersoft.studio.widgets.map.core.LatLng;
 import com.jaspersoft.studio.widgets.map.core.Marker;
 import com.jaspersoft.studio.widgets.map.messages.Messages;
+import com.jaspersoft.studio.widgets.map.support.MapCredentials;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
@@ -72,14 +73,12 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 	 * Creates a new panel containing the controls to work with a Google Maps
 	 * component presented inside a browser instance.
 	 * 
-	 * @param parent
-	 *            a composite control which will be the parent of the new instance
-	 *            (cannot be null)
-	 * @param style
-	 *            the style of widget to construct
+	 * @param parent a composite control which will be the parent of the new instance (cannot be null)
+	 * @param style the style of widget to construct
+	 * @param mapCredentials credentials (api key) for the Google Map component
 	 */
-	public GMapsMarkersPanel(Composite parent, int style) {
-		super(parent, style);
+	public GMapsMarkersPanel(Composite parent, int style, MapCredentials mapCredentials) {
+		super(parent, style, mapCredentials);
 	}
 
 	@Override
@@ -116,7 +115,7 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 
 	@Override
 	protected void createMap(Composite parent) {
-		map = new MapTile(parent, SWT.NONE, MapActivator.getFileLocation("mapfiles/gmaps_library/map2.html")); //$NON-NLS-1$
+		map = new MapTile(parent, SWT.NONE, MapActivator.getFileLocation("mapfiles/gmaps_library/map2.html"), mapCredentials); //$NON-NLS-1$
 		map.configureJavaSupport(new DetailsPanelMapSupportMarker(map.getMapControl()));
 		map.getFunctions().add(new AddNewMarker(map.getMapControl(), MapWidgetConstants.BROWSER_FUNCTION_ADD_MARKER,
 				map.getJavaMapSupport()));
@@ -357,5 +356,11 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 				new String[] { Messages.GMapsMarkersPanel_8, Messages.GMapsMarkersPanel_9 }, 1);
 		if (dialog.open() == Dialog.OK)
 			handleRemoveMarker(markersList.getSelectionIndices());
+	}
+	
+	public void dispose() {
+		if(map!=null) {
+			map.dispose();
+		}
 	}
 }

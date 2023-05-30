@@ -3,6 +3,8 @@
  *******************************************************************************/
 package com.jaspersoft.studio.components.map.property;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -43,6 +45,7 @@ public class MapAuthenticationSection extends AbstractSection {
 		useBusinessAPICheck = getWidgetFactory().createButton(cmpContainer,
 				Messages.MapAuthenticationSection_UseBusinessAPICheckbox, SWT.CHECK);
 		useBusinessAPICheck.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
+		useBusinessAPICheck.setToolTipText(Messages.MapAuthenticationSection_BusinessAPIKeyWarningTooltip);
 
 		keyWidget = createWidget4Property(cmpContainer, MapComponent.PROPERTY_KEY);
 		idWidget = createWidget4Property(cmpContainer, MapComponent.PROPERTY_CLIENT_ID);
@@ -68,11 +71,15 @@ public class MapAuthenticationSection extends AbstractSection {
 		if (useBusiness) {
 			((Text) keyWidget.getControl()).setText(""); //$NON-NLS-1$
 			getElement().setPropertyValue(MapComponent.PROPERTY_KEY, null);
+			useBusinessAPICheck.setText(Messages.MapAuthenticationSection_DeprecatedWarningPrefix + Messages.MapAuthenticationSection_UseBusinessAPICheckbox);
+			useBusinessAPICheck.setImage(JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
 		} else {
 			((Text) idWidget.getControl()).setText(""); //$NON-NLS-1$
 			getElement().setPropertyValue(MapComponent.PROPERTY_CLIENT_ID, null);
 			((Text) signatureWidget.getControl()).setText(""); //$NON-NLS-1$
 			getElement().setPropertyValue(MapComponent.PROPERTY_SIGNATURE, null);
+			useBusinessAPICheck.setText(Messages.MapAuthenticationSection_UseBusinessAPICheckbox);
+			useBusinessAPICheck.setImage(null);
 		}
 		parent.update();
 		parent.layout();

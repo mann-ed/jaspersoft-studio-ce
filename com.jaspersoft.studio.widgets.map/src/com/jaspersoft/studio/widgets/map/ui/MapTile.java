@@ -3,9 +3,14 @@
  *******************************************************************************/
 package com.jaspersoft.studio.widgets.map.ui;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -24,6 +29,9 @@ import com.jaspersoft.studio.widgets.map.support.BaseJSMapSupport;
 import com.jaspersoft.studio.widgets.map.support.BaseJavaMapSupport;
 import com.jaspersoft.studio.widgets.map.support.JSMapSupport;
 import com.jaspersoft.studio.widgets.map.support.JavaMapSupport;
+import com.jaspersoft.studio.widgets.map.support.MapCredentials;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 /**
  * A tile containing the map widget. The browser can be further customized via
@@ -52,20 +60,27 @@ import com.jaspersoft.studio.widgets.map.support.JavaMapSupport;
  */
 public class MapTile {
 
+	private static final String MAP_JS_API_URL = "https://maps.googleapis.com/maps/api/js"; //$NON-NLS-1$
 	private List<GMapEnabledFunction> functions;
 	private JSMapSupport jsMapSupp;
 	private JavaMapSupport javaMapSupp;
 	protected Browser mapControl;
 	private String mapURL;
+	private String apiKey;
+	private Path tmpMapDirectory;
 
-	public MapTile(Composite parent, int style) {
-		this(parent, style, MapActivator.getFileLocation("mapfiles/gmaps_library/map.html")); //$NON-NLS-1$
+	public MapTile(Composite parent, int style, MapCredentials credentials) {
+		this(parent, style, MapActivator.getFileLocation("mapfiles/gmaps_library/map.html"), credentials); //$NON-NLS-1$
 	}
 
-	public MapTile(Composite parent, int style, String mapURL) {
+	public MapTile(Composite parent, int style, String mapURL, MapCredentials credentials) {
 		createBrowser(parent, style);
 		addListeners();
+		if(UIUtils.isWindows()) {
+			mapURL = "file:///" + mapURL.replace("\\", "/");
+		}
 		this.mapURL = mapURL;
+		this.apiKey = credentials!=null ? credentials.getApiKey() : null;
 	}
 
 	protected void createBrowser(Composite parent, int style) {
@@ -151,6 +166,37 @@ public class MapTile {
 		getJavascriptMapSupport();
 		getFunctions();
 		// Sets the URL on the browser
-		mapControl.setUrl(mapURL);
+		if(apiKey!=null) {
+			try {
+				File origMapFile = new File(mapURL);
+				tmpMapDirectory = Files.createTempDirectory("gmaplibrary");
+				FileUtils.copyDirectory(origMapFile.getParentFile().toPath().toFile(), tmpMapDirectory.toFile());
+				String origMapHtmlCode = Files.readString(origMapFile.toPath());
+				File tmpMapFile = Files.createTempFile(tmpMapDirectory, "map", ".html").toFile();
+				origMapHtmlCode = origMapHtmlCode.replace(MAP_JS_API_URL, MAP_JS_API_URL+ "?key="+apiKey);
+				Files.writeString(tmpMapFile.toPath(), origMapHtmlCode);
+				mapControl.setUrl(tmpMapFile.getAbsolutePath());
+			} catch (IOException e) {
+				MapActivator.logError("Unable to activate the map tile with the proper API KEY.", e);
+				mapControl.setUrl(mapURL);
+			}
+		}
+		else {
+			mapControl.setUrl(mapURL);
+		}
+	}
+	
+	/**
+	 * Should be manually invoked when discarding the map tile (i.e dialogs or panels dispose).
+	 * It cleans up possible temporary files and more.
+	 */
+	public void dispose() {
+		if(tmpMapDirectory!=null) {
+			try {
+				FileUtils.deleteDirectory(tmpMapDirectory.toFile());
+			} catch (IOException e) {
+				MapActivator.logError("Something went wrong during the deletion of the temp map directory.", e);
+			}
+		}
 	}
 }

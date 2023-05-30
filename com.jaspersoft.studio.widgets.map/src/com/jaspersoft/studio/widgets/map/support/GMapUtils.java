@@ -11,18 +11,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.widgets.map.core.Animation;
 import com.jaspersoft.studio.widgets.map.core.LatLng;
 import com.jaspersoft.studio.widgets.map.core.MarkerOptions;
-import com.jaspersoft.studio.widgets.map.ui.GMapsDetailsPanel;
+
+import net.sf.jasperreports.components.map.MapComponent;
 
 /**
  * A bunch of utility methods to deal with the map component.
@@ -102,13 +100,17 @@ public class GMapUtils {
 	 *            the address to look
 	 * @return the latitude and longitude information
 	 */
-	public static LatLng getAddressCoordinates(String addressText) {
+	public static LatLng getAddressCoordinates(String addressText, MapCredentials mapCredentials) {
 		LatLng coordinates = null;
 		HttpGet locateAddressGET = null;
+		String apikeyDetails = "";
+		if(mapCredentials!=null) {
+			apikeyDetails = "key="+mapCredentials.getApiKey()+"&";
+		}
 		
 		try {
 			String addressUrlEncoded = URLEncoder.encode(addressText, "UTF-8");
-			locateAddressGET = new HttpGet("http://maps.google.com/maps/api/geocode/json?address=" + addressUrlEncoded);
+			locateAddressGET = new HttpGet("https://maps.google.com/maps/api/geocode/json?" + apikeyDetails + "address=" + addressUrlEncoded);
 			
 			try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 				CloseableHttpResponse response = httpclient.execute(locateAddressGET);
@@ -143,14 +145,17 @@ public class GMapUtils {
 	}
 
 	/**
-	 * Opens in a separate {@link Shell} the panel containing the Google Map
-	 * controls.
+	 * Finds the Google Map credentials (api key) information from the report property set.
+	 * 
+	 * @param jConfig the {@link JasperReportsConfiguration} context
+	 * @return the map credentials (api key) details, <code>null</code> if none available
 	 */
-	public static void openSample() {
-		Display display = Display.getDefault();
-		Shell shell = new Shell(display);
-		shell.setLayout(new FillLayout());
-		new GMapsDetailsPanel(shell, SWT.NONE);
-		shell.open();
+	public static MapCredentials getMapCredentials(JasperReportsConfiguration jConfig) {
+		MapCredentials credentials = null;
+		if(jConfig!=null && jConfig.getJasperDesign()!=null) {
+			String key = jConfig.getJasperDesign().getProperty(MapComponent.PROPERTY_KEY);
+			credentials = new MapCredentials(key);
+		}
+		return credentials;
 	}
 }
