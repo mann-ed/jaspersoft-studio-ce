@@ -76,9 +76,6 @@ public class MapTile {
 	public MapTile(Composite parent, int style, String mapURL, MapCredentials credentials) {
 		createBrowser(parent, style);
 		addListeners();
-		if(UIUtils.isWindows()) {
-			mapURL = "file:///" + mapURL.replace("\\", "/");
-		}
 		this.mapURL = mapURL;
 		this.apiKey = credentials!=null ? credentials.getApiKey() : null;
 	}
@@ -170,20 +167,28 @@ public class MapTile {
 			try {
 				File origMapFile = new File(mapURL);
 				tmpMapDirectory = Files.createTempDirectory("gmaplibrary");
-				FileUtils.copyDirectory(origMapFile.getParentFile().toPath().toFile(), tmpMapDirectory.toFile());
+				FileUtils.copyDirectory(origMapFile.getParentFile(), tmpMapDirectory.toFile());
 				String origMapHtmlCode = Files.readString(origMapFile.toPath());
 				File tmpMapFile = Files.createTempFile(tmpMapDirectory, "map", ".html").toFile();
 				origMapHtmlCode = origMapHtmlCode.replace(MAP_JS_API_URL, MAP_JS_API_URL+ "?key="+apiKey);
 				Files.writeString(tmpMapFile.toPath(), origMapHtmlCode);
-				mapControl.setUrl(tmpMapFile.getAbsolutePath());
+				mapControl.setUrl(fixMapURL(tmpMapFile.getAbsolutePath()));
 			} catch (IOException e) {
 				MapActivator.logError("Unable to activate the map tile with the proper API KEY.", e);
-				mapControl.setUrl(mapURL);
+				UIUtils.showError("Unable to activate the map tile with the proper API KEY.", e);
+				mapControl.setUrl(fixMapURL(mapURL));
 			}
 		}
 		else {
-			mapControl.setUrl(mapURL);
+			mapControl.setUrl(fixMapURL(mapURL));
 		}
+	}
+	
+	private String fixMapURL(String mapURL) {
+		if(UIUtils.isWindows()) {
+			mapURL = "file:///" + mapURL.replace("\\", "/");
+		}
+		return mapURL;
 	}
 	
 	/**
@@ -197,6 +202,9 @@ public class MapTile {
 			} catch (IOException e) {
 				MapActivator.logError("Something went wrong during the deletion of the temp map directory.", e);
 			}
+		}
+		if(mapControl!=null) {
+			mapControl.dispose();
 		}
 	}
 }
