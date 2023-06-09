@@ -13,7 +13,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: net.sf.jasperreports, com.jaspersoft.studio
 Bundle-ClassPath: patch-library.jar,
- lib/jasperreports-custom-visualization-develop-JS-69328-20230518.085316-2.jar,
+ lib/jasperreports-custom-visualization-develop-JS-69328-20230526.080758-3.jar,
  .
 Export-Package: net.sf.jasperreports.customvisualization,
  net.sf.jasperreports.customvisualization.design,
