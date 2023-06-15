@@ -6,6 +6,8 @@ package com.jaspersoft.studio.widgets.map.ui;
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressAdapter;
+import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -17,7 +19,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.jaspersoft.studio.utils.NumberValidator;
-import com.jaspersoft.studio.widgets.map.MapActivator;
 import com.jaspersoft.studio.widgets.map.MapWidgetConstants;
 import com.jaspersoft.studio.widgets.map.browserfunctions.GMapEnabledFunction;
 import com.jaspersoft.studio.widgets.map.core.LatLng;
@@ -70,24 +71,28 @@ public class GMapsCenterPanel {
 
 	protected void createContent(Composite parent, int style) {
 		createTop(parent);
-
 		if (Util.isLinux()) {
 			Composite warningCmp = MapUIUtils.createLinuxWarningText(parent);
 			warningCmp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		}
-
 		createMap(parent);
-
 		UIUtils.getDisplay().asyncExec(() -> map.activateMapTile());
 	}
 
 	protected void createMap(Composite parent) {
-		map = new MapTile(parent, SWT.NONE, MapActivator.getFileLocation("mapfiles/gmaps_library/map2.html"), mapCredentials);
+		map = new MapTile(parent, SWT.NONE, mapCredentials);
 		map.configureJavaSupport(new DetailsPanelMapSupport(map.getMapControl()));
 		map.getFunctions().add(new InitialConfigurationFunction(map.getMapControl(),
 				MapWidgetConstants.BROWSER_FUNCTION_INITIAL_CONFIGURATION, map.getJavaMapSupport()));
-		if (parent.getLayout() instanceof GridLayout)
+		if (parent.getLayout() instanceof GridLayout) {
 			map.setLayoutData(new GridData(GridData.FILL_BOTH));
+		}
+		map.getMapControl().addProgressListener(new ProgressAdapter() {
+			@Override
+			public void completed(ProgressEvent event) {
+				map.getJavascriptMapSupport().evaluateJavascript("MENU_KIND=_MENU_MINIMAL");
+			}
+		});
 	}
 
 	protected void createTop(Composite parent) {
@@ -128,29 +133,6 @@ public class GMapsCenterPanel {
 					doAddressChanged(tadr);
 			}
 		});
-		// tadr.addModifyListener(new ModifyListener() {
-		//
-		// @Override
-		// public void modifyText(ModifyEvent e) {
-		// if (centering)
-		// return;
-		// String txt = tadr.getText();
-		// if (txt.isEmpty())
-		// return;
-		// refreshing = true;
-		// try {
-		// System.out.println(txt);
-		// address = txt;
-		// LatLng coords = GMapUtils.getAddressCoordinates(txt);
-		// if (coords != null) {
-		// centerMap(coords);
-		// handleAddressChanged(txt);
-		// }
-		// } finally {
-		// refreshing = false;
-		// }
-		// }
-		// });
 
 		Label lbl = new Label(cmp, SWT.NONE);
 		lbl.setText("Latitude");
@@ -159,14 +141,7 @@ public class GMapsCenterPanel {
 		gd = new GridData();
 		gd.widthHint = 100;
 		tlat.setLayoutData(gd);
-		tlat.addVerifyListener(new NumberValidator(new Float("-85"), new Float("85"), Float.class));
-		// tlat.addModifyListener(new ModifyListener() {
-		//
-		// @Override
-		// public void modifyText(ModifyEvent e) {
-		// doLatChange(tadr);
-		// }
-		// });
+		tlat.addVerifyListener(new NumberValidator(Float.parseFloat("-85"), Float.parseFloat("85"), Float.class));
 		tlat.addTraverseListener(e -> {
 			if (e.detail == SWT.TRAVERSE_RETURN || e.keyCode == SWT.CR) {
 				doLatChange(tadr);
@@ -192,14 +167,7 @@ public class GMapsCenterPanel {
 		gd = new GridData();
 		gd.widthHint = 100;
 		tlon.setLayoutData(gd);
-		tlon.addVerifyListener(new NumberValidator(new Float("-180"), new Float("180"), Float.class));
-		// tlon.addModifyListener(new ModifyListener() {
-		//
-		// @Override
-		// public void modifyText(ModifyEvent e) {
-		// doLonChange(tadr);
-		// }
-		// });
+		tlon.addVerifyListener(new NumberValidator(Float.parseFloat("-180"), Float.parseFloat("180"), Float.class));
 		tlon.addTraverseListener(e -> {
 			if (e.detail == SWT.TRAVERSE_RETURN || e.keyCode == SWT.CR) {
 				doLonChange(tadr);
@@ -220,7 +188,7 @@ public class GMapsCenterPanel {
 	}
 
 	public void initMap() {
-		// nothing to do here
+		
 	}
 
 	/**
@@ -255,11 +223,9 @@ public class GMapsCenterPanel {
 		try {
 			setMapCenter(lastCoords);
 			lastCoords = null;
-			System.out.println(mapCenter.toJsString());
 			tlon.setText(String.format("%.7f", mapCenter.getLng()));
 			tlat.setText(String.format("%.7f", mapCenter.getLat()));
 			map.getJavascriptMapSupport().evaluateJavascript("myMap.panTo(" + mapCenter.toJsString() + "); ");
-			// addCenterMarker(coords);
 		} finally {
 			centering = false;
 			centerMap(lastCoords);
@@ -363,75 +329,83 @@ public class GMapsCenterPanel {
 	private boolean initialised = false;
 
 	public void refresh() {
-		initMap();
-		initMarkers = true;
-		try {
-			if (!initialised) {
-				map.getJavascriptMapSupport().setZoomLevel(getZoomLevel());
-				map.getJavascriptMapSupport().setMapType(mapType != null ? mapType : MapType.ROADMAP);
-				if ((mapCenter == null || mapCenter.getLat() == null || mapCenter.getLng() == null)) {
-					if (address != null && !address.isEmpty()) {
-						LatLng coords = GMapUtils.getAddressCoordinates(address, mapCredentials);
-						if (coords != null)
-							centerMap(coords);
-					}
-				} else
-					centerMap(mapCenter);
-				initialised = true;
+		UIUtils.getDisplay().asyncExec(() -> {
+			initMarkers = true;
+			try {
+				initMap();
+				if (!initialised) {
+					map.getJavascriptMapSupport().setZoomLevel(getZoomLevel());
+					map.getJavascriptMapSupport().setMapType(mapType != null ? mapType : MapType.ROADMAP);
+					if ((mapCenter == null || mapCenter.getLat() == null || mapCenter.getLng() == null)) {
+						if (address != null && !address.isEmpty()) {
+							LatLng coords = GMapUtils.getAddressCoordinates(address, mapCredentials);
+							if (coords != null)
+								centerMap(coords);
+						}
+					} else
+						centerMap(mapCenter);
+					initialised = true;
+				}
+				postInitMap();
+			} finally {
+				initMarkers = false;
 			}
-			postInitMap();
-		} finally {
-			initMarkers = false;
-		}
+		});
 	}
 
 	protected void postInitMap() {
-		map.getJavascriptMapSupport().evaluateJavascript("MENU_KIND=_MENU_MINIMAL");
+
 	}
 
 	protected void doAddressChanged(final Text tadr) {
-		refreshing = true;
-		try {
-			LatLng coords = GMapUtils.getAddressCoordinates(tadr.getText(), mapCredentials);
-			if (coords != null)
-				centerMap(coords);
-		} finally {
-			refreshing = false;
-		}
+		UIUtils.getDisplay().asyncExec(() -> {
+			refreshing = true;
+			try {
+				LatLng coords = GMapUtils.getAddressCoordinates(tadr.getText(), mapCredentials);
+				if (coords != null)
+					centerMap(coords);
+			} finally {
+				refreshing = false;
+			}
+		});
 	}
 
 	protected void doLatChange(final Text tadr) {
-		if (refreshing || centering)
-			return;
-		String txt = tlat.getText();
-		if (txt.isEmpty())
-			return;
-		refreshing = true;
-		try {
-			Double d = Double.valueOf(txt);
-			centerMap(new LatLng(d, mapCenter.getLng()));
-			address = null;
-			tadr.setText("");
-		} finally {
-			refreshing = false;
-		}
+		UIUtils.getDisplay().asyncExec(() -> {
+			if (refreshing || centering)
+				return;
+			String txt = tlat.getText();
+			if (txt.isEmpty())
+				return;
+			refreshing = true;
+			try {
+				Double d = Double.valueOf(txt);
+				centerMap(new LatLng(d, mapCenter.getLng()));
+				address = null;
+				tadr.setText("");
+			} finally {
+				refreshing = false;
+			}
+		});
 	}
 
 	protected void doLonChange(final Text tadr) {
-		if (refreshing || centering)
-			return;
-		String txt = tlon.getText();
-		if (txt.isEmpty())
-			return;
-		refreshing = true;
-		try {
-			Double d = Double.valueOf(txt);
-			centerMap(new LatLng(mapCenter.getLat(), d));
-			address = null;
-			tadr.setText("");
-		} finally {
-			refreshing = false;
-		}
+		UIUtils.getDisplay().asyncExec(() -> {
+			if (refreshing || centering)
+				return;
+			String txt = tlon.getText();
+			if (txt.isEmpty())
+				return;
+			refreshing = true;
+			try {
+				Double d = Double.valueOf(txt);
+				centerMap(new LatLng(mapCenter.getLat(), d));
+				address = null;
+				tadr.setText("");
+			} finally {
+				refreshing = false;
+			}
+		});
 	}
 	
 	public void dispose() {

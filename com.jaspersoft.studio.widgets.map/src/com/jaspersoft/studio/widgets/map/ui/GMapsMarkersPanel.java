@@ -12,6 +12,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressAdapter;
+import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -31,7 +33,6 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import com.jaspersoft.studio.widgets.map.MapActivator;
 import com.jaspersoft.studio.widgets.map.MapWidgetConstants;
 import com.jaspersoft.studio.widgets.map.browserfunctions.AddNewMarker;
 import com.jaspersoft.studio.widgets.map.browserfunctions.ClearMarkersList;
@@ -115,7 +116,7 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 
 	@Override
 	protected void createMap(Composite parent) {
-		map = new MapTile(parent, SWT.NONE, MapActivator.getFileLocation("mapfiles/gmaps_library/map2.html"), mapCredentials); //$NON-NLS-1$
+		map = new MapTile(parent, SWT.NONE, mapCredentials); //$NON-NLS-1$
 		map.configureJavaSupport(new DetailsPanelMapSupportMarker(map.getMapControl()));
 		map.getFunctions().add(new AddNewMarker(map.getMapControl(), MapWidgetConstants.BROWSER_FUNCTION_ADD_MARKER,
 				map.getJavaMapSupport()));
@@ -155,6 +156,12 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 				// nothing to do here
 			}
 
+		});
+		map.getMapControl().addProgressListener(new ProgressAdapter() {
+			@Override
+			public void completed(ProgressEvent event) {
+				map.getJavascriptMapSupport().evaluateJavascript("MENU_KIND=_MENU_COMPLETE"); //$NON-NLS-1$
+			}
 		});
 	}
 
@@ -341,11 +348,6 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 		map.getJavascriptMapSupport().clearMarkers();
 		if (markersList != null)
 			markersList.removeAll();
-	}
-
-	@Override
-	protected void postInitMap() {
-		map.getJavascriptMapSupport().evaluateJavascript("MENU_KIND=_MENU_COMPLETE"); //$NON-NLS-1$
 	}
 
 	protected void deleteMarker() {

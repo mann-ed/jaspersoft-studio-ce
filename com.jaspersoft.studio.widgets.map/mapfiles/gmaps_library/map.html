@@ -1,9 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Google Map</title>
 <link rel="stylesheet" type="text/css" href="css/gmaps_lib.css" />
+<script type="text/javascript">
+	// Java support variables
+	var IS_JAVA_SUPPORTED = false;
+	var JAVA_TO_JAVASCRIPT_CALLED = false;
+	
+	// Other vars
+	var _MENU_MINIMAL = "minimal"; // menu without markers stuff
+	var _MENU_COMPLETE = "complete"; // menu with markers stuff
+	var _MENU_NONE = "none"; // no menu
+	var MENU_KIND = _MENU_MINIMAL;
+</script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 <script type="text/javascript" src="gmaps_lib.js"></script>
 <script type="text/javascript">
@@ -23,25 +34,17 @@
 
 	    // run possible configuration
 	    if (typeof javaCall_InitialConfiguration != 'undefined') javaCall_InitialConfiguration();
-	
-	    // update initial information
-	    if (typeof javaCall_UpdateZoomLevel != 'undefined') javaCall_UpdateZoomLevel(myMap.getZoom());
-	    if (typeof javaCall_UpdateMapCenter != 'undefined') javaCall_UpdateMapCenter(myMap.getCenter().lat(), myMap.getCenter().lng());
-	    if (typeof javaCall_UpdateMapType != 'undefined') javaCall_UpdateMapType(myMap.getMapType());
-	    
+	 
 	    //	context menu for the map
 	    if (MENU_KIND != _MENU_NONE) {
 		    var mapMenuItems = [];
 		    mapMenuItems.push(new GMapsMenuItemHead());
 		    if(MENU_KIND == _MENU_COMPLETE) {
 			    mapMenuItems.push(new GMapsMenuItemSeparator());
-			    mapMenuItems.push(new GMapsMenuItem('Add marker', 'add_new_marker', 'gmaps_context_menu_item menu_item_addmarker'));
-			    mapMenuItems.push(new GMapsMenuItem('Delete all markers', 'delete_all_markers', 'gmaps_context_menu_item menu_item_delete'));
+			    mapMenuItems.push(new GMapsMenuItem('Add marker', 'add_new_marker', 'gmaps_context_menu_item menu_item_addmarker')); 
 			}
 		    mapMenuItems.push(new GMapsMenuItemSeparator());
-		    mapMenuItems.push(new GMapsMenuItem('Zoom in', 'zoom_in_click', 'gmaps_context_menu_item menu_item_zoomin'));
-		    mapMenuItems.push(new GMapsMenuItem('Zoom out', 'zoom_out_click', 'gmaps_context_menu_item menu_item_zoomout'));
-		    mapMenuItems.push(new GMapsMenuItemSeparator());
+		    
 		    mapMenuItems.push(new GMapsMenuItem('Center map here', 'center_map_click', 'gmaps_context_menu_item menu_item_centermap'));
 		    var mapContextMenu = new GMapsContextMenu(myMap, mapMenuItems);
 		    // map context menu behavior
@@ -74,7 +77,7 @@
 			    var markerContextMenu = new GMapsContextMenu(myMap, markerMenuItems);
 			    markerContextMenu.hide = function () {
 			        GMapsContextMenu.prototype.hide.call(this);
-			        myMap.selectedMarker = null;
+			        //myMap.selectedMarker = null;
 			    }
 			    // marker context menu behavior
 			    google.maps.event.addListener(markerContextMenu, 'menu_item_selected', function (latLng, eventName) {
@@ -84,25 +87,34 @@
 			            break;
 			        }
 			    });
-		    }		    
-		    google.maps.event.addListener(myMap.map, 'hideMenus', function (mouseEvent) { 
+			    google.maps.event.addListener(myMap.map, 'hideMenus', function (mouseEvent) { 
 	           		markerContextMenu.hide();
 	                mapContextMenu.hide(); 
-	        });
-		    // enable the context menu(s) showing on right click
-	        google.maps.event.addListener(myMap.map, 'rightclick', function (mouseEvent) { 
-	           		markerContextMenu.hide();
-	                mapContextMenu.show(mouseEvent.latLng); 
-	        });
-	        google.maps.event.addListener(myMap.map, 'rightclickMarker', function (mouseEvent) { 
-	            	mapContextMenu.hide(); 
-	                markerContextMenu.show(mouseEvent.latLng); 
-	        });
+		        });
+			    // enable the context menu(s) showing on right click
+		        google.maps.event.addListener(myMap.map, 'rightclick', function (mouseEvent) { 
+		           		markerContextMenu.hide();
+		                mapContextMenu.show(mouseEvent.latLng); 
+		        });
+		        google.maps.event.addListener(myMap.map, 'rightclickMarker', function (mouseEvent) { 
+		            	mapContextMenu.hide(); 
+		                markerContextMenu.show(mouseEvent.latLng); 
+		        });
+		    }else{
+			    google.maps.event.addListener(myMap.map, 'hideMenus', function (mouseEvent) {  
+		                mapContextMenu.hide(); 
+		        });
+			    // enable the context menu(s) showing on right click
+		        google.maps.event.addListener(myMap.map, 'rightclick', function (mouseEvent) {  
+		                mapContextMenu.show(mouseEvent.latLng); 
+		        }); 
+		    }		     
+	        
         }
 	}
 </script>
 </head>
-<body onload="mapSetup()">
+<body>
 	<div id="map_container">Loading the map ...</div>
 </body>
 </html>

@@ -95,7 +95,6 @@ public class GMapsPathsPanel extends GMapsMarkersPanel {
 		snippet += " });\n";
 		snippet += "mypath.setMap(myMap.map);\n";
 
-		// System.out.println(snippet);
 		map.getJavascriptMapSupport().evaluateJavascript(snippet);
 	}
 

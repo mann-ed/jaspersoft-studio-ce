@@ -13,6 +13,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressAdapter;
+import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -162,6 +164,14 @@ public class MapTile {
 		getJavaMapSupport();
 		getJavascriptMapSupport();
 		getFunctions();
+		
+		mapControl.addProgressListener(new ProgressAdapter() {
+			@Override
+			public void completed(ProgressEvent event) {
+				mapControl.evaluate("mapSetup();",true);
+			}
+		});
+		
 		// Sets the URL on the browser
 		if(apiKey!=null) {
 			try {

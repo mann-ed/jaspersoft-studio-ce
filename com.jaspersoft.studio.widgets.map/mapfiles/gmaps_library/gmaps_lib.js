@@ -1,16 +1,6 @@
 /*******************************************************************************
  * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
  *******************************************************************************/
-// Java support variables
-var IS_JAVA_SUPPORTED = false;
-var JAVA_TO_JAVASCRIPT_CALLED = false;
-
-// Other vars
-var _MENU_MINIMAL = "minimal"; // menu without markers stuff
-var _MENU_COMPLETE = "complete"; // menu with markers stuff
-var _MENU_NONE = "none"; // no menu
-var MENU_KIND = _MENU_MINIMAL;
-
 /**
  * Definition of the custom context menu. It will inherit from
  * google.maps.OverlayView class. We will have to implement the methods onAdd(),
