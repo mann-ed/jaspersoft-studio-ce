@@ -89,6 +89,11 @@ public class MapTile {
 				event.doit = false;
 			}
 		});
+		if(MapUIUtils.isGoogleMapWidgetDisabled()) {
+			String disabledMapURL = MapActivator.getFileLocation("mapfiles/gmaps_library/map_disabled.html");
+			mapControl.setUrl(fixMapURL(disabledMapURL));
+			mapControl.setJavascriptEnabled(false);
+		}
 	}
 
 	/**
@@ -165,32 +170,34 @@ public class MapTile {
 		getJavascriptMapSupport();
 		getFunctions();
 		
-		mapControl.addProgressListener(new ProgressAdapter() {
-			@Override
-			public void completed(ProgressEvent event) {
-				mapControl.evaluate("mapSetup();",true);
+		if(!MapUIUtils.isGoogleMapWidgetDisabled()) {
+			mapControl.addProgressListener(new ProgressAdapter() {
+				@Override
+				public void completed(ProgressEvent event) {
+					mapControl.evaluate("mapSetup();",true);
+				}
+			});
+			
+			// Sets the URL on the browser
+			if(apiKey!=null) {
+				try {
+					File origMapFile = new File(mapURL);
+					tmpMapDirectory = Files.createTempDirectory("gmaplibrary");
+					FileUtils.copyDirectory(origMapFile.getParentFile(), tmpMapDirectory.toFile());
+					String origMapHtmlCode = Files.readString(origMapFile.toPath());
+					File tmpMapFile = Files.createTempFile(tmpMapDirectory, "map", ".html").toFile();
+					origMapHtmlCode = origMapHtmlCode.replace(MAP_JS_API_URL, MAP_JS_API_URL+ "?key="+apiKey);
+					Files.writeString(tmpMapFile.toPath(), origMapHtmlCode);
+					mapControl.setUrl(fixMapURL(tmpMapFile.getAbsolutePath()));
+				} catch (IOException e) {
+					MapActivator.logError("Unable to activate the map tile with the proper API KEY.", e);
+					UIUtils.showError("Unable to activate the map tile with the proper API KEY.", e);
+					mapControl.setUrl(fixMapURL(mapURL));
+				}
 			}
-		});
-		
-		// Sets the URL on the browser
-		if(apiKey!=null) {
-			try {
-				File origMapFile = new File(mapURL);
-				tmpMapDirectory = Files.createTempDirectory("gmaplibrary");
-				FileUtils.copyDirectory(origMapFile.getParentFile(), tmpMapDirectory.toFile());
-				String origMapHtmlCode = Files.readString(origMapFile.toPath());
-				File tmpMapFile = Files.createTempFile(tmpMapDirectory, "map", ".html").toFile();
-				origMapHtmlCode = origMapHtmlCode.replace(MAP_JS_API_URL, MAP_JS_API_URL+ "?key="+apiKey);
-				Files.writeString(tmpMapFile.toPath(), origMapHtmlCode);
-				mapControl.setUrl(fixMapURL(tmpMapFile.getAbsolutePath()));
-			} catch (IOException e) {
-				MapActivator.logError("Unable to activate the map tile with the proper API KEY.", e);
-				UIUtils.showError("Unable to activate the map tile with the proper API KEY.", e);
+			else {
 				mapControl.setUrl(fixMapURL(mapURL));
 			}
-		}
-		else {
-			mapControl.setUrl(fixMapURL(mapURL));
 		}
 	}
 	
