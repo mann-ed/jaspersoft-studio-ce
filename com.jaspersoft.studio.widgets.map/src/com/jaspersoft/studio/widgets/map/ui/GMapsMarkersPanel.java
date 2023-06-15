@@ -175,7 +175,9 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int markerIdx = markersList.getSelectionIndex();
-				map.getJavascriptMapSupport().highlightMarker(markerIdx);
+				UIUtils.getDisplay().asyncExec(()->{
+					map.getJavascriptMapSupport().highlightMarker(markerIdx);
+				});
 			}
 		});
 		markersList.addKeyListener(new KeyAdapter() {
@@ -353,11 +355,13 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 	protected void deleteMarker() {
 		if (markersList.getSelectionCount() <= 0)
 			return;
-		MessageDialog dialog = new MessageDialog(UIUtils.getShell(), Messages.GMapsMarkersPanel_2, null,
-				Messages.GMapsMarkersPanel_7, MessageDialog.QUESTION,
-				new String[] { Messages.GMapsMarkersPanel_8, Messages.GMapsMarkersPanel_9 }, 1);
-		if (dialog.open() == Dialog.OK)
-			handleRemoveMarker(markersList.getSelectionIndices());
+		UIUtils.getDisplay().asyncExec(()->{
+			MessageDialog dialog = new MessageDialog(UIUtils.getShell(), Messages.GMapsMarkersPanel_2, null,
+					Messages.GMapsMarkersPanel_7, MessageDialog.QUESTION,
+					new String[] { Messages.GMapsMarkersPanel_8, Messages.GMapsMarkersPanel_9 }, 1);
+			if (dialog.open() == Dialog.OK)
+				handleRemoveMarker(markersList.getSelectionIndices());
+		});
 	}
 	
 	public void dispose() {

@@ -68,7 +68,7 @@
 		        }
 		    });
 		
-			if(MENU_KIND == _MENU_COMPLETE) {
+			if(MENU_KIND == _MENU_COMPLETE && (navigator.appVersion.indexOf('Win') == -1)) {
 			    // context menu for the marker
 			    var markerMenuItems = [];
 			    markerMenuItems.push(new GMapsMenuItemHead());
