@@ -298,8 +298,8 @@ public class HyperlinkSection extends AbstractSection {
 				}
 				hideList.put(linkTypeItems[i], elHiders.toArray(new ElementHider[elHiders.size()]));
 			}
-			// Default all for unknown custom types
-			hideList.put("Custom", new ElementHider[]{tooltip, anchor, page, reference, parameters}); //$NON-NLS-1$
+			// Default onlny parameters for unknown custom types
+			hideList.put("Custom", new ElementHider[]{parameters}); //$NON-NLS-1$
 		}
 	}
 	
