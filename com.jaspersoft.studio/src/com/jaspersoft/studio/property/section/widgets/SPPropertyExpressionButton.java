@@ -70,7 +70,7 @@ public class SPPropertyExpressionButton extends ASPropertyWidget<JPropertyExpres
 				PropertyExpressionsDTO dto = (PropertyExpressionsDTO) model
 						.getPropertyValue(JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS);
 				wizard.setValue(dto);
-				WizardDialog dialog = new WizardDialog(UIUtils.getShell(), wizard);
+				WizardDialog dialog = new WizardDialog(UIUtils.getShellForWizardDialog(), wizard);
 				dialog.create();
 				if (dialog.open() == Dialog.OK)
 					section.changeProperty(JRDesignElement.PROPERTY_PROPERTY_EXPRESSIONS, wizard.getValue());

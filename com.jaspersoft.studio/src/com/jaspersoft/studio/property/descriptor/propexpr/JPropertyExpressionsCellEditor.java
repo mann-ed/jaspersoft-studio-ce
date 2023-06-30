@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Control;
 import com.jaspersoft.studio.property.descriptor.EditableDialogCellEditor;
 import com.jaspersoft.studio.property.descriptor.propexpr.dialog.JRPropertyExpressionEditor;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+
 public class JPropertyExpressionsCellEditor extends EditableDialogCellEditor {
 	private boolean showExpression = true;
 	private boolean forceStandardEditing = false;
@@ -35,7 +37,7 @@ public class JPropertyExpressionsCellEditor extends EditableDialogCellEditor {
 		wizard.setShowExpression(showExpression);
 		// clone the object to avoid side effect
 		wizard.setValue(((PropertyExpressionsDTO) getValue()).clone());
-		WizardDialog dialog = new WizardDialog(cellEditorWindow.getShell(), wizard);
+		WizardDialog dialog = new WizardDialog(UIUtils.getShellForWizardDialog(), wizard);
 		if (dialog.open() == Dialog.OK)
 			return wizard.getValue();
 		return null;

@@ -34,7 +34,7 @@ public class WProperties extends AWTextButton {
 				wizard.setShowExpression(aw.element instanceof JRDesignField);
 				// clone the object to avoid side effect
 				wizard.setValue(((PropertyExpressionsDTO) aw.getValue()).clone());
-				WizardDialog dialog = new WizardDialog(UIUtils.getShell(), wizard);
+				WizardDialog dialog = new WizardDialog(UIUtils.getShellForWizardDialog(), wizard);
 				if (dialog.open() == Dialog.OK)
 					aw.setValue(wizard.getValue());
 			}
