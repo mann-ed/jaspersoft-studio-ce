@@ -199,7 +199,7 @@ public class JDDragGuidePolicy extends GraphicalEditPolicy {
 			// move the guide being dragged to the last index so that it's drawn
 			// on
 			// top of other guides
-			List<IFigure> children = getHostFigure().getParent().getChildren();
+			List<IFigure> children = (List<IFigure>) getHostFigure().getParent().getChildren();
 			children.remove(getHostFigure());
 			children.add(getHostFigure());
 		}

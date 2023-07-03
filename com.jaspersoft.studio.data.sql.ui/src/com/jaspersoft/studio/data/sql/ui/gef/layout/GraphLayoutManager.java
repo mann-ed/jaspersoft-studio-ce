@@ -21,7 +21,7 @@ public class GraphLayoutManager extends AbstractLayout {
 
 	protected Dimension calculatePreferredSize(IFigure container, int wHint, int hHint) {
 		container.validate();
-		List<IFigure> children = container.getChildren();
+		List<IFigure> children = (List<IFigure>) container.getChildren();
 		Rectangle result = new Rectangle().setLocation(container.getClientArea().getLocation());
 		for (IFigure c : children)
 			result.union(c.getBounds());

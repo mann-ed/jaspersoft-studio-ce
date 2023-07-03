@@ -213,20 +213,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bouncycastle.bcpkix"
-         download-size="0"
-         install-size="0"
-         version="1.72.0.v20221013-1810"
-         unpack="false"/>
-
-   <plugin
-         id="org.bouncycastle.bcutil"
-         download-size="0"
-         install-size="0"
-         version="1.72.0.v20221013-1810"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.servicemix.bundles.xmlbeans"
          download-size="0"
          install-size="0"
@@ -252,13 +238,6 @@
          download-size="0"
          install-size="0"
          version="2.17.1"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.xalan-serializer"
-         download-size="0"
-         install-size="0"
-         version="2.7.2.1"
          unpack="false"/>
 
    <plugin
@@ -310,14 +289,14 @@
          id="bcpg"
          download-size="0"
          install-size="0"
-         version="1.72.0"
+         version="1.73.0"
          unpack="false"/>
 
    <plugin
          id="bcprov"
          download-size="0"
          install-size="0"
-         version="1.72.0"
+         version="1.73.0"
          unpack="false"/>
 
    <plugin
@@ -339,5 +318,19 @@
          download-size="0"
          install-size="0"
          version="1.16.0.b01"/>
+
+   <plugin
+         id="bcpkix"
+         download-size="0"
+         install-size="0"
+         version="1.73.0"
+         unpack="false"/>
+
+   <plugin
+         id="bcutil"
+         download-size="0"
+         install-size="0"
+         version="1.73.0"
+         unpack="false"/>
 
 </feature>
