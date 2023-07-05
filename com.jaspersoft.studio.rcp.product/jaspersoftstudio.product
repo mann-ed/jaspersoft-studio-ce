@@ -23,9 +23,9 @@ Special thanks to all people who support this software.
       <programArgs>-data @noDefault
 --launcher.defaultAction openFile</programArgs>
       <vmArgs>-Xms128m
--Xmx1024m
--XX:+CMSClassUnloadingEnabled
--XX:+UseConcMarkSweepGC
+-Xmx2048m
+--add-exports java.xml/com.sun.org.apache.xml.internal.serialize=ALL-UNNAMED
+--add-opens java.desktop/sun.java2d=ALL-UNNAMED
 -Dfile.encoding=UTF-8
 -Djava.net.preferIPv4Stack=true
 -Ddeployment.security.TLSv1.1=true
