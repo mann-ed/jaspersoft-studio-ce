@@ -2,7 +2,7 @@
 <feature
       id="jre.macosx.cocoa.x86_64.feature"
       label="JRE for Mac OS X 64-bit systems"
-      version="11.0.18"
+      version="17.0.7"
       provider-name="Cloud Software Group, Inc."
       os="macosx"
       ws="cocoa"
