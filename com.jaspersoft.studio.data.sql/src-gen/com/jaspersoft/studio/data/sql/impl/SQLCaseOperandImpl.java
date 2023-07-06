@@ -90,6 +90,7 @@ public class SQLCaseOperandImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getWop()
   {
     return wop;
@@ -117,6 +118,7 @@ public class SQLCaseOperandImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setWop(Operands newWop)
   {
     if (newWop != wop)
@@ -138,6 +140,7 @@ public class SQLCaseOperandImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrExpr getExpr()
   {
     return expr;
@@ -165,6 +168,7 @@ public class SQLCaseOperandImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(OrExpr newExpr)
   {
     if (newExpr != expr)
@@ -186,6 +190,7 @@ public class SQLCaseOperandImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SQLCaseWhens getWhen()
   {
     return when;
@@ -213,6 +218,7 @@ public class SQLCaseOperandImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setWhen(SQLCaseWhens newWhen)
   {
     if (newWhen != when)

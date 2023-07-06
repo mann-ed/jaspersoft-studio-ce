@@ -200,6 +200,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getSostr()
   {
     return sostr;
@@ -210,6 +211,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSostr(String newSostr)
   {
     String oldSostr = sostr;
@@ -223,6 +225,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public BigDecimal getSodbl()
   {
     return sodbl;
@@ -233,6 +236,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSodbl(BigDecimal newSodbl)
   {
     BigDecimal oldSodbl = sodbl;
@@ -246,6 +250,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getSodate()
   {
     return sodate;
@@ -256,6 +261,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSodate(String newSodate)
   {
     String oldSodate = sodate;
@@ -269,6 +275,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getSotime()
   {
     return sotime;
@@ -279,6 +286,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSotime(String newSotime)
   {
     String oldSotime = sotime;
@@ -292,6 +300,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getSodt()
   {
     return sodt;
@@ -302,6 +311,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSodt(String newSodt)
   {
     String oldSodt = sodt;
@@ -315,6 +325,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getSoUInt()
   {
     return soUInt;
@@ -325,6 +336,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSoUInt(Long newSoUInt)
   {
     Long oldSoUInt = soUInt;
@@ -338,6 +350,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getSoint()
   {
     return soint;
@@ -348,6 +361,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSoint(Long newSoint)
   {
     Long oldSoint = soint;
@@ -492,7 +506,7 @@ public class ScalarOperandImpl extends RowValueImpl implements ScalarOperand
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (sostr: ");
     result.append(sostr);
     result.append(", sodbl: ");

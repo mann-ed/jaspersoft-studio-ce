@@ -69,6 +69,7 @@ public class abcImpl extends FromValuesColumnNamesImpl implements abc
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<ColumnNames> getEntries()
   {
     if (entries == null)

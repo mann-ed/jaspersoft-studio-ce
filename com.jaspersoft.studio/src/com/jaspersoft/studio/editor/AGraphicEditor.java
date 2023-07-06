@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor;
 
 import java.util.List;
@@ -68,6 +67,10 @@ public abstract class AGraphicEditor extends J2DGraphicalEditor implements ITabb
 		this.jrContext = jrContext;
 	}
 
+	public JasperReportsConfiguration getJrContext() {
+		return jrContext;
+	}
+	
 	public FigureCanvas getEditor() {
 		return (FigureCanvas) getGraphicalViewer().getControl();
 	}

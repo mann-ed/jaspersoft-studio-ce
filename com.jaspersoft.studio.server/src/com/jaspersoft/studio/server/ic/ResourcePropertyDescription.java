@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.ic;
 
 import java.net.MalformedURLException;
@@ -147,12 +146,12 @@ public class ResourcePropertyDescription extends FilePropertyDescription {
 				try {
 					if (element instanceof PropertyExpressionsDTO) {
 						PropertyExpressionsDTO dto = (PropertyExpressionsDTO) element;
-						dto.addProperty(AExporter.PROP_SERVERURL, msp.getValue().getUrl(), false);
+						dto.addProperty(AExporter.PROP_SERVERURL, msp.getValue().getUrl(), false, false);
 						dto.addProperty(AExporter.PROP_USER,
 								msp.getValue().getUser() + (msp.getValue().getOrganisation() != null
 										? "|" + msp.getValue().getOrganisation()
 										: ""),
-								false);
+								false, false);
 					} else {
 						if (ds != null) {
 							ds.getPropertiesMap().setProperty(AExporter.PROP_SERVERURL, msp.getValue().getUrl());

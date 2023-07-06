@@ -36,10 +36,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>C</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>C</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>C</em>' attribute.
    * @see #setC(String)
@@ -62,10 +58,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Efrag</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Efrag</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Efrag</em>' containment reference.
    * @see #setEfrag(FullExpression)
@@ -88,10 +80,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Not Prm</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Not Prm</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Not Prm</em>' attribute.
    * @see #setNotPrm(String)
@@ -114,10 +102,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Expgroup</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Expgroup</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Expgroup</em>' containment reference.
    * @see #setExpgroup(ExprGroup)
@@ -140,10 +124,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Exp</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Exp</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Exp</em>' containment reference.
    * @see #setExp(FullExpression)
@@ -166,10 +146,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Xexp</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Xexp</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Xexp</em>' containment reference.
    * @see #setXexp(XExpr)
@@ -192,10 +168,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>In</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>In</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>In</em>' containment reference.
    * @see #setIn(InOper)
@@ -218,10 +190,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Exists</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Exists</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Exists</em>' containment reference.
    * @see #setExists(ExistsOper)
@@ -244,10 +212,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Op1</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op1</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op1</em>' containment reference.
    * @see #setOp1(Operands)
@@ -270,10 +234,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Isnull</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Isnull</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Isnull</em>' attribute.
    * @see #setIsnull(String)
@@ -296,10 +256,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Between</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Between</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Between</em>' containment reference.
    * @see #setBetween(Between)
@@ -322,10 +278,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Like</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Like</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Like</em>' containment reference.
    * @see #setLike(Like)
@@ -348,10 +300,6 @@ public interface FullExpression extends OrExpr
   /**
    * Returns the value of the '<em><b>Comp</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Comp</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Comp</em>' containment reference.
    * @see #setComp(Comparison)

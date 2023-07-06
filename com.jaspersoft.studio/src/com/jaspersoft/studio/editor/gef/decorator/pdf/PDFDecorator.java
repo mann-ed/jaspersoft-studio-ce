@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.gef.decorator.pdf;
 
 import java.awt.Color;
@@ -17,6 +16,7 @@ import javax.swing.ImageIcon;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 
+import com.jaspersoft.studio.editor.action.pdf.PdfActionHeading;
 import com.jaspersoft.studio.editor.gef.decorator.IDecorator;
 import com.jaspersoft.studio.editor.gef.decorator.chainable.AbstractPainter;
 import com.jaspersoft.studio.editor.gef.decorator.chainable.IDecoratorInterface;
@@ -88,9 +88,7 @@ public class PDFDecorator implements IDecorator, IDecoratorInterface {
 				boolean drawstart = false;
 				boolean drawend = false;
 
-				String[] tags = { "net.sf.jasperreports.export.pdf.tag.h1", "H1", "net.sf.jasperreports.export.pdf.tag.h2", "H2", 
-						"net.sf.jasperreports.export.pdf.tag.h3", "H3", "net.sf.jasperreports.export.pdf.tag.h4", "H4", 
-						"net.sf.jasperreports.export.pdf.tag.h5", "H5", "net.sf.jasperreports.export.pdf.tag.h6", "H6",
+				String[] tags = {
 						"net.sf.jasperreports.export.pdf.tag.table", "TBL", "net.sf.jasperreports.export.pdf.tag.tr", "TR", 
 						"net.sf.jasperreports.export.pdf.tag.th", "TH","net.sf.jasperreports.export.pdf.tag.td", "TD",
 						"net.sf.jasperreports.export.pdf.tag.l", "LIST", "net.sf.jasperreports.export.pdf.tag.li", "LIST ITEM"};
@@ -115,6 +113,14 @@ public class PDFDecorator implements IDecorator, IDecoratorInterface {
 					}
 
 				}
+				
+				// Checking the generic tag for heading
+				String headingValue = v.getProperty(PdfActionHeading.EXPORT_PDF_ACCESSIBILITY_TAG);
+				if(headingValue!=null) {
+					drawstart=drawend=true;
+					fullString += headingValue.toUpperCase() + " ";
+				}
+				
 				if (drawstart)
 					drawStart(g, r);
 				if (drawend)
@@ -210,9 +216,7 @@ public class PDFDecorator implements IDecorator, IDecoratorInterface {
 		String fullString = "";
 		String endString = "";
 
-		String[] tags = { "net.sf.jasperreports.export.pdf.tag.h1", "H1", "net.sf.jasperreports.export.pdf.tag.h2", "H2", 
-				"net.sf.jasperreports.export.pdf.tag.h3", "H3", "net.sf.jasperreports.export.pdf.tag.h4", "H4", 
-				"net.sf.jasperreports.export.pdf.tag.h5", "H5", "net.sf.jasperreports.export.pdf.tag.h6", "H6",
+		String[] tags = {
 				"net.sf.jasperreports.export.pdf.tag.table", "TBL", "net.sf.jasperreports.export.pdf.tag.tr", "TR", 
 				"net.sf.jasperreports.export.pdf.tag.th", "TH","net.sf.jasperreports.export.pdf.tag.td", "TD",
 				"net.sf.jasperreports.export.pdf.tag.l", "LIST", "net.sf.jasperreports.export.pdf.tag.li", "LIST ITEM"};
@@ -231,6 +235,12 @@ public class PDFDecorator implements IDecorator, IDecoratorInterface {
 				}
 			}
 
+		}
+		
+		// Checking the generic tag for heading
+		String headingValue = mapProperties.getProperty(PdfActionHeading.EXPORT_PDF_ACCESSIBILITY_TAG);
+		if(headingValue!=null) {
+			fullString += headingValue.toUpperCase() + " ";
 		}
 	
 		startString = startString.trim();

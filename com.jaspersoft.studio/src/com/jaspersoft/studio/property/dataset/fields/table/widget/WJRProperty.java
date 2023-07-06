@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.dataset.fields.table.widget;
 
 import java.awt.Color;
@@ -68,6 +68,7 @@ import net.sf.jasperreports.engine.design.JRDesignField;
 import net.sf.jasperreports.engine.design.JRDesignParameter;
 import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.ExpressionTypeEnum;
 import net.sf.jasperreports.engine.type.JREnum;
 import net.sf.jasperreports.engine.type.NamedEnum;
 import net.sf.jasperreports.engine.type.NamedValueEnum;
@@ -365,32 +366,39 @@ public class WJRProperty extends AWidget {
 			}
 		} else if (element instanceof PropertyExpressionsDTO) {
 			PropertyExpressionsDTO d = (PropertyExpressionsDTO) element;
-			for (PropertyExpressionDTO tdto : d.getProperties())
+			for (PropertyExpressionDTO tdto : d.getProperties()) {
 				if (tdto.getName().equals(cName)) {
 					tdto.setExpression(value instanceof JRDesignExpression);
 					tdto.setValue(value instanceof JRDesignExpression ? ((JRDesignExpression) value).getText()
 							: value.toString());
 					return;
 				}
+			}
 			PropertyExpressionDTO tdto = null;
-			if (element instanceof DatasetPropertyExpressionsDTO)
+			if (element instanceof DatasetPropertyExpressionsDTO) {
 				if (value instanceof PropertyExpressionDTO) {
 					PropertyExpressionDTO pedto = (PropertyExpressionDTO) value;
-					tdto = new DatasetPropertyExpressionDTO(pedto.isExpression(), cName,
-							pedto.isExpression() ? pedto.getValueAsExpression().toString() : pedto.getValue(),
-							PropertyEvaluationTimeEnum.LATE);
-				} else
-					tdto = new DatasetPropertyExpressionDTO(value instanceof JRDesignExpression, cName,
-							value instanceof JRDesignExpression ? ((JRDesignExpression) value).getText()
-									: value.toString(),
-							PropertyEvaluationTimeEnum.LATE);
+					boolean isExpr = pedto.isExpression();
+					String pValue = isExpr ? pedto.getValueAsExpression().toString() : pedto.getValue();
+					boolean isSimpleText = isExpr ? ExpressionTypeEnum.SIMPLE_TEXT == pedto.getValueAsExpression().getType() : false;
+					tdto = new DatasetPropertyExpressionDTO(isExpr, cName, pValue, isSimpleText, PropertyEvaluationTimeEnum.LATE);
+				} else {
+					boolean isExpr = value instanceof JRDesignExpression;
+					String pValue = isExpr ? ((JRDesignExpression) value).getText() : value.toString();
+					boolean isSimpleText = isExpr ? ExpressionTypeEnum.SIMPLE_TEXT == ((JRDesignExpression) value).getType() : false;
+					tdto = new DatasetPropertyExpressionDTO(isExpr, cName, pValue, isSimpleText, PropertyEvaluationTimeEnum.LATE);
+				}
+			}
 			else {
-				if (value instanceof PropertyExpressionDTO)
+				if (value instanceof PropertyExpressionDTO) {
 					tdto = (PropertyExpressionDTO) value;
-				else
-					tdto = new PropertyExpressionDTO(value instanceof JRDesignExpression, cName,
-							value instanceof JRDesignExpression ? ((JRDesignExpression) value).getText()
-									: value.toString());
+				}
+				else {
+					boolean isExpr = value instanceof JRDesignExpression;
+					String pValue = isExpr ? ((JRDesignExpression) value).getText() : value.toString();
+					boolean isSimpleText = isExpr ? ExpressionTypeEnum.SIMPLE_TEXT == ((JRDesignExpression) value).getType() : false;
+					tdto = new PropertyExpressionDTO(isExpr, cName, pValue, isSimpleText);
+				}
 			}
 			((PropertyExpressionsDTO) element).getProperties().add(tdto);
 		} else if (element instanceof JRPropertiesMap) {
@@ -410,35 +418,40 @@ public class WJRProperty extends AWidget {
 		if (element instanceof JRPropertiesHolder) {
 			JRPropertiesHolder field = (JRPropertiesHolder) element;
 			boolean isExpression = false;
+			boolean isSimpleText = false;
 			String value = field.getPropertiesMap().getProperty(c.getPropertyName());
 			if (isPropertyExpressions(element)) {
 				JRPropertyExpression[] pexps = getPropertyExpressions(element);
-				if (pexps != null)
-					for (JRPropertyExpression pe : pexps)
+				if (pexps != null) {
+					for (JRPropertyExpression pe : pexps) {
 						if (pe.getName().equals(c.getPropertyName()) && pe.getValueExpression() != null) {
 							isExpression = true;
 							value = pe.getValueExpression().getText();
+							isSimpleText = ExpressionTypeEnum.SIMPLE_TEXT == pe.getValueExpression().getType();
 							if (pe instanceof DatasetPropertyExpression) {
-								dto = new DatasetPropertyExpressionDTO(isExpression, c.getPropertyName(), value,
+								dto = new DatasetPropertyExpressionDTO(isExpression, c.getPropertyName(), value, isSimpleText,
 										((DatasetPropertyExpression) pe).getEvaluationTime());
 								return dto;
 							}
 						}
+					}
+				}
 			}
-			return new PropertyExpressionDTO(isExpression, c.getPropertyName(), value);
+			return new PropertyExpressionDTO(isExpression, c.getPropertyName(), value, isSimpleText);
 		} else if (element instanceof PropertyExpressionsDTO) {
 			PropertyExpressionsDTO d = (PropertyExpressionsDTO) element;
-			for (PropertyExpressionDTO pe : d.getProperties())
+			for (PropertyExpressionDTO pe : d.getProperties()) {
 				if (pe.getName().equals(c.getPropertyName())) {
 					dto = pe;
 					return dto;
 				}
+			}
 		} else if (element instanceof JRPropertiesMap) {
 			JRPropertiesMap field = (JRPropertiesMap) element;
 			String value = field.getProperty(c.getPropertyName());
-			return new PropertyExpressionDTO(false, c.getPropertyName(), value);
+			return new PropertyExpressionDTO(false, c.getPropertyName(), value, false);
 		}
-		dto = new PropertyExpressionDTO(false, c.getPropertyName(), null);
+		dto = new PropertyExpressionDTO(false, c.getPropertyName(), null, false);
 		return dto;
 	}
 

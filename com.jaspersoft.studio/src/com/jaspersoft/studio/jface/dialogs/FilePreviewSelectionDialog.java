@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.jface.dialogs;
 
 import java.io.BufferedInputStream;
@@ -52,6 +51,7 @@ public class FilePreviewSelectionDialog extends FileSelectionDialog {
 	// Image preview job information
 	private static final int IMAGE_PREVIEW_JOB_DELAY = 500;
 	private ImagePreviewJob filePreviewJob;
+	private Image previewJobResizedImg;
 
 	private Composite cmpFilePreview;
 	private Composite cmpNoFilePreview;
@@ -303,9 +303,11 @@ public class FilePreviewSelectionDialog extends FileSelectionDialog {
 							// Gets a resized image for the preview area
 							int imgWidth = img.getImageData().width;
 							int imgHeight = img.getImageData().height;
-							Image resizedImg = ImageUtils.resize(img, Math.min(imgWidth, 200),
-									Math.min(imgHeight, 200));
-							filePreview.setImage(resizedImg);
+							if(previewJobResizedImg!=null) {
+								previewJobResizedImg.dispose();
+							}
+							previewJobResizedImg = ImageUtils.resize(img, Math.min(imgWidth, 200), Math.min(imgHeight, 200));
+							filePreview.setImage(previewJobResizedImg);
 							lblFileDimension.setText(
 									Messages.ImageSelectionDialog_Dimension + imgWidth + "x" + imgHeight + "px"); //$NON-NLS-2$ //$NON-NLS-3$
 							lblFileSize.setText(Messages.ImageSelectionDialog_Size + sizeInfo);
@@ -327,7 +329,6 @@ public class FilePreviewSelectionDialog extends FileSelectionDialog {
 				return Status.CANCEL_STATUS;
 			}
 		}
-
 	}
 
 	@Override
@@ -336,7 +337,10 @@ public class FilePreviewSelectionDialog extends FileSelectionDialog {
 			filePreviewJob.cancel();
 			filePreviewJob = null;
 		}
+		if (previewJobResizedImg != null) {
+			previewJobResizedImg.dispose();
+			previewJobResizedImg = null;
+		}
 		return super.close();
 	}
-
 }

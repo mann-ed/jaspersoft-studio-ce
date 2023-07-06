@@ -1,12 +1,9 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.customadapters;
 
 import java.lang.reflect.Constructor;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -19,15 +16,13 @@ import org.eclipse.wb.swt.ResourceManager;
 
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.DataAdapterFactory;
-import com.jaspersoft.studio.data.DataAdapterServiceFactoryImpl;
 import com.jaspersoft.studio.data.adapter.IDataAdapterCreator;
 import com.jaspersoft.studio.data.customadapters.ui.AdapterWidgetsDescriptor;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.DataAdapterContributorFactory;
 import net.sf.jasperreports.data.DataAdapterService;
-import net.sf.jasperreports.data.DataAdapterServiceFactory;
+import net.sf.jasperreports.data.DataAdapterServiceUtil;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperReportsContext;
@@ -74,33 +69,14 @@ public class ConfigurableDataAdapterFactory implements DataAdapterFactory {
 	 * Return the data adapter service, first the service is found among the JasperReports contribution and if it 
 	 * can't be found the a default dummy service is returned, since this method should not return null+
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public DataAdapterService createDataAdapterService(JasperReportsContext jasperReportsContext, DataAdapter dataAdapter) {
 		//Search among the JR Extensions
-		List<DataAdapterContributorFactory> bundles = jasperReportsContext.getExtensions(DataAdapterContributorFactory.class);
 		ParameterContributorContext paramContribContext = new ParameterContributorContext(jasperReportsContext, null, null);
-		for (Iterator<DataAdapterContributorFactory> it = bundles.iterator(); it.hasNext();)
+		DataAdapterService service = DataAdapterServiceUtil.getInstance(paramContribContext).getService(dataAdapter);
+		if (service != null)
 		{
-			DataAdapterContributorFactory factory = it.next();
-			DataAdapterService service = factory.getDataAdapterService(paramContribContext, dataAdapter);
-			if (service != null)
-			{
-				return service;
-			}
-		}
-		//Look in the data adapter service factory, DataAdapterServiceFactory is deprecated but somw old data adapters may still use it
-		List<DataAdapterServiceFactory> oldBundles = jasperReportsContext.getExtensions(DataAdapterServiceFactory.class);
-		for (Iterator<DataAdapterServiceFactory> it = oldBundles.iterator(); it.hasNext();)
-		{
-			DataAdapterServiceFactory factory = it.next();
-			if (!(factory instanceof DataAdapterServiceFactoryImpl)) {
-				DataAdapterService service = factory.getDataAdapterService(jasperReportsContext, dataAdapter);
-				if (service != null)
-				{
-					return service;
-				}
-			}
+			return service;
 		}
 		
 		//fallback returning a default DataAdapterService

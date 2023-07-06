@@ -1,9 +1,9 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.widgets.framework.ui;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -40,7 +40,7 @@ public class SelectableComboItemPropertyDescription<T> extends ComboItemProperty
 	
 	@Override
 	protected Combo createComboControl(Composite parent) {
-		CustomReadOnlyCombo result = (CustomReadOnlyCombo)super.createComboControl(parent);
+		CustomReadOnlyCombo result = (CustomReadOnlyCombo)super.createComboControl(parent, SWT.READ_ONLY);
 		result.setReadOnly(true);
 		return result;
 	}

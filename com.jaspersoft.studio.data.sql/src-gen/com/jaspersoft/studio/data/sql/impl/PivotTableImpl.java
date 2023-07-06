@@ -90,6 +90,7 @@ public class PivotTableImpl extends MinimalEObjectImpl.Container implements Pivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PivotFunctions getPfun()
   {
     return pfun;
@@ -117,6 +118,7 @@ public class PivotTableImpl extends MinimalEObjectImpl.Container implements Pivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPfun(PivotFunctions newPfun)
   {
     if (newPfun != pfun)
@@ -138,6 +140,7 @@ public class PivotTableImpl extends MinimalEObjectImpl.Container implements Pivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PivotForClause getPfor()
   {
     return pfor;
@@ -165,6 +168,7 @@ public class PivotTableImpl extends MinimalEObjectImpl.Container implements Pivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPfor(PivotForClause newPfor)
   {
     if (newPfor != pfor)
@@ -186,6 +190,7 @@ public class PivotTableImpl extends MinimalEObjectImpl.Container implements Pivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PivotInClause getPin()
   {
     return pin;
@@ -213,6 +218,7 @@ public class PivotTableImpl extends MinimalEObjectImpl.Container implements Pivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPin(PivotInClause newPin)
   {
     if (newPin != pin)

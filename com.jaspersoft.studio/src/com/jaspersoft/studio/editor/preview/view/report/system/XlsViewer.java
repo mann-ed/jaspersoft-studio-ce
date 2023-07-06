@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.preview.view.report.system;
 
 import org.eclipse.jface.preference.PreferencePage;
@@ -16,6 +15,7 @@ import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import net.sf.jasperreports.eclipse.viewer.ReportViewer;
 import net.sf.jasperreports.engine.JasperPrint;
 
+@Deprecated
 public class XlsViewer extends ASystemViewer {
 
 	public XlsViewer(Composite parent, JasperReportsConfiguration jContext) {

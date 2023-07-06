@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.custom.adapter;
 
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import net.sf.jasperreports.data.AbstractDataAdapter;
 import net.sf.jasperreports.data.AbstractDataAdapterService;
 import net.sf.jasperreports.data.DataAdapter;
 import net.sf.jasperreports.data.DataAdapterContributorFactory;
-import net.sf.jasperreports.data.DataAdapterServiceFactory;
 
 /**
  * Container for the informations on the classes loaded from the JAR of 
@@ -55,7 +53,7 @@ public class LoadedClassesContainer {
 			adapterImplementation.add(new Pair(loadedClass.getPackage().getName(), loadedClass.getSimpleName()));
 		}else if (!loadedClass.isInterface() && AbstractDataAdapterService.class.isAssignableFrom(loadedClass)){
 			 service.add(new Pair(loadedClass.getPackage().getName(), loadedClass.getSimpleName()));
-		}else if (!loadedClass.isInterface() && (DataAdapterServiceFactory.class.isAssignableFrom(loadedClass) || DataAdapterContributorFactory.class.isAssignableFrom(loadedClass))){
+		}else if (!loadedClass.isInterface() && DataAdapterContributorFactory.class.isAssignableFrom(loadedClass)){
 			serviceFatory.add(new Pair(loadedClass.getPackage().getName(), loadedClass.getSimpleName()));
 		}
 	}

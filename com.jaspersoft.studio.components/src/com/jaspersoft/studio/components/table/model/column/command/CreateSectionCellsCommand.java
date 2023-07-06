@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.table.model.column.command;
 
 import java.util.ArrayList;
@@ -232,7 +231,7 @@ public class CreateSectionCellsCommand extends Command {
 			}
 		}
 		//Set the height of the cells
-		getHeight(table.getStandardTable().getColumns());
+		setHeight(table.getStandardTable().getColumns(), getMaxHeight(table.getStandardTable().getColumns()));
 		
 		//Calculate the new spans
 		HashMap<Cell, Integer> spans = null;
@@ -259,7 +258,18 @@ public class CreateSectionCellsCommand extends Command {
 				}
 			}
 		}
-		
+		manager.update();
+	}
+	
+	private int getMaxHeight(List<BaseColumn> columns) {
+		int  maxHeight = 30;
+		for(BaseColumn column : columns){
+			if (column instanceof StandardColumnGroup){
+				int groupHeight = 30 + getMaxHeight(((StandardColumnGroup)column).getColumns());
+				maxHeight = Math.max(groupHeight, groupHeight);
+			}
+		}
+		return maxHeight;
 	}
 	
 	/**
@@ -269,20 +279,14 @@ public class CreateSectionCellsCommand extends Command {
 	 * @param columns the columns where the height should be set
 	 * @return return in the recursion the height of a group
 	 */
-	private int getHeight(List<BaseColumn> columns){
-		int  maxHeight = 30;
-		for(BaseColumn column : columns){
-			if (column instanceof StandardColumnGroup){
-				int groupHeight = 30 + getHeight(((StandardColumnGroup)column).getColumns());
-				maxHeight = Math.max(groupHeight, groupHeight);
-			}
-		}
+	private void setHeight(List<BaseColumn> columns, int maxHeight){
 		for(BaseColumn column : columns){
 			if (column instanceof StandardColumnGroup){
 				Cell cell = getCell(column);
 				if (cell != null){
 					((DesignCell)cell).setHeight(30);
 				}
+				setHeight(((StandardColumnGroup)column).getColumns(), maxHeight - 30);
 			} else {
 				Cell cell = getCell(column);
 				if (cell != null){
@@ -290,7 +294,6 @@ public class CreateSectionCellsCommand extends Command {
 				}				
 			}
 		}
-		return maxHeight;
 	}
 
 	/**

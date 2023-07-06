@@ -1,14 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.wizard.resource.page.datasource;
 
-import net.sf.jasperreports.data.jndi.JndiDataAdapter;
-
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -26,6 +23,8 @@ import com.jaspersoft.studio.server.messages.Messages;
 import com.jaspersoft.studio.server.model.AMResource;
 import com.jaspersoft.studio.server.wizard.resource.APageContent;
 import com.jaspersoft.studio.utils.UIUtil;
+
+import net.sf.jasperreports.data.jndi.JndiDataAdapter;
 
 public class DatasourceJndiPageContent extends APageContent {
 
@@ -85,7 +84,9 @@ public class DatasourceJndiPageContent extends APageContent {
 
 	@Override
 	protected void rebind() {
-		bindingContext.bindValue(SWTObservables.observeText(tname, SWT.Modify), PojoObservables.observeValue(res.getValue(), "jndiName")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tname),
+				PojoProperties.value("jndiName").observe(res.getValue())); //$NON-NLS-1$
 	}
 
 	@Override

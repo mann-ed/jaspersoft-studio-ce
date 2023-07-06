@@ -1,19 +1,13 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.sql.dialogs;
 
 import java.util.List;
 
-import net.sf.jasperreports.eclipse.ui.ATitledDialog;
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.design.JRDesignDataset;
-import net.sf.jasperreports.engine.design.JRDesignParameter;
-
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -25,6 +19,11 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.jaspersoft.studio.data.sql.model.query.expression.MExpressionPNot;
 import com.jaspersoft.studio.messages.Messages;
+
+import net.sf.jasperreports.eclipse.ui.ATitledDialog;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.design.JRDesignDataset;
+import net.sf.jasperreports.engine.design.JRDesignParameter;
 
 public class EditPNotExpressionDialog extends ATitledDialog {
 	private MExpressionPNot value;
@@ -72,7 +71,9 @@ public class EditPNotExpressionDialog extends ATitledDialog {
 		operator.setItems(items);
 		operator.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
-		bindingContext.bindValue(SWTObservables.observeSelection(operator), PojoObservables.observeValue(this, "prm")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(operator),
+				PojoProperties.value("prm").observe(this)); //$NON-NLS-1$
 		return cmp;
 	}
 }

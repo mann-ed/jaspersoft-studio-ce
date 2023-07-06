@@ -66,6 +66,7 @@ public class FunctionAnalyticalImpl extends MinimalEObjectImpl.Container impleme
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AnalyticClause getAnClause()
   {
     return anClause;
@@ -93,6 +94,7 @@ public class FunctionAnalyticalImpl extends MinimalEObjectImpl.Container impleme
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setAnClause(AnalyticClause newAnClause)
   {
     if (newAnClause != anClause)

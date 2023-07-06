@@ -1,13 +1,24 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.action.copy;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.eclipse.ui.IWorkbenchPart;
+
+import com.jaspersoft.studio.JaspersoftStudioPlugin;
+import com.jaspersoft.studio.editor.action.ACachedSelectionAction;
+import com.jaspersoft.studio.messages.Messages;
+import com.jaspersoft.studio.model.APropertyNode;
+import com.jaspersoft.studio.model.MGraphicElement;
+import com.jaspersoft.studio.model.MGraphicElementLinePen;
+import com.jaspersoft.studio.model.MLineBox;
+import com.jaspersoft.studio.utils.AlfaRGB;
+import com.jaspersoft.studio.utils.Colors;
 
 import net.sf.jasperreports.engine.JRBoxContainer;
 import net.sf.jasperreports.engine.JRCommonElement;
@@ -37,18 +48,6 @@ import net.sf.jasperreports.engine.type.RotationEnum;
 import net.sf.jasperreports.engine.type.ScaleImageEnum;
 import net.sf.jasperreports.engine.type.VerticalImageAlignEnum;
 import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
-
-import org.eclipse.ui.IWorkbenchPart;
-
-import com.jaspersoft.studio.JaspersoftStudioPlugin;
-import com.jaspersoft.studio.editor.action.ACachedSelectionAction;
-import com.jaspersoft.studio.messages.Messages;
-import com.jaspersoft.studio.model.APropertyNode;
-import com.jaspersoft.studio.model.MGraphicElement;
-import com.jaspersoft.studio.model.MGraphicElementLinePen;
-import com.jaspersoft.studio.model.MLineBox;
-import com.jaspersoft.studio.utils.AlfaRGB;
-import com.jaspersoft.studio.utils.Colors;
 
 /**
  * Action to copy the appearance of an element and that can be 
@@ -336,7 +335,7 @@ public class CopyFormatAction extends ACachedSelectionAction {
 		if (ownLineWidth != null) {
 			return ownLineWidth;
 		}
-		JRStyle baseStyle = getBaseStyle(pen.getStyleContainer());
+		JRStyle baseStyle = getBaseStyle(pen.getPenContainer());
 		if (baseStyle != null) {
 			Float lineWidth = baseStyle.getLinePen().getLineWidth();
 			if (lineWidth != null) {
@@ -355,7 +354,7 @@ public class CopyFormatAction extends ACachedSelectionAction {
 		if (penLineWidth != null) {
 			return penLineWidth;
 		}
-		JRStyle baseStyle = getBaseStyle(boxPen.getStyleContainer());
+		JRStyle baseStyle = getBaseStyle(boxPen.getPenContainer());
 		if (baseStyle != null) {
 			Float lineWidth = boxPen.getPen(baseStyle.getLineBox()).getLineWidth();
 			if (lineWidth != null) {
@@ -370,7 +369,7 @@ public class CopyFormatAction extends ACachedSelectionAction {
 		if (ownLineStyle != null) {
 			return ownLineStyle;
 		}
-		JRStyle baseStyle = getBaseStyle(pen.getStyleContainer());
+		JRStyle baseStyle = getBaseStyle(pen.getPenContainer());
 		if (baseStyle != null) {
 			LineStyleEnum lineStyle = baseStyle.getLinePen().getLineStyleValue();
 			if (lineStyle != null) {
@@ -389,7 +388,7 @@ public class CopyFormatAction extends ACachedSelectionAction {
 		if (penLineStyle != null) {
 			return penLineStyle;
 		}
-		JRStyle baseStyle = getBaseStyle(boxPen.getStyleContainer());
+		JRStyle baseStyle = getBaseStyle(boxPen.getPenContainer());
 		if (baseStyle != null) {
 			LineStyleEnum lineStyle = boxPen.getPen(baseStyle.getLineBox()).getLineStyleValue();
 			if (lineStyle != null) {
@@ -404,7 +403,7 @@ public class CopyFormatAction extends ACachedSelectionAction {
 		if (ownLineColor != null) {
 			return Colors.getSWTRGB4AWTGBColor(ownLineColor);
 		}
-		JRStyle baseStyle = getBaseStyle(pen.getStyleContainer());
+		JRStyle baseStyle = getBaseStyle(pen.getPenContainer());
 		if (baseStyle != null) {
 			Color lineColor = baseStyle.getLinePen().getLineColor();
 			if (lineColor != null) {
@@ -423,7 +422,7 @@ public class CopyFormatAction extends ACachedSelectionAction {
 		if (penLineColor != null) {
 			return Colors.getSWTRGB4AWTGBColor(penLineColor);
 		}
-		JRStyle baseStyle = getBaseStyle(boxPen.getStyleContainer());
+		JRStyle baseStyle = getBaseStyle(boxPen.getPenContainer());
 		if (baseStyle != null) {
 			Color lineColor = boxPen.getPen(baseStyle.getLineBox()).getLineColor();
 			if (lineColor != null) {

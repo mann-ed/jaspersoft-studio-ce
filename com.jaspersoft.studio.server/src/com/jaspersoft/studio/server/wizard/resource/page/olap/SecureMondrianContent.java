@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.wizard.resource.page.olap;
 
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -46,7 +45,9 @@ public class SecureMondrianContent extends OLAPMondrianSchemaContent {
 		List<ResourceProperty> props = res.getValue().getProperties();
 		ResourceProperty resprop = ResourceDescriptorUtil.getProperty(ResourceDescriptor.PROP_XMLA_CATALOG, props);
 
-		bindingContext.bindValue(SWTObservables.observeText(tCatalog, SWT.Modify), PojoObservables.observeValue(resprop, "value"));
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tCatalog),
+				PojoProperties.value("value").observe(resprop)); //$NON-NLS-1$
 
 		Control c = super.createContent(cmp);
 		GridData gd = new GridData(GridData.FILL_BOTH);

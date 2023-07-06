@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio;
 
 import java.io.PrintStream;
@@ -102,6 +102,18 @@ public class JaspersoftStudioPlugin extends AbstractJRUIPlugin {
 		PreferencesUtils.getJaspersoftStudioPrefStore().setValue(chromeEnabledproperty, "true");
 		PreferencesUtils.storeJasperReportsProperty(chromeEnabledproperty, "true");
 		DefaultJasperReportsContext.getInstance().setProperty(chromeEnabledproperty, "true");
+		// Temporary workaround fix for JRL-1820
+		// Error message: 
+		// 		com.github.kklisura.cdt.services.exceptions.ChromeServiceException: Server responded with non-200 code: 405 - Method Not Allowed. 
+		// 		Using unsafe HTTP verb GET to invoke /json/new. This action supports only PUT verb.
+		String chromePageIsolate = "net.sf.jasperreports.chrome.page.isolate";
+		PreferencesUtils.getJaspersoftStudioPrefStore().setValue(chromePageIsolate, "true");
+		PreferencesUtils.storeJasperReportsProperty(chromePageIsolate, "true");
+		DefaultJasperReportsContext.getInstance().setProperty(chromePageIsolate, "true");
+		String chromeRemoteAllowOrigins = "net.sf.jasperreports.chrome.argument.remote-allow-origins";
+		PreferencesUtils.getJaspersoftStudioPrefStore().setValue(chromeRemoteAllowOrigins, "*");
+		PreferencesUtils.storeJasperReportsProperty(chromeRemoteAllowOrigins, "*");
+		DefaultJasperReportsContext.getInstance().setProperty(chromeRemoteAllowOrigins, "*");
 	}
 
 	/**
@@ -201,6 +213,11 @@ public class JaspersoftStudioPlugin extends AbstractJRUIPlugin {
 		// };
 		// extensionsPreloadingJob.setPriority(Job.LONG);
 		// extensionsPreloadingJob.schedule();
+		
+		// Possibly delete markers from JasperReports projects in the workspace
+		if(getInstance().getPreferenceStore().getBoolean(GlobalPreferencePage.JSS_CLEANUP_MARKERS_ONSTARTUP)) {
+			JDTUtils.deleteAllJRProjectMarkers();
+		}
 
 		// JSS console activation (if requested)
 		if (getInstance().getPreferenceStore().getBoolean(GlobalPreferencePage.JSS_ENABLE_INTERNAL_CONSOLE)) {

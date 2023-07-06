@@ -1,19 +1,13 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.properties;
 
 import java.io.File;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.util.FileUtils;
-import net.sf.jasperreports.engine.type.ImageTypeEnum;
-import net.sf.jasperreports.engine.util.JRTypeSniffer;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,6 +23,11 @@ import com.jaspersoft.studio.properties.view.TabbedPropertySheetPage;
 import com.jaspersoft.studio.server.Activator;
 import com.jaspersoft.studio.server.WSClientHelper;
 import com.jaspersoft.studio.server.model.AFileResource;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileUtils;
+import net.sf.jasperreports.engine.type.ImageTypeEnum;
+import net.sf.jasperreports.engine.util.JRTypeSniffer;
 
 public abstract class AResourceSection extends ASection {
 	private Text trefuri;
@@ -114,7 +113,9 @@ public abstract class AResourceSection extends ASection {
 
 	@Override
 	protected void bind() {
-		bindingContext.bindValue(SWTObservables.observeText(trefuri, SWT.NONE), PojoObservables.observeValue(res, "fileName"));
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.NONE).observe(trefuri),
+				PojoProperties.value("fileName").observe(res)); //$NON-NLS-1$
 	}
 
 	protected abstract String[] getFilter();

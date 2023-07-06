@@ -26,10 +26,6 @@ public interface FetchFirst extends EObject
   /**
    * Returns the value of the '<em><b>Fetch First</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fetch First</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fetch First</em>' containment reference.
    * @see #setFetchFirst(UnsignedValue)
@@ -52,10 +48,6 @@ public interface FetchFirst extends EObject
   /**
    * Returns the value of the '<em><b>Row</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Row</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Row</em>' attribute.
    * @see #setRow(String)

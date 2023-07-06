@@ -1,9 +1,9 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.action.resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
@@ -36,7 +36,9 @@ public class DownloadFileAction extends OpenInEditorAction {
 	@Override
 	protected boolean preDownload(AFileResource fres, IProgressMonitor monitor) {
 		SaveAsDialog saveAsDialog = new SaveAsDialog(Display.getDefault().getActiveShell());
-		saveAsDialog.setOriginalName(AExporter.getNewFileName(fres.getValue(), "." + fres.getDefaultFileExtension())); //$NON-NLS-1$
+		String defaultFileExtension = fres.getDefaultFileExtension();
+		saveAsDialog.setOriginalName(AExporter.getNewFileName(
+				fres.getValue(), StringUtils.isNotEmpty(defaultFileExtension) ? "." + defaultFileExtension : null)); //$NON-NLS-1$
 		if (saveAsDialog.open() == Dialog.OK) {
 			path = saveAsDialog.getResult();
 			return true;

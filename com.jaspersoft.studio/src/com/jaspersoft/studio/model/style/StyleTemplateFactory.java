@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.style;
 
 import java.io.File;
@@ -127,6 +126,13 @@ public class StyleTemplateFactory {
 		for (JRStyle s : jrst.getStyles()) {
 			APropertyNode n = (APropertyNode) ReportFactory.createNode(parent, s, -2);
 			n.setEditable(editable);
+			// create the "children" conditional styles
+			if (((JRDesignStyle) s).getConditionalStyleList() != null) {
+				for (Object jrc : ((JRDesignStyle) s).getConditionalStyleList()) {
+					ANode conditionalStyle = ReportFactory.createNode(n, jrc, -1);
+					conditionalStyle.setEditable(editable);
+				}
+			}
 		}
 	}
 
@@ -151,6 +157,12 @@ public class StyleTemplateFactory {
 					e.printStackTrace();
 				}
 			}
+			if (((JRDesignStyle) s).getConditionalStyleList() != null) {
+				for (Object jrc : ((JRDesignStyle) s).getConditionalStyleList()) {
+					ReportFactory.createNode(n, jrc, -1);
+				}
+			}
+
 		}
 		// Add the external styles to the JasperDesign
 		for (INode node : parent.getChildren()) {

@@ -76,6 +76,7 @@ public class UnpivotInClauseArgImpl extends UnpivotInClauseArgsImpl implements U
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PivotColumns getPcols()
   {
     return pcols;
@@ -103,6 +104,7 @@ public class UnpivotInClauseArgImpl extends UnpivotInClauseArgsImpl implements U
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPcols(PivotColumns newPcols)
   {
     if (newPcols != pcols)
@@ -124,6 +126,7 @@ public class UnpivotInClauseArgImpl extends UnpivotInClauseArgsImpl implements U
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PivotColumns getCfuls()
   {
     return cfuls;
@@ -151,6 +154,7 @@ public class UnpivotInClauseArgImpl extends UnpivotInClauseArgsImpl implements U
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setCfuls(PivotColumns newCfuls)
   {
     if (newCfuls != cfuls)

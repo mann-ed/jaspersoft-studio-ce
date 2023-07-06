@@ -1,17 +1,16 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.preferences.theme;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -204,9 +203,13 @@ public class ThemesPreferencePage extends FieldEditorOverlayPage {
 					.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
 			controlDecoration.setImage(fieldDecoration.getImage());
 
-			binding.bindValue(SWTObservables.observeText(tname, SWT.Modify), PojoObservables.observeValue(this, "themename"), //$NON-NLS-1$
-					new UpdateValueStrategy().setAfterConvertValidator(new StringRequiredValidator(
-							Messages.ThemesPreferencePage_enternameMessage, controlDecoration, getButton(IDialogConstants.OK_ID))),
+			binding.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tname),
+					PojoProperties.value("themename").observe(this), //$NON-NLS-1$
+					new UpdateValueStrategy().setAfterConvertValidator(
+							new StringRequiredValidator(
+									Messages.ThemesPreferencePage_enternameMessage, 
+									controlDecoration, getButton(IDialogConstants.OK_ID))),
 					null);
 
 			return control;

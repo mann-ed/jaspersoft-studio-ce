@@ -1,17 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.style;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
-
-import net.sf.jasperreports.engine.JRStyle;
-import net.sf.jasperreports.engine.design.JRDesignImage;
-import net.sf.jasperreports.engine.design.JRDesignStaticText;
-import net.sf.jasperreports.engine.design.JRDesignStyle;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.ColorConstants;
@@ -38,6 +32,14 @@ import com.jaspersoft.studio.model.image.MImage;
 import com.jaspersoft.studio.model.style.MStyle;
 import com.jaspersoft.studio.model.text.MStaticText;
 import com.jaspersoft.studio.preferences.DesignerPreferencePage;
+
+import net.sf.jasperreports.engine.JRConditionalStyle;
+import net.sf.jasperreports.engine.JRExpression;
+import net.sf.jasperreports.engine.JRStyle;
+import net.sf.jasperreports.engine.design.JRDesignConditionalStyle;
+import net.sf.jasperreports.engine.design.JRDesignImage;
+import net.sf.jasperreports.engine.design.JRDesignStaticText;
+import net.sf.jasperreports.engine.design.JRDesignStyle;
 
 public class StyleEditPart extends FigureEditPart {
 
@@ -72,7 +74,7 @@ public class StyleEditPart extends FigureEditPart {
 		textE.setY(20);
 		textE.setWidth(200);
 		textE.setHeight(100);
-		textE.setText(getStylePartText(style.getName()));
+		textE.setText(computeTextMsg(style));
 		textE.setStyle(style);
 		textModel.setValue(textE);
 
@@ -114,6 +116,9 @@ public class StyleEditPart extends FigureEditPart {
 				if (JRDesignStyle.PROPERTY_NAME.equals(arg0.getPropertyName())){
 					textE.setText(getStylePartText(arg0.getNewValue() != null ? arg0.getNewValue() : ""));
 				}
+				if (JRDesignConditionalStyle.PROPERTY_CONDITION_EXPRESSION.equals(arg0.getPropertyName())) {
+					textE.setText(computeTextMsg(style));
+				}
 				imageModel.setChangedProperty(true);
 				textModel.setChangedProperty(true);
 				if (getParent() != null) {
@@ -126,6 +131,17 @@ public class StyleEditPart extends FigureEditPart {
 		});
 		
 		return rf;
+	}
+	
+	private String computeTextMsg(JRStyle style) {
+		if(style instanceof JRConditionalStyle) {
+			JRExpression conditionExpression = ((JRConditionalStyle)style).getConditionExpression();
+			String conditionExpr = conditionExpression!=null ? conditionExpression.getText() : "<NO CONDITION SET>";
+			return "Conditional Style: " + conditionExpr;
+		}
+		else {
+			return getStylePartText(style.getName());			
+		}
 	}
 	
 	/**

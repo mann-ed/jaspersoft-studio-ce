@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.variable;
 
 import java.beans.PropertyChangeEvent;
@@ -70,6 +69,7 @@ public class MVariableSystem extends APropertyNode implements IDragable {
 	 */
 	public MVariableSystem() {
 		super();
+		setEditable(false);
 	}
 
 	/**
@@ -84,6 +84,7 @@ public class MVariableSystem extends APropertyNode implements IDragable {
 	 */
 	public MVariableSystem(ANode parent, JRDesignVariable jrVariable, int newIndex) {
 		super(parent, newIndex);
+		setEditable(false);
 		setValue(jrVariable);
 	}
 
@@ -254,9 +255,4 @@ public class MVariableSystem extends APropertyNode implements IDragable {
 		return jrDesignVariable;
 	}
 
-	@Override
-	public void setValue(Object value) {
-		super.setValue(value);
-		setEditable(false);
-	}
 }

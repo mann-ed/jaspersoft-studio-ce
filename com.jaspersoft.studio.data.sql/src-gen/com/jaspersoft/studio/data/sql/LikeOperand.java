@@ -28,10 +28,6 @@ public interface LikeOperand extends EObject
   /**
    * Returns the value of the '<em><b>Op2</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op2</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op2</em>' attribute.
    * @see #setOp2(String)
@@ -54,10 +50,6 @@ public interface LikeOperand extends EObject
   /**
    * Returns the value of the '<em><b>Fop2</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fop2</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fop2</em>' containment reference.
    * @see #setFop2(OpFunction)
@@ -80,10 +72,6 @@ public interface LikeOperand extends EObject
   /**
    * Returns the value of the '<em><b>Fcast</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fcast</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fcast</em>' containment reference.
    * @see #setFcast(OpFunctionCast)
@@ -106,10 +94,6 @@ public interface LikeOperand extends EObject
   /**
    * Returns the value of the '<em><b>Fparam</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fparam</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fparam</em>' containment reference.
    * @see #setFparam(POperand)

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.wizard;
 
 import java.io.ByteArrayInputStream;
@@ -16,11 +15,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.util.FileUtils;
-import net.sf.jasperreports.util.CastorUtil;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -39,6 +33,12 @@ import com.jaspersoft.studio.data.adapter.IReportDescriptor;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.preferences.util.PreferencesUtils;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.util.CastorUtil;
+import net.sf.jasperreports.util.JacksonRuntimException;
+import net.sf.jasperreports.util.JacksonUtil;
 
 /**
  * Wizard to import one of more data adapters definition from the previous installations of Jaspersoft Studio
@@ -108,16 +108,19 @@ public class ImportJSSAdapterWizard extends Wizard implements IImportWizard {
 								}
 
 								DataAdapterDescriptor dataAdapterDescriptor = factory.createDataAdapter();
-								DataAdapter dataAdapter = dataAdapterDescriptor.getDataAdapter();
+								DataAdapter dataAdapter = null;
 
-								ByteArrayInputStream in = new ByteArrayInputStream(nodeToString(adapterNode).getBytes());
+								byte[] bytes = nodeToString(adapterNode).getBytes();
 								try {
-									dataAdapter = (DataAdapter) CastorUtil.getInstance(JasperReportsConfiguration.getDefaultInstance())
-											.read(in);
+									try {
+										dataAdapter = JacksonUtil.getInstance(JasperReportsConfiguration.getDefaultInstance()).loadXml(new ByteArrayInputStream(bytes), DataAdapter.class);
+									} catch (JacksonRuntimException e) {
+										dataAdapter = (DataAdapter) CastorUtil.getInstance(JasperReportsConfiguration.getDefaultInstance()).read(new ByteArrayInputStream(bytes));
+									}
 									dataAdapterDescriptor.setDataAdapter(dataAdapter);
 									DataAdapterManager.getPreferencesStorage().addDataAdapter(dataAdapterDescriptor);
 								} finally {
-									FileUtils.closeStream(in);
+									//nothing to do
 								}
 							}
 						}

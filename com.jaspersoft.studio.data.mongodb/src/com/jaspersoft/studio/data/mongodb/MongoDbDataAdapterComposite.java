@@ -1,14 +1,10 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.mongodb;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,6 +19,9 @@ import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.mongodb.messages.Messages;
 import com.jaspersoft.studio.data.secret.DataAdaptersSecretsProvider;
 import com.jaspersoft.studio.swt.widgets.WSecretText;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 /**
  * 
@@ -83,9 +82,15 @@ public class MongoDbDataAdapterComposite extends ADataAdapterComposite {
 
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
-		bindingContext.bindValue(SWTObservables.observeText(mongoUriField, SWT.Modify), PojoObservables.observeValue(dataAdapter, "mongoURI")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(usernameField, SWT.Modify), PojoObservables.observeValue(dataAdapter, "username")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(passwordField, SWT.Modify), PojoObservables.observeValue(dataAdapter, "password")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(mongoUriField),
+				PojoProperties.value("mongoURI").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(usernameField),
+				PojoProperties.value("username").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(passwordField),
+				PojoProperties.value("password").observe(dataAdapter)); //$NON-NLS-1$
 	}
 
 	@Override

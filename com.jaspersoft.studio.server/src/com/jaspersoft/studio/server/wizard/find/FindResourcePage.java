@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.wizard.find;
 
 import java.lang.reflect.InvocationTargetException;
@@ -352,7 +351,7 @@ public class FindResourcePage extends WizardPage {
 				String type = WsTypes.INST().toRestType(r.getValue().getWsType());
 				String ftype = WsTypes.INST().toRestFileType(r.getValue().getWsType()).toString();
 				for (String t : finderUI.getTypes()) {
-					if (type.equals(ResourceMediaType.FILE_CLIENT_TYPE) && t.equals(ftype))
+					if (ResourceMediaType.FILE_CLIENT_TYPE.equals(type) && t.equals(ftype))
 						return true;
 					if (t.equals(type))
 						return true;

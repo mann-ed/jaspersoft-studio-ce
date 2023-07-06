@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.sql.widgets;
 
 import org.eclipse.swt.SWT;
@@ -36,10 +35,6 @@ public class FunctionWidget extends AOperandWidget<FunctionOperand> {
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.minimumWidth = 250;
 		txt.setLayoutData(gd);
-
-//		DataBindingContext bindingContext = new DataBindingContext();
-//		bindingContext.bindValue(SWTObservables.observeText(txt, SWT.Modify),
-//				PojoObservables.observeValue(getValue(), "value")); //$NON-NLS-1$
 	}
 
 }

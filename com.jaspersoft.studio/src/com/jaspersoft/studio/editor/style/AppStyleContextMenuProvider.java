@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.style;
 
 import org.eclipse.gef.EditPartViewer;
@@ -12,6 +11,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.actions.ActionFactory;
 
 import com.jaspersoft.studio.editor.AContextMenuProvider;
+import com.jaspersoft.studio.editor.outline.actions.CreateConditionalStyleAction;
 import com.jaspersoft.studio.editor.outline.actions.CreateStyleAction;
 import com.jaspersoft.studio.editor.outline.actions.CreateStyleTemplateReferenceAction;
 import com.jaspersoft.studio.editor.outline.actions.SaveStyleAsTemplateAction;
@@ -43,6 +43,10 @@ public class AppStyleContextMenuProvider extends AContextMenuProvider {
 		// -----------------------------------------------------------
 
 		IAction action = getActionRegistry().getAction(CreateStyleAction.ID);
+		if (action != null && action.isEnabled())
+			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
+		
+		action = getActionRegistry().getAction(CreateConditionalStyleAction.ID);
 		if (action != null && action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
 

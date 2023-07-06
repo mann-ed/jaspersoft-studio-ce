@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.messages;
 
 import org.eclipse.osgi.util.NLS;
@@ -260,23 +259,6 @@ public class Messages extends NLS {
 	public static String PasteDialog_5;
 	public static String PasteResourceAsLinkAction_1;
 	public static String PasteResourceAsLinkAction_2;
-	public static String PermissionDialog_0;
-	public static String PermissionPage_0;
-	public static String PermissionPage_1;
-	public static String PermissionPage_10;
-	public static String PermissionPage_11;
-	public static String PermissionPage_12;
-	public static String PermissionPage_13;
-	public static String PermissionPage_14;
-	public static String PermissionPage_15;
-	public static String PermissionPage_3;
-	public static String PermissionPage_4;
-	public static String PermissionPage_5;
-	public static String PermissionPage_6;
-	public static String PermissionPage_7;
-	public static String PermissionPage_8;
-	public static String PermissionPage_9;
-	public static String PermissionWizard_0;
 	public static String Publish_0;
 	public static String Publish2ServerWizard_0;
 	public static String Publish2ServerWizard_MonitorName;
@@ -443,8 +425,6 @@ public class Messages extends NLS {
 	public static String ServerProfileWizard_2;
 	public static String ServerProfileWizard_3;
 	public static String ServerProfileWizardDialog_testButton;
-	public static String ShowPermissionsAction_1;
-	public static String ShowPermissionsAction_2;
 	public static String ShowPublishDialogAction_1;
 	public static String ShowPublishDialogAction_2;
 	public static String ShowPublishDialogAction_3;
@@ -463,7 +443,6 @@ public class Messages extends NLS {
 	public static String ResourceDescriptorPage_id;
 	public static String ResourceDescriptorPage_title;
 	public static String ResourceExpressionAction_0;
-	public static String ResourcePageContent_0;
 	public static String ResourcePageContent_3;
 	public static String ResourcePageContent_isReference;
 	public static String ResourcePageContent_UpdateDate;

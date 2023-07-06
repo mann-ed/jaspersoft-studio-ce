@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.widgets.framework;
 
 import java.text.MessageFormat;
@@ -14,6 +13,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -148,6 +149,9 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 	 */
 	private List<ItemPropertyModifiedListener> listeners = new ArrayList<>();
 
+	private Image resizedImageForExprBtn;
+	private Image disabledImageForExprBtn;
+
 	/**
 	 * Create the widget without a label
 	 * 
@@ -213,13 +217,10 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 
 		// Create the edit expression button
 		btnEditExpression = new Button(this, SWT.FLAT);
-		Image loadedImage = JaspersoftStudioPlugin.getInstance().getImage(BUTTON_ICON_PATH);
 		if (contentLayoutData != null) {
-			Point buttonSize = contentLayoutData.getButtonSize();
-			Image resizedImage = ImageUtils.resize(loadedImage, buttonSize.x / 2, buttonSize.y / 2);
-			btnEditExpression.setImage(resizedImage);
+			btnEditExpression.setImage(getResizedImageForExprButton());
 		} else {
-			btnEditExpression.setImage(new Image(loadedImage.getDevice(), loadedImage.getImageData()));
+			btnEditExpression.setImage(getDisabledImageForExprButton());
 		}
 		btnEditExpression.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -238,8 +239,47 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 					btnEditExpression.setToolTipText(tt);
 				}
 			});
+		
+		this.addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				// Remove modify listeners
+				Object[] listenersArray = listeners.toArray();
+				for (Object l : listenersArray) {
+					removeModifyListener((ItemPropertyModifiedListener) l);
+				}
+				listeners.clear();
+				listeners = null;
+				if(resizedImageForExprBtn!=null) {
+					resizedImageForExprBtn.dispose();
+					resizedImageForExprBtn=null;
+				}
+				if(disabledImageForExprBtn!=null) {
+					disabledImageForExprBtn.dispose();
+					disabledImageForExprBtn=null;
+				}				
+			}
+		});
 
 		setLayout(new ItemPropertyLayout(this, titleLabel, expressionEditLabel, editorControl, btnEditExpression));
+	}
+
+	private Image getResizedImageForExprButton() {
+		if(resizedImageForExprBtn!=null) {
+			resizedImageForExprBtn.dispose();
+		}
+		Point buttonSize = contentLayoutData.getButtonSize();
+		Image loadedImage = JaspersoftStudioPlugin.getInstance().getImage(BUTTON_ICON_PATH);
+		resizedImageForExprBtn = ImageUtils.resize(loadedImage, buttonSize.x / 2, buttonSize.y / 2);
+		return resizedImageForExprBtn;
+	}
+	
+	private Image getDisabledImageForExprButton() {
+		if(disabledImageForExprBtn==null) {
+			Image loadedImage = JaspersoftStudioPlugin.getInstance().getImage(BUTTON_ICON_PATH);
+			disabledImageForExprBtn = new Image(loadedImage.getDevice(), loadedImage.getImageData());
+		}
+		return disabledImageForExprBtn;
 	}
 
 	@Override
@@ -368,18 +408,6 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 		event.propertyName = ipDesc.getName();
 		for (ItemPropertyModifiedListener ml : listeners)
 			ml.itemModified(event);
-	}
-
-	@Override
-	public void dispose() {
-		// Remove modify listeners
-		Object[] listenersArray = listeners.toArray();
-		for (Object l : listenersArray) {
-			removeModifyListener((ItemPropertyModifiedListener) l);
-		}
-		listeners.clear();
-		listeners = null;
-		super.dispose();
 	}
 
 	/**
@@ -540,10 +568,10 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 			return getVisible();
 		return false;
 	}
-
+	
 	/**
 	 * Set the layout for the content of this {@link WItemProperty}, after the
-	 * set operation a layot of this container is triggered
+	 * set operation a layout of this container is triggered
 	 * 
 	 * @param data a not null {@link ItemPropertyLayoutData}
 	 */
@@ -554,10 +582,7 @@ public class WItemProperty extends Composite implements IExpressionContextSetter
 		if (oldImage != null && !oldImage.isDisposed()) {
 			oldImage.dispose();
 		}
-		Point buttonSize = contentLayoutData.getButtonSize();
-		Image loadedImage = JaspersoftStudioPlugin.getInstance().getImage(BUTTON_ICON_PATH);
-		Image resizedImage = ImageUtils.resize(loadedImage, buttonSize.x / 2, buttonSize.y / 2);
-		btnEditExpression.setImage(resizedImage);
+		btnEditExpression.setImage(getResizedImageForExprButton());
 		layout();
 	}
 

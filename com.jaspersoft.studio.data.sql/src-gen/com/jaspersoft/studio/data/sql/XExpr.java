@@ -28,10 +28,6 @@ public interface XExpr extends EObject
    * Returns the value of the '<em><b>Xf</b></em>' attribute.
    * The literals are from the enumeration {@link com.jaspersoft.studio.data.sql.XFunction}.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Xf</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Xf</em>' attribute.
    * @see com.jaspersoft.studio.data.sql.XFunction
@@ -56,10 +52,6 @@ public interface XExpr extends EObject
   /**
    * Returns the value of the '<em><b>Col</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Col</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Col</em>' containment reference.
    * @see #setCol(Operands)
@@ -82,10 +74,6 @@ public interface XExpr extends EObject
   /**
    * Returns the value of the '<em><b>Prm</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Prm</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Prm</em>' containment reference.
    * @see #setPrm(Prms)

@@ -1,15 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.utils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import net.sf.jasperreports.engine.type.LineStyleEnum;
-import net.sf.jasperreports.engine.type.NamedEnum;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -20,8 +16,61 @@ import com.jaspersoft.studio.property.descriptor.NullEnum;
 import com.jaspersoft.studio.property.descriptors.NamedEnumPropertyDescriptor;
 import com.jaspersoft.studio.property.section.widgets.SPLineStyleEnum;
 
+import net.sf.jasperreports.engine.type.LineStyleEnum;
+import net.sf.jasperreports.engine.type.NamedEnum;
+
 public class EnumHelper {
 
+	/**
+	 * Returns an array of the available values (or names) for the specified enumeration.
+	 * 
+	 * @param enumClazz the {@link NamedEnum} item
+	 * @return the computed array
+	 */
+	public static String[] getEnumValues(Class<? extends NamedEnum> enumClazz) {
+        NamedEnum[] enumConstants = enumClazz.getEnumConstants();
+        List<String> values = new ArrayList<>();
+        for (NamedEnum positionEnum: enumConstants) {
+        	values.add(positionEnum.getName());
+        }
+        return values.toArray(new String[values.size()]);
+	}
+	
+	/**
+	 * Returns an handy array of both the human readable labels and the actual values for
+	 * the specified enumeration item.
+	 * 
+	 * @param enumClazz the {@link NamedEnum} item
+	 * @return the computed bi-dimensional array
+	 */
+	public static String[][] getEnumLabelsAndValues(Class<? extends NamedEnum> enumClazz) {
+		String[] labels = getEnumNames(enumClazz, NullEnum.NOTNULL);
+		String[] values = getEnumValues(enumClazz);
+		return getEnumLabelsAndValues(labels, values);
+	}
+	
+	/**
+	 * Returns an handy array of both the human readable labels and the actual values for
+	 * a possible existing enumeration item.
+	 * 
+	 * @param labels the labels for the enumeration item
+	 * @param values the actual values for the enumeration item
+	 * @return the computed bi-dimensional array
+	 */
+	public static String[][] getEnumLabelsAndValues(String[] labels, String[] values) {
+		if (labels!=null && values!=null && labels.length==values.length) {
+			String[][] results = new String[labels.length][2];
+			for(int i=0; i<values.length; i++) {
+				results[i][0]=values[i];
+				results[i][1]=labels[i];
+			}
+			return results;
+		}
+		else {
+			throw new RuntimeException("Impossible to match the labels and values");
+		}
+	}
+	
 	public static String[] getEnumNames(Class<? extends NamedEnum> enumClazz, NullEnum type) {
 		NamedEnum[] enums = enumClazz.getEnumConstants();
 		return getEnumNames(enums, type);

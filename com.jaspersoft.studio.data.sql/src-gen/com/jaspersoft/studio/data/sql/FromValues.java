@@ -26,10 +26,6 @@ public interface FromValues extends EObject
   /**
    * Returns the value of the '<em><b>Values</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Values</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Values</em>' containment reference.
    * @see #setValues(Values)
@@ -52,10 +48,6 @@ public interface FromValues extends EObject
   /**
    * Returns the value of the '<em><b>C</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>C</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>C</em>' containment reference.
    * @see #setC(FromValuesColumns)

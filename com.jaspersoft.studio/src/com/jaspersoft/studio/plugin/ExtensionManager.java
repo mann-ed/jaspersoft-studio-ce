@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.plugin;
 
 import java.util.ArrayList;
@@ -43,6 +43,7 @@ import com.jaspersoft.studio.data.jdbc.JDBCDriverDefinitionsContainer;
 import com.jaspersoft.studio.editor.IEditorContributor;
 import com.jaspersoft.studio.editor.action.exporter.IExportedResourceHandler;
 import com.jaspersoft.studio.editor.context.AEditorContext;
+import com.jaspersoft.studio.editor.context.IResourceContextSwitchUtil;
 import com.jaspersoft.studio.editor.expression.ExpressionContext;
 import com.jaspersoft.studio.editor.expression.IExpressionEditorSupportFactory;
 import com.jaspersoft.studio.editor.preview.PreviewModeDetails;
@@ -105,7 +106,8 @@ public class ExtensionManager {
 	};
 	private List<IParameterICContributor> prmICContributors = new ArrayList<>();
 	private List<IReportRunner> reportRunners = new ArrayList<>();
-	private List<AEditorContext> editorContext = new ArrayList<>();
+	private Map<String, IResourceContextSwitchUtil> editorContextUtils = new HashMap<String, IResourceContextSwitchUtil>(); 
+	private List<ICustomActionsFactory> customActionsFactories = new ArrayList<>();
 
 	public void init() {
 		IConfigurationElement[] config = Platform.getExtensionRegistry()
@@ -124,6 +126,21 @@ public class ExtensionManager {
 				System.out.println(ex.getMessage());
 			}
 		}
+		
+		config = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(JaspersoftStudioPlugin.PLUGIN_ID, ICustomActionsFactory.EXTENSION_POINT_SUFFIX); //$NON-NLS-1$
+		for (IConfigurationElement e : config) {
+			try {
+				Object o = e.createExecutableExtension(ICustomActionsFactory.EXTENSION_PROPERTY_NAME); //$NON-NLS-1$
+				if (o instanceof ICustomActionsFactory) {
+					ICustomActionsFactory actionsFactory = (ICustomActionsFactory) o;
+					customActionsFactories.add(actionsFactory);
+				}
+			} catch (CoreException ex) {
+				System.out.println(ex.getMessage());
+			}
+		}
+		
 
 		// List all the extensions that provide a DataAdapterFactory
 		config = Platform.getExtensionRegistry().getConfigurationElementsFor(JaspersoftStudioPlugin.PLUGIN_ID,
@@ -168,8 +185,15 @@ public class ExtensionManager {
 			try {
 				String cname = e.getAttribute("contextName");
 				Object o = e.createExecutableExtension("ClassFactory"); //$NON-NLS-1$
-				if (o instanceof AEditorContext)
+				if (o instanceof AEditorContext) {
 					editorContexts.add(new KeyValue<String, String>(cname, ((AEditorContext) o).getName()));
+				}
+				if(e.getAttribute("utilityClass")!=null) {
+					Object u = e.createExecutableExtension("utilityClass"); //$NON-NLS-1$
+					if (u instanceof IResourceContextSwitchUtil) {
+						editorContextUtils.put(cname, (IResourceContextSwitchUtil) u);
+					}
+				}
 			} catch (CoreException ex) {
 				System.out.println(ex.getMessage());
 			}
@@ -182,6 +206,14 @@ public class ExtensionManager {
 
 	public List<KeyValue<String, String>> getEditorContexts() {
 		return editorContexts;
+	}
+	
+	public IResourceContextSwitchUtil getEditorContextUtil(String contextName) {
+		return editorContextUtils.get(contextName);
+	}
+	
+	public Collection<IResourceContextSwitchUtil> getAllEditorContextUtils() {		
+		return editorContextUtils.values();
 	}
 
 	public AEditorContext getEditorContext(String c, IFile f) {
@@ -714,6 +746,19 @@ public class ExtensionManager {
 		return null;
 	}
 
+	public List<Action> getCustomActions(WorkbenchPart part, String categoryID) {
+		List<Action> lst = new ArrayList<>();
+		for (ICustomActionsFactory f : customActionsFactories) {
+			if(categoryID!=null && categoryID.equals(f.getFactoryCategoryID())) {
+				List<Action> l = f.getActions(part);
+				if (l != null && !l.isEmpty()) {
+					lst.addAll(l);
+				}
+			}
+		}
+		return lst;
+	}
+	
 	public List<Action> getActions(WorkbenchPart part) {
 		List<Action> lst = new ArrayList<Action>();
 		for (IComponentFactory f : nodeFactory) {
@@ -721,9 +766,27 @@ public class ExtensionManager {
 			if (l != null && !l.isEmpty())
 				lst.addAll(l);
 		}
+		for (ICustomActionsFactory f : customActionsFactories) {
+			List<Action> l = f.getActions(part);
+			if (l != null && !l.isEmpty())
+				lst.addAll(l);
+		}
 		return lst;
 	}
 
+	public List<String> getCustomActionsIDs(String categoryID) {
+		List<String> lst = new ArrayList<>();
+		for (ICustomActionsFactory f : customActionsFactories) {
+			if (categoryID != null && categoryID.equals(f.getFactoryCategoryID())) {
+				List<String> l = f.getActionIDs();
+				if (l != null && !l.isEmpty()) {
+					lst.addAll(l);
+				}
+			}
+		}
+		return lst;
+	}
+	
 	public List<String> getActionIDs() {
 		List<String> lst = new ArrayList<String>();
 		for (IComponentFactory f : nodeFactory) {

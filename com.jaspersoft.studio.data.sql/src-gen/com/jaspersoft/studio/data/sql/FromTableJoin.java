@@ -28,10 +28,6 @@ public interface FromTableJoin extends EObject
   /**
    * Returns the value of the '<em><b>Join</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Join</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Join</em>' attribute.
    * @see #setJoin(String)
@@ -54,10 +50,6 @@ public interface FromTableJoin extends EObject
   /**
    * Returns the value of the '<em><b>On Table</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>On Table</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>On Table</em>' containment reference.
    * @see #setOnTable(TableOrAlias)
@@ -80,10 +72,6 @@ public interface FromTableJoin extends EObject
   /**
    * Returns the value of the '<em><b>Join Expr</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Join Expr</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Join Expr</em>' containment reference.
    * @see #setJoinExpr(OrExpr)
@@ -106,10 +94,6 @@ public interface FromTableJoin extends EObject
   /**
    * Returns the value of the '<em><b>Join Cond</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Join Cond</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Join Cond</em>' containment reference.
    * @see #setJoinCond(JoinCondition)

@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>com.jaspersoft.studio.community-edition</groupId>
 		<artifactId>plugins</artifactId>
-		<version>6.18.1.final</version>
+		<version>6.20.5.final</version>
 		<relativePath>../aggregator/plugins/</relativePath>
 	</parent>
 
 	<groupId>com.jaspersoft.studio.community-edition</groupId>
 	<artifactId>jaxb-api-import-fragment</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>1.0.0.b01</version>
+	<version>1.0.0.b02</version>
 </project> 

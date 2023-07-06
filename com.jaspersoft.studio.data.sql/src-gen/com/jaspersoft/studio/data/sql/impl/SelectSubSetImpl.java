@@ -108,6 +108,7 @@ public class SelectSubSetImpl extends MinimalEObjectImpl.Container implements Se
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getOp()
   {
     return op;
@@ -118,6 +119,7 @@ public class SelectSubSetImpl extends MinimalEObjectImpl.Container implements Se
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp(String newOp)
   {
     String oldOp = op;
@@ -131,6 +133,7 @@ public class SelectSubSetImpl extends MinimalEObjectImpl.Container implements Se
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getAll()
   {
     return all;
@@ -141,6 +144,7 @@ public class SelectSubSetImpl extends MinimalEObjectImpl.Container implements Se
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setAll(String newAll)
   {
     String oldAll = all;
@@ -154,6 +158,7 @@ public class SelectSubSetImpl extends MinimalEObjectImpl.Container implements Se
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Select getQuery()
   {
     return query;
@@ -181,6 +186,7 @@ public class SelectSubSetImpl extends MinimalEObjectImpl.Container implements Se
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setQuery(Select newQuery)
   {
     if (newQuery != query)
@@ -309,7 +315,7 @@ public class SelectSubSetImpl extends MinimalEObjectImpl.Container implements Se
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (op: ");
     result.append(op);
     result.append(", all: ");

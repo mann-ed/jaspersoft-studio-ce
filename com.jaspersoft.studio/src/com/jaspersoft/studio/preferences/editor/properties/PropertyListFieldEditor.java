@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.preferences.editor.properties;
 
 import java.io.IOException;
@@ -402,9 +401,9 @@ public class PropertyListFieldEditor extends FieldEditor {
 
 	private static void setContextProperty(String k, String v) {
 		if (v != null)
-			JRPropertiesUtil.getInstance(DefaultJasperReportsContext.getInstance()).setProperty(k, v);
+			JRPropertiesUtil.getInstance(JasperReportsConfiguration.getDefaultInstance()).setProperty(k, v);
 		else
-			JRPropertiesUtil.getInstance(DefaultJasperReportsContext.getInstance()).removeProperty(k);
+			JRPropertiesUtil.getInstance(JasperReportsConfiguration.getDefaultInstance()).removeProperty(k);
 	}
 
 	/**
@@ -797,7 +796,8 @@ public class PropertyListFieldEditor extends FieldEditor {
 				if (index == 1) {
 					String def = pm.getDefaultValue();
 					if (def != null)
-						return SWTResourceManager.getColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
+						return SWTResourceManager
+								.getColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
 				}
 			}
 			return null;

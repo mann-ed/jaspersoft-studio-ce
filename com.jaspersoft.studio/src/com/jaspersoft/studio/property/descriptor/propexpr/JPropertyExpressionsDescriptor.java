@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.descriptor.propexpr;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -13,13 +13,19 @@ import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.property.section.widgets.SPPropertyExpressionButton;
 
 public class JPropertyExpressionsDescriptor extends NTextPropertyDescriptor {
+	private boolean forceStandardEditing=false;
 
 	public JPropertyExpressionsDescriptor(Object id, String displayName) {
+		this(id, displayName, false);
+	}
+
+	public JPropertyExpressionsDescriptor(Object id, String displayName, boolean forceStandardEditing) {
 		super(id, displayName);
+		this.forceStandardEditing=forceStandardEditing;
 	}
 
 	public CellEditor createPropertyEditor(Composite parent) {
-		JPropertyExpressionsCellEditor editor = new JPropertyExpressionsCellEditor(parent);
+		JPropertyExpressionsCellEditor editor = new JPropertyExpressionsCellEditor(parent,true,forceStandardEditing);
 		HelpSystem.bindToHelp(this, editor.getControl());
 		return editor;
 	}

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.descriptor.returnvalue;
 
 import java.util.ArrayList;
@@ -107,8 +106,8 @@ public class ReturnValueContainer {
 		List<ReturnValueContainer> result = new ArrayList<ReturnValueContainer>();
 		for (JRSubreportReturnValue subreportReturn : subreportReturns) {
 			ReturnValueContainer generalReturn = new ReturnValueContainer();
-			generalReturn.setCalculation(subreportReturn.getCalculationValue());
-			generalReturn.setFromVariable(subreportReturn.getSubreportVariable());
+			generalReturn.setCalculation(subreportReturn.getCalculation());
+			generalReturn.setFromVariable(subreportReturn.getFromVariable());
 			generalReturn.setToVariable(subreportReturn.getToVariable());
 			generalReturn.setIncrementerFactoryClassName(subreportReturn.getIncrementerFactoryClassName());
 			result.add(generalReturn);

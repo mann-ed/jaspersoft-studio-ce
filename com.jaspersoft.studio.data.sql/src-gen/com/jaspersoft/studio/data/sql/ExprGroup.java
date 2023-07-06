@@ -26,10 +26,6 @@ public interface ExprGroup extends EObject
   /**
    * Returns the value of the '<em><b>Isnot</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Isnot</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Isnot</em>' attribute.
    * @see #setIsnot(String)
@@ -52,10 +48,6 @@ public interface ExprGroup extends EObject
   /**
    * Returns the value of the '<em><b>Expr</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Expr</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Expr</em>' containment reference.
    * @see #setExpr(OrExpr)

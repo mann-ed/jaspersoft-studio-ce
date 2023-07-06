@@ -1,12 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.wizard.resource.page.runit;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -80,8 +79,11 @@ public class ReportUnitContent extends APageContent {
 	@Override
 	protected void rebind() {
 		ReportProxy v = getProxy(res.getValue());
-		if (jspview != null)
-			bindingContext.bindValue(SWTObservables.observeText(jspview, SWT.Modify), PojoObservables.observeValue(v, "jspView")); //$NON-NLS-1$
+		if (jspview != null) {
+			bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(jspview),
+					PojoProperties.value("jspView").observe(v)); //$NON-NLS-1$
+		}
 	}
 
 	protected ReportProxy getProxy(ResourceDescriptor rd) {

@@ -69,6 +69,7 @@ public class uicargsImpl extends UnpivotInClauseArgsImpl implements uicargs
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<UnpivotInClauseArg> getEntries()
   {
     if (entries == null)

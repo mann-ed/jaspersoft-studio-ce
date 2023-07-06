@@ -31,10 +31,6 @@ public interface TableOrAlias extends EObject
   /**
    * Returns the value of the '<em><b>Tfull</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Tfull</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Tfull</em>' containment reference.
    * @see #setTfull(TableFull)
@@ -57,10 +53,6 @@ public interface TableOrAlias extends EObject
   /**
    * Returns the value of the '<em><b>Sq</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Sq</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Sq</em>' containment reference.
    * @see #setSq(SubQueryOperand)
@@ -83,10 +75,6 @@ public interface TableOrAlias extends EObject
   /**
    * Returns the value of the '<em><b>Values</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Values</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Values</em>' containment reference.
    * @see #setValues(FromValues)
@@ -109,10 +97,6 @@ public interface TableOrAlias extends EObject
   /**
    * Returns the value of the '<em><b>Pivot</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Pivot</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Pivot</em>' containment reference.
    * @see #setPivot(PivotTable)
@@ -135,10 +119,6 @@ public interface TableOrAlias extends EObject
   /**
    * Returns the value of the '<em><b>Unpivot</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Unpivot</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Unpivot</em>' containment reference.
    * @see #setUnpivot(UnpivotTable)
@@ -161,10 +141,6 @@ public interface TableOrAlias extends EObject
   /**
    * Returns the value of the '<em><b>Alias</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Alias</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Alias</em>' attribute.
    * @see #setAlias(String)
@@ -187,10 +163,6 @@ public interface TableOrAlias extends EObject
   /**
    * Returns the value of the '<em><b>Tbl Alias</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Tbl Alias</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Tbl Alias</em>' containment reference.
    * @see #setTblAlias(DbObjectName)

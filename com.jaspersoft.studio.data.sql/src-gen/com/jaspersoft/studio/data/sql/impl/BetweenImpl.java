@@ -98,6 +98,7 @@ public class BetweenImpl extends MinimalEObjectImpl.Container implements Between
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getOpBetween()
   {
     return opBetween;
@@ -108,6 +109,7 @@ public class BetweenImpl extends MinimalEObjectImpl.Container implements Between
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOpBetween(String newOpBetween)
   {
     String oldOpBetween = opBetween;
@@ -121,6 +123,7 @@ public class BetweenImpl extends MinimalEObjectImpl.Container implements Between
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getOp2()
   {
     return op2;
@@ -148,6 +151,7 @@ public class BetweenImpl extends MinimalEObjectImpl.Container implements Between
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp2(Operands newOp2)
   {
     if (newOp2 != op2)
@@ -169,6 +173,7 @@ public class BetweenImpl extends MinimalEObjectImpl.Container implements Between
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getOp3()
   {
     return op3;
@@ -196,6 +201,7 @@ public class BetweenImpl extends MinimalEObjectImpl.Container implements Between
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp3(Operands newOp3)
   {
     if (newOp3 != op3)
@@ -326,7 +332,7 @@ public class BetweenImpl extends MinimalEObjectImpl.Container implements Between
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (opBetween: ");
     result.append(opBetween);
     result.append(')');

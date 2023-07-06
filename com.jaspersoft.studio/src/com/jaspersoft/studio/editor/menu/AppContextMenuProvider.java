@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.menu;
 
 import java.util.List;
@@ -49,6 +48,7 @@ import com.jaspersoft.studio.editor.action.order.BringBackwardAction;
 import com.jaspersoft.studio.editor.action.order.BringForwardAction;
 import com.jaspersoft.studio.editor.action.order.BringToBackAction;
 import com.jaspersoft.studio.editor.action.order.BringToFrontAction;
+import com.jaspersoft.studio.editor.action.reportsplitting.ReportSplittingAction;
 import com.jaspersoft.studio.editor.action.size.MatchSizeAction;
 import com.jaspersoft.studio.editor.action.size.Size2BorderAction;
 import com.jaspersoft.studio.editor.action.text.AdjustTextFontSize;
@@ -110,6 +110,7 @@ import com.jaspersoft.studio.formatting.actions.SameWidthMinAction;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.plugin.ExtensionManager;
 import com.jaspersoft.studio.plugin.IComponentFactory;
+import com.jaspersoft.studio.plugin.ICustomActionsFactory;
 import com.jaspersoft.studio.property.dataset.dialog.ContextualDatasetAction;
 import com.jaspersoft.studio.property.section.report.action.PageFormatAction;
 import com.jaspersoft.studio.property.section.report.action.PageRemoveMarginsAction;
@@ -266,6 +267,10 @@ public class AppContextMenuProvider extends AContextMenuProvider {
 		action = getActionRegistry().getAction(UnBindElementsAction.ID);
 		if (action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_COPY, action);
+		
+		action = getActionRegistry().getAction(ReportSplittingAction.ID);
+		if (action.isEnabled())
+			menu.appendToGroup(GEFActionConstants.GROUP_COPY, action);
 
 		menu.appendToGroup(GEFActionConstants.GROUP_COPY, new Separator());
 
@@ -276,6 +281,7 @@ public class AppContextMenuProvider extends AContextMenuProvider {
 		action = getActionRegistry().getAction(SetDefaultsAction.ID);
 		if (action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_COPY, action);
+		
 
 		// -----------------------------------------------------------
 
@@ -351,9 +357,19 @@ public class AppContextMenuProvider extends AContextMenuProvider {
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
 
 		action = getActionRegistry().getAction(CreateScriptletAction.ID);
-		if (action != null && action.isEnabled())
+		if (action != null && action.isEnabled()) {
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
-
+		}
+		// custom scriptlet actions
+		ExtensionManager extManager = JaspersoftStudioPlugin.getExtensionManager();
+		List<String> customActionsIDs = extManager.getCustomActionsIDs(ICustomActionsFactory.CATEGORY_SCRIPTLET);
+		for(String actionId : customActionsIDs) {
+			action = getActionRegistry().getAction(actionId);
+			if (action != null && action.isEnabled()) {
+				menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
+			}
+		}
+		
 		action = getActionRegistry().getAction(CreateParameterAction.ID);
 		if (action != null && action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
@@ -410,8 +426,7 @@ public class AppContextMenuProvider extends AContextMenuProvider {
 		if (action != null && action.isEnabled())
 			menu.appendToGroup(GEFActionConstants.GROUP_ADD, action);
 
-		ExtensionManager m = JaspersoftStudioPlugin.getExtensionManager();
-		List<String> lst = m.getActionIDs();
+		List<String> lst = extManager.getActionIDs();
 		for (String ids : lst) {
 			if (ids.equals(AContextMenuProvider.SEPARATOR)) {
 				menu.appendToGroup(IComponentFactory.GROUP_COMPONENT, new Separator());

@@ -921,7 +921,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
 
   /**
    * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-   * 
+   *
    * <p>This method is used to initialize {@link SqlPackage#eINSTANCE} when that field is accessed.
    * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
    * <!-- begin-user-doc -->
@@ -936,7 +936,8 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
     if (isInited) return (SqlPackage)EPackage.Registry.INSTANCE.getEPackage(SqlPackage.eNS_URI);
 
     // Obtain or create and register package
-    SqlPackageImpl theSqlPackage = (SqlPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof SqlPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new SqlPackageImpl());
+    Object registeredSqlPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+    SqlPackageImpl theSqlPackage = registeredSqlPackage instanceof SqlPackageImpl ? (SqlPackageImpl)registeredSqlPackage : new SqlPackageImpl();
 
     isInited = true;
 
@@ -949,7 +950,6 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
     // Mark meta-data to indicate it can't be changed
     theSqlPackage.freeze();
 
-  
     // Update the registry and return the package
     EPackage.Registry.INSTANCE.put(SqlPackage.eNS_URI, theSqlPackage);
     return theSqlPackage;
@@ -960,6 +960,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getModel()
   {
     return modelEClass;
@@ -970,6 +971,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getModel_Wq()
   {
     return (EReference)modelEClass.getEStructuralFeatures().get(0);
@@ -980,6 +982,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getModel_Query()
   {
     return (EReference)modelEClass.getEStructuralFeatures().get(1);
@@ -990,6 +993,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWithQuery()
   {
     return withQueryEClass;
@@ -1000,6 +1004,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getWithQuery_W()
   {
     return (EAttribute)withQueryEClass.getEStructuralFeatures().get(0);
@@ -1010,9 +1015,10 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getWithQuery_Wname()
+  @Override
+  public EReference getWithQuery_Wname()
   {
-    return (EAttribute)withQueryEClass.getEStructuralFeatures().get(1);
+    return (EReference)withQueryEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1020,6 +1026,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWithQuery_WithCols()
   {
     return (EReference)withQueryEClass.getEStructuralFeatures().get(2);
@@ -1030,6 +1037,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWithQuery_Query()
   {
     return (EReference)withQueryEClass.getEStructuralFeatures().get(3);
@@ -1040,6 +1048,40 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
+  public EReference getWithQuery_AdditionalWname()
+  {
+    return (EReference)withQueryEClass.getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getWithQuery_AdditionalWithCols()
+  {
+    return (EReference)withQueryEClass.getEStructuralFeatures().get(5);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getWithQuery_AdditionalQueries()
+  {
+    return (EReference)withQueryEClass.getEStructuralFeatures().get(6);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EClass getWithColumns()
   {
     return withColumnsEClass;
@@ -1050,6 +1092,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFetchFirst()
   {
     return fetchFirstEClass;
@@ -1060,6 +1103,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFetchFirst_FetchFirst()
   {
     return (EReference)fetchFirstEClass.getEStructuralFeatures().get(0);
@@ -1070,6 +1114,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getFetchFirst_Row()
   {
     return (EAttribute)fetchFirstEClass.getEStructuralFeatures().get(1);
@@ -1080,6 +1125,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOffset()
   {
     return offsetEClass;
@@ -1090,6 +1136,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getOffset_Offset()
   {
     return (EAttribute)offsetEClass.getEStructuralFeatures().get(0);
@@ -1100,6 +1147,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLimit()
   {
     return limitEClass;
@@ -1110,6 +1158,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getLimit_L1()
   {
     return (EAttribute)limitEClass.getEStructuralFeatures().get(0);
@@ -1120,6 +1169,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getLimit_L2()
   {
     return (EAttribute)limitEClass.getEStructuralFeatures().get(1);
@@ -1130,6 +1180,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSelectQuery()
   {
     return selectQueryEClass;
@@ -1140,6 +1191,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSelectSubSet()
   {
     return selectSubSetEClass;
@@ -1150,6 +1202,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getSelectSubSet_Op()
   {
     return (EAttribute)selectSubSetEClass.getEStructuralFeatures().get(0);
@@ -1160,6 +1213,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getSelectSubSet_All()
   {
     return (EAttribute)selectSubSetEClass.getEStructuralFeatures().get(1);
@@ -1170,6 +1224,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelectSubSet_Query()
   {
     return (EReference)selectSubSetEClass.getEStructuralFeatures().get(2);
@@ -1180,6 +1235,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSelect()
   {
     return selectEClass;
@@ -1190,6 +1246,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_Op()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(0);
@@ -1200,6 +1257,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getSelect_Select()
   {
     return (EAttribute)selectEClass.getEStructuralFeatures().get(1);
@@ -1210,6 +1268,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_Cols()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(2);
@@ -1220,6 +1279,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_Tbl()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(3);
@@ -1230,6 +1290,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_WhereExpression()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(4);
@@ -1240,6 +1301,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_GroupByEntry()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(5);
@@ -1250,6 +1312,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_HavingEntry()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(6);
@@ -1260,6 +1323,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_OrderByEntry()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(7);
@@ -1270,6 +1334,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_Lim()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(8);
@@ -1280,6 +1345,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_Offset()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(9);
@@ -1290,6 +1356,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSelect_FetchFirst()
   {
     return (EReference)selectEClass.getEStructuralFeatures().get(10);
@@ -1300,6 +1367,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrColumn()
   {
     return orColumnEClass;
@@ -1310,6 +1378,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOrColumn_Entries()
   {
     return (EReference)orColumnEClass.getEStructuralFeatures().get(0);
@@ -1320,6 +1389,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getColumnOrAlias()
   {
     return columnOrAliasEClass;
@@ -1330,6 +1400,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getColumnOrAlias_Ce()
   {
     return (EReference)columnOrAliasEClass.getEStructuralFeatures().get(0);
@@ -1340,6 +1411,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getColumnOrAlias_Alias()
   {
     return (EAttribute)columnOrAliasEClass.getEStructuralFeatures().get(1);
@@ -1350,6 +1422,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getColumnOrAlias_ColAlias()
   {
     return (EReference)columnOrAliasEClass.getEStructuralFeatures().get(2);
@@ -1360,6 +1433,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getColumnOrAlias_AllCols()
   {
     return (EAttribute)columnOrAliasEClass.getEStructuralFeatures().get(3);
@@ -1370,6 +1444,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getColumnOrAlias_DbAllCols()
   {
     return (EReference)columnOrAliasEClass.getEStructuralFeatures().get(4);
@@ -1380,6 +1455,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getColumnFull()
   {
     return columnFullEClass;
@@ -1390,6 +1466,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrTable()
   {
     return orTableEClass;
@@ -1400,6 +1477,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOrTable_Entries()
   {
     return (EReference)orTableEClass.getEStructuralFeatures().get(0);
@@ -1410,6 +1488,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFromTable()
   {
     return fromTableEClass;
@@ -1420,6 +1499,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFromTable_Table()
   {
     return (EReference)fromTableEClass.getEStructuralFeatures().get(0);
@@ -1430,6 +1510,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFromTable_Fjoin()
   {
     return (EReference)fromTableEClass.getEStructuralFeatures().get(1);
@@ -1440,6 +1521,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFromTableJoin()
   {
     return fromTableJoinEClass;
@@ -1450,6 +1532,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getFromTableJoin_Join()
   {
     return (EAttribute)fromTableJoinEClass.getEStructuralFeatures().get(0);
@@ -1460,6 +1543,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFromTableJoin_OnTable()
   {
     return (EReference)fromTableJoinEClass.getEStructuralFeatures().get(1);
@@ -1470,6 +1554,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFromTableJoin_JoinExpr()
   {
     return (EReference)fromTableJoinEClass.getEStructuralFeatures().get(2);
@@ -1480,6 +1565,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFromTableJoin_JoinCond()
   {
     return (EReference)fromTableJoinEClass.getEStructuralFeatures().get(3);
@@ -1490,6 +1576,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getJoinCondition()
   {
     return joinConditionEClass;
@@ -1500,6 +1587,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getJoinCondition_UseCols()
   {
     return (EReference)joinConditionEClass.getEStructuralFeatures().get(0);
@@ -1510,6 +1598,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getUsingCols()
   {
     return usingColsEClass;
@@ -1520,6 +1609,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getUsingCols_Entries()
   {
     return (EReference)usingColsEClass.getEStructuralFeatures().get(0);
@@ -1530,6 +1620,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getTableOrAlias()
   {
     return tableOrAliasEClass;
@@ -1540,6 +1631,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTableOrAlias_Tfull()
   {
     return (EReference)tableOrAliasEClass.getEStructuralFeatures().get(0);
@@ -1550,6 +1642,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTableOrAlias_Sq()
   {
     return (EReference)tableOrAliasEClass.getEStructuralFeatures().get(1);
@@ -1560,6 +1653,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTableOrAlias_Values()
   {
     return (EReference)tableOrAliasEClass.getEStructuralFeatures().get(2);
@@ -1570,6 +1664,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTableOrAlias_Pivot()
   {
     return (EReference)tableOrAliasEClass.getEStructuralFeatures().get(3);
@@ -1580,6 +1675,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTableOrAlias_Unpivot()
   {
     return (EReference)tableOrAliasEClass.getEStructuralFeatures().get(4);
@@ -1590,6 +1686,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getTableOrAlias_Alias()
   {
     return (EAttribute)tableOrAliasEClass.getEStructuralFeatures().get(5);
@@ -1600,6 +1697,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getTableOrAlias_TblAlias()
   {
     return (EReference)tableOrAliasEClass.getEStructuralFeatures().get(6);
@@ -1610,6 +1708,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFromValues()
   {
     return fromValuesEClass;
@@ -1620,6 +1719,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFromValues_Values()
   {
     return (EReference)fromValuesEClass.getEStructuralFeatures().get(0);
@@ -1630,6 +1730,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFromValues_C()
   {
     return (EReference)fromValuesEClass.getEStructuralFeatures().get(1);
@@ -1640,6 +1741,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFromValuesColumns()
   {
     return fromValuesColumnsEClass;
@@ -1650,6 +1752,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFromValuesColumns_FvCols()
   {
     return (EReference)fromValuesColumnsEClass.getEStructuralFeatures().get(0);
@@ -1660,6 +1763,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFromValuesColumnNames()
   {
     return fromValuesColumnNamesEClass;
@@ -1670,6 +1774,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getColumnNames()
   {
     return columnNamesEClass;
@@ -1680,6 +1785,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getColumnNames_ColName()
   {
     return (EAttribute)columnNamesEClass.getEStructuralFeatures().get(0);
@@ -1690,6 +1796,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getValues()
   {
     return valuesEClass;
@@ -1700,6 +1807,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getValues_Rows()
   {
     return (EReference)valuesEClass.getEStructuralFeatures().get(0);
@@ -1710,6 +1818,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRows()
   {
     return rowsEClass;
@@ -1720,6 +1829,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRows_Entries()
   {
     return (EReference)rowsEClass.getEStructuralFeatures().get(0);
@@ -1730,6 +1840,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRow()
   {
     return rowEClass;
@@ -1740,6 +1851,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRow_RowValues()
   {
     return (EReference)rowEClass.getEStructuralFeatures().get(0);
@@ -1750,6 +1862,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRowValues()
   {
     return rowValuesEClass;
@@ -1760,6 +1873,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getRowValues_Entries()
   {
     return (EReference)rowValuesEClass.getEStructuralFeatures().get(0);
@@ -1770,6 +1884,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getRowValue()
   {
     return rowValueEClass;
@@ -1780,6 +1895,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getRowValue_Null()
   {
     return (EAttribute)rowValueEClass.getEStructuralFeatures().get(0);
@@ -1790,6 +1906,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPivotTable()
   {
     return pivotTableEClass;
@@ -1800,6 +1917,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPivotTable_Pfun()
   {
     return (EReference)pivotTableEClass.getEStructuralFeatures().get(0);
@@ -1810,6 +1928,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPivotTable_Pfor()
   {
     return (EReference)pivotTableEClass.getEStructuralFeatures().get(1);
@@ -1820,6 +1939,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPivotTable_Pin()
   {
     return (EReference)pivotTableEClass.getEStructuralFeatures().get(2);
@@ -1830,6 +1950,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPivotFunctions()
   {
     return pivotFunctionsEClass;
@@ -1840,6 +1961,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getPivotFunctions_Abc()
   {
     return (EAttribute)pivotFunctionsEClass.getEStructuralFeatures().get(0);
@@ -1850,6 +1972,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPivotFunction()
   {
     return pivotFunctionEClass;
@@ -1860,6 +1983,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPivotInClause()
   {
     return pivotInClauseEClass;
@@ -1870,6 +1994,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPivotInClause_Sq()
   {
     return (EReference)pivotInClauseEClass.getEStructuralFeatures().get(0);
@@ -1880,6 +2005,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPivotInClause_Args()
   {
     return (EReference)pivotInClauseEClass.getEStructuralFeatures().get(1);
@@ -1890,6 +2016,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getPivotInClause_Pinany()
   {
     return (EAttribute)pivotInClauseEClass.getEStructuralFeatures().get(2);
@@ -1900,6 +2027,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getUnpivotTable()
   {
     return unpivotTableEClass;
@@ -1910,6 +2038,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getUnpivotTable_Pcols()
   {
     return (EReference)unpivotTableEClass.getEStructuralFeatures().get(0);
@@ -1920,6 +2049,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getUnpivotTable_Pfor()
   {
     return (EReference)unpivotTableEClass.getEStructuralFeatures().get(1);
@@ -1930,6 +2060,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getUnpivotTable_Inop()
   {
     return (EReference)unpivotTableEClass.getEStructuralFeatures().get(2);
@@ -1940,6 +2071,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getUnpivotInClause()
   {
     return unpivotInClauseEClass;
@@ -1950,6 +2082,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getUnpivotInClauseArgs()
   {
     return unpivotInClauseArgsEClass;
@@ -1960,6 +2093,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getUnpivotInClauseArg()
   {
     return unpivotInClauseArgEClass;
@@ -1970,6 +2104,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getUnpivotInClauseArg_Pcols()
   {
     return (EReference)unpivotInClauseArgEClass.getEStructuralFeatures().get(0);
@@ -1980,6 +2115,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getUnpivotInClauseArg_Cfuls()
   {
     return (EReference)unpivotInClauseArgEClass.getEStructuralFeatures().get(1);
@@ -1990,6 +2126,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPivotForClause()
   {
     return pivotForClauseEClass;
@@ -2000,6 +2137,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPivotColumns()
   {
     return pivotColumnsEClass;
@@ -2010,6 +2148,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPivots()
   {
     return pivotsEClass;
@@ -2020,6 +2159,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPivotCol()
   {
     return pivotColEClass;
@@ -2030,6 +2170,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getTableFull()
   {
     return tableFullEClass;
@@ -2040,6 +2181,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getDbObjectNameAll()
   {
     return dbObjectNameAllEClass;
@@ -2050,6 +2192,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getDbObjectNameAll_Dbname()
   {
     return (EAttribute)dbObjectNameAllEClass.getEStructuralFeatures().get(0);
@@ -2060,6 +2203,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getDbObjectName()
   {
     return dbObjectNameEClass;
@@ -2070,6 +2214,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getDbObjectName_Dbname()
   {
     return (EAttribute)dbObjectNameEClass.getEStructuralFeatures().get(0);
@@ -2080,6 +2225,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrOrderByColumn()
   {
     return orOrderByColumnEClass;
@@ -2090,6 +2236,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOrOrderByColumn_Entries()
   {
     return (EReference)orOrderByColumnEClass.getEStructuralFeatures().get(0);
@@ -2100,6 +2247,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrderByColumnFull()
   {
     return orderByColumnFullEClass;
@@ -2110,6 +2258,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOrderByColumnFull_ColOrder()
   {
     return (EReference)orderByColumnFullEClass.getEStructuralFeatures().get(0);
@@ -2120,6 +2269,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getOrderByColumnFull_ColOrderInt()
   {
     return (EAttribute)orderByColumnFullEClass.getEStructuralFeatures().get(1);
@@ -2130,6 +2280,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getOrderByColumnFull_Direction()
   {
     return (EAttribute)orderByColumnFullEClass.getEStructuralFeatures().get(2);
@@ -2140,6 +2291,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrGroupByColumn()
   {
     return orGroupByColumnEClass;
@@ -2150,6 +2302,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOrGroupByColumn_Entries()
   {
     return (EReference)orGroupByColumnEClass.getEStructuralFeatures().get(0);
@@ -2160,6 +2313,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getGroupByColumnFull()
   {
     return groupByColumnFullEClass;
@@ -2170,6 +2324,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getGroupByColumnFull_ColGrBy()
   {
     return (EReference)groupByColumnFullEClass.getEStructuralFeatures().get(0);
@@ -2180,6 +2335,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getGroupByColumnFull_GbFunction()
   {
     return (EReference)groupByColumnFullEClass.getEStructuralFeatures().get(1);
@@ -2190,6 +2346,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getGroupByColumnFull_GrByInt()
   {
     return (EAttribute)groupByColumnFullEClass.getEStructuralFeatures().get(2);
@@ -2200,6 +2357,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrExpr()
   {
     return orExprEClass;
@@ -2210,6 +2368,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOrExpr_Entries()
   {
     return (EReference)orExprEClass.getEStructuralFeatures().get(0);
@@ -2220,6 +2379,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFullExpression()
   {
     return fullExpressionEClass;
@@ -2230,6 +2390,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getFullExpression_C()
   {
     return (EAttribute)fullExpressionEClass.getEStructuralFeatures().get(0);
@@ -2240,6 +2401,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_Efrag()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(1);
@@ -2250,6 +2412,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getFullExpression_NotPrm()
   {
     return (EAttribute)fullExpressionEClass.getEStructuralFeatures().get(2);
@@ -2260,6 +2423,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_Expgroup()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(3);
@@ -2270,6 +2434,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_Exp()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(4);
@@ -2280,6 +2445,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_Xexp()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(5);
@@ -2290,6 +2456,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_In()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(6);
@@ -2300,6 +2467,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_Exists()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(7);
@@ -2310,6 +2478,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_Op1()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(8);
@@ -2320,6 +2489,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getFullExpression_Isnull()
   {
     return (EAttribute)fullExpressionEClass.getEStructuralFeatures().get(9);
@@ -2330,6 +2500,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_Between()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(10);
@@ -2340,6 +2511,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_Like()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(11);
@@ -2350,6 +2522,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFullExpression_Comp()
   {
     return (EReference)fullExpressionEClass.getEStructuralFeatures().get(12);
@@ -2360,6 +2533,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getExprGroup()
   {
     return exprGroupEClass;
@@ -2370,6 +2544,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getExprGroup_Isnot()
   {
     return (EAttribute)exprGroupEClass.getEStructuralFeatures().get(0);
@@ -2380,6 +2555,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getExprGroup_Expr()
   {
     return (EReference)exprGroupEClass.getEStructuralFeatures().get(1);
@@ -2390,6 +2566,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getXExpr()
   {
     return xExprEClass;
@@ -2400,6 +2577,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getXExpr_Xf()
   {
     return (EAttribute)xExprEClass.getEStructuralFeatures().get(0);
@@ -2410,6 +2588,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getXExpr_Col()
   {
     return (EReference)xExprEClass.getEStructuralFeatures().get(1);
@@ -2420,6 +2599,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getXExpr_Prm()
   {
     return (EReference)xExprEClass.getEStructuralFeatures().get(2);
@@ -2430,6 +2610,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPrms()
   {
     return prmsEClass;
@@ -2440,6 +2621,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getPrms_Entries()
   {
     return (EReference)prmsEClass.getEStructuralFeatures().get(0);
@@ -2450,6 +2632,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getJRParameter()
   {
     return jrParameterEClass;
@@ -2460,6 +2643,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getJRParameter_Jrprm()
   {
     return (EAttribute)jrParameterEClass.getEStructuralFeatures().get(0);
@@ -2470,6 +2654,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getComparison()
   {
     return comparisonEClass;
@@ -2480,6 +2665,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getComparison_Operator()
   {
     return (EAttribute)comparisonEClass.getEStructuralFeatures().get(0);
@@ -2490,6 +2676,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getComparison_SubOperator()
   {
     return (EAttribute)comparisonEClass.getEStructuralFeatures().get(1);
@@ -2500,6 +2687,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getComparison_Op2()
   {
     return (EReference)comparisonEClass.getEStructuralFeatures().get(2);
@@ -2510,6 +2698,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLike()
   {
     return likeEClass;
@@ -2520,6 +2709,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getLike_OpLike()
   {
     return (EAttribute)likeEClass.getEStructuralFeatures().get(0);
@@ -2530,6 +2720,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getLike_Op2()
   {
     return (EReference)likeEClass.getEStructuralFeatures().get(1);
@@ -2540,6 +2731,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getLikeOperand()
   {
     return likeOperandEClass;
@@ -2550,6 +2742,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getLikeOperand_Op2()
   {
     return (EAttribute)likeOperandEClass.getEStructuralFeatures().get(0);
@@ -2560,6 +2753,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getLikeOperand_Fop2()
   {
     return (EReference)likeOperandEClass.getEStructuralFeatures().get(1);
@@ -2570,6 +2764,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getLikeOperand_Fcast()
   {
     return (EReference)likeOperandEClass.getEStructuralFeatures().get(2);
@@ -2580,6 +2775,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getLikeOperand_Fparam()
   {
     return (EReference)likeOperandEClass.getEStructuralFeatures().get(3);
@@ -2590,6 +2786,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getBetween()
   {
     return betweenEClass;
@@ -2600,6 +2797,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getBetween_OpBetween()
   {
     return (EAttribute)betweenEClass.getEStructuralFeatures().get(0);
@@ -2610,6 +2808,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getBetween_Op2()
   {
     return (EReference)betweenEClass.getEStructuralFeatures().get(1);
@@ -2620,6 +2819,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getBetween_Op3()
   {
     return (EReference)betweenEClass.getEStructuralFeatures().get(2);
@@ -2630,6 +2830,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getInOper()
   {
     return inOperEClass;
@@ -2640,6 +2841,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getInOper_Op()
   {
     return (EAttribute)inOperEClass.getEStructuralFeatures().get(0);
@@ -2650,6 +2852,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getInOper_Subquery()
   {
     return (EReference)inOperEClass.getEStructuralFeatures().get(1);
@@ -2660,6 +2863,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getInOper_OpList()
   {
     return (EReference)inOperEClass.getEStructuralFeatures().get(2);
@@ -2670,6 +2874,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getExistsOper()
   {
     return existsOperEClass;
@@ -2680,6 +2885,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getExistsOper_Op()
   {
     return (EAttribute)existsOperEClass.getEStructuralFeatures().get(0);
@@ -2690,6 +2896,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getExistsOper_Subquery()
   {
     return (EReference)existsOperEClass.getEStructuralFeatures().get(1);
@@ -2700,6 +2907,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getExistsOper_OpList()
   {
     return (EReference)existsOperEClass.getEStructuralFeatures().get(2);
@@ -2710,6 +2918,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOperandListGroup()
   {
     return operandListGroupEClass;
@@ -2720,6 +2929,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperandListGroup_OpGroup()
   {
     return (EReference)operandListGroupEClass.getEStructuralFeatures().get(0);
@@ -2730,6 +2940,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOperandList()
   {
     return operandListEClass;
@@ -2740,6 +2951,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOperands()
   {
     return operandsEClass;
@@ -2750,6 +2962,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperands_Op1()
   {
     return (EReference)operandsEClass.getEStructuralFeatures().get(0);
@@ -2760,6 +2973,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperands_Left()
   {
     return (EReference)operandsEClass.getEStructuralFeatures().get(1);
@@ -2770,6 +2984,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperands_Right()
   {
     return (EReference)operandsEClass.getEStructuralFeatures().get(2);
@@ -2780,6 +2995,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOperand()
   {
     return operandEClass;
@@ -2790,6 +3006,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Column()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(0);
@@ -2800,6 +3017,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Xop()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(1);
@@ -2810,6 +3028,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Subq()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(2);
@@ -2820,6 +3039,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Fcast()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(3);
@@ -2830,6 +3050,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Fext()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(4);
@@ -2840,6 +3061,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Func()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(5);
@@ -2850,6 +3072,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Sqlcase()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(6);
@@ -2860,6 +3083,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Param()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(7);
@@ -2870,6 +3094,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Eparam()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(8);
@@ -2880,6 +3105,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOperand_Scalar()
   {
     return (EReference)operandEClass.getEStructuralFeatures().get(9);
@@ -2890,6 +3116,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpFunction()
   {
     return opFunctionEClass;
@@ -2900,6 +3127,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getOpFunction_Fname()
   {
     return (EAttribute)opFunctionEClass.getEStructuralFeatures().get(0);
@@ -2910,6 +3138,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getOpFunction_Star()
   {
     return (EAttribute)opFunctionEClass.getEStructuralFeatures().get(1);
@@ -2920,6 +3149,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOpFunction_Args()
   {
     return (EReference)opFunctionEClass.getEStructuralFeatures().get(2);
@@ -2930,6 +3160,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOpFunction_Fan()
   {
     return (EReference)opFunctionEClass.getEStructuralFeatures().get(3);
@@ -2940,6 +3171,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFunctionExtract()
   {
     return functionExtractEClass;
@@ -2950,6 +3182,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getFunctionExtract_V()
   {
     return (EAttribute)functionExtractEClass.getEStructuralFeatures().get(0);
@@ -2960,6 +3193,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFunctionExtract_Operand()
   {
     return (EReference)functionExtractEClass.getEStructuralFeatures().get(1);
@@ -2970,6 +3204,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getFunctionAnalytical()
   {
     return functionAnalyticalEClass;
@@ -2980,6 +3215,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getFunctionAnalytical_AnClause()
   {
     return (EReference)functionAnalyticalEClass.getEStructuralFeatures().get(0);
@@ -2990,6 +3226,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAnalyticClause()
   {
     return analyticClauseEClass;
@@ -3000,6 +3237,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAnalyticClause_Abc()
   {
     return (EReference)analyticClauseEClass.getEStructuralFeatures().get(0);
@@ -3010,6 +3248,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAnalyticClause_Obc()
   {
     return (EReference)analyticClauseEClass.getEStructuralFeatures().get(1);
@@ -3020,6 +3259,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAnalyticClause_Winc()
   {
     return (EReference)analyticClauseEClass.getEStructuralFeatures().get(2);
@@ -3030,6 +3270,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWindowingClause()
   {
     return windowingClauseEClass;
@@ -3040,6 +3281,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWindowingClauseBetween()
   {
     return windowingClauseBetweenEClass;
@@ -3050,6 +3292,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWindowingClauseBetween_WcoP()
   {
     return (EReference)windowingClauseBetweenEClass.getEStructuralFeatures().get(0);
@@ -3060,6 +3303,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWindowingClauseBetween_WcoF()
   {
     return (EReference)windowingClauseBetweenEClass.getEStructuralFeatures().get(1);
@@ -3070,6 +3314,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWindowingClauseOperandFollowing()
   {
     return windowingClauseOperandFollowingEClass;
@@ -3080,6 +3325,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWindowingClauseOperandFollowing_Exp()
   {
     return (EReference)windowingClauseOperandFollowingEClass.getEStructuralFeatures().get(0);
@@ -3090,6 +3336,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWindowingClauseOperandPreceding()
   {
     return windowingClauseOperandPrecedingEClass;
@@ -3100,6 +3347,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWindowingClauseOperandPreceding_Expr()
   {
     return (EReference)windowingClauseOperandPrecedingEClass.getEStructuralFeatures().get(0);
@@ -3110,6 +3358,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrderByClause()
   {
     return orderByClauseEClass;
@@ -3120,6 +3369,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOrderByClause_Args()
   {
     return (EReference)orderByClauseEClass.getEStructuralFeatures().get(0);
@@ -3130,6 +3380,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrderByClauseArgs()
   {
     return orderByClauseArgsEClass;
@@ -3140,6 +3391,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOrderByClauseArg()
   {
     return orderByClauseArgEClass;
@@ -3150,6 +3402,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOrderByClauseArg_Col()
   {
     return (EReference)orderByClauseArgEClass.getEStructuralFeatures().get(0);
@@ -3160,6 +3413,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getQueryPartitionClause()
   {
     return queryPartitionClauseEClass;
@@ -3170,6 +3424,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getQueryPartitionClause_Args()
   {
     return (EReference)queryPartitionClauseEClass.getEStructuralFeatures().get(0);
@@ -3180,6 +3435,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAnalyticExprArgs()
   {
     return analyticExprArgsEClass;
@@ -3190,6 +3446,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAnalyticExprArg()
   {
     return analyticExprArgEClass;
@@ -3200,6 +3457,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAnalyticExprArg_Ce()
   {
     return (EReference)analyticExprArgEClass.getEStructuralFeatures().get(0);
@@ -3210,6 +3468,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAnalyticExprArg_ColAlias()
   {
     return (EReference)analyticExprArgEClass.getEStructuralFeatures().get(1);
@@ -3220,6 +3479,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpFunctionArg()
   {
     return opFunctionArgEClass;
@@ -3230,6 +3490,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpFunctionArgOperand()
   {
     return opFunctionArgOperandEClass;
@@ -3240,6 +3501,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOpFunctionArgOperand_Op()
   {
     return (EReference)opFunctionArgOperandEClass.getEStructuralFeatures().get(0);
@@ -3250,6 +3512,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpFunctionCast()
   {
     return opFunctionCastEClass;
@@ -3260,6 +3523,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOpFunctionCast_Op()
   {
     return (EReference)opFunctionCastEClass.getEStructuralFeatures().get(0);
@@ -3270,6 +3534,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getOpFunctionCast_Type()
   {
     return (EAttribute)opFunctionCastEClass.getEStructuralFeatures().get(1);
@@ -3280,6 +3545,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getOpFunctionCast_P()
   {
     return (EAttribute)opFunctionCastEClass.getEStructuralFeatures().get(2);
@@ -3290,6 +3556,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getOpFunctionCast_P2()
   {
     return (EAttribute)opFunctionCastEClass.getEStructuralFeatures().get(3);
@@ -3300,6 +3567,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpFunctionArgAgregate()
   {
     return opFunctionArgAgregateEClass;
@@ -3310,6 +3578,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPOperand()
   {
     return pOperandEClass;
@@ -3320,6 +3589,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getPOperand_Prm()
   {
     return (EAttribute)pOperandEClass.getEStructuralFeatures().get(0);
@@ -3330,6 +3600,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getExpOperand()
   {
     return expOperandEClass;
@@ -3340,6 +3611,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getExpOperand_Prm()
   {
     return (EAttribute)expOperandEClass.getEStructuralFeatures().get(0);
@@ -3350,6 +3622,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getColumnOperand()
   {
     return columnOperandEClass;
@@ -3360,6 +3633,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getColumnOperand_Cfull()
   {
     return (EReference)columnOperandEClass.getEStructuralFeatures().get(0);
@@ -3370,6 +3644,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getColumnOperand_Ora()
   {
     return (EAttribute)columnOperandEClass.getEStructuralFeatures().get(1);
@@ -3380,6 +3655,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSubQueryOperand()
   {
     return subQueryOperandEClass;
@@ -3390,6 +3666,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSubQueryOperand_Sel()
   {
     return (EReference)subQueryOperandEClass.getEStructuralFeatures().get(0);
@@ -3400,6 +3677,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getScalarOperand()
   {
     return scalarOperandEClass;
@@ -3410,6 +3688,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getScalarOperand_Sostr()
   {
     return (EAttribute)scalarOperandEClass.getEStructuralFeatures().get(0);
@@ -3420,6 +3699,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getScalarOperand_Sodbl()
   {
     return (EAttribute)scalarOperandEClass.getEStructuralFeatures().get(1);
@@ -3430,6 +3710,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getScalarOperand_Sodate()
   {
     return (EAttribute)scalarOperandEClass.getEStructuralFeatures().get(2);
@@ -3440,6 +3721,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getScalarOperand_Sotime()
   {
     return (EAttribute)scalarOperandEClass.getEStructuralFeatures().get(3);
@@ -3450,6 +3732,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getScalarOperand_Sodt()
   {
     return (EAttribute)scalarOperandEClass.getEStructuralFeatures().get(4);
@@ -3460,6 +3743,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getScalarOperand_SoUInt()
   {
     return (EAttribute)scalarOperandEClass.getEStructuralFeatures().get(5);
@@ -3470,6 +3754,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getScalarOperand_Soint()
   {
     return (EAttribute)scalarOperandEClass.getEStructuralFeatures().get(6);
@@ -3480,6 +3765,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSQLCaseOperand()
   {
     return sqlCaseOperandEClass;
@@ -3490,6 +3776,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSQLCaseOperand_Wop()
   {
     return (EReference)sqlCaseOperandEClass.getEStructuralFeatures().get(0);
@@ -3500,6 +3787,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSQLCaseOperand_Expr()
   {
     return (EReference)sqlCaseOperandEClass.getEStructuralFeatures().get(1);
@@ -3510,6 +3798,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSQLCaseOperand_When()
   {
     return (EReference)sqlCaseOperandEClass.getEStructuralFeatures().get(2);
@@ -3520,6 +3809,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSQLCaseWhens()
   {
     return sqlCaseWhensEClass;
@@ -3530,6 +3820,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getSqlCaseWhen()
   {
     return sqlCaseWhenEClass;
@@ -3540,6 +3831,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSqlCaseWhen_Wop()
   {
     return (EReference)sqlCaseWhenEClass.getEStructuralFeatures().get(0);
@@ -3550,6 +3842,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSqlCaseWhen_Expr()
   {
     return (EReference)sqlCaseWhenEClass.getEStructuralFeatures().get(1);
@@ -3560,6 +3853,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSqlCaseWhen_Texp()
   {
     return (EReference)sqlCaseWhenEClass.getEStructuralFeatures().get(2);
@@ -3570,6 +3864,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getSqlCaseWhen_Eexp()
   {
     return (EReference)sqlCaseWhenEClass.getEStructuralFeatures().get(3);
@@ -3580,6 +3875,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getIntegerValue()
   {
     return integerValueEClass;
@@ -3590,6 +3886,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getIntegerValue_Integer()
   {
     return (EAttribute)integerValueEClass.getEStructuralFeatures().get(0);
@@ -3600,6 +3897,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getUnsignedValue()
   {
     return unsignedValueEClass;
@@ -3610,6 +3908,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getUnsignedValue_Integer()
   {
     return (EAttribute)unsignedValueEClass.getEStructuralFeatures().get(0);
@@ -3620,6 +3919,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getCol()
   {
     return colEClass;
@@ -3630,6 +3930,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getCol_Entries()
   {
     return (EReference)colEClass.getEStructuralFeatures().get(0);
@@ -3640,6 +3941,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getabc()
   {
     return abcEClass;
@@ -3650,6 +3952,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getabc_Entries()
   {
     return (EReference)abcEClass.getEStructuralFeatures().get(0);
@@ -3660,6 +3963,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getUnipivotInClause()
   {
     return unipivotInClauseEClass;
@@ -3670,6 +3974,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EAttribute getUnipivotInClause_Op()
   {
     return (EAttribute)unipivotInClauseEClass.getEStructuralFeatures().get(0);
@@ -3680,6 +3985,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getUnipivotInClause_Args()
   {
     return (EReference)unipivotInClauseEClass.getEStructuralFeatures().get(1);
@@ -3690,6 +3996,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getuicargs()
   {
     return uicargsEClass;
@@ -3700,6 +4007,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getuicargs_Entries()
   {
     return (EReference)uicargsEClass.getEStructuralFeatures().get(0);
@@ -3710,6 +4018,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getpvcs()
   {
     return pvcsEClass;
@@ -3720,6 +4029,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getpvcs_Entries()
   {
     return (EReference)pvcsEClass.getEStructuralFeatures().get(0);
@@ -3730,6 +4040,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getpcols()
   {
     return pcolsEClass;
@@ -3740,6 +4051,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getpcols_Entries()
   {
     return (EReference)pcolsEClass.getEStructuralFeatures().get(0);
@@ -3750,6 +4062,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass gettbls()
   {
     return tblsEClass;
@@ -3760,6 +4073,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference gettbls_Entries()
   {
     return (EReference)tblsEClass.getEStructuralFeatures().get(0);
@@ -3770,6 +4084,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpList()
   {
     return opListEClass;
@@ -3780,6 +4095,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOpList_Entries()
   {
     return (EReference)opListEClass.getEStructuralFeatures().get(0);
@@ -3790,6 +4106,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getPlus()
   {
     return plusEClass;
@@ -3800,6 +4117,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getMinus()
   {
     return minusEClass;
@@ -3810,6 +4128,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getConcat()
   {
     return concatEClass;
@@ -3820,6 +4139,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getMultiply()
   {
     return multiplyEClass;
@@ -3830,6 +4150,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getDivision()
   {
     return divisionEClass;
@@ -3840,6 +4161,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOBCArgs()
   {
     return obcArgsEClass;
@@ -3850,6 +4172,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOBCArgs_Entries()
   {
     return (EReference)obcArgsEClass.getEStructuralFeatures().get(0);
@@ -3860,6 +4183,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getAExpArgs()
   {
     return aExpArgsEClass;
@@ -3870,6 +4194,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getAExpArgs_Entries()
   {
     return (EReference)aExpArgsEClass.getEStructuralFeatures().get(0);
@@ -3880,6 +4205,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getOpFList()
   {
     return opFListEClass;
@@ -3890,6 +4216,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getOpFList_Entries()
   {
     return (EReference)opFListEClass.getEStructuralFeatures().get(0);
@@ -3900,6 +4227,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EClass getWhenList()
   {
     return whenListEClass;
@@ -3910,6 +4238,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EReference getWhenList_Entries()
   {
     return (EReference)whenListEClass.getEStructuralFeatures().get(0);
@@ -3920,6 +4249,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EEnum getXFunction()
   {
     return xFunctionEEnum;
@@ -3930,6 +4260,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EEnum getEXTRACT_VALUES()
   {
     return extracT_VALUESEEnum;
@@ -3940,6 +4271,7 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SqlFactory getSqlFactory()
   {
     return (SqlFactory)getEFactoryInstance();
@@ -3971,9 +4303,12 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
 
     withQueryEClass = createEClass(WITH_QUERY);
     createEAttribute(withQueryEClass, WITH_QUERY__W);
-    createEAttribute(withQueryEClass, WITH_QUERY__WNAME);
+    createEReference(withQueryEClass, WITH_QUERY__WNAME);
     createEReference(withQueryEClass, WITH_QUERY__WITH_COLS);
     createEReference(withQueryEClass, WITH_QUERY__QUERY);
+    createEReference(withQueryEClass, WITH_QUERY__ADDITIONAL_WNAME);
+    createEReference(withQueryEClass, WITH_QUERY__ADDITIONAL_WITH_COLS);
+    createEReference(withQueryEClass, WITH_QUERY__ADDITIONAL_QUERIES);
 
     withColumnsEClass = createEClass(WITH_COLUMNS);
 
@@ -4459,9 +4794,12 @@ public class SqlPackageImpl extends EPackageImpl implements SqlPackage
 
     initEClass(withQueryEClass, WithQuery.class, "WithQuery", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getWithQuery_W(), ecorePackage.getEString(), "w", null, 0, 1, WithQuery.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getWithQuery_Wname(), ecorePackage.getEString(), "wname", null, 0, 1, WithQuery.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getWithQuery_Wname(), this.getDbObjectName(), null, "wname", null, 0, 1, WithQuery.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWithQuery_WithCols(), this.getWithColumns(), null, "withCols", null, 0, 1, WithQuery.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getWithQuery_Query(), this.getSelectQuery(), null, "query", null, 0, 1, WithQuery.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getWithQuery_AdditionalWname(), this.getDbObjectName(), null, "additionalWname", null, 0, -1, WithQuery.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getWithQuery_AdditionalWithCols(), this.getWithColumns(), null, "additionalWithCols", null, 0, -1, WithQuery.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getWithQuery_AdditionalQueries(), this.getSelectQuery(), null, "additionalQueries", null, 0, -1, WithQuery.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(withColumnsEClass, WithColumns.class, "WithColumns", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

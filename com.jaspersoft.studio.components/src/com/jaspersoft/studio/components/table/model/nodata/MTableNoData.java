@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.table.model.nodata;
 
 import java.beans.PropertyChangeEvent;
@@ -16,6 +15,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -365,7 +365,7 @@ public class MTableNoData extends APropertyNode implements IGraphicElement, IPas
 	public Color getForeground() {
 		if (getValue() == null)
 			return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
-		return null;
+		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
 	}
 
 	@Override

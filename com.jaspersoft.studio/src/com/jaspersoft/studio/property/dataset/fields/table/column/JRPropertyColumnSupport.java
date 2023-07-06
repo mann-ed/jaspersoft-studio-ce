@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.dataset.fields.table.column;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -15,6 +15,7 @@ import net.sf.jasperreports.engine.JRPropertiesHolder;
 import net.sf.jasperreports.engine.JRPropertyExpression;
 import net.sf.jasperreports.engine.design.JRDesignField;
 import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
+import net.sf.jasperreports.engine.type.ExpressionTypeEnum;
 
 public class JRPropertyColumnSupport extends PropertyColumnSupport {
 
@@ -66,18 +67,22 @@ public class JRPropertyColumnSupport extends PropertyColumnSupport {
 			JRPropertiesHolder field = (JRPropertiesHolder) element;
 			boolean isExpression = false;
 			String value = field.getPropertiesMap().getProperty(c.getPropertyName());
+			boolean isSimpleText = false;
 			if (element instanceof JRDesignField) {
 				JRDesignField f = (JRDesignField) element;
-				if (f.getPropertyExpressionsList() != null)
-					for (JRPropertyExpression pe : f.getPropertyExpressionsList())
+				if (f.getPropertyExpressionsList() != null) {
+					for (JRPropertyExpression pe : f.getPropertyExpressionsList()) {
 						if (pe.getName().equals(c.getPropertyName()) && pe.getValueExpression() != null) {
 							isExpression = true;
+							isSimpleText = ExpressionTypeEnum.SIMPLE_TEXT == pe.getValueExpression().getType();
 							value = pe.getValueExpression().getText();
 						}
+					}
+				}
 			}
-			return new PropertyExpressionDTO(isExpression, c.getPropertyName(), value);
+			return new PropertyExpressionDTO(isExpression, c.getPropertyName(), value, isSimpleText);
 		}
-		return new PropertyExpressionDTO(false, c.getPropertyName(), "");
+		return new PropertyExpressionDTO(false, c.getPropertyName(), "", false);
 	}
 
 }

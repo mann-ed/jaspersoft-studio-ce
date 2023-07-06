@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.widgets.framework.manager;
 
 import java.text.MessageFormat;
@@ -32,6 +31,7 @@ import com.jaspersoft.studio.widgets.framework.model.WidgetPropertyDescriptor;
 import com.jaspersoft.studio.widgets.framework.model.WidgetsDescriptor;
 import com.jaspersoft.studio.widgets.framework.ui.ArrayPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.BigDecimalPropertyDescription;
+import com.jaspersoft.studio.widgets.framework.ui.BooleanComboPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.CheckboxItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.ClassItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.ColorPropertyDescription;
@@ -48,7 +48,10 @@ import com.jaspersoft.studio.widgets.framework.ui.ItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.LocaleComboPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.LongPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.MeasureUnitPropertyDescription;
+import com.jaspersoft.studio.widgets.framework.ui.MultiCheckBoxPropertyDescription;
+import com.jaspersoft.studio.widgets.framework.ui.MultiLineTextPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.NotNullableTextPropertyDescription;
+import com.jaspersoft.studio.widgets.framework.ui.PasswordTextPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.SelectableComboItemPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.TextPropertyDescription;
 import com.jaspersoft.studio.widgets.framework.ui.TimezoneComboPropertyDescription;
@@ -128,17 +131,21 @@ public class WidgetFactory {
 			hardcodedWidgets.put("long", new LongPropertyDescription());
 			hardcodedWidgets.put("bigdecimal", new BigDecimalPropertyDescription());
 			hardcodedWidgets.put("text", new TextPropertyDescription<String>());
+			hardcodedWidgets.put("multiline_text", new MultiLineTextPropertyDescription<String>());
 			hardcodedWidgets.put("not_nullable_text", new NotNullableTextPropertyDescription<String>());
 			hardcodedWidgets.put("selectable_combo", new SelectableComboItemPropertyDescription<String>());
 			hardcodedWidgets.put("class_combo", new ClassItemPropertyDescription());
 			hardcodedWidgets.put("fontfamily_combo", new FontFamilyComboPropertyDescription());
 			hardcodedWidgets.put("fontstyle_selector", new FontStylePropertyDescription());
 			hardcodedWidgets.put("checkbox_selector", new CheckboxItemPropertyDescription());
+			hardcodedWidgets.put("checkbox_multi", new MultiCheckBoxPropertyDescription<String>());
 			hardcodedWidgets.put("measureunit", new MeasureUnitPropertyDescription());
 			hardcodedWidgets.put("fixedmeasureunit", new FixedMeasurePropertyDescription());
 			hardcodedWidgets.put("fixednumbermeasureunit", new FixedNumberMesurePropertyDescription());
 			hardcodedWidgets.put("timezone_combo", new TimezoneComboPropertyDescription());
 			hardcodedWidgets.put("locale_combo", new LocaleComboPropertyDescription());
+			hardcodedWidgets.put("password_text", new PasswordTextPropertyDescription<String>());
+			hardcodedWidgets.put("boolean", new BooleanComboPropertyDescription());
 		}
 		return hardcodedWidgets;
 	}

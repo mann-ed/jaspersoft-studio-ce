@@ -27,10 +27,6 @@ public interface ExistsOper extends EObject
   /**
    * Returns the value of the '<em><b>Op</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op</em>' attribute.
    * @see #setOp(String)
@@ -53,10 +49,6 @@ public interface ExistsOper extends EObject
   /**
    * Returns the value of the '<em><b>Subquery</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Subquery</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Subquery</em>' containment reference.
    * @see #setSubquery(SubQueryOperand)
@@ -79,10 +71,6 @@ public interface ExistsOper extends EObject
   /**
    * Returns the value of the '<em><b>Op List</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Op List</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Op List</em>' containment reference.
    * @see #setOpList(OperandListGroup)

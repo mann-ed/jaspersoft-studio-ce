@@ -1,25 +1,14 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.jdbc;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.Driver;
-import java.sql.DriverPropertyInfo;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Properties;
 
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -46,19 +35,13 @@ import com.jaspersoft.studio.swt.widgets.ClasspathComponent;
 import com.jaspersoft.studio.swt.widgets.PropertiesComponent;
 import com.jaspersoft.studio.swt.widgets.WSecretText;
 import com.jaspersoft.studio.utils.UIUtil;
-import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
-import net.sf.jasperreports.data.AbstractClasspathAwareDataAdapterService;
 import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.DataAdapterServiceUtil;
 import net.sf.jasperreports.data.jdbc.JdbcDataAdapter;
 import net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl;
-import net.sf.jasperreports.data.jdbc.JdbcDataAdapterService;
 import net.sf.jasperreports.data.jdbc.TransactionIsolation;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.engine.ParameterContributorContext;
-import net.sf.jasperreports.engine.util.JRClassLoader;
 
 public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 
@@ -439,21 +422,27 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 					((JdbcDataAdapter) dataAdapter).getUrl());
 		}
 
-		bindingContext.bindValue(SWTObservables.observeText(textUsername, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "username")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(textPassword, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "password")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textUsername),
+				PojoProperties.value("username").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textPassword),
+				PojoProperties.value("password").observe(dataAdapter)); //$NON-NLS-1$
 		bindURLAssistant(dataAdapter);
-		bindingContext.bindValue(SWTObservables.observeText(textJDBCUrl, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "url")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textJDBCUrl),
+				PojoProperties.value("url").observe(dataAdapter)); //$NON-NLS-1$
 
 		Proxy p = new Proxy((JdbcDataAdapterImpl) dataAdapter);
-		bindingContext.bindValue(SWTObservables.observeSingleSelectionIndex(bAc),
-				PojoObservables.observeValue(p, "autoCommit")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSingleSelectionIndex(bRO),
-				PojoObservables.observeValue(p, "readOnly")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSingleSelectionIndex(bTI),
-				PojoObservables.observeValue(p, "transactionIsolation")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.singleSelectionIndex().observe(bAc),
+				PojoProperties.value("autoCommit").observe(p)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.singleSelectionIndex().observe(bRO),
+				PojoProperties.value("readOnly").observe(p)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.singleSelectionIndex().observe(bTI),
+				PojoProperties.value("transactionIsolation").observe(p)); //$NON-NLS-1$				
 
 		cpath.setClasspaths(jdbcDataAdapter.getClasspath());
 		cproperties.setProperties(jdbcDataAdapter.getProperties());
@@ -543,12 +532,16 @@ public class JDBCDataAdapterComposite extends ADataAdapterComposite {
 	}
 
 	protected void bindURLAssistant(DataAdapter dataAdapter) {
-		if (textServerAddress != null)
-			bindingContext.bindValue(SWTObservables.observeText(textServerAddress, SWT.Modify),
-					PojoObservables.observeValue(dataAdapter, "serverAddress")); //$NON-NLS-1$
-		if (textDatabase != null)
-			bindingContext.bindValue(SWTObservables.observeText(textDatabase, SWT.Modify),
-					PojoObservables.observeValue(dataAdapter, "database")); //$NON-NLS-1$
+		if (textServerAddress != null) {
+			bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(textServerAddress),
+					PojoProperties.value("serverAddress").observe(dataAdapter)); //$NON-NLS-1$
+		}
+		if (textDatabase != null) {
+			bindingContext.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(textDatabase),
+					PojoProperties.value("database").observe(dataAdapter)); //$NON-NLS-1$
+		}
 	}
 
 	public DataAdapterDescriptor getDataAdapter() {

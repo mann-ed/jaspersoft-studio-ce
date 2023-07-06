@@ -87,6 +87,7 @@ public class OperandsImpl extends OpFunctionArgAgregateImpl implements Operands
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operand getOp1()
   {
     return op1;
@@ -114,6 +115,7 @@ public class OperandsImpl extends OpFunctionArgAgregateImpl implements Operands
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp1(Operand newOp1)
   {
     if (newOp1 != op1)
@@ -135,6 +137,7 @@ public class OperandsImpl extends OpFunctionArgAgregateImpl implements Operands
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getLeft()
   {
     return left;
@@ -162,6 +165,7 @@ public class OperandsImpl extends OpFunctionArgAgregateImpl implements Operands
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setLeft(Operands newLeft)
   {
     if (newLeft != left)
@@ -183,6 +187,7 @@ public class OperandsImpl extends OpFunctionArgAgregateImpl implements Operands
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operand getRight()
   {
     return right;
@@ -210,6 +215,7 @@ public class OperandsImpl extends OpFunctionArgAgregateImpl implements Operands
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRight(Operand newRight)
   {
     if (newRight != right)

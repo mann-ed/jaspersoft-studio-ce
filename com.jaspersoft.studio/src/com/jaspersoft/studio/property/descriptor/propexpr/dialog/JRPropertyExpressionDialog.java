@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.descriptor.propexpr.dialog;
 
 import java.util.Collections;
@@ -8,6 +8,7 @@ import java.util.Collections;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -30,6 +31,7 @@ import com.jaspersoft.studio.swt.widgets.WTextExpression;
 import net.sf.jasperreports.eclipse.util.Misc;
 import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
+import net.sf.jasperreports.engine.type.ExpressionTypeEnum;
 import net.sf.jasperreports.engine.type.PropertyEvaluationTimeEnum;
 import net.sf.jasperreports.properties.PropertyMetadata;
 
@@ -45,6 +47,9 @@ public class JRPropertyExpressionDialog extends JRPropertyDialog {
 	 * Checkbutton to choose if to use a textual value or an expression
 	 */
 	protected Button buseexpr;
+	
+	// Checkbox to enable type="simpleText" for the propertyExpression
+	protected Button simpleTextCheck;
 
 	/**
 	 * Control where the expression can be placed
@@ -105,15 +110,18 @@ public class JRPropertyExpressionDialog extends JRPropertyDialog {
 	}
 
 	/**
-	 * Create the checkbox
+	 * Create the checkbox(es)
 	 */
 	protected void createAdditionalControls(Composite parent) {
 		if (showExpression) {
 			buseexpr = new Button(parent, SWT.CHECK);
-			buseexpr.setText(Messages.JRPropertyExpressionDialog_0);
-			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-			gd.horizontalSpan = 2;
-			buseexpr.setLayoutData(gd);
+			buseexpr.setText(Messages.JRPropertyExpressionDialog_UseExpressionCheckTxt);
+			buseexpr.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
+			simpleTextCheck = new Button(parent, SWT.CHECK);
+			simpleTextCheck.setText("Simple Text");
+			simpleTextCheck.setToolTipText("Expression is a simple text expression where parameter, field, variable references have their values converted to string and expanded in-place in the resulting text.");
+			simpleTextCheck.setVisible(false);
+			simpleTextCheck.setEnabled(false);
 		}
 	}
 
@@ -129,18 +137,24 @@ public class JRPropertyExpressionDialog extends JRPropertyDialog {
 			}
 		});
 		vexp = createValueExpressionControl(stackComposite);
-		if (buseexpr != null)
+		if (buseexpr != null) {
 			buseexpr.addSelectionListener(new SelectionListener() {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					stackLayout.topControl = buseexpr.getSelection() ? vexp : vcmp;
-					stackComposite.layout();
 					((PropertyExpressionDTO) value).setExpression(buseexpr.getSelection());
-					if (buseexpr.getSelection())
+					if (buseexpr.getSelection()) {
 						value.setValue(evalue.getExpression().getText());
-					else
+						simpleTextCheck.setEnabled(true);
+						simpleTextCheck.setVisible(true);
+					}
+					else {
 						value.setValue(tvalue.getText());
+						simpleTextCheck.setEnabled(false);
+						simpleTextCheck.setVisible(false);
+					}
+					stackComposite.layout();
 				}
 
 				@Override
@@ -148,6 +162,17 @@ public class JRPropertyExpressionDialog extends JRPropertyDialog {
 					widgetDefaultSelected(e);
 				}
 			});
+		}
+		if(simpleTextCheck!=null) {
+			simpleTextCheck.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(value instanceof PropertyExpressionDTO) {
+						((PropertyExpressionDTO)value).setSimpleText(simpleTextCheck.getSelection());
+					}
+				}
+			});
+		}
 		fillValue(value);
 		return composite;
 	}
@@ -214,12 +239,17 @@ public class JRPropertyExpressionDialog extends JRPropertyDialog {
 	 */
 	private void fillValue(PropertyDTO value) {
 		evalue.setExpressionContext(value.geteContext());
-		if (cprop != null)
+		if (cprop != null) {
 			cprop.setText(Misc.nvl(value.getName()));
-		if (buseexpr != null)
+		}
+		if (buseexpr != null) {
 			buseexpr.setSelection(value.isExpression());
+		}
 		if (value.isExpression()) {
 			stackLayout.topControl = vexp;
+			simpleTextCheck.setEnabled(true);
+			simpleTextCheck.setVisible(true);
+			simpleTextCheck.setSelection(ExpressionTypeEnum.SIMPLE_TEXT == value.getValueAsExpression().getType());
 			stackComposite.layout();
 		}
 

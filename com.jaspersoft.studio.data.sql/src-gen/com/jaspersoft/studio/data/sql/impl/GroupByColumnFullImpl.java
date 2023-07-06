@@ -98,6 +98,7 @@ public class GroupByColumnFullImpl extends OrGroupByColumnImpl implements GroupB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ColumnFull getColGrBy()
   {
     return colGrBy;
@@ -125,6 +126,7 @@ public class GroupByColumnFullImpl extends OrGroupByColumnImpl implements GroupB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setColGrBy(ColumnFull newColGrBy)
   {
     if (newColGrBy != colGrBy)
@@ -146,6 +148,7 @@ public class GroupByColumnFullImpl extends OrGroupByColumnImpl implements GroupB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OpFunction getGbFunction()
   {
     return gbFunction;
@@ -173,6 +176,7 @@ public class GroupByColumnFullImpl extends OrGroupByColumnImpl implements GroupB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setGbFunction(OpFunction newGbFunction)
   {
     if (newGbFunction != gbFunction)
@@ -194,6 +198,7 @@ public class GroupByColumnFullImpl extends OrGroupByColumnImpl implements GroupB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getGrByInt()
   {
     return grByInt;
@@ -204,6 +209,7 @@ public class GroupByColumnFullImpl extends OrGroupByColumnImpl implements GroupB
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setGrByInt(Long newGrByInt)
   {
     Long oldGrByInt = grByInt;
@@ -326,7 +332,7 @@ public class GroupByColumnFullImpl extends OrGroupByColumnImpl implements GroupB
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (grByInt: ");
     result.append(grByInt);
     result.append(')');

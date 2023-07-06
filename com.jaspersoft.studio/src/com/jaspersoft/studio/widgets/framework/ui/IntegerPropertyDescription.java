@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.widgets.framework.ui;
 
 import java.util.Locale;
@@ -138,7 +137,9 @@ public class IntegerPropertyDescription extends NumberPropertyDescription<Intege
 
 	@Override
 	public String getToolTip() {
-		String tt = Misc.nvl(getDescription());
+		String tt = getName() + "\n\n";
+		tt += Misc.nvl(getDescription());
+		tt += "\n\n" + (isMandatory() ? "Mandatory" : "Optional");
 		if (!Misc.isNullOrEmpty(getDefaultValueString()))
 			tt += "\nDefault: " + getDefaultValue();
 		if (getMin() != null || getMax() != null) {

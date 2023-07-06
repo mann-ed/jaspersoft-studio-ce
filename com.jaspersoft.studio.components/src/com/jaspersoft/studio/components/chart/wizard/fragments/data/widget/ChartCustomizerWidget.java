@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.chart.wizard.fragments.data.widget;
 
 import java.util.ArrayList;
@@ -358,7 +357,7 @@ public abstract class ChartCustomizerWidget {
 		}
 		//And then we re-add them in the same order of the customizers list
 		for(ChartCustomizerDefinition definition : selectedCustomizers){
-			dto.addProperty(NamedChartCustomizer.CUSTOMIZER_CLASS_PROPERTY_PREFIX + definition.getKey(), definition.getCustomizerClass(), false);
+			dto.addProperty(NamedChartCustomizer.CUSTOMIZER_CLASS_PROPERTY_PREFIX + definition.getKey(), definition.getCustomizerClass(), false, false);
 		}
 	}
 

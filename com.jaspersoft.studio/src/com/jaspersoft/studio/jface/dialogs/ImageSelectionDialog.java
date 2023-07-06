@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.jface.dialogs;
 
 import org.eclipse.swt.widgets.Shell;
@@ -15,6 +14,12 @@ import com.jaspersoft.studio.messages.Messages;
  * 
  */
 public class ImageSelectionDialog extends FilePreviewSelectionDialog {
+
+	private static final String SVG_TYPE = ".svg"; //$NON-NLS-1$
+	private static final String GIF_TYPE = "*.gif"; //$NON-NLS-1$
+	private static final String JPEG_JPG_TYPE = "*.jpeg; *.jpg"; //$NON-NLS-1$
+	private static final String ALL_IMAGES_TYPE = "*.png;*.jpeg;*.jpg;*.gif;*.svg"; //$NON-NLS-1$
+	private static final String PNG_TYPE = "*.png"; //$NON-NLS-1$
 
 	/**
 	 * Create the dialog.
@@ -56,17 +61,35 @@ public class ImageSelectionDialog extends FilePreviewSelectionDialog {
 	}
 
 	@Override
-	protected String getFileExtension() {
-		return "*.png"; //$NON-NLS-1$
-	}
-	
-	@Override
-	protected String[] getFileExtensionsNames() {
-		return new String[] {"All Images", "PNG", "JPEG", "GIF", "SVG", "All Files"};
+	protected String getDefaultResourcesPattern() {
+		return PNG_TYPE; //$NON-NLS-1$
 	}
 
 	@Override
-	protected String[] getFileExtensions() {
-		return new String[] {"*.png;*.jpeg;*.jpg;*.gif;*.svg", "*.png", "*.jpeg; *.jpg", "*.gif", ".svg", "*.*" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	public String getSupportedTypeName(String type) {
+		switch (type) {
+		case ALL_IMAGES_TYPE:
+			return Messages.ImageSelectionDialog_AllImagesTxt;
+		case PNG_TYPE:
+			return Messages.ImageSelectionDialog_PngTxt;
+		case JPEG_JPG_TYPE:
+			return Messages.ImageSelectionDialog_JpegTxt;
+		case GIF_TYPE:
+			return Messages.ImageSelectionDialog_GifTxt;
+		case SVG_TYPE:
+			return Messages.ImageSelectionDialog_SvgTxt;
+		case ALL_FILES_TYPE:
+			return Messages.ImageSelectionDialog_AllFilesTxt;
+		default:
+			return super.getSupportedTypeName(type);
+		}
+	}
+	
+	
+
+	@Override
+	public String[] getSupportedTypes() {
+		return new String[] {
+				ALL_IMAGES_TYPE, PNG_TYPE, JPEG_JPG_TYPE, GIF_TYPE, SVG_TYPE, ALL_FILES_TYPE }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 }

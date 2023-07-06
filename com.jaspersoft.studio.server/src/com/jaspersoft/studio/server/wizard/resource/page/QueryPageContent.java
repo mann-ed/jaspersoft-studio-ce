@@ -1,13 +1,12 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.wizard.resource.page;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -96,10 +95,14 @@ public class QueryPageContent extends APageContent {
 	@Override
 	protected void rebind() {
 		ResourceDescriptor r = res.getValue();
-		if (clang != null && !clang.isDisposed())
-			bindingContext.bindValue(SWTObservables.observeText(clang),
-					PojoObservables.observeValue(getProxy(r), "language")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(tsql, SWT.Modify), PojoObservables.observeValue(r, "sql"), //$NON-NLS-1$
+		if (clang != null && !clang.isDisposed()) {
+			bindingContext.bindValue(
+					WidgetProperties.text().observe(clang),
+					PojoProperties.value("language").observe(getProxy(r))); //$NON-NLS-1$
+		}
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tsql),
+				PojoProperties.value("sql").observe(r), //$NON-NLS-1$
 				new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator()), null);
 	}
 

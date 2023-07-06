@@ -71,6 +71,7 @@ public class OrExprImpl extends MinimalEObjectImpl.Container implements OrExpr
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<FullExpression> getEntries()
   {
     if (entries == null)

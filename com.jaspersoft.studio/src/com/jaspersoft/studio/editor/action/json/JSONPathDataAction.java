@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.action.json;
 
 import java.util.List;
@@ -135,19 +134,22 @@ public class JSONPathDataAction extends JSONAction {
 			peDTO.removeProperty(JSON_EXPORTER_REPEAT_VALUE_PROPERTY, false);
 			removeDataPropertyExpression(peDTO);
 		} else {
-			peDTO.setProperty(JSON_EXPORTER_PATH_PROPERTY, path, false);
-			if (repeat)
-				peDTO.setProperty(JSON_EXPORTER_REPEAT_VALUE_PROPERTY, "true", false); //$NON-NLS-1$
-			else
+			peDTO.setProperty(JSON_EXPORTER_PATH_PROPERTY, path, false, false);
+			if (repeat) {
+				peDTO.setProperty(JSON_EXPORTER_REPEAT_VALUE_PROPERTY, "true", false, false); //$NON-NLS-1$
+			}
+			else {
 				peDTO.removeProperty(JSON_EXPORTER_REPEAT_VALUE_PROPERTY, false);
+			}
 		}
 
-		if (data == null)
+		if (data == null) {
 			removeDataPropertyExpression(peDTO);
+		}
 		else {
 			PropertyExpressionDTO dpe = peDTO.getProperty(JSON_EXPORTER_DATA_PROPERTY, true);
 			if (dpe == null) {
-				peDTO.addProperty(JSON_EXPORTER_DATA_PROPERTY, data.getText(), true);
+				peDTO.addProperty(JSON_EXPORTER_DATA_PROPERTY, data.getText(), true, false);
 			} else {
 				dpe.setValue(data.getText());
 			}

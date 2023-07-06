@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.dnd;
 
 import java.io.File;
@@ -24,6 +23,7 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.data.DataAdapterManager;
+import com.jaspersoft.studio.data.DataAdapterUtils;
 import com.jaspersoft.studio.data.MDataAdapter;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
@@ -39,7 +39,7 @@ public class DataAdapterDragSourceListener implements TransferDragSourceListener
 
 	private static final String ENCODING = net.sf.jasperreports.eclipse.util.FileUtils.UTF8_ENCODING; //$NON-NLS-1$
 	private static final String DATA_ADAPTER_FILE_PREFIX = "dataAdapter"; //$NON-NLS-1$
-	private static final String DATA_ADAPTER_FILE_EXT = ".xml"; //$NON-NLS-1$
+	private static final String DATA_ADAPTER_FILE_EXT = DataAdapterUtils.DOTTED_FILE_EXTENSION; //$NON-NLS-1$
 	private String[] dataAdapterFilesLocations = new String[0];
 
 	@Override

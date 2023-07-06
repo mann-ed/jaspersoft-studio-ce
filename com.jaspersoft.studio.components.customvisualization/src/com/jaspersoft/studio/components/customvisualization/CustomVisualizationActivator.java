@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.customvisualization;
 
 import java.io.IOException;
@@ -112,7 +111,6 @@ public class CustomVisualizationActivator extends AbstractJRUIPlugin {
 			
 			// Force the properties values in order to avoid problems with different Studio versions
 			// See Bugzilla #42275.
-			PreferencesUtils.storeJasperReportsProperty(CVConstants.CV_REQUIREJS_PROPERTY, pathToRequireJs);
 			PreferencesUtils.storeJasperReportsProperty(SCRIPTS_PATH, "com/jaspersoft/jasperreports/customvisualization/resources/require/.*"); //$NON-NLS-1$
 	}
 }

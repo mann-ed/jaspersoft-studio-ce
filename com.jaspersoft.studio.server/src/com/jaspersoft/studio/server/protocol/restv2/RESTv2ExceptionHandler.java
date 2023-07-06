@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.protocol.restv2;
 
 import java.text.MessageFormat;
@@ -64,7 +63,12 @@ public class RESTv2ExceptionHandler {
 					handleErrorDescriptor(res, monitor, status);
 			}
 		case 401:
-			throw new HttpResponseException(status, buildErrorMessage(res, status));
+			if(ct!=null && ct.startsWith("application/json")) {
+				handleErrorDescriptor(res, monitor, status);
+			}
+			else {
+				throw new HttpResponseException(status, handle401Errors(res));
+			}
 		case 404:
 		case 403:
 		case 409:
@@ -91,6 +95,11 @@ public class RESTv2ExceptionHandler {
 		}
 	}
 
+	private String handle401Errors(Response res) {
+		String output = res.readEntity(String.class);
+		return output;
+	}
+	
 	private String buildErrorMessage(Response res, int status) {
 		String msg = "" + status;
 		String rp = res.getStatusInfo().getReasonPhrase();

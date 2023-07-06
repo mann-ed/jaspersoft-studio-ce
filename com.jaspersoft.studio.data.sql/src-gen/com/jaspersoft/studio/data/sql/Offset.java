@@ -25,10 +25,6 @@ public interface Offset extends EObject
   /**
    * Returns the value of the '<em><b>Offset</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Offset</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Offset</em>' attribute.
    * @see #setOffset(Long)

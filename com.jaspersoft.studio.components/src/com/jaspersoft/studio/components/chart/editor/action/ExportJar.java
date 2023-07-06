@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.chart.editor.action;
 
 import java.io.File;
@@ -100,17 +99,18 @@ public class ExportJar extends Action {
 		if (path != null) {
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			if (file != null) {
-				IProgressMonitor monitor = editor.getEditorSite().getActionBars().getStatusLineManager().getProgressMonitor();
+				IProgressMonitor monitor = editor.getEditorSite().getActionBars().getStatusLineManager()
+						.getProgressMonitor();
 				monitor.beginTask("Exporting Chart Themes to a JAR", IProgressMonitor.UNKNOWN);
 				try {
 					ChartThemeSettings cts = editor.getChartThemeSettings();
 					File f = new File(file.getRawLocationURI());
 					f.createNewFile();
-					// NOTE: Recall to refresh the newly created jar in order 
+					// NOTE: Recall to refresh the newly created jar in order
 					// to avoid wrong event triggering from the file system listener.
 					// We verified it could impact the classpath reload.
 					file.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-					XmlChartThemeExtensionsRegistryFactory.saveToJar(cts, name, f);
+					XmlChartThemeExtensionsRegistryFactory.saveToJar(editor.getJrContext(), cts, name, f);
 					if (addtoclasspath)
 						ProjectUtil.addFileToClasspath(monitor, file);
 					UIUtils.showInformation("Chart Theme was generated");

@@ -73,6 +73,7 @@ public class ExpOperandImpl extends MinimalEObjectImpl.Container implements ExpO
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getPrm()
   {
     return prm;
@@ -83,6 +84,7 @@ public class ExpOperandImpl extends MinimalEObjectImpl.Container implements ExpO
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPrm(String newPrm)
   {
     String oldPrm = prm;
@@ -167,7 +169,7 @@ public class ExpOperandImpl extends MinimalEObjectImpl.Container implements ExpO
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (prm: ");
     result.append(prm);
     result.append(')');

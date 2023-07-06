@@ -1,16 +1,15 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.sql.dialogs;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -168,9 +167,12 @@ public class JoinFromTableDialog extends ATitledDialog {
 		}
 
 		DataBindingContext bindingContext = new DataBindingContext();
-		bindingContext.bindValue(SWTObservables.observeSelection(keyword), PojoObservables.observeValue(this, "join")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(ftable),
-				PojoObservables.observeValue(this, "fromTable")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(keyword),
+				PojoProperties.value("join").observe(this)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(ftable),
+				PojoProperties.value("fromTable").observe(this)); //$NON-NLS-1$
 
 		if (!create) {
 			treeViewer = new TreeViewer(cmp, SWT.MULTI | SWT.BORDER);

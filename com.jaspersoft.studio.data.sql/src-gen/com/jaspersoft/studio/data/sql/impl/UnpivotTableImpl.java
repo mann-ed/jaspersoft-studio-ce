@@ -90,6 +90,7 @@ public class UnpivotTableImpl extends MinimalEObjectImpl.Container implements Un
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PivotColumns getPcols()
   {
     return pcols;
@@ -117,6 +118,7 @@ public class UnpivotTableImpl extends MinimalEObjectImpl.Container implements Un
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPcols(PivotColumns newPcols)
   {
     if (newPcols != pcols)
@@ -138,6 +140,7 @@ public class UnpivotTableImpl extends MinimalEObjectImpl.Container implements Un
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public PivotForClause getPfor()
   {
     return pfor;
@@ -165,6 +168,7 @@ public class UnpivotTableImpl extends MinimalEObjectImpl.Container implements Un
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setPfor(PivotForClause newPfor)
   {
     if (newPfor != pfor)
@@ -186,6 +190,7 @@ public class UnpivotTableImpl extends MinimalEObjectImpl.Container implements Un
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public UnpivotInClause getInop()
   {
     return inop;
@@ -213,6 +218,7 @@ public class UnpivotTableImpl extends MinimalEObjectImpl.Container implements Un
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setInop(UnpivotInClause newInop)
   {
     if (newInop != inop)

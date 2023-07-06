@@ -69,6 +69,7 @@ public class OpFListImpl extends OpFunctionArgImpl implements OpFList
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<OpFunctionArgOperand> getEntries()
   {
     if (entries == null)

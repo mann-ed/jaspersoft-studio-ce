@@ -129,6 +129,7 @@ public class OpFunctionCastImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getOp()
   {
     return op;
@@ -156,6 +157,7 @@ public class OpFunctionCastImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp(Operands newOp)
   {
     if (newOp != op)
@@ -177,6 +179,7 @@ public class OpFunctionCastImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getType()
   {
     return type;
@@ -187,6 +190,7 @@ public class OpFunctionCastImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setType(String newType)
   {
     String oldType = type;
@@ -200,6 +204,7 @@ public class OpFunctionCastImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getP()
   {
     return p;
@@ -210,6 +215,7 @@ public class OpFunctionCastImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setP(Long newP)
   {
     Long oldP = p;
@@ -223,6 +229,7 @@ public class OpFunctionCastImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Long getP2()
   {
     return p2;
@@ -233,6 +240,7 @@ public class OpFunctionCastImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setP2(Long newP2)
   {
     Long oldP2 = p2;
@@ -363,7 +371,7 @@ public class OpFunctionCastImpl extends MinimalEObjectImpl.Container implements 
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (type: ");
     result.append(type);
     result.append(", p: ");

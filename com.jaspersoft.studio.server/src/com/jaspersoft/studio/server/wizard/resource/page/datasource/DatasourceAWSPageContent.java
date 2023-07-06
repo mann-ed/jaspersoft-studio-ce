@@ -1,15 +1,14 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.wizard.resource.page.datasource;
 
 import java.util.List;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -156,14 +155,18 @@ public class DatasourceAWSPageContent extends DatasourceJDBCPageContent {
 		if (!ec2)
 			bindAWS();
 
-		bindingContext.bindValue(SWTObservables.observeText(awsRegion, SWT.Modify),
-				PojoObservables.observeValue(p, "datasourceAwsRegion")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(awsService, SWT.Modify),
-				PojoObservables.observeValue(p, "datasourceAwsDbService")); // $NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(awsDBInstance, SWT.Modify),
-				PojoObservables.observeValue(p, "datasourceAwsDbInstanceIdentifier")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(awsDSDBName, SWT.Modify),
-				PojoObservables.observeValue(p, "datasourceAwsDbName")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(awsRegion),
+				PojoProperties.value("datasourceAwsRegion").observe(p)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(awsService),
+				PojoProperties.value("datasourceAwsDbService").observe(p)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(awsDBInstance),
+				PojoProperties.value("datasourceAwsDbInstanceIdentifier").observe(p)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(awsDSDBName),
+				PojoProperties.value("datasourceAwsDbName").observe(p)); //$NON-NLS-1$
 	}
 
 	private void setEC2Settings(boolean ec2) {
@@ -177,12 +180,15 @@ public class DatasourceAWSPageContent extends DatasourceJDBCPageContent {
 
 	@SuppressWarnings("deprecation")
 	private void bindAWS() {
-		bAccessKey = bindingContext.bindValue(SWTObservables.observeText(awsAccessKey, SWT.Modify),
-				PojoObservables.observeValue(p, "datasourceAwsAccessKey"));
-		bSecretKey = bindingContext.bindValue(SWTObservables.observeText(awsSecretKey, SWT.Modify),
-				PojoObservables.observeValue(p, "datasourceAwsSecretKey"));
-		bArn = bindingContext.bindValue(SWTObservables.observeText(awsArn, SWT.Modify),
-				PojoObservables.observeValue(p, "datasourceAwsRoleArn"));
+		bAccessKey = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(awsAccessKey), 
+				PojoProperties.value("datasourceAwsAccessKey").observe(p)); //$NON-NLS-1$
+		bSecretKey = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(awsSecretKey), 
+				PojoProperties.value("datasourceAwsSecretKey").observe(p)); //$NON-NLS-1$
+		bArn = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(awsArn),
+				PojoProperties.value("datasourceAwsRoleArn").observe(p)); //$NON-NLS-1$
 	}
 
 	private void unbindAWS() {

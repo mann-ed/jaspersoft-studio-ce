@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.widgets.framework.ui;
 
 import org.eclipse.swt.SWT;
@@ -30,7 +29,7 @@ import net.sf.jasperreports.engine.design.JRDesignExpression;
 /**
  * Superclass of every {@link ItemPropertyDescription}. Since a widget is
  * composed of both expression part and simple control part, this class
- * implement the part regardig the expression, since its logic is shared between
+ * implement the part regarding the expression, since its logic is shared between
  * the widgets
  * 
  * @author Orlandin Marco
@@ -121,9 +120,12 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 
 	@Override
 	public String getDefaultValueString() {
-		if (defaultValue != null)
-			return defaultValue.toString();
-		return ""; //$NON-NLS-1$
+		return (defaultValue != null) ? defaultValue.toString() : ""; //$NON-NLS-1$
+	}
+	
+	@Override
+	public String getFallbackValueString() {
+		return (fallbackValue != null) ? fallbackValue.toString() : ""; //$NON-NLS-1$
 	}
 
 	@Override
@@ -173,9 +175,9 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 	 */
 	protected Control createExpressionControl(final IWItemProperty wiProp, Composite parent) {
 		Text textExpression = new Text(parent, SWT.BORDER | SWT.WRAP);
-		// The expression control always fill the available area in both
-		// directions
-		GridData textData = new GridData(GridData.FILL_BOTH);
+		// The expression control always fill the available area in both directions
+		GridData textData = new GridData(SWT.FILL,SWT.FILL,true,true);
+		textData.widthHint=150;
 		textExpression.setLayoutData(textData);
 		textExpression.addFocusListener(new FocusAdapter() {
 
@@ -255,10 +257,16 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 
 	public String getToolTip(IWItemProperty wip, String value) {
 		String tooltip = "";
-		if (!Misc.isNullOrEmpty(value))
-			tooltip += "\n\n" + value;
 		String wipTt = wip.getToolTip();
-		tooltip += wipTt != null ? wipTt : "\n" + getToolTip();
+		if(wipTt!=null) {
+			tooltip = wipTt;
+		}
+		else {
+			if (!Misc.isNullOrEmpty(value)) {
+				tooltip += "\n\n" + value;
+			}
+			tooltip += "\n" + getToolTip();
+		}
 		return tooltip.trim();
 	}
 
@@ -266,8 +274,12 @@ public abstract class AbstractExpressionPropertyDescription<T> implements ItemPr
 		String tt = getName() + "\n\n";
 		tt += Misc.nvl(getDescription());
 		tt += "\n\n" + (isMandatory() ? "Mandatory" : "Optional");
-		if (!Misc.isNullOrEmpty(getDefaultValueString()))
+		if (!Misc.isNullOrEmpty(getDefaultValueString())) {
 			tt += "\n\nDefault: " + getDefaultValueString();
+		}
+		if (!Misc.isNullOrEmpty(getFallbackValueString())) {
+			tt += "\n\nFallback: " + getFallbackValueString();
+		}
 		return tt;
 	}
 

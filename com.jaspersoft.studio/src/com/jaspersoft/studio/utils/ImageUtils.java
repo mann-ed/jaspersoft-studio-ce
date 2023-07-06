@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.utils;
 
 import java.awt.image.BufferedImage;
@@ -23,6 +22,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wb.swt.ResourceManager;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 /**
  * Utility class for managing image related stuff.
@@ -72,7 +73,7 @@ public class ImageUtils {
 		Assert.isTrue(width > 1, "Please specify a valid width value for the new image.");
 		Assert.isTrue(height > 1, "Please specify a valid height value for the new image.");
 		// Perform resize operation using anti-alias and interpolation settings
-		Image scaled = new Image(Display.getDefault(), width, height);
+		Image scaled = new Image(UIUtils.getDisplay(), width, height);
 		GC gc = new GC(scaled);
 		try {
 			gc.setAntialias(SWT.ON);

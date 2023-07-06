@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.backward;
 
 import java.io.File;
@@ -52,6 +52,9 @@ import net.sf.jasperreports.eclipse.util.ZipFilter;
  */
 public class JRBackwardManager {
 
+	private static final String JR_TOOLKIT_JAR_INTERNAL_LOCATION = "com/jaspersoft/studio/backward/resources/JRToolKit.jar";
+	private static final String JR_TOOLKIT_JAR_FILENAME = "JRToolKit.jar";
+
 	/**
 	 * Key of the storage where the older version of jasperreports are saved
 	 */
@@ -99,6 +102,15 @@ public class JRBackwardManager {
 		} finally {
 			FileUtils.closeStream(is);
 		}
+	}
+	
+	/**
+	 * Copy the JRToolkit jar utility into the specified destination folder.
+	 * 
+	 * @param destinationDir the target location
+	 */
+	public static void copyJRToolkitUtility(File destinationDir) {
+		fetchResource(JR_TOOLKIT_JAR_INTERNAL_LOCATION, destinationDir, JR_TOOLKIT_JAR_FILENAME);
 	}
 
 	/**
@@ -223,7 +235,7 @@ public class JRBackwardManager {
 				path.delete();
 			}else
 				org.apache.commons.io.FileUtils.moveDirectory(path, destDir);
-			fetchResource("com/jaspersoft/studio/backward/resources/JRToolKit.jar", destDir, "JRToolKit.jar");
+			fetchResource(JR_TOOLKIT_JAR_INTERNAL_LOCATION, destDir, JR_TOOLKIT_JAR_FILENAME);
 		} catch (Exception e) {
 			if (path != null)
 				path.delete();

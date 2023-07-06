@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.widgets.framework.ui;
 
 import org.eclipse.swt.SWT;
@@ -133,11 +132,6 @@ public abstract class NumberPropertyDescription<T extends Number> extends Abstra
 			changeFallbackForeground(isFallback, simpleControl);
 			cmp.switchToSecondContainer();
 		}
-	}
-
-	@Override
-	public String getToolTip(IWItemProperty wip, String value) {
-		return super.getToolTip(wip, value) + "\n" + getToolTip();
 	}
 
 	@Override

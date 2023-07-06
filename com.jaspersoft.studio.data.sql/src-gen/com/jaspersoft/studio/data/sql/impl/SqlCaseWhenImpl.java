@@ -99,6 +99,7 @@ public class SqlCaseWhenImpl extends SQLCaseWhensImpl implements SqlCaseWhen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getWop()
   {
     return wop;
@@ -126,6 +127,7 @@ public class SqlCaseWhenImpl extends SQLCaseWhensImpl implements SqlCaseWhen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setWop(Operands newWop)
   {
     if (newWop != wop)
@@ -147,6 +149,7 @@ public class SqlCaseWhenImpl extends SQLCaseWhensImpl implements SqlCaseWhen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public OrExpr getExpr()
   {
     return expr;
@@ -174,6 +177,7 @@ public class SqlCaseWhenImpl extends SQLCaseWhensImpl implements SqlCaseWhen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(OrExpr newExpr)
   {
     if (newExpr != expr)
@@ -195,6 +199,7 @@ public class SqlCaseWhenImpl extends SQLCaseWhensImpl implements SqlCaseWhen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getTexp()
   {
     return texp;
@@ -222,6 +227,7 @@ public class SqlCaseWhenImpl extends SQLCaseWhensImpl implements SqlCaseWhen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setTexp(Operands newTexp)
   {
     if (newTexp != texp)
@@ -243,6 +249,7 @@ public class SqlCaseWhenImpl extends SQLCaseWhensImpl implements SqlCaseWhen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getEexp()
   {
     return eexp;
@@ -270,6 +277,7 @@ public class SqlCaseWhenImpl extends SQLCaseWhensImpl implements SqlCaseWhen
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setEexp(Operands newEexp)
   {
     if (newEexp != eexp)

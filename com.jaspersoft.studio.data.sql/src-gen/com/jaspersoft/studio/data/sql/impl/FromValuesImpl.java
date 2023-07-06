@@ -78,6 +78,7 @@ public class FromValuesImpl extends MinimalEObjectImpl.Container implements From
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Values getValues()
   {
     return values;
@@ -105,6 +106,7 @@ public class FromValuesImpl extends MinimalEObjectImpl.Container implements From
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setValues(Values newValues)
   {
     if (newValues != values)
@@ -126,6 +128,7 @@ public class FromValuesImpl extends MinimalEObjectImpl.Container implements From
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public FromValuesColumns getC()
   {
     return c;
@@ -153,6 +156,7 @@ public class FromValuesImpl extends MinimalEObjectImpl.Container implements From
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setC(FromValuesColumns newC)
   {
     if (newC != c)

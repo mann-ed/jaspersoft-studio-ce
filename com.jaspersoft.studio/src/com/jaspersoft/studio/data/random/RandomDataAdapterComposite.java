@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.random;
 
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,8 +44,9 @@ public class RandomDataAdapterComposite extends ADataAdapterComposite {
 
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
-		bindingContext.bindValue(SWTObservables.observeSelection(spinnerRecords),
-				PojoObservables.observeValue(dataAdapter, "recordNumber")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(spinnerRecords),
+				PojoProperties.value("recordNumber").observe(dataAdapter)); //$NON-NLS-1$
 	}
 
 	public DataAdapterDescriptor getDataAdapter() {

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.editor;
 
 import java.io.ByteArrayInputStream;
@@ -302,7 +301,7 @@ public class ReportRunControler {
 						APreview pv = pcontainer.getDefaultViewer();
 						if (pv instanceof ABrowserViewer)
 							try {
-								String urlcookie = re.getBaseUrl();
+								String urlcookie = cli.getServerProfile().getUrl();
 								StringBuilder scookie = new StringBuilder();
 								String del = "";
 								for (Cookie co : re.getReportOutputCookie()) {

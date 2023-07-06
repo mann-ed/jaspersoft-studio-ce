@@ -1,15 +1,10 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.customjrds;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.ds.DataSourceDataAdapter;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -22,6 +17,10 @@ import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.messages.Messages;
 import com.jaspersoft.studio.swt.widgets.ClassType;
 import com.jaspersoft.studio.swt.widgets.ClasspathComponent;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.ds.DataSourceDataAdapter;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class CustomJrdsDataAdapterComposite extends ADataAdapterComposite {
 
@@ -75,16 +74,14 @@ public class CustomJrdsDataAdapterComposite extends ADataAdapterComposite {
 
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
-		bindingContext.bindValue(SWTObservables.observeText(
-				textFactoryClass.getControl(), SWT.Modify), PojoObservables
-				.observeValue(dataAdapter, "factoryClass")); //$NON-NLS-1$
-
 		bindingContext.bindValue(
-				SWTObservables.observeText(textMethodToCall, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "methodToCall")); //$NON-NLS-1$
+				WidgetProperties.text(SWT.Modify).observe(textFactoryClass.getControl()),
+				PojoProperties.value("factoryClass").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textMethodToCall),
+				PojoProperties.value("methodToCall").observe(dataAdapter)); //$NON-NLS-1$
 
 		DataSourceDataAdapter dsDataAdapter = (DataSourceDataAdapter) dataAdapter;
-
 		cpath.setClasspaths(dsDataAdapter.getClasspath());
 	}
 

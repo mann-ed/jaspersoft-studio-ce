@@ -234,6 +234,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getC()
   {
     return c;
@@ -244,6 +245,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setC(String newC)
   {
     String oldC = c;
@@ -257,6 +259,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public FullExpression getEfrag()
   {
     return efrag;
@@ -284,6 +287,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setEfrag(FullExpression newEfrag)
   {
     if (newEfrag != efrag)
@@ -305,6 +309,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getNotPrm()
   {
     return notPrm;
@@ -315,6 +320,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setNotPrm(String newNotPrm)
   {
     String oldNotPrm = notPrm;
@@ -328,6 +334,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ExprGroup getExpgroup()
   {
     return expgroup;
@@ -355,6 +362,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpgroup(ExprGroup newExpgroup)
   {
     if (newExpgroup != expgroup)
@@ -376,6 +384,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public FullExpression getExp()
   {
     return exp;
@@ -403,6 +412,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExp(FullExpression newExp)
   {
     if (newExp != exp)
@@ -424,6 +434,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public XExpr getXexp()
   {
     return xexp;
@@ -451,6 +462,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setXexp(XExpr newXexp)
   {
     if (newXexp != xexp)
@@ -472,6 +484,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public InOper getIn()
   {
     return in;
@@ -499,6 +512,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setIn(InOper newIn)
   {
     if (newIn != in)
@@ -520,6 +534,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public ExistsOper getExists()
   {
     return exists;
@@ -547,6 +562,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExists(ExistsOper newExists)
   {
     if (newExists != exists)
@@ -568,6 +584,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getOp1()
   {
     return op1;
@@ -595,6 +612,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp1(Operands newOp1)
   {
     if (newOp1 != op1)
@@ -616,6 +634,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getIsnull()
   {
     return isnull;
@@ -626,6 +645,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setIsnull(String newIsnull)
   {
     String oldIsnull = isnull;
@@ -639,6 +659,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Between getBetween()
   {
     return between;
@@ -666,6 +687,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setBetween(Between newBetween)
   {
     if (newBetween != between)
@@ -687,6 +709,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Like getLike()
   {
     return like;
@@ -714,6 +737,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setLike(Like newLike)
   {
     if (newLike != like)
@@ -735,6 +759,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Comparison getComp()
   {
     return comp;
@@ -762,6 +787,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setComp(Comparison newComp)
   {
     if (newComp != comp)
@@ -1008,7 +1034,7 @@ public class FullExpressionImpl extends OrExprImpl implements FullExpression
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (c: ");
     result.append(c);
     result.append(", notPrm: ");

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.wizard;
 
 import java.io.ByteArrayInputStream;
@@ -52,6 +52,7 @@ import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.DataAdapterEditorPart;
 import com.jaspersoft.studio.data.DataAdapterFactory;
 import com.jaspersoft.studio.data.DataAdapterManager;
+import com.jaspersoft.studio.data.DataAdapterUtils;
 import com.jaspersoft.studio.data.wizard.pages.DataAdapterEditorPage;
 import com.jaspersoft.studio.data.wizard.pages.DataAdaptersListPage;
 import com.jaspersoft.studio.messages.Messages;
@@ -67,8 +68,6 @@ import net.sf.jasperreports.eclipse.wizard.project.ProjectUtil;
 public class NewFileDataAdapterWizard extends AbstractDataAdapterWizard implements INewWizard, SelectionListener {
 	/** The wizard ID */
 	public static final String WIZARD_ID = "com.jaspersoft.studio.data.wizard.NewFileDataAdapterWizard"; //$NON-NLS-1$
-	/* default name for data adapter file */
-	private static final String NEW_DATAADAPTER_XML = "DataAdapter.xml"; //$NON-NLS-1$
 	private ISelection selection;
 	private WizardNewFileCreationPage step1;
 
@@ -150,8 +149,8 @@ public class NewFileDataAdapterWizard extends AbstractDataAdapterWizard implemen
 			if (file.exists()) {
 				return false;
 			}
-			if (!fileName.endsWith(".xml")) {
-				fileName += ".xml"; 
+			if (!fileName.endsWith(DataAdapterUtils.DOTTED_FILE_EXTENSION)) {
+				fileName += DataAdapterUtils.DOTTED_FILE_EXTENSION; 
 			}
 			file = r.getProject().getFile(fileName);
 			return !file.exists();
@@ -175,7 +174,7 @@ public class NewFileDataAdapterWizard extends AbstractDataAdapterWizard implemen
 				ContextHelpIDs.WIZARD_NEW_DATAAPDATER);
 		step1.setTitle(Messages.NewFileDataAdapterWizard_1);
 		step1.setDescription(Messages.NewFileDataAdapterWizard_2);
-		step1.setFileExtension("xml");//$NON-NLS-1$
+		step1.setFileExtension(DataAdapterUtils.FILE_EXTENSION);//$NON-NLS-1$
 		setupNewFileName();
 		addPage(step1);
 
@@ -192,7 +191,7 @@ public class NewFileDataAdapterWizard extends AbstractDataAdapterWizard implemen
 	}
 
 	public void setupNewFileName() {
-		String filename = NEW_DATAADAPTER_XML;
+		String filename = DataAdapterUtils.NEW_DATA_ADAPTER_FILENAME;
 		if (selection != null) {
 			if (selection instanceof TreeSelection) {
 				TreeSelection s = (TreeSelection) selection;
@@ -203,7 +202,7 @@ public class NewFileDataAdapterWizard extends AbstractDataAdapterWizard implemen
 
 					int i = 1;
 					while (file.getProject().getFile(f).exists()) {
-						filename = "DataAdapter" + i + ".xml"; //$NON-NLS-1$ //$NON-NLS-2$
+						filename = "DataAdapter" + i + DataAdapterUtils.DOTTED_FILE_EXTENSION; //$NON-NLS-1$ //$NON-NLS-2$
 						f = file.getProjectRelativePath().removeLastSegments(1).toOSString() + "/" + filename; //$NON-NLS-1$
 						i++;
 					}
@@ -379,7 +378,7 @@ public class NewFileDataAdapterWizard extends AbstractDataAdapterWizard implemen
 				try {
 					if (ProjectUtil.isOpen(p) && p.getNature(JavaCore.NATURE_ID) != null) {
 						p.open(progressMonitor);
-						this.selection = new TreeSelection(new TreePath(new Object[] { p.getFile(NEW_DATAADAPTER_XML) }));
+						this.selection = new TreeSelection(new TreePath(new Object[] { p.getFile(DataAdapterUtils.NEW_DATA_ADAPTER_FILENAME) }));
 						return;
 					}
 				} catch (CoreException e) {
@@ -390,7 +389,7 @@ public class NewFileDataAdapterWizard extends AbstractDataAdapterWizard implemen
 				try {
 					if (p.isAccessible()) {
 						p.open(progressMonitor);
-						this.selection = new TreeSelection(new TreePath(new Object[] { p.getFile(NEW_DATAADAPTER_XML) }));
+						this.selection = new TreeSelection(new TreePath(new Object[] { p.getFile(DataAdapterUtils.NEW_DATA_ADAPTER_FILENAME) }));
 						return;
 					}
 				} catch (CoreException e) {

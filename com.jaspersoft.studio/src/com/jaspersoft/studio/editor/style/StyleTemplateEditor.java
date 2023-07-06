@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.style;
 
 import java.util.List;
@@ -17,6 +16,7 @@ import org.eclipse.ui.IActionBars;
 
 import com.jaspersoft.studio.editor.AGraphicEditor;
 import com.jaspersoft.studio.editor.outline.JDReportOutlineView;
+import com.jaspersoft.studio.editor.outline.actions.CreateConditionalStyleAction;
 import com.jaspersoft.studio.editor.outline.actions.CreateStyleAction;
 import com.jaspersoft.studio.editor.outline.actions.CreateStyleTemplateReferenceAction;
 import com.jaspersoft.studio.editor.outline.actions.RefreshTemplateStyleExpression;
@@ -51,6 +51,9 @@ public class StyleTemplateEditor extends AGraphicEditor {
 				id = CreateStyleAction.ID;
 				bars.setGlobalActionHandler(id, registry.getAction(id));
 				
+				id = CreateConditionalStyleAction.ID;
+				bars.setGlobalActionHandler(id, registry.getAction(id));
+				
 				id = RefreshTemplateStyleExpression.ID;
 				bars.setGlobalActionHandler(id, registry.getAction(id));
 				
@@ -81,9 +84,14 @@ public class StyleTemplateEditor extends AGraphicEditor {
 		super.createActions();
 		ActionRegistry registry = getActionRegistry();
 		List<String> selectionActions = getSelectionActions();
+		
 		IAction action = new CreateStyleAction(this);
 		registry.registerAction(action);
 		selectionActions.add(CreateStyleAction.ID);
+		
+		action = new CreateConditionalStyleAction(this);
+		registry.registerAction(action);
+		selectionActions.add(CreateConditionalStyleAction.ID);
 
 		action = new CreateStyleTemplateReferenceAction(this);
 		registry.registerAction(action);

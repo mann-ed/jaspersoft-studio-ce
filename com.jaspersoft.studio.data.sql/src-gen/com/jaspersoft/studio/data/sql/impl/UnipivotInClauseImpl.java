@@ -86,6 +86,7 @@ public class UnipivotInClauseImpl extends UnpivotInClauseImpl implements Unipivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getOp()
   {
     return op;
@@ -96,6 +97,7 @@ public class UnipivotInClauseImpl extends UnpivotInClauseImpl implements Unipivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp(String newOp)
   {
     String oldOp = op;
@@ -109,6 +111,7 @@ public class UnipivotInClauseImpl extends UnpivotInClauseImpl implements Unipivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public UnpivotInClauseArgs getArgs()
   {
     return args;
@@ -136,6 +139,7 @@ public class UnipivotInClauseImpl extends UnpivotInClauseImpl implements Unipivo
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setArgs(UnpivotInClauseArgs newArgs)
   {
     if (newArgs != args)
@@ -254,7 +258,7 @@ public class UnipivotInClauseImpl extends UnpivotInClauseImpl implements Unipivo
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (op: ");
     result.append(op);
     result.append(')');

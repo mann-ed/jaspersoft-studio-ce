@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.action.text;
 
 import java.util.List;
@@ -182,8 +181,12 @@ public class ConvertStaticIntoText extends ACachedSelectionAction {
 	private void cloneTextField(JRDesignTextField textObject, JRDesignStaticText labelObject)
 	{
 		String staticTextValue = labelObject.getText();
-		//If the text is not valid for an expression it will be handled as a string
-		if (!isValidExpression(staticTextValue)){
+		if (staticTextValue.isEmpty()) {
+			// special case for empty string
+			staticTextValue="\"\"";
+		}
+		else if (!isValidExpression(staticTextValue)){
+			//If the text is not valid for an expression it will be handled as a string
 			if (!staticTextValue.startsWith("\"")) staticTextValue = "\"".concat(staticTextValue); //$NON-NLS-1$ //$NON-NLS-2$
 			if (!staticTextValue.endsWith("\"")) staticTextValue = staticTextValue.concat("\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.utils;
 
 import java.beans.PropertyChangeListener;
@@ -35,6 +34,7 @@ import net.sf.jasperreports.engine.design.events.JRChangeEventsSupport;
 import net.sf.jasperreports.engine.fill.JRExpressionEvalException;
 import net.sf.jasperreports.engine.fill.JRParameterDefaultValuesEvaluator;
 import net.sf.jasperreports.engine.util.JRExpressionUtil;
+import net.sf.jasperreports.utils.JasperReportsModelUtils;
 
 public class ExpressionUtil {
 
@@ -375,6 +375,7 @@ public class ExpressionUtil {
 					jd.addParameter(np);
 				}
 			}
+			JasperReportsModelUtils.addImportStatements(jrConfig.getJasperDesign(), jd);
 			jr = JasperCompileManager.getInstance(jrConfig).compile(jd);
 		} else if (jr == null) {
 			try {
@@ -395,6 +396,7 @@ public class ExpressionUtil {
 						jd.addParameter(np);
 					}
 				}
+				JasperReportsModelUtils.addImportStatements(jrConfig.getJasperDesign(), jd);
 				jr = JasperCompileManager.getInstance(jrConfig).compile(jd);
 			}
 		}

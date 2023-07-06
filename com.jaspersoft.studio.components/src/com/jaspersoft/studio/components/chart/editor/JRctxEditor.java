@@ -1,19 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.chart.editor;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.sf.jasperreports.charts.ChartThemeBundle;
-import net.sf.jasperreports.chartthemes.simple.ChartThemeSettings;
-import net.sf.jasperreports.chartthemes.simple.FileImageProvider;
-import net.sf.jasperreports.chartthemes.simple.ImageProvider;
-import net.sf.jasperreports.chartthemes.simple.XmlChartTheme;
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.PartInitException;
@@ -24,6 +16,13 @@ import com.jaspersoft.studio.editor.AMultiEditor;
 import com.jaspersoft.studio.jasper.CachedImageProvider;
 import com.jaspersoft.studio.model.INode;
 import com.jaspersoft.studio.model.MRoot;
+
+import net.sf.jasperreports.charts.ChartThemeBundle;
+import net.sf.jasperreports.chartthemes.simple.ChartThemeSettings;
+import net.sf.jasperreports.chartthemes.simple.FileImageProvider;
+import net.sf.jasperreports.chartthemes.simple.ImageProvider;
+import net.sf.jasperreports.chartthemes.simple.XmlChartTheme;
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 public class JRctxEditor extends AMultiEditor {
 
@@ -63,7 +62,7 @@ public class JRctxEditor extends AMultiEditor {
 		cts.getPlotSettings().setBackgroundImage(
 				getImageProvider(cts.getPlotSettings().getBackgroundImage()));
 
-		String xml = XmlChartTheme.saveSettings(cts);
+		String xml = XmlChartTheme.saveSettings(jrContext, cts);
 		xml = xml
 				.replaceFirst(
 						"<chart-theme>", "<!-- Created with Jaspersoft Studio -->\n<chart-theme>"); //$NON-NLS-1$ //$NON-NLS-2$

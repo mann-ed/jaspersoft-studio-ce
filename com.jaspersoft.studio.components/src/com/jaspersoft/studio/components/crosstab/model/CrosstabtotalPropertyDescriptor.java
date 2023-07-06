@@ -2,8 +2,8 @@ package com.jaspersoft.studio.components.crosstab.model;
 
 import org.eclipse.gef.EditPart;
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;

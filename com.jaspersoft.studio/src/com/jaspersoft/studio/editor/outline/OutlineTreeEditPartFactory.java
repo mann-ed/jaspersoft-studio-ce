@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.outline;
 
 import java.util.ArrayList;
@@ -261,7 +260,11 @@ public class OutlineTreeEditPartFactory implements EditPartFactory {
 		} else if (child instanceof MElementGroup) {
 			return new DeleteElementGroupCommand(parent, (MElementGroup) child);
 		} else if (child instanceof MConditionalStyle) {
-			return new DeleteConditionalStyleCommand((MStyle) parent, (MConditionalStyle) child);
+			// NOTE: handle the special case of conditional styles shown as children of
+			// external style templates inside JRXML editors.
+			if(parent instanceof MStyle && !(parent.getParent() instanceof MStyleTemplate)) {
+				return new DeleteConditionalStyleCommand((MStyle) parent, (MConditionalStyle) child);
+			}
 		} else if (child instanceof MStyleTemplate) {
 			if (parent instanceof MStyles)
 				return new DeleteStyleTemplateCommand((MStyles) parent, (MStyleTemplate) child);

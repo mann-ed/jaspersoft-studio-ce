@@ -1,12 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.sql.widgets.scalar;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,7 +38,9 @@ public class StringWidget extends AScalarWidget {
 		txt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		DataBindingContext bindingContext = new DataBindingContext();
-		bindingContext.bindValue(SWTObservables.observeText(txt, SWT.Modify), PojoObservables.observeValue(getValue(), "value")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(txt),
+				PojoProperties.value("value").observe(getValue())); //$NON-NLS-1$
 	}
 
 }

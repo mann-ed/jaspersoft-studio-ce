@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.section.widgets;
 
 import org.eclipse.jface.fieldassist.TextContentAdapter;
@@ -67,6 +66,7 @@ public class SPExpression extends AHistorySPropertyWidget<IPropertyDescriptor> i
 
 	public void setData(APropertyNode pnode, Object b) {
 		createContextualMenu(pnode);
+		expr.setEnabled(pnode.isEditable());
 		expr.setExpression((JRDesignExpression) b);
 		if (b != null && expr.getTextControl() != null) {
 			String expressionText = ((JRDesignExpression) b).getText();

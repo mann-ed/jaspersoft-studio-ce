@@ -78,6 +78,7 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public WithQuery getWq()
   {
     return wq;
@@ -105,6 +106,7 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setWq(WithQuery newWq)
   {
     if (newWq != wq)
@@ -126,6 +128,7 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public SelectQuery getQuery()
   {
     return query;
@@ -153,6 +156,7 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setQuery(SelectQuery newQuery)
   {
     if (newQuery != query)

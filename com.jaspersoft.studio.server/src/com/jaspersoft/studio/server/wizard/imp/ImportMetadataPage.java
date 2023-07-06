@@ -1,18 +1,17 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.wizard.imp;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationUpdater;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -136,16 +135,30 @@ public class ImportMetadataPage extends JSSHelpWizardPage {
 		gd.horizontalSpan = 2;
 		bIncSrvSettings.setLayoutData(gd);
 
-		Binding binding = bindingContext.bindValue(SWTObservables.observeText(tfile, SWT.Modify), PojoObservables.observeValue(value, "file"), //$NON-NLS-1$
+		Binding binding = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tfile),
+				PojoProperties.value("file").observe(value),
 				new UpdateValueStrategy().setAfterConvertValidator(new NotEmptyFileValidator(null)), null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT, null, new ControlDecorationUpdater());
 
-		bindingContext.bindValue(SWTObservables.observeSelection(bupdate), PojoObservables.observeValue(value, "update")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bSkipUpd), PojoObservables.observeValue(value, "skipUserUpdates")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bIncAuditEvt), PojoObservables.observeValue(value, "inclAuditEvents")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bIncAccEvt), PojoObservables.observeValue(value, "inclAccessEvents")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bIncMonEvt), PojoObservables.observeValue(value, "inclMonitorEvents")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(bIncSrvSettings), PojoObservables.observeValue(value, "inclSrvSettings")); //$NON-NLS-1$ 
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bupdate),
+				PojoProperties.value("update").observe(value)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bSkipUpd),
+				PojoProperties.value("skipUserUpdates").observe(value)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bIncAuditEvt),
+				PojoProperties.value("inclAuditEvents").observe(value)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bIncAccEvt),
+				PojoProperties.value("inclAccessEvents").observe(value)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bIncMonEvt),
+				PojoProperties.value("inclMonitorEvents").observe(value)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(bIncSrvSettings),
+				PojoProperties.value("inclSrvSettings").observe(value)); //$NON-NLS-1$
 	}
 
 	public ImportOptions getValue() {

@@ -1,8 +1,9 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.dataset;
+
+import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.engine.JRDataset;
 import net.sf.jasperreports.engine.JRDatasetRun;
@@ -11,10 +12,8 @@ import net.sf.jasperreports.engine.JRExpression;
 import net.sf.jasperreports.engine.JRGroup;
 import net.sf.jasperreports.engine.design.JRDesignElementDataset;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.DatasetResetTypeEnum;
 import net.sf.jasperreports.engine.type.IncrementTypeEnum;
-import net.sf.jasperreports.engine.type.ResetTypeEnum;
-
-import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 /**
  * Adapter for a dataset instance used in a generic component element. The dataset used MUST be a valid subclass of the
@@ -64,7 +63,7 @@ public class ComponentElementDatasetAdapter implements IEditableDataset {
 			componentElementDataset.setResetGroup(newResetGroup);
 	}
 
-	public void setResetType(ResetTypeEnum newResetType) {
+	public void setResetType(DatasetResetTypeEnum newResetType) {
 		if (componentElementDataset != null)
 			componentElementDataset.setResetType(newResetType);
 	}

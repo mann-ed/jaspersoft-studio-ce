@@ -69,6 +69,7 @@ public class OBCArgsImpl extends OrderByClauseArgsImpl implements OBCArgs
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<OrderByClauseArg> getEntries()
   {
     if (entries == null)

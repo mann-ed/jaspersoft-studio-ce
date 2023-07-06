@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.jface.dialogs;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+
+import com.jaspersoft.studio.messages.Messages;
 
 /**
  * Dialog proposed when an image needs to be selected.
@@ -16,6 +17,8 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class StyleTemplateSelectionDialog extends FileSelectionDialog {
 
+	private static final String JRTX_TYPE = "*.jrtx"; //$NON-NLS-1$
+	
 	/**
 	 * Expression that will be shown in the dialog once opened
 	 */
@@ -34,7 +37,7 @@ public class StyleTemplateSelectionDialog extends FileSelectionDialog {
 	 * @return the title for the dialog
 	 */
 	protected String getDialogTitle() {
-		return "Select a Style Template";
+		return Messages.StyleTemplateSelectionDialog_Title;
 	}
 
 	/**
@@ -52,22 +55,37 @@ public class StyleTemplateSelectionDialog extends FileSelectionDialog {
 	 * 
 	 * @return the title and labels for the group of modes
 	 */
+	@Override
 	protected String[] getImageModesAndHeaderTitles() {
-		return new String[] { "Style Template selection mode", "Workspace resource (an element inside the workspace)",
-				"Absolute Path in the filesystem (use only for quick testing, never use in real reports)",
-				"URL (a remote URL referring to a Style Template, will be the expression value)",
-				"No Style Template (no Style Template reference will be set)",
-				"Custom expression (enter an expression for the Style Template using the expression editor)" };
+		return new String[] { 
+				Messages.StyleTemplateSelectionDialog_SectionTitle, 
+				Messages.StyleTemplateSelectionDialog_WorkspaceModeTxt,
+				Messages.StyleTemplateSelectionDialog_AbsolutePathTxt,
+				Messages.StyleTemplateSelectionDialog_RemoteURLTxt,
+				Messages.StyleTemplateSelectionDialog_NoStyleTxt,
+				Messages.StyleTemplateSelectionDialog_CustomExpressionTxt };
 	}
 
 	@Override
-	protected String getFileExtension() {
-		return "*.jrtx";
+	protected String getDefaultResourcesPattern() {
+		return JRTX_TYPE;
 	}
 
 	@Override
-	protected String[] getFileExtensions() {
-		return new String[] { "*.jrtx", "*.*" };
+	public String[] getSupportedTypes() {
+		return new String[] { JRTX_TYPE, ALL_FILES_TYPE };
+	}
+	
+	@Override
+	public String getSupportedTypeName(String type) {
+		switch (type) {
+		case JRTX_TYPE:
+			return Messages.StyleTemplateSelectionDialog_StyleTemplateFilesTxt;
+		case ALL_FILES_TYPE:
+			return Messages.StyleTemplateSelectionDialog_AllFilesTxt;
+		default:
+			return super.getSupportedTypeName(type);
+		}
 	}
 	
 	/**

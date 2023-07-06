@@ -1,23 +1,18 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.doc.samples.handlers;
-
-import net.sf.jasperreports.eclipse.ui.validator.EmptyStringValidator;
-import net.sf.jasperreports.eclipse.wizard.project.JRProjectPage;
-import net.sf.jasperreports.samples.wizards.SampleNewWizard;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -34,6 +29,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import com.jaspersoft.studio.doc.samples.messages.Messages;
+
+import net.sf.jasperreports.eclipse.ui.validator.EmptyStringValidator;
+import net.sf.jasperreports.eclipse.wizard.project.JRProjectPage;
+import net.sf.jasperreports.samples.wizards.SampleNewWizard;
 
 /**
  * Action for the cheatsheet to open the wizard to import the sample reports
@@ -96,7 +95,9 @@ public class ImportSamplesWizardHandler extends Action {
 			gd.horizontalSpan = 2;
 			new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(gd);
 
-			dbc.bindValue(SWTObservables.observeText(tname, SWT.Modify), PojoObservables.observeValue(this, "name"),
+			dbc.bindValue(
+					WidgetProperties.text(SWT.Modify).observe(tname),
+					PojoProperties.value("name").observe(this),
 					new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator() {
 						@Override
 						public IStatus validate(String value) {

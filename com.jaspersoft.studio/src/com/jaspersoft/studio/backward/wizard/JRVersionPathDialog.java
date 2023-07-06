@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.backward.wizard;
 
 import java.io.File;
@@ -36,7 +35,7 @@ public class JRVersionPathDialog extends ATitledDialog {
 	protected JRVersionPathDialog(Shell parentShell, JRDefinition value) {
 		super(parentShell);
 		setTitle(Messages.JRVersionPathDialog_0);
-		setDefaultSize(500, 180);
+		setDefaultSize(450, 250);
 		this.value = value;
 	}
 
@@ -54,6 +53,8 @@ public class JRVersionPathDialog extends ATitledDialog {
 		GridData gd = new GridData();
 		gd.horizontalSpan = 2;
 		lbl.setLayoutData(gd);
+		
+		setDescription(Messages.JRVersionPathDialog_description);
 
 		final Text tpath = new Text(cmp, SWT.BORDER);
 		tpath.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

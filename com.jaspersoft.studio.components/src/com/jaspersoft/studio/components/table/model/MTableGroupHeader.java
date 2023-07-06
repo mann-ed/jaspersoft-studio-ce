@@ -1,11 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.table.model;
 
 import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -86,8 +86,9 @@ public class MTableGroupHeader extends AMFooterHeaderCollection {
 			if (child.getValue() != null) {
 				StandardBaseColumn currentCol = (StandardBaseColumn) child.getValue();
 				Cell headerCell = currentCol.getGroupHeader(jrDesignGroup.getName());
-				if (headerCell != null)
-					return null;
+				if (headerCell != null) {
+					return UIUtils.getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+				}
 			}
 		}
 		return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);

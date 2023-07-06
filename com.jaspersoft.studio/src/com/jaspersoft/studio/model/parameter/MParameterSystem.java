@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.parameter;
 
 import java.beans.PropertyChangeEvent;
@@ -69,6 +68,7 @@ public class MParameterSystem extends APropertyNode implements IDragable {
 	 */
 	public MParameterSystem() {
 		super();
+		setEditable(false);
 	}
 
 	/**
@@ -83,6 +83,7 @@ public class MParameterSystem extends APropertyNode implements IDragable {
 	 */
 	public MParameterSystem(ANode parent, JRDesignParameter jrParameter, int newIndex) {
 		super(parent, newIndex);
+		setEditable(false);
 		setValue(jrParameter);
 	}
 
@@ -238,12 +239,6 @@ public class MParameterSystem extends APropertyNode implements IDragable {
 		} else if (id.equals(JRDesignParameter.PROPERTY_VALUE_CLASS_NAME)) {
 			jrParameter.setValueClassName((String) value);
 		}
-	}
-
-	@Override
-	public void setValue(Object value) {
-		super.setValue(value);
-		setEditable(false);
 	}
 
 	/**

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.book.editors;
 
 import java.beans.PropertyChangeEvent;
@@ -51,6 +50,7 @@ import com.jaspersoft.studio.book.editparts.BookSectionEditPart;
 import com.jaspersoft.studio.book.model.MBookReport;
 import com.jaspersoft.studio.editor.AGraphicEditor;
 import com.jaspersoft.studio.editor.ZoomActualAction;
+import com.jaspersoft.studio.editor.action.reportsplitting.ReportSplittingAction;
 import com.jaspersoft.studio.editor.gef.parts.JSSGraphicalViewerKeyHandler;
 import com.jaspersoft.studio.editor.gef.parts.MainDesignerRootEditPart;
 import com.jaspersoft.studio.editor.gef.ui.actions.RZoomComboContributionItem;
@@ -286,8 +286,12 @@ public class JRBookDesignEditor extends AGraphicEditor {
 		@SuppressWarnings("unchecked")
 		List<String> selectionActions = getSelectionActions();
 		ActionRegistry registry = getActionRegistry();
+		
+		IAction action = new ReportSplittingAction(this);
+		registry.registerAction(action);
+		selectionActions.add(action.getId());
 
-		IAction action = new CreateNewBookPartAction(this);
+		action = new CreateNewBookPartAction(this);
 		registry.registerAction(action);
 		selectionActions.add(action.getId());
 

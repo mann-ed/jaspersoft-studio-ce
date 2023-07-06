@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.sql.dialogs;
 
 import java.util.ArrayList;
@@ -9,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -104,8 +103,9 @@ public class EditExpressionDialog extends ATitledDialog {
 
 			new Label(c, SWT.NONE).setText(Messages.EditExpressionDialog_5);
 
-			bindingContext.bindValue(SWTObservables.observeSelection(prevoperator),
-					PojoObservables.observeValue(this, "prevcond")); //$NON-NLS-1$
+			bindingContext.bindValue(
+					WidgetProperties.widgetSelection().observe(prevoperator),
+					PojoProperties.value("prevcond").observe(this)); //$NON-NLS-1$
 		} else {
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 5;
@@ -141,8 +141,9 @@ public class EditExpressionDialog extends ATitledDialog {
 		rcmp.setLayoutData(gd);
 
 		showRight();
-		bindingContext.bindValue(SWTObservables.observeSelection(optr),
-				PojoObservables.observeValue(this, "operator")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(optr),
+				PojoProperties.value("operator").observe(this)); //$NON-NLS-1$
 		return cmp;
 	}
 

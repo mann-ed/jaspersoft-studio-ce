@@ -108,6 +108,7 @@ public class ComparisonImpl extends MinimalEObjectImpl.Container implements Comp
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getOperator()
   {
     return operator;
@@ -118,6 +119,7 @@ public class ComparisonImpl extends MinimalEObjectImpl.Container implements Comp
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOperator(String newOperator)
   {
     String oldOperator = operator;
@@ -131,6 +133,7 @@ public class ComparisonImpl extends MinimalEObjectImpl.Container implements Comp
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getSubOperator()
   {
     return subOperator;
@@ -141,6 +144,7 @@ public class ComparisonImpl extends MinimalEObjectImpl.Container implements Comp
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setSubOperator(String newSubOperator)
   {
     String oldSubOperator = subOperator;
@@ -154,6 +158,7 @@ public class ComparisonImpl extends MinimalEObjectImpl.Container implements Comp
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public Operands getOp2()
   {
     return op2;
@@ -181,6 +186,7 @@ public class ComparisonImpl extends MinimalEObjectImpl.Container implements Comp
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setOp2(Operands newOp2)
   {
     if (newOp2 != op2)
@@ -309,7 +315,7 @@ public class ComparisonImpl extends MinimalEObjectImpl.Container implements Comp
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (operator: ");
     result.append(operator);
     result.append(", subOperator: ");

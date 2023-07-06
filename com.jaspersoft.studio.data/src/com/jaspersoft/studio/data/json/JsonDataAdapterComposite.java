@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.json;
 
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -123,15 +122,18 @@ public class JsonDataAdapterComposite extends AFileDataAdapterComposite {
 		JsonDataAdapter xmlDataAdapter = (JsonDataAdapter) dataAdapter;
 
 		doBindFileNameWidget(xmlDataAdapter);
-		bindingContext.bindValue(SWTObservables.observeText(textSelectExpression, SWT.Modify),
-				PojoObservables.observeValue(dataAdapter, "selectExpression")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeText(clang),
-				PojoObservables.observeValue(new Proxy((JsonDataAdapter) dataAdapter), "language"));
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(textSelectExpression),
+				PojoProperties.value("selectExpression").observe(dataAdapter)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text().observe(clang),
+				PojoProperties.value("language").observe(new Proxy((JsonDataAdapter) dataAdapter))); //$NON-NLS-1$
 
 		dnf.bindWidgets(xmlDataAdapter, bindingContext, xmlDataAdapter.getLocale(), xmlDataAdapter.getTimeZone());
 
-		bindingContext.bindValue(SWTObservables.observeSelection(btnRadioButtonCreateDataAdapter),
-				PojoObservables.observeValue(dataAdapter, "useConnection")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(btnRadioButtonCreateDataAdapter),
+				PojoProperties.value("useConnection").observe(dataAdapter)); //$NON-NLS-1$
 
 		if (xmlDataAdapter.isUseConnection()) {
 			useConnection = true;

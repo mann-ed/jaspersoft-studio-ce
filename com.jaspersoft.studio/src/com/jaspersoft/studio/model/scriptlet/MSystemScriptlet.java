@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.scriptlet;
 
 import java.util.ArrayList;
@@ -57,6 +56,7 @@ public class MSystemScriptlet extends APropertyNode {
 	 */
 	public MSystemScriptlet() {
 		super();
+		setEditable(false);
 	}
 
 	/**
@@ -71,6 +71,7 @@ public class MSystemScriptlet extends APropertyNode {
 	 */
 	public MSystemScriptlet(ANode parent, JRScriptlet jfRield, int newIndex) {
 		super(parent, newIndex);
+		setEditable(false);
 		setValue(jfRield);
 	}
 
@@ -159,7 +160,7 @@ public class MSystemScriptlet extends APropertyNode {
 			return jrField.getDescription();
 		return null;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 

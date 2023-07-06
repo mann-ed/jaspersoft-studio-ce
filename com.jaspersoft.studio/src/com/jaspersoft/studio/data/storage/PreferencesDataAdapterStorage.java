@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.storage;
 
 import java.io.File;
@@ -23,11 +22,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.eclipse.util.FileUtils;
-import net.sf.jasperreports.engine.util.JRXmlUtils;
-import net.sf.jasperreports.util.CastorUtil;
-
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
@@ -42,6 +36,13 @@ import com.jaspersoft.studio.data.DataAdapterFactory;
 import com.jaspersoft.studio.data.DataAdapterManager;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.eclipse.util.FileUtils;
+import net.sf.jasperreports.engine.util.JRXmlUtils;
+import net.sf.jasperreports.util.CastorUtil;
+import net.sf.jasperreports.util.JacksonRuntimException;
+import net.sf.jasperreports.util.JacksonUtil;
 
 public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 
@@ -97,7 +98,17 @@ public class PreferencesDataAdapterStorage extends ADataAdapterStorage {
 							inputStream.close();
 
 							inputStream = new FileInputStream(storageElement);
-							dataAdapter = (DataAdapter) CastorUtil.getInstance(jConf).read(inputStream);
+							try
+							{
+								dataAdapter = JacksonUtil.getInstance(jConf).loadXml(inputStream, DataAdapter.class);
+							}
+							catch (JacksonRuntimException e)
+							{
+								// castor fallback; reuse inputStream using similar close/recreate technique as above
+								inputStream.close();
+								inputStream = new FileInputStream(storageElement);
+								dataAdapter = (DataAdapter) CastorUtil.getInstance(jConf).read(inputStream);
+							}
 							dataAdapterDescriptor.setDataAdapter(dataAdapter);
 							// Always add the data adapter read from the file
 							// regardless of the name

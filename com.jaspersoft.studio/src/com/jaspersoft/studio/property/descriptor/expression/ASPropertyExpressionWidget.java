@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.descriptor.expression;
 
 import java.awt.Color;
@@ -59,6 +59,7 @@ import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignField;
 import net.sf.jasperreports.engine.design.JRDesignPropertyExpression;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.ExpressionTypeEnum;
 import net.sf.jasperreports.engine.type.PropertyEvaluationTimeEnum;
 import net.sf.jasperreports.properties.PropertyMetadata;
 
@@ -318,24 +319,29 @@ public class ASPropertyExpressionWidget extends ASPropertyWidget<ExpressionPrope
 					return;
 				}
 			PropertyExpressionDTO dto1 = null;
-			if (element instanceof DatasetPropertyExpressionsDTO)
+			if (element instanceof DatasetPropertyExpressionsDTO) {
 				if (value instanceof PropertyExpressionDTO) {
 					PropertyExpressionDTO pedto = (PropertyExpressionDTO) value;
 					dto1 = new DatasetPropertyExpressionDTO(pedto.isExpression(), propertyName,
-							pedto.isExpression() ? pedto.getValueAsExpression().toString() : pedto.getValue(),
+							pedto.isExpression() ? pedto.getValueAsExpression().toString() : pedto.getValue(), pedto.isSimpleText(),
 							PropertyEvaluationTimeEnum.LATE);
-				} else
-					dto1 = new DatasetPropertyExpressionDTO(value instanceof JRDesignExpression, propertyName,
-							value instanceof JRDesignExpression ? ((JRDesignExpression) value).getText()
-									: value.toString(),
-							PropertyEvaluationTimeEnum.LATE);
+				} else {
+					boolean isExpr = value instanceof JRDesignExpression;
+					String pValue = isExpr ? ((JRDesignExpression)value).getText() : value.toString();
+					boolean isSimpleText = isExpr ? ExpressionTypeEnum.SIMPLE_TEXT == ((JRDesignExpression)value).getType() : false;
+					dto1 = new DatasetPropertyExpressionDTO(isExpr, propertyName, pValue, isSimpleText, PropertyEvaluationTimeEnum.LATE);
+				}
+			}
 			else {
-				if (value instanceof PropertyExpressionDTO)
+				if (value instanceof PropertyExpressionDTO) {
 					dto1 = (PropertyExpressionDTO) value;
-				else
-					dto1 = new PropertyExpressionDTO(value instanceof JRDesignExpression, propertyName,
-							value instanceof JRDesignExpression ? ((JRDesignExpression) value).getText()
-									: value.toString());
+				}
+				else {
+					boolean isExpr = value instanceof JRDesignExpression;
+					String pValue = isExpr ? ((JRDesignExpression)value).getText() : value.toString();
+					boolean isSimpleText = isExpr ? ExpressionTypeEnum.SIMPLE_TEXT == ((JRDesignExpression)value).getType() : false;
+					dto1 = new PropertyExpressionDTO(isExpr, propertyName, pValue, isSimpleText);
+				}
 			}
 			((PropertyExpressionsDTO) element).getProperties().add(dto1);
 		} else if (element instanceof JRPropertiesMap) {
@@ -350,35 +356,41 @@ public class ASPropertyExpressionWidget extends ASPropertyWidget<ExpressionPrope
 		if (element instanceof JRPropertiesHolder) {
 			JRPropertiesHolder field = (JRPropertiesHolder) element;
 			boolean isExpression = false;
+			boolean isSimpleText = false;
 			String value = field.getPropertiesMap().getProperty(propertyName);
 			if (isPropertyExpressions(element)) {
 				JRPropertyExpression[] pexps = getPropertyExpressions(element);
-				if (pexps != null)
-					for (JRPropertyExpression pe : pexps)
+				if (pexps != null) {
+					for (JRPropertyExpression pe : pexps) {
 						if (pe.getName().equals(propertyName) && pe.getValueExpression() != null) {
 							isExpression = true;
 							value = pe.getValueExpression().getText();
+							isSimpleText = ExpressionTypeEnum.SIMPLE_TEXT == pe.getValueExpression().getType();
 							if (pe instanceof DatasetPropertyExpression) {
-								dto = new DatasetPropertyExpressionDTO(isExpression, propertyName, value,
+								dto = new DatasetPropertyExpressionDTO(
+										isExpression, propertyName, value, isSimpleText,
 										((DatasetPropertyExpression) pe).getEvaluationTime());
 								return dto;
 							}
 						}
+					}
+				}
 			}
-			return new PropertyExpressionDTO(isExpression, propertyName, value);
+			return new PropertyExpressionDTO(isExpression, propertyName, value, isSimpleText);
 		} else if (element instanceof PropertyExpressionsDTO) {
 			PropertyExpressionsDTO d = (PropertyExpressionsDTO) element;
-			for (PropertyExpressionDTO pe : d.getProperties())
+			for (PropertyExpressionDTO pe : d.getProperties()) {
 				if (pe.getName().equals(propertyName)) {
 					dto = pe;
 					return dto;
 				}
+			}
 		} else if (element instanceof JRPropertiesMap) {
 			JRPropertiesMap field = (JRPropertiesMap) element;
 			String value = field.getProperty(propertyName);
-			return new PropertyExpressionDTO(false, propertyName, value);
+			return new PropertyExpressionDTO(false, propertyName, value, false);
 		}
-		dto = new PropertyExpressionDTO(false, propertyName, "");
+		dto = new PropertyExpressionDTO(false, propertyName, "", false);
 		return dto;
 	}
 

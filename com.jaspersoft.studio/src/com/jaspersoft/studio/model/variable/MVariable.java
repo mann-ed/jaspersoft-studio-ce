@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.variable;
 
 import java.util.ArrayList;
@@ -74,6 +73,7 @@ public class MVariable extends MVariableSystem implements ICopyable {
 	 */
 	public MVariable() {
 		super();
+		setEditable(true);
 	}
 
 	@Override
@@ -93,6 +93,7 @@ public class MVariable extends MVariableSystem implements ICopyable {
 	 */
 	public MVariable(ANode parent, JRDesignVariable jrVariable, int newIndex) {
 		super(parent, jrVariable, newIndex);
+		setEditable(true);
 	}
 
 	@Override
@@ -359,12 +360,6 @@ public class MVariable extends MVariableSystem implements ICopyable {
 			return getExpressionContext();
 		}
 		return super.getAdapter(adapter);
-	}
-
-	@Override
-	public void setValue(Object value) {
-		super.setValue(value);
-		setEditable(true);
 	}
 
 	@Override

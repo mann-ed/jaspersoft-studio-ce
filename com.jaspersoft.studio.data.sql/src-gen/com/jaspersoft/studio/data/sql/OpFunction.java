@@ -28,10 +28,6 @@ public interface OpFunction extends EObject
   /**
    * Returns the value of the '<em><b>Fname</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fname</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fname</em>' attribute.
    * @see #setFname(String)
@@ -54,10 +50,6 @@ public interface OpFunction extends EObject
   /**
    * Returns the value of the '<em><b>Star</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Star</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Star</em>' attribute.
    * @see #setStar(String)
@@ -80,10 +72,6 @@ public interface OpFunction extends EObject
   /**
    * Returns the value of the '<em><b>Args</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Args</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Args</em>' containment reference.
    * @see #setArgs(OpFunctionArg)
@@ -106,10 +94,6 @@ public interface OpFunction extends EObject
   /**
    * Returns the value of the '<em><b>Fan</b></em>' containment reference.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Fan</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Fan</em>' containment reference.
    * @see #setFan(FunctionAnalytical)

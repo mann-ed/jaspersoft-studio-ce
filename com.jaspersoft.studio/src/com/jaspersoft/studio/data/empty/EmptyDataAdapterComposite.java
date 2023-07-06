@@ -1,14 +1,10 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.empty;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,6 +15,9 @@ import org.eclipse.swt.widgets.Spinner;
 import com.jaspersoft.studio.data.ADataAdapterComposite;
 import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.messages.Messages;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class EmptyDataAdapterComposite extends ADataAdapterComposite {
 
@@ -45,8 +44,9 @@ public class EmptyDataAdapterComposite extends ADataAdapterComposite {
 
 	@Override
 	protected void bindWidgets(DataAdapter dataAdapter) {
-		bindingContext.bindValue(SWTObservables.observeSelection(spinnerRecords),
-				PojoObservables.observeValue(dataAdapter, "recordCount")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(spinnerRecords),
+				PojoProperties.value("recordCount").observe(dataAdapter)); //$NON-NLS-1$
 	}
 
 	public DataAdapterDescriptor getDataAdapter() {

@@ -69,6 +69,7 @@ public class WhenListImpl extends SQLCaseWhensImpl implements WhenList
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public EList<SqlCaseWhen> getEntries()
   {
     if (entries == null)

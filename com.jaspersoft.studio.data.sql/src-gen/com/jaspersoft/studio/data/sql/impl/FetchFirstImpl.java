@@ -87,6 +87,7 @@ public class FetchFirstImpl extends MinimalEObjectImpl.Container implements Fetc
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public UnsignedValue getFetchFirst()
   {
     return fetchFirst;
@@ -114,6 +115,7 @@ public class FetchFirstImpl extends MinimalEObjectImpl.Container implements Fetc
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setFetchFirst(UnsignedValue newFetchFirst)
   {
     if (newFetchFirst != fetchFirst)
@@ -135,6 +137,7 @@ public class FetchFirstImpl extends MinimalEObjectImpl.Container implements Fetc
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getRow()
   {
     return row;
@@ -145,6 +148,7 @@ public class FetchFirstImpl extends MinimalEObjectImpl.Container implements Fetc
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setRow(String newRow)
   {
     String oldRow = row;
@@ -255,7 +259,7 @@ public class FetchFirstImpl extends MinimalEObjectImpl.Container implements Fetc
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (row: ");
     result.append(row);
     result.append(')');

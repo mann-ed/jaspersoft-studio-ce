@@ -338,18 +338,18 @@
    </context>
    <context id="issue_detail" title="Feedback details">
       <description>In this step of the wizard you can provide some details for the bug or feature you want to submit, the title and a description are mandatory. At the end of the procedure you will see you feedback in the bug tracker on the community site of JasperSoft, and you will able to interact with the other users and developers. For this reason you must be a registered user to commit a feedback.</description>
-   	  <topic href="http://community.jaspersoft.com/bug-tracker?field_bug_project_target_id=496" label="Bug Tracker" />
-   	  <topic href="http://community.jaspersoft.com/modal_forms/nojs/login" label="Register User page" />
+   	  <topic href="https://community.jaspersoft.com/bug-tracker?field_bug_project_target_id=496" label="Bug Tracker" />
+   	  <topic href="https://community.jaspersoft.com/modal_forms/nojs/login" label="Register User page" />
    </context>
    <context id="issue_attachments" title="Feedback attachments">
       <description>If you are submitting an issue you can also attach to the feedback some standard files like the eclipse log, a summary of your hardware configuration or choose manually the file to upload.</description>
-   	  <topic href="http://community.jaspersoft.com/bug-tracker?field_bug_project_target_id=496" label="Bug Tracker" />
-   	  <topic href="http://community.jaspersoft.com/modal_forms/nojs/login" label="Register User page" />
+   	  <topic href="https://community.jaspersoft.com/bug-tracker?field_bug_project_target_id=496" label="Bug Tracker" />
+   	  <topic href="https://community.jaspersoft.com/modal_forms/nojs/login" label="Register User page" />
    </context>
    <context id="issue_login" title="Provide your login informations">
       <description>To complete the feedback procedure you must provide a valid username and password to access to community.jaspersoft.com, the official community site of JasperSoft . If you haven't an account you can register just now, it is free and with an account you can interact with the other users and developers by JasperSoft, post your own tutorials or questions, and many other things.</description>
-   	  <topic href="http://community.jaspersoft.com/bug-tracker?field_bug_project_target_id=496" label="Bug Tracker" />
-   	  <topic href="http://community.jaspersoft.com/modal_forms/nojs/login" label="Register User page" />
+   	  <topic href="https://community.jaspersoft.com/bug-tracker?field_bug_project_target_id=496" label="Bug Tracker" />
+   	  <topic href="https://community.jaspersoft.com/modal_forms/nojs/login" label="Register User page" />
    </context>
  	<context id="preferences_properties_tab" title="Manage the properties configuration">
       <description>In this page you can set some properties that will be used to configure JasperReports. To get information on what a property does, select it from the list and press the help key (on linux and windows it is the key F1).</description>
@@ -391,7 +391,7 @@
    </context>
    <context id="editInputControl" title="Edit Input Control">
       <description>Input controls are graphical widgets the server displays with the report. Input controls can be used to Prompt the user for input, validate the format of the input, pass the input to the report.Based on the input, the server modifies the WHERE filter clauses in SQL parametrized queries. Input controls correspond to the parameters defined in JRXML reports, such as $P{name}. The server maps the value that the user enters for the input control to the parameter of the same name. If you define an input control in the JasperReport and the server can’t find a parameter by the same name in the JRXML, the input control doesn’t function when the report runs.</description>
-  	  <topic href="http://community.jaspersoft.com/documentation/jasperreports-server-user-guide/adding-input-controls" label="Input Controls in JasperReport Server" />
+  	  <topic href="https://community.jaspersoft.com/documentation/jasperreports-server-user-guide/adding-input-controls" label="Input Controls in JasperReport Server" />
    </context>
    <context id="editGenericFile" title="Edit File Resource">
       <description>In this dialog you can download a file resource or replace the one in the server with another one. Depending on the type of file resource (for example with images) you can also see a preview of the resource actually on the server.</description>

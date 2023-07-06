@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.parameter;
 
 import java.util.EnumSet;
@@ -72,6 +72,7 @@ public class MParameter extends MParameterSystem implements ICopyable {
 	 */
 	public MParameter() {
 		super();
+		setEditable(true);
 	}
 
 	/**
@@ -86,6 +87,7 @@ public class MParameter extends MParameterSystem implements ICopyable {
 	 */
 	public MParameter(ANode parent, JRDesignParameter jrParameter, int newIndex) {
 		super(parent, jrParameter, newIndex);
+		setEditable(true);
 	}
 
 	@Override
@@ -276,12 +278,6 @@ public class MParameter extends MParameterSystem implements ICopyable {
 		if (dataSet != null && conf != null)
 			return new ExpressionContext(dataSet, conf);
 		return null;
-	}
-
-	@Override
-	public void setValue(Object value) {
-		super.setValue(value);
-		setEditable(true);
 	}
 
 	@Override

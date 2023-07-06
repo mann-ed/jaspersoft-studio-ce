@@ -1,7 +1,10 @@
+/*******************************************************************************
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.context;
 
-import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -19,6 +21,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -31,25 +35,30 @@ import org.eclipse.swt.widgets.ToolItem;
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
 import com.jaspersoft.studio.editor.AbstractJRXMLEditor;
 import com.jaspersoft.studio.messages.Messages;
-import com.jaspersoft.studio.utils.Colors;
-import com.jaspersoft.studio.utils.UIUtil;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.KeyValue;
 import net.sf.jasperreports.eclipse.util.Misc;
+import net.sf.jasperreports.eclipse.viewer.BrowserUtils;
 
 public class EditorContextUtil {
 
+	public static QualifiedName EC_KEY = 
+			new QualifiedName(JaspersoftStudioPlugin.getUniqueIdentifier(),	AEditorContext.EDITOR_CONTEXT);
+	private static final boolean EDGE_PROBLEM_FOUND = UIUtils.isWindows() && !BrowserUtils.isEdgeWebViewEnabled();
+	public static boolean ENABLEMENU = false;
 	private static List<ContextSwitchAction> actions = new ArrayList<>();
 	private static Map<AbstractJRXMLEditor, Label> labels = new HashMap<>();
 
-	public static void fireContextChanged(IResource r) {
-		if (ENABLEMENU)
-			for (ContextSwitchAction csa : actions)
+	public static void fireContextChanged(IResource r, String state) {
+		if (ENABLEMENU) {
+			for (ContextSwitchAction csa : actions) {
 				csa.refresh(r);
-		else
+			}
+		}
+		else {
 			for (AbstractJRXMLEditor editor : labels.keySet()) {
 				JasperReportsConfiguration jConf = editor.getJrContext();
 				AEditorContext old = jConf.getEditorContext();
@@ -64,14 +73,16 @@ public class EditorContextUtil {
 				if (lbl.isDisposed())
 					continue;
 				lbl.setText(editor.getJrContext().getEditorContext().getName());
-				lbl.pack();
-				lbl.getParent().update();
-				lbl.getParent().layout(true);
+				lbl.getParent().pack();
+				lbl.getParent().getParent().update();
+				lbl.getParent().getParent().layout(true);
 			}
+		}
+		Collection<IResourceContextSwitchUtil> allUtils = JaspersoftStudioPlugin.getExtensionManager().getAllEditorContextUtils();
+		for(IResourceContextSwitchUtil u : allUtils) {
+			u.essentialOperations(r, state);
+		}
 	}
-
-	public static QualifiedName EC_KEY = new QualifiedName(JaspersoftStudioPlugin.getUniqueIdentifier(),
-			AEditorContext.EDITOR_CONTEXT);
 
 	public static AEditorContext getEditorContext(IFile f, JasperReportsConfiguration jConf) {
 		String ctx = null;
@@ -110,8 +121,6 @@ public class EditorContextUtil {
 		return Misc.nvl(ctx, AEditorContext.NAME);
 	}
 
-	public static boolean ENABLEMENU = false;
-
 	public static Control createSwitch(Composite cmp, AbstractJRXMLEditor editor) {
 		if (ENABLEMENU) {
 			ToolBar toolBar = new ToolBar(cmp, SWT.FLAT);
@@ -123,12 +132,39 @@ public class EditorContextUtil {
 			toolBar.pack();
 			return toolBar;
 		}
-		Label lbl = new Label(cmp, SWT.NONE);
-		if (editor.getJrContext() != null)
-			lbl.setText(editor.getJrContext().getEditorContext().getName());
-		labels.put(editor, lbl);
-		lbl.addDisposeListener(e -> labels.remove(editor));
-		return lbl;
+		
+		int numColumns = 1;
+		if(EDGE_PROBLEM_FOUND) {
+			numColumns = 3;
+		}
+		
+		Composite container = new Composite(cmp,SWT.NONE);
+		GridLayout containerGL = new GridLayout(numColumns,false);
+		container.setLayout(containerGL);
+		container.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
+		
+		if(EDGE_PROBLEM_FOUND) {
+			Label warningLbl = new Label(container, SWT.NONE);
+			GridData warningLblGD = new GridData(SWT.FILL,SWT.CENTER,true,false);
+			warningLbl.setText(Messages.EditorContextUtil_EdgeWarningMsg);
+			warningLbl.setForeground(UIUtils.getDisplay().getSystemColor(SWT.COLOR_RED));
+			warningLbl.setLayoutData(warningLblGD);
+			
+			Label separator = new Label(container,SWT.SEPARATOR | SWT.VERTICAL);
+			GridData sepGD = new GridData(SWT.FILL,SWT.FILL,true,false);
+			sepGD.heightHint = 20;
+			separator.setLayoutData(sepGD);
+		}
+
+		Label contextNameLbl = new Label(container, SWT.NONE);
+		if (editor.getJrContext() != null) {
+			GridData contextNameLblGD = new GridData(SWT.FILL,SWT.CENTER,true,false);
+			contextNameLbl.setLayoutData(contextNameLblGD);
+			contextNameLbl.setText(editor.getJrContext().getEditorContext().getName());
+		}
+		labels.put(editor, contextNameLbl);
+		contextNameLbl.addDisposeListener(e -> labels.remove(editor));
+		return container;
 	}
 
 	public static class ContextSwitchAction extends Action implements IMenuCreator {
@@ -261,15 +297,15 @@ public class EditorContextUtil {
 			return null;
 		}
 
-		public void refresh(IResource r) {
+		public void refresh(IResource resource) {
 			JasperReportsConfiguration jConf = editor.getJrContext();
 			AEditorContext old = jConf.getEditorContext();
 			IFile f = (IFile) jConf.get(FileUtils.KEY_FILE);
 			AEditorContext ec = getEditorContext(f, jConf);
-			if (old.getClass().equals(ec.getClass()))
+			if (old.getClass().equals(ec.getClass())) {
 				return;
-			editor.changeContext(ec.getId(), !r.equals(f));
-
+			}
+			editor.changeContext(ec.getId(), !resource.equals(f));
 			setToolBarText(jConf.getEditorContext().getName());
 		}
 	}

@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.wizard.resource.page.olap;
 
 import java.util.List;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -91,23 +90,33 @@ public class OLAPXmlaPageContent extends APageContent {
 		List<ResourceProperty> props = res.getValue().getProperties();
 		ResourceProperty resprop = ResourceDescriptorUtil.getProperty(MROlapXmlaConnection.PROP_XMLA_URI, props);
 
-		bindingContext.bindValue(SWTObservables.observeText(turi, SWT.Modify), PojoObservables.observeValue(resprop, "value")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(turi),
+				PojoProperties.value("value").observe(resprop)); //$NON-NLS-1$
 
 		resprop = ResourceDescriptorUtil.getProperty(MROlapXmlaConnection.PROP_XMLA_CATALOG, props);
 
-		bindingContext.bindValue(SWTObservables.observeText(tcatalog, SWT.Modify), PojoObservables.observeValue(resprop, "value")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tcatalog),
+				PojoProperties.value("value").observe(resprop)); //$NON-NLS-1$
 
 		resprop = ResourceDescriptorUtil.getProperty(MROlapXmlaConnection.PROP_XMLA_DATASOURCE, props);
 
-		bindingContext.bindValue(SWTObservables.observeText(tdatasource, SWT.Modify), PojoObservables.observeValue(resprop, "value")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tdatasource),
+				PojoProperties.value("value").observe(resprop)); //$NON-NLS-1$
 
 		resprop = ResourceDescriptorUtil.getProperty(MROlapXmlaConnection.PROP_XMLA_USERNAME, props);
 
-		bindingContext.bindValue(SWTObservables.observeText(tuser, SWT.Modify), PojoObservables.observeValue(resprop, "value")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tuser),
+				PojoProperties.value("value").observe(resprop)); //$NON-NLS-1$
 
 		resprop = ResourceDescriptorUtil.getProperty(MROlapXmlaConnection.PROP_XMLA_PASSWORD, props);
 
-		bindingContext.bindValue(SWTObservables.observeText(tpass, SWT.Modify), PojoObservables.observeValue(resprop, "value")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tpass),
+				PojoProperties.value("value").observe(resprop)); //$NON-NLS-1$
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.rcp.intro;
 
 import org.eclipse.core.runtime.IProduct;
@@ -41,7 +40,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setInitialSize(new Point(1024, 768));
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(true);
-		configurer.setShowFastViewBars(true);
 		configurer.setShowMenuBar(true);
 		configurer.setShowProgressIndicator(true);
 		configurer.setShowPerspectiveBar(true);

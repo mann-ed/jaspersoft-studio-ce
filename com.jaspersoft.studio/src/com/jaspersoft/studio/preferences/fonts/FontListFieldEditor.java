@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.preferences.fonts;
 
 import java.io.ByteArrayInputStream;
@@ -516,7 +515,7 @@ public class FontListFieldEditor extends TreeFieldEditor {
 
 	protected void addURLPressed() {
 		FontURLWizard wiz = new FontURLWizard(new ArrayList<>(fontFamilies.getFontFamilies()));
-		WizardDialog d = new WizardDialog(UIUtils.getShell(), wiz);
+		WizardDialog d = new WizardDialog(UIUtils.getShellForWizardDialog(), wiz);
 		d.setPageSize(800, 50);
 		if (d.open() == Dialog.OK) {
 			if (fontFamilies == null) {
@@ -532,7 +531,7 @@ public class FontListFieldEditor extends TreeFieldEditor {
 
 	protected void addPathPressed() {
 		FontPathWizard wiz = new FontPathWizard(new ArrayList<FontFamily>(fontFamilies.getFontFamilies()));
-		WizardDialog d = new WizardDialog(UIUtils.getShell(), wiz);
+		WizardDialog d = new WizardDialog(UIUtils.getShellForWizardDialog(), wiz);
 		d.setPageSize(800, 50);
 		if (d.open() == Dialog.OK) {
 			if (fontFamilies == null) {

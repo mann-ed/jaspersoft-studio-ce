@@ -66,6 +66,7 @@ public class JoinConditionImpl extends MinimalEObjectImpl.Container implements J
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public UsingCols getUseCols()
   {
     return useCols;
@@ -93,6 +94,7 @@ public class JoinConditionImpl extends MinimalEObjectImpl.Container implements J
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setUseCols(UsingCols newUseCols)
   {
     if (newUseCols != useCols)

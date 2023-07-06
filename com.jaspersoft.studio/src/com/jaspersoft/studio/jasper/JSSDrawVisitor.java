@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.jasper;
 
 import java.awt.Graphics2D;
@@ -50,7 +49,7 @@ public class JSSDrawVisitor extends UniformElementVisitor {
 		
 		//BUild the render cache
 		JSSRenderersCache renderCache = new JSSRenderersCache(jasperReportsContext);
-		this.drawVisitor = new PrintDrawVisitor(jasperReportsContext, renderCache, minPrintJobSize, ignoreFont);
+		this.drawVisitor = new PrintDrawVisitor(jasperReportsContext, renderCache, minPrintJobSize, ignoreFont, true, false);
 		this.grx = grx;
 		setGraphics2D(grx);
 		this.drawVisitor.setClip(true);
@@ -62,7 +61,7 @@ public class JSSDrawVisitor extends UniformElementVisitor {
 	 */
 	public void refreshFontsCache(){
 		JasperReportsContext jasperReportsContext = reportConverter.getJasperReportsContext();
-		AwtTextRenderer textRenderer = new AwtTextRenderer(jasperReportsContext, minPrintJobSize, ignoreFont);
+		AwtTextRenderer textRenderer = new AwtTextRenderer(jasperReportsContext, minPrintJobSize, ignoreFont, true, false);
 		TextDrawer textDrawer = new TextDrawer(jasperReportsContext, textRenderer);
 		drawVisitor.setTextDrawer(textDrawer);
 	}

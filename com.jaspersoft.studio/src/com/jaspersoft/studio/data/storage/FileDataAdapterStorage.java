@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.storage;
 
 import java.io.BufferedInputStream;
@@ -41,6 +40,7 @@ import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.DataAdapterEditorPart;
 import com.jaspersoft.studio.data.DataAdapterFactory;
 import com.jaspersoft.studio.data.DataAdapterManager;
+import com.jaspersoft.studio.data.DataAdapterUtils;
 import com.jaspersoft.studio.data.DefaultDataAdapterDescriptor;
 import com.jaspersoft.studio.data.customadapters.JSSCastorUtil;
 import com.jaspersoft.studio.messages.Messages;
@@ -52,6 +52,8 @@ import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 import net.sf.jasperreports.eclipse.util.CastorHelper;
 import net.sf.jasperreports.eclipse.util.FileUtils;
 import net.sf.jasperreports.eclipse.util.Misc;
+import net.sf.jasperreports.util.JacksonRuntimException;
+import net.sf.jasperreports.util.JacksonUtil;
 
 public class FileDataAdapterStorage extends ADataAdapterStorage {
 
@@ -69,7 +71,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 				IPath fpath = proxy.requestFullPath();
 				if (fpath != null) {
 					String fext = fpath.getFileExtension();
-					if (fext != null && fext.equalsIgnoreCase("xml")) //$NON-NLS-1$
+					if (fext != null && DataAdapterUtils.isSupportedFileExtension(fext)) //$NON-NLS-1$
 						checkFile((IFile) proxy.requestResource());
 				}
 			}
@@ -152,7 +154,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 													return false;
 												}
 												if (res.getType() == IResource.FILE
-														&& "xml".equalsIgnoreCase(res.getFileExtension())) //$NON-NLS-1$
+														&& DataAdapterUtils.isSupportedFileExtension(res.getFileExtension())) //$NON-NLS-1$
 													switch (delta.getKind()) {
 													case IResourceDelta.ADDED:
 														// checkFile((IFile)
@@ -252,7 +254,7 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 				|| !file.exists())
 			return;
 		String ext = file.getFileExtension();
-		if (ext.equalsIgnoreCase("xml")) { //$NON-NLS-1$
+		if (DataAdapterUtils.isSupportedFileExtension(ext)) { //$NON-NLS-1$
 			final DataAdapterDescriptor das = readDataADapter(file.getContents(), file);
 			if (das != null) {
 				das.setName(file.getProjectRelativePath().toOSString());
@@ -355,8 +357,17 @@ public class FileDataAdapterStorage extends ADataAdapterStorage {
 									Messages.DataAdapterManager_nodataadapterfound + className, null));
 			} else {
 				DataAdapterDescriptor dataAdapterDescriptor = factory.createDataAdapter();
-				DataAdapter dataAdapter = dataAdapterDescriptor.getDataAdapter(jrConfig);
-				dataAdapter = (DataAdapter) JSSCastorUtil.getInstance(jrConfig).read(in);
+				DataAdapter dataAdapter = null;
+				try
+				{
+					dataAdapter = JacksonUtil.getInstance(jrConfig).loadXml(in, DataAdapter.class);
+				}
+				catch (JacksonRuntimException e)
+				{
+					// castor fallback; input stream reset is already used prior to this call, so doing the same here
+					in.reset();
+					dataAdapter = (DataAdapter) JSSCastorUtil.getInstance(jrConfig).read(in);
+				}
 				dataAdapterDescriptor.setDataAdapter(dataAdapter);
 				dad = dataAdapterDescriptor;
 			}

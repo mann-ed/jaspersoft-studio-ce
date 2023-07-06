@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.descriptor.propexpr;
 
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import com.jaspersoft.studio.editor.expression.ExpressionContext;
 
 import net.sf.jasperreports.engine.JRPropertiesMap;
 import net.sf.jasperreports.engine.JRPropertyExpression;
+import net.sf.jasperreports.engine.type.ExpressionTypeEnum;
 
 /**
  * Container used to represent all the standard properties and the expression
@@ -42,15 +43,16 @@ public class PropertyExpressionsDTO {
 		this(jrElement, eContext);
 		if (propExpressions != null)
 			for (JRPropertyExpression prop : propExpressions) {
-				PropertyExpressionDTO newProp = new PropertyExpressionDTO(true, prop.getName(),
-						prop.getValueExpression().getText());
+				PropertyExpressionDTO newProp = new PropertyExpressionDTO(
+						true, prop.getName(), prop.getValueExpression().getText(), 
+						ExpressionTypeEnum.SIMPLE_TEXT == prop.getValueExpression().getType());
 				newProp.seteContext(eContext);
 				newProp.setJrElement(jrElement);
 				properties.add(newProp);
 			}
 		if (propMap != null)
 			for (String prop : propMap.getPropertyNames()) {
-				PropertyExpressionDTO newProp = new PropertyExpressionDTO(false, prop, propMap.getProperty(prop));
+				PropertyExpressionDTO newProp = new PropertyExpressionDTO(false, prop, propMap.getProperty(prop),false);
 				newProp.seteContext(eContext);
 				newProp.setJrElement(jrElement);
 				properties.add(newProp);
@@ -157,9 +159,9 @@ public class PropertyExpressionsDTO {
 	 * @return true if a property with the same name\type was not found and the
 	 * new one was inserted, false otherwise
 	 */
-	public boolean addProperty(String name, String value, boolean isExpression) {
+	public boolean addProperty(String name, String value, boolean isExpression, boolean isSimpleText) {
 		if (!hasProperty(name, isExpression)) {
-			PropertyExpressionDTO newProp = new PropertyExpressionDTO(isExpression, name, value);
+			PropertyExpressionDTO newProp = new PropertyExpressionDTO(isExpression, name, value, isSimpleText);
 			newProp.seteContext(eContext);
 			newProp.setJrElement(jrElement);
 			properties.add(newProp);
@@ -180,9 +182,9 @@ public class PropertyExpressionsDTO {
 	 * @return true if a property with the same name\type was not found and the
 	 * new one was inserted, false otherwise
 	 */
-	public boolean addProperty(String name, String value, boolean isExpression, int position) {
+	public boolean addProperty(String name, String value, boolean isExpression, boolean isSimpleText, int position) {
 		if (!hasProperty(name, isExpression)) {
-			PropertyExpressionDTO newProp = new PropertyExpressionDTO(isExpression, name, value);
+			PropertyExpressionDTO newProp = new PropertyExpressionDTO(isExpression, name, value, isSimpleText);
 			newProp.seteContext(eContext);
 			newProp.setJrElement(jrElement);
 			properties.add(position, newProp);
@@ -201,12 +203,15 @@ public class PropertyExpressionsDTO {
 	 * @param isExpression true if the property is an expression property, false
 	 * if it is a standard property
 	 */
-	public void setProperty(String name, String value, boolean isExpression) {
+	public void setProperty(String name, String value, boolean isExpression, boolean isSimpleText) {
 		PropertyExpressionDTO prop = getProperty(name, isExpression);
-		if (prop != null)
+		if (prop != null) {
 			prop.setValue(value);
-		else
-			addProperty(name, value, isExpression);
+			prop.setSimpleText(isSimpleText);
+		}
+		else {
+			addProperty(name, value, isExpression, isSimpleText);
+		}
 	}
 
 	/**
@@ -218,9 +223,11 @@ public class PropertyExpressionsDTO {
 	 * @return the property if it was found, null otherwise
 	 */
 	public PropertyExpressionDTO getProperty(String propertyName, boolean isExpression) {
-		for (PropertyExpressionDTO prop : properties)
-			if (isExpression == prop.isExpression() && propertyName.equals(prop.getName()))
+		for (PropertyExpressionDTO prop : properties) {
+			if (isExpression == prop.isExpression() && propertyName.equals(prop.getName())) {
 				return prop;
+			}
+		}
 		return null;
 	}
 
@@ -232,8 +239,9 @@ public class PropertyExpressionsDTO {
 	@Override
 	public PropertyExpressionsDTO clone() {
 		PropertyExpressionsDTO copy = new PropertyExpressionsDTO(getJrElement(), geteContext());
-		for (PropertyExpressionDTO prop : getProperties())
-			copy.addProperty(prop.getName(), prop.getValue(), prop.isExpression());
+		for (PropertyExpressionDTO prop : getProperties()) {
+			copy.addProperty(prop.getName(), prop.getValue(), prop.isExpression(), prop.isSimpleText());
+		}
 		return copy;
 	}
 }

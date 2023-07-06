@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.utils;
 
 import java.io.IOException;
@@ -19,10 +18,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.jaspersoft.studio.JaspersoftStudioPlugin;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 /*
  * /* The Class Colors.
@@ -246,7 +246,7 @@ public class Colors {
 			}
 		}
 
-		Image image = new Image(Display.getCurrent(), data);
+		Image image = new Image(UIUtils.getDisplay(), data);
 		return image;
 	}
 

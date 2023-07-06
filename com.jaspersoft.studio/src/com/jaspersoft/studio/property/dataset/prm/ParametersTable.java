@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.dataset.prm;
 
 import java.beans.PropertyChangeListener;
@@ -349,7 +349,7 @@ public class ParametersTable extends AbstractModifyTable {
 			protected Object getValue(Object element) {
 				if (element instanceof Object[]) {
 					Object[] row = (Object[]) element;
-					return new PropertyExpressionDTO(false, (String) row[0], (String) row[1]);
+					return new PropertyExpressionDTO(false, (String) row[0], (String) row[1], false);
 				}
 				return null;
 			}
@@ -487,7 +487,7 @@ public class ParametersTable extends AbstractModifyTable {
 					}
 				} else if (obj instanceof Object[]) {
 					Object[] row = (Object[]) obj;
-					PropertyExpressionDTO v = new PropertyExpressionDTO(false, (String) row[0], (String) row[1]);
+					PropertyExpressionDTO v = new PropertyExpressionDTO(false, (String) row[0], (String) row[1], false);
 					JRDesignParameter pold = (JRDesignParameter) row[2];
 					JRDesignParameter pclone = (JRDesignParameter) pold.clone();
 					if (PropertyDialogHelper.showPropertyDialog(v, pclone, mdataset.getJasperConfiguration())) {

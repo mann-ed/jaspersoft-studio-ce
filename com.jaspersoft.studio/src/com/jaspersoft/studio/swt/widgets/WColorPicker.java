@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.swt.widgets;
 
 import java.util.ArrayList;
@@ -12,6 +11,8 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -77,6 +78,20 @@ public class WColorPicker extends Composite {
 		}
 	};
 	
+	private DisposeListener disposeListener = new DisposeListener() {
+		@Override
+		public void widgetDisposed(DisposeEvent e) {
+			if(previewImg!=null) {
+				previewImg.dispose();
+				previewImg=null;
+			}
+			if(disabledPreviewImg!=null) {
+				disabledPreviewImg.dispose();
+				disabledPreviewImg=null;
+			}
+		}
+	};
+	
 	/**
 	 * Enumeration used as a result of the validation, valid it means the inserted text is 
 	 * a valid hex color, not valid means that the inserted value is not the hex of a color
@@ -114,6 +129,9 @@ public class WColorPicker extends Composite {
 	/** Flag to specify if the support for the HTML color names is activated */
 	private boolean htmlColorNamesSupported = false;
 
+	private Image previewImg;
+	private Image disabledPreviewImg;
+
 	public WColorPicker(AlfaRGB preselectedRGB, Composite parent) {
 		this(preselectedRGB, parent, SWT.NONE);
 	}
@@ -122,6 +140,7 @@ public class WColorPicker extends Composite {
 		super(parent, style);
 		this.selectedRGB = preselectedRGB;
 		this.colorSelectionListeners = new ArrayList<ColorSelectionListener>();
+		this.addDisposeListener(disposeListener);
 		createControl(parent);
 	}
 
@@ -142,7 +161,8 @@ public class WColorPicker extends Composite {
 		imgColorPreview = new CLabel(this, SWT.NONE);
 		GridData gridData1 = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		imgColorPreview.setLayoutData(gridData1);
-		imgColorPreview.setImage(Colors.getSWTColorPreview(Colors.getAWT4SWTRGBColor(selectedRGB), 16, 16));
+		previewImg = Colors.getSWTColorPreview(Colors.getAWT4SWTRGBColor(selectedRGB), 16, 16);
+		imgColorPreview.setImage(previewImg);
 
 		textColorValue = new Text(this, SWT.BORDER | SWT.BORDER_SOLID);
 		GC tmpGC = new GC(textColorValue);
@@ -383,18 +403,23 @@ public class WColorPicker extends Composite {
 	 * Internally updates the color preview image.
 	 */
 	private void updatePreviewImage(boolean enabled) {
-		// Remember to dispose the old image no longer needed in order to release system resources
-		Image oldImage = imgColorPreview.getImage();
-		if (oldImage != null) {
-			oldImage.dispose();
+		if(previewImg!=null) {
+			previewImg.dispose();
+			previewImg=null;
 		}
-		Image newImage = Colors.getSWTColorPreview(Colors.getAWT4SWTRGBColor(selectedRGB), 16, 16);
+		previewImg = Colors.getSWTColorPreview(Colors.getAWT4SWTRGBColor(selectedRGB), 16, 16);
 		if (enabled) {
-			imgColorPreview.setImage(newImage);
+			imgColorPreview.setImage(previewImg);
 		} else {
-			Image disabledImg = new Image(getDisplay(), newImage, SWT.IMAGE_DISABLE);
-			imgColorPreview.setImage(disabledImg);
-			newImage.dispose();
+			if(disabledPreviewImg!=null) {
+				disabledPreviewImg.dispose();
+				disabledPreviewImg=null;
+			}
+			disabledPreviewImg = new Image(getDisplay(), previewImg, SWT.IMAGE_DISABLE);
+			imgColorPreview.setImage(disabledPreviewImg);
+			previewImg.dispose();
+			previewImg=null;
 		}
 	}
+	
 }

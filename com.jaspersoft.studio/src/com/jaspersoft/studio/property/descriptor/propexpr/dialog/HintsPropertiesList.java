@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.property.descriptor.propexpr.dialog;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.design.JRDesignDataset;
+import net.sf.jasperreports.engine.design.JRDesignScriptlet;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.properties.PropertiesMetadataUtil;
@@ -69,20 +70,30 @@ public class HintsPropertiesList {
 		ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
 		try {
 			Thread.currentThread().setContextClassLoader(JRLoader.class.getClassLoader());
-			if (holder instanceof JasperDesign)
+			if (holder instanceof JasperDesign) {
 				getReportProperties((JasperDesign) holder, jrContext, result, pmu);
-			else if (holder instanceof JRDesignDataset)
+			}
+			else if (holder instanceof JRDesignDataset) {
 				getDatasetProperties((JRDesignDataset) holder, jrContext, result, pmu);
-			else if (holder instanceof JRElement)
+			}
+			else if (holder instanceof JRElement) {
 				getElementProperties((JRElement) holder, result, pmu);
-			else if (holder instanceof JRElementGroup)
+			}
+			else if (holder instanceof JRElementGroup) {
 				getElementGroupProperties((JRElementGroup) holder, result, pmu);
-			else if (holder instanceof JRField)
+			}
+			else if (holder instanceof JRField) {
 				getFieldProperties(jrContext, result, pmu);
-			else if (holder instanceof JRParameter)
+			}
+			else if (holder instanceof JRParameter) {
 				getParameterProperties(jrContext, result);
-			else
+			}
+			else if (holder instanceof JRDesignScriptlet) {
+				getScriptletProperties((JRDesignScriptlet)holder,result,pmu);
+			}
+			else {
 				getContextProperties(result, pmu);
+			}
 		} catch (JRException e) {
 			e.printStackTrace();
 		} finally {
@@ -97,6 +108,11 @@ public class HintsPropertiesList {
 			r.add(p);
 		}
 		return r;
+	}
+	
+	private static void getScriptletProperties(JRDesignScriptlet holder, List<PropertyMetadata> result, PropertiesMetadataUtil pmu) throws JRException {
+		result.addAll(PropertyMetadataRegistry.getPropertiesMetadata(PropertyScope.SCRIPTLET));
+		result.addAll(pmu.getScriptletProperties(holder.getValueClassName()));
 	}
 
 	private static void getContextProperties(List<PropertyMetadata> result, PropertiesMetadataUtil pmu) {

@@ -24,10 +24,6 @@ public interface RowValue extends RowValues
   /**
    * Returns the value of the '<em><b>Null</b></em>' attribute.
    * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Null</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Null</em>' attribute.
    * @see #setNull(String)

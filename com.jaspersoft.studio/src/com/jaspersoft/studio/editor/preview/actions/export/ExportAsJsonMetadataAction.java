@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.preview.actions.export;
 
 import java.io.File;
@@ -12,6 +11,7 @@ import net.sf.jasperreports.engine.export.JsonMetadataExporter;
 import net.sf.jasperreports.export.SimpleJsonMetadataReportConfiguration;
 import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 
+import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
 public class ExportAsJsonMetadataAction extends AExportAction {
@@ -20,11 +20,11 @@ public class ExportAsJsonMetadataAction extends AExportAction {
 			ExportMenuAction parentMenu) {
 		super(viewer, jContext, parentMenu);
 
-		setText("Export As JSON Metadata");
-		setToolTipText("Export as JSON metadata");
+		setText(Messages.ExportAsJsonMetadataAction_Text);
+		setToolTipText(Messages.ExportAsJsonMetadataAction_Tooltip);
 
 		setFileExtensions(new String[] { "*.json" }); //$NON-NLS-1$
-		setFilterNames(new String[] { "JSON (*.json)" });
+		setFilterNames(new String[] { Messages.ExportAsJsonMetadataAction_FilterNameJSON });
 		setDefaultFileExtension("json"); //$NON-NLS-1$
 	}
 

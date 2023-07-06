@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.preview.element;
 
 import java.io.File;
@@ -173,14 +173,18 @@ public class ElementPreviewer {
 
 		// create a temp dir and a temp file for html
 		File destDir = FileUtils.createTempDir();
-		final String dest = new File(destDir, "index.html").getAbsolutePath();
+		String dest = new File(destDir, "index.html").getAbsolutePath();
 		JasperExportManager.getInstance(jConf).exportToHtmlFile(jrPrint, dest);
 		System.out.println(dest);
 		UIUtils.getDisplay().asyncExec(() -> {
 			if (browser.isDisposed())
 				return;
 			browser.setToolTipText(dest);
-			browser.setUrl(dest);
+			String url = dest;
+			if(UIUtils.isWindows()) {
+				url = "file:///"+ dest.replace("\\", "/");
+			}
+			browser.setUrl(url);
 		});
 		return dest;
 	}

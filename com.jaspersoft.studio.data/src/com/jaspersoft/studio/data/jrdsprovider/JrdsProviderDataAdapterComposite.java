@@ -1,15 +1,10 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.jrdsprovider;
 
-import net.sf.jasperreports.data.DataAdapter;
-import net.sf.jasperreports.data.provider.DataSourceProviderDataAdapter;
-import net.sf.jasperreports.engine.JasperReportsContext;
-
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -21,6 +16,10 @@ import com.jaspersoft.studio.data.DataAdapterDescriptor;
 import com.jaspersoft.studio.data.messages.Messages;
 import com.jaspersoft.studio.swt.widgets.ClassType;
 import com.jaspersoft.studio.swt.widgets.ClasspathComponent;
+
+import net.sf.jasperreports.data.DataAdapter;
+import net.sf.jasperreports.data.provider.DataSourceProviderDataAdapter;
+import net.sf.jasperreports.engine.JasperReportsContext;
 
 public class JrdsProviderDataAdapterComposite extends ADataAdapterComposite {
 
@@ -58,9 +57,9 @@ public class JrdsProviderDataAdapterComposite extends ADataAdapterComposite {
 	protected void bindWidgets(DataAdapter dataAdapter) {
 		DataSourceProviderDataAdapter da = (DataSourceProviderDataAdapter) dataAdapter;
 
-		bindingContext.bindValue(SWTObservables.observeText(
-				factoryText.getControl(), SWT.Modify), PojoObservables
-				.observeValue(dataAdapter, "providerClass")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(factoryText.getControl()),
+				PojoProperties.value("providerClass").observe(dataAdapter)); //$NON-NLS-1$ 
 
 		cpath.setClasspaths(da.getClasspath());
 	}

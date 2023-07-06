@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.scriptlet.command;
 
 import net.sf.jasperreports.engine.JRException;
@@ -25,7 +24,7 @@ import com.jaspersoft.studio.utils.SelectionHelper;
 public class CreateScriptletCommand extends Command {
 
 	/** The jr scriptlet. */
-	private JRDesignScriptlet jrScriptlet;
+	protected JRDesignScriptlet jrScriptlet;
 
 	/** The jr dataset. */
 	private JRDesignDataset jrDataset;

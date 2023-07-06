@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.model.band;
 
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.Map;
 import org.eclipse.babel.editor.util.UIUtils;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 
@@ -301,7 +302,7 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	public Color getForeground() {
 		if (getValue() == null)
 			return UIUtils.getSystemColor(CompatibilityConstants.Colors.COLOR_WIDGET_DISABLED_FOREGROUND);
-		return null;
+		return UIUtils.getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
 	}
 
 	/*
@@ -402,7 +403,8 @@ public class MBand extends APropertyNode implements IGraphicElement, IPastable, 
 	protected Map<String, DefaultValue> createDefaultsMap() {
 		Map<String, DefaultValue> defaultsMap = super.createDefaultsMap();
 		defaultsMap.put(JRDesignBand.PROPERTY_HEIGHT, new DefaultValue(CONST_HEIGHT, false));
-		defaultsMap.put(JRDesignBand.PROPERTY_SPLIT_TYPE, new DefaultValue(null, true));
+		int splitTypeDef = NamedEnumPropertyDescriptor.getIntValue(SplitTypeEnum.PREVENT, NullEnum.NULL,null);
+		defaultsMap.put(JRBaseBand.PROPERTY_splitType, new DefaultValue(splitTypeDef, true));
 		defaultsMap.put(JRDesignBand.PROPERTY_PRINT_WHEN_EXPRESSION, new DefaultValue(null, true));
 		return defaultsMap;
 	}

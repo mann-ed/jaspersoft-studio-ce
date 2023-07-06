@@ -1,17 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.chart.editor.wizard;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-
-import net.sf.jasperreports.chartthemes.simple.XmlChartTheme;
-import net.sf.jasperreports.eclipse.builder.jdt.JDTUtils;
-import net.sf.jasperreports.eclipse.util.FileUtils;
-import net.sf.jasperreports.eclipse.wizard.project.ProjectUtil;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -54,7 +48,13 @@ import org.eclipse.ui.part.FileEditorInput;
 import com.jaspersoft.studio.components.chart.ContextHelpIDs;
 import com.jaspersoft.studio.components.chart.messages.Messages;
 import com.jaspersoft.studio.utils.SelectionHelper;
+import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 import com.jaspersoft.studio.wizards.ContextData;
+
+import net.sf.jasperreports.chartthemes.simple.XmlChartTheme;
+import net.sf.jasperreports.eclipse.builder.jdt.JDTUtils;
+import net.sf.jasperreports.eclipse.util.FileUtils;
+import net.sf.jasperreports.eclipse.wizard.project.ProjectUtil;
 
 /*
  * This is a sample new wizard. Its role is to create a new file resource in the provided container. If the container
@@ -121,7 +121,7 @@ public class ChartThemeNewWizard extends Wizard implements INewWizard {
 			});
 			setHelpData();
 		};
-		
+
 		@Override
 		public void setVisible(boolean visible) {
 			JDTUtils.deactivateLinkedResourcesSupport(visible);
@@ -168,19 +168,19 @@ public class ChartThemeNewWizard extends Wizard implements INewWizard {
 		JDTUtils.restoreLinkedResourcesSupport();
 		return super.performCancel();
 	}
-	
+
 	@Override
 	public boolean canFinish() {
-		if(JDTUtils.isVirtualResource(step1.getContainerFullPath())) {
+		if (JDTUtils.isVirtualResource(step1.getContainerFullPath())) {
 			step1.setErrorMessage(Messages.ChartThemeNewWizard_VirtualFolderError);
 			return false;
 		}
 		return super.canFinish();
 	}
-	
+
 	/**
-	 * This method is called when 'Finish' button is pressed in the wizard. We
-	 * will create an operation and run it using wizard as execution context.
+	 * This method is called when 'Finish' button is pressed in the wizard. We will
+	 * create an operation and run it using wizard as execution context.
 	 */
 	public boolean performFinish() {
 		JDTUtils.restoreLinkedResourcesSupport();
@@ -210,9 +210,8 @@ public class ChartThemeNewWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * The worker method. It will find the container, create the file if missing
-	 * or just replace its contents, and open the editor on the newly created
-	 * file.
+	 * The worker method. It will find the container, create the file if missing or
+	 * just replace its contents, and open the editor on the newly created file.
 	 */
 
 	private void doFinish(String containerName, String fileName, IProgressMonitor monitor) throws CoreException {
@@ -226,7 +225,7 @@ public class ChartThemeNewWizard extends Wizard implements INewWizard {
 		final IFile file = container.getFile(new Path(fileName));
 		InputStream in = null;
 		try {
-			in = openContentStream();
+			in = openContentStream(file);
 			if (file.exists()) {
 				file.setContents(in, true, true, monitor);
 			} else {
@@ -261,8 +260,9 @@ public class ChartThemeNewWizard extends Wizard implements INewWizard {
 	 * We will initialize file contents with a sample text.
 	 */
 
-	private InputStream openContentStream() {
-		String contents = XmlChartTheme.saveSettings(BaseSettingsFactory.createChartThemeSettings());
+	private InputStream openContentStream(IFile file) {
+		String contents = XmlChartTheme.saveSettings(JasperReportsConfiguration.getDefaultJRConfig(file),
+				BaseSettingsFactory.createChartThemeSettings());
 		return new ByteArrayInputStream(contents.getBytes());
 	}
 
@@ -273,8 +273,9 @@ public class ChartThemeNewWizard extends Wizard implements INewWizard {
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		if (selection instanceof StructuredSelection) {
-			if (selection.getFirstElement() instanceof IProject || selection.getFirstElement() instanceof IFile || 
-				selection.getFirstElement() instanceof IFolder  || selection.getFirstElement() instanceof IPackageFragment) {
+			if (selection.getFirstElement() instanceof IProject || selection.getFirstElement() instanceof IFile
+					|| selection.getFirstElement() instanceof IFolder
+					|| selection.getFirstElement() instanceof IPackageFragment) {
 				this.selection = selection;
 				return;
 			}
@@ -282,7 +283,8 @@ public class ChartThemeNewWizard extends Wizard implements INewWizard {
 				if (obj instanceof EditPart) {
 					IEditorInput ein = SelectionHelper.getActiveJRXMLEditor().getEditorInput();
 					if (ein instanceof FileEditorInput) {
-						this.selection = new TreeSelection(new TreePath(new Object[] { ((FileEditorInput) ein).getFile() }));
+						this.selection = new TreeSelection(
+								new TreePath(new Object[] { ((FileEditorInput) ein).getFile() }));
 						return;
 					}
 				}

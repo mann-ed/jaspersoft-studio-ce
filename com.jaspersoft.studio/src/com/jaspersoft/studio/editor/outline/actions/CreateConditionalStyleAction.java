@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.editor.outline.actions;
 
 import java.util.List;
@@ -11,6 +10,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.jaspersoft.studio.editor.palette.JDPaletteCreationFactory;
+import com.jaspersoft.studio.editor.style.StyleEditPart;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.model.style.MConditionalStyle;
 import com.jaspersoft.studio.model.style.MStyle;
@@ -37,6 +37,11 @@ public class CreateConditionalStyleAction extends ACreateAndSelectAction {
 	
 	@Override
 	protected boolean calculateEnabled() {
+		// FIXME - for now disable the ability to create conditional style from JRTXEditor main area
+		List selectedObjects = getSelectedObjects();
+		if(selectedObjects!=null && selectedObjects.size()==1 && selectedObjects.get(0) instanceof StyleEditPart) {
+			return false;
+		}
 		List<Object> elements = editor.getSelectionCache().getSelectionModelForType(MStyle.class);
 		if (elements.size() == 1){
 			MStyle style = (MStyle)elements.get(0);

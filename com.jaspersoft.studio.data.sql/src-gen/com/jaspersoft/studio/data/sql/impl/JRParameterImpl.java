@@ -72,6 +72,7 @@ public class JRParameterImpl extends PrmsImpl implements JRParameter
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String getJrprm()
   {
     return jrprm;
@@ -82,6 +83,7 @@ public class JRParameterImpl extends PrmsImpl implements JRParameter
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setJrprm(String newJrprm)
   {
     String oldJrprm = jrprm;
@@ -166,7 +168,7 @@ public class JRParameterImpl extends PrmsImpl implements JRParameter
   {
     if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
+    StringBuilder result = new StringBuilder(super.toString());
     result.append(" (jrprm: ");
     result.append(jrprm);
     result.append(')');

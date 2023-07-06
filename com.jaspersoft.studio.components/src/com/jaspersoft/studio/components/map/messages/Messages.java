@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.components.map.messages;
 
 import org.eclipse.osgi.util.NLS;
@@ -27,6 +26,30 @@ public class Messages extends NLS {
 	public static String ItemPropertyDialog_PropertyName;
 	public static String ItemPropertyDialog_PropertyValue;
 	public static String ItemPropertyDialog_UseExpression;
+	public static String LegendMapItemDialog_Description;
+	public static String LegendMapItemDialog_PropertyEnabledDesc;
+	public static String LegendMapItemDialog_PropertyEnabledLbl;
+	public static String LegendMapItemDialog_PropertyLabelDefaultValue;
+	public static String LegendMapItemDialog_PropertyLabelDesc;
+	public static String LegendMapItemDialog_PropertyLabelLbl;
+	public static String LegendMapItemDialog_PropertyLegendMaxWidthDesc;
+	public static String LegendMapItemDialog_PropertyLegendMaxWidthFullDesc;
+	public static String LegendMapItemDialog_PropertyLegendMaxWidthFullLbl;
+	public static String LegendMapItemDialog_PropertyLegendMaxWidthLbl;
+	public static String LegendMapItemDialog_PropertyLegendMaxHeightDesc;
+	public static String LegendMapItemDialog_PropertyLegendMaxHeightFullDesc;
+	public static String LegendMapItemDialog_PropertyLegendMaxHeightFullLbl;
+	public static String LegendMapItemDialog_PropertyLegendMaxHeightLbl;
+	public static String LegendMapItemDialog_PropertyOrientationDesc;
+	public static String LegendMapItemDialog_PropertyOrientationLbl;
+	public static String LegendMapItemDialog_PropertyPositionDesc;
+	public static String LegendMapItemDialog_PropertyPositionLbl;
+	public static String LegendMapItemDialog_PropertyUseMarkerIconsDesc;
+	public static String LegendMapItemDialog_PropertyUseMarkerIconsLbl;
+	public static String LegendMapItemDialog_Title;
+	public static String LegendOrResetMapLabelProvider_DefaultLabelTxt;
+	public static String LegendOrResetMapLabelProvider_WarningInvalidLabel;
+	public static String LegendOrResetMapLabelProvider_WarningNotSet;
 	public static String MapAuthenticationSection_ApiKeyText;
 	public static String MapAuthenticationSection_ClientIdText;
 	public static String MapAuthenticationSection_SignatureText;
@@ -156,12 +179,18 @@ public class Messages extends NLS {
 	public static String MMap_languageExpressionTitle;
 	public static String MMap_latitude_description;
 	public static String MMap_latitude;
+	public static String MMap_Legend;
+	public static String MMap_LegendDesc;
 	public static String MMap_longitude;
 	public static String MMap_longitude_description;
 	public static String MMap_MapPaths;
 	public static String MMap_MapPathsDescription;
 	public static String MMap_MapStyles;
 	public static String MMap_MapStylesDescription;
+	public static String MMap_MarkerClustering;
+	public static String MMap_MarkerClusteringDesc;
+	public static String MMap_MarkerSpidering;
+	public static String MMap_MarkerSpideringDesc;
 	public static String MMap_mapScaleDescription;
 	public static String MMap_mapScaleTitle;
 	public static String MMap_mapTypeDescription;
@@ -175,6 +204,8 @@ public class Messages extends NLS {
 	public static String MMap_PathLabel;
 	public static String MMap_PathsStylesCategory;
 	public static String MMap_PathsStylesCategoryDesc;
+	public static String MMap_ResetMap;
+	public static String MMap_ResetMapDesc;
 	public static String MMap_SignatureDescription;
 	public static String MMap_SignatureText;
 	public static String MMap_StyleLabel;
@@ -216,6 +247,20 @@ public class Messages extends NLS {
 	public static String PathPropertyDescriptor_0;
 	public static String PathsLabelProvider_ItemAt;
 	public static String PathsLabelProvider_PathPrefix;
+	public static String ResetMapItemDialog_Description;
+	public static String ResetMapItemDialog_PropertyEnabledDesc;
+	public static String ResetMapItemDialog_PropertyEnabledLbl;
+	public static String ResetMapItemDialog_PropertyLabelDefaultValue;
+	public static String ResetMapItemDialog_PropertyLabelDesc;
+	public static String ResetMapItemDialog_PropertyLabelLbl;
+	public static String ResetMapItemDialog_PropertyPositionDesc;
+	public static String ResetMapItemDialog_PropertyPositionLbl;
+	public static String ResetMapItemDialog_Title;
+	public static String SPLegendMap_DeleteTooltip;
+	public static String SPLegendMap_EditTooltip;
+	public static String SPLegendMap_NotSet;
+	public static String SPLegendMap_RemoveDialogMsg;
+	public static String SPLegendMap_RemoveDialogTitle;
 	public static String SPMapDataElementsList_AddDatasetDialogInfoMsg;
 	public static String SPMapDataElementsList_AddDatasetDialogTitle;
 	public static String SPMapDataElementsList_AddNewDatasetBtnTooltip;
@@ -243,6 +288,11 @@ public class Messages extends NLS {
 	public static String SPMapDataElementsList_RemoveQuestionMsg;
 	public static String SPMapDataElementsList_RemoveQuestionTitle;
 	public static String SPMarker_MarkersListBtn;
+	public static String SPResetMap_ConfirmDeleteMsg;
+	public static String SPResetMap_ConfirmDeleteTitle;
+	public static String SPResetMap_DeleteTooltip;
+	public static String SPResetMap_EditTooltip;
+	public static String SPResetMap_NotSet;
 	public static String StylesLabelProvider_Style;
 	public static String StylesLabelProvider_StyleItem;
 	public static String TMarkerLabelProvider_MissingId;

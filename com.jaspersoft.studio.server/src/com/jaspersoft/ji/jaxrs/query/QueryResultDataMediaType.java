@@ -1,12 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
-/*
- * Copyright (C) 2005 - 2015 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * Licensed under commercial Jaspersoft Subscription License Agreement
- */
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.ji.jaxrs.query;
 
 import javax.ws.rs.core.MediaType;

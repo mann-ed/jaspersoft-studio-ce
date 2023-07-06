@@ -2,24 +2,24 @@
 <feature
       id="com.jaspersoft.studio.supplemental.bundles"
       label="Additional bundles for the Community Edition"
-      version="6.18.1.final"
-      provider-name="Tibco Software Inc.">
+      version="6.20.5.final"
+      provider-name="Cloud Software Group, Inc.">
 
-   <description url="http://community.jaspersoft.com/project/jaspersoft-studio">
+   <description url="https://community.jaspersoft.com/project/jaspersoft-studio">
       Additional bundles for the Community Edition
    </description>
 
    <copyright>
-      Copyright (C) 2010 - 2021. TIBCO Software Inc.
+      Copyright (C) 2010 - 2023. Cloud Software Group, Inc.
    </copyright>
 
    <url>
-      <update label="TIBCO Jaspersoft Studio update site" url="http://jasperstudio.sf.net/updates"/>
-      <discovery label="TIBCO Jaspersoft Studio Community Edition" url="http://community.jaspersoft.com/project/jaspersoft-studio"/>
+      <update label="Jaspersoft Studio update site" url="https://jasperstudio.sf.net/updates"/>
+      <discovery label="Jaspersoft Studio Community Edition" url="https://community.jaspersoft.com/project/jaspersoft-studio"/>
    </url>
 
    <requires>
-      <import plugin="com.jaspersoft.studio" version="6.18.1" match="greaterOrEqual"/>
+      <import plugin="com.jaspersoft.studio" version="6.20.5" match="greaterOrEqual"/>
       <import plugin="org.w3c.css.sac" version="1.3.1" match="greaterOrEqual"/>
    </requires>
 
@@ -27,7 +27,7 @@
          id="com.jaspersoft.studio.svgimporter"
          download-size="0"
          install-size="0"
-         version="6.18.1.final"
+         version="6.20.5.final"
          unpack="false"/>
 
 </feature>

@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.server.protocol.restv2;
 
 import java.io.File;
@@ -40,6 +39,8 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -140,6 +141,11 @@ public class RestV2ConnectionJersey extends ARestV2ConnectionJersey {
 			clientConfig.property(ClientProperties.CHUNKED_ENCODING_SIZE, null);
 		clientConfig.property(ApacheClientProperties.PREEMPTIVE_BASIC_AUTHENTICATION, true);
 
+		// Fix for #JS-60770: problems with AWS and some cookies with Invalid 'expires' attribute
+		RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.STANDARD).build();
+        clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, requestConfig);
+        
 		// config your ssl for apache connector
 		SslConfigurator sslConfig = SslConfigurator.newInstance(true);
 		clientConfig.property(ApacheClientProperties.SSL_CONFIG, sslConfig);

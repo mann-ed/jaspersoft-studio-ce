@@ -65,6 +65,7 @@ public class WindowingClauseOperandPrecedingImpl extends WindowingClauseImpl imp
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public AnalyticExprArg getExpr()
   {
     return expr;
@@ -92,6 +93,7 @@ public class WindowingClauseOperandPrecedingImpl extends WindowingClauseImpl imp
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public void setExpr(AnalyticExprArg newExpr)
   {
     if (newExpr != expr)

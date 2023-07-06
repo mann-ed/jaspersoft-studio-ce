@@ -1,17 +1,13 @@
 /*******************************************************************************
- * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
- * All Rights Reserved. Confidential & Proprietary.
- ******************************************************************************/
+ * Copyright © 2010-2023. Cloud Software Group, Inc. All rights reserved.
+ *******************************************************************************/
 package com.jaspersoft.studio.data.sql.dialogs;
-
-import net.sf.jasperreports.eclipse.ui.ATitledDialog;
-import net.sf.jasperreports.eclipse.ui.validator.ValidatorUtil;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -28,6 +24,9 @@ import com.jaspersoft.studio.data.sql.model.query.select.MSelectColumn;
 import com.jaspersoft.studio.data.sql.text2model.ConvertUtil;
 import com.jaspersoft.studio.data.sql.validator.ColumnAliasStringValidator;
 import com.jaspersoft.studio.utils.UIUtil;
+
+import net.sf.jasperreports.eclipse.ui.ATitledDialog;
+import net.sf.jasperreports.eclipse.ui.validator.ValidatorUtil;
 
 public class EditSelectColumnDialog extends ATitledDialog {
 	private MSelectColumn value;
@@ -91,8 +90,12 @@ public class EditSelectColumnDialog extends ATitledDialog {
 		talias.setLayoutData(gd);
 
 		DataBindingContext bindingContext = new DataBindingContext();
-		bindingContext.bindValue(SWTObservables.observeText(talias, SWT.Modify), PojoObservables.observeValue(this, "alias")); //$NON-NLS-1$
-		bindingContext.bindValue(SWTObservables.observeSelection(keyword), PojoObservables.observeValue(this, "aliasKeyword"), //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(talias),
+				PojoProperties.value("alias").observe(this)); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(keyword),
+				PojoProperties.value("aliasKeyword").observe(this), //$NON-NLS-1$
 				new UpdateValueStrategy().setAfterConvertValidator(new ColumnAliasStringValidator()), null);
 		return cmp;
 	}
@@ -102,9 +105,13 @@ public class EditSelectColumnDialog extends ATitledDialog {
 		Control createButtonBar = super.createButtonBar(parent);
 
 		DataBindingContext bindingContext = new DataBindingContext();
-		Binding b = bindingContext.bindValue(SWTObservables.observeText(talias, SWT.Modify), PojoObservables.observeValue(this, "alias"), //$NON-NLS-1$
+		Binding b = bindingContext.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(talias),
+				PojoProperties.value("alias").observe(this), //$NON-NLS-1$
 				new UpdateValueStrategy().setAfterConvertValidator(new ColumnAliasStringValidator()), null);
-		bindingContext.bindValue(SWTObservables.observeSelection(keyword), PojoObservables.observeValue(this, "aliasKeyword")); //$NON-NLS-1$
+		bindingContext.bindValue(
+				WidgetProperties.widgetSelection().observe(keyword),
+				PojoProperties.value("aliasKeyword").observe(this)); //$NON-NLS-1$
 
 		ValidatorUtil.controlDecorator(b, getButton(IDialogConstants.OK_ID));
 		return createButtonBar;

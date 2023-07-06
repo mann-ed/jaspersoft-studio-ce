@@ -55,7 +55,7 @@
                   Query designer class
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":com.jaspersoft.studio.editor.AEditorContext"/>
+                  <meta.attribute kind="java" basedOn="com.jaspersoft.studio.editor.context.AEditorContext:"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -64,6 +64,16 @@
                <documentation>
                   Query Language Name unique
                </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="utilityClass" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":com.jaspersoft.studio.editor.context.IResourceContextSwitchUtil"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>

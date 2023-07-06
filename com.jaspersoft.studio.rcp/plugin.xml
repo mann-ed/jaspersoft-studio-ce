@@ -77,14 +77,14 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="com.jaspersoft.studio.rcp.application"
-            name="TIBCO Jaspersoft&#xAE; Studio">
+            name="Jaspersoft&#xAE; Studio">
          <property
                name="windowImages"
                value="icons/jss_icon_16.png,icons/jss_icon_32.png,icons/jss_icon_48.png,icons/jss_icon_64.png,icons/jss_icon_128.png">
          </property>
          <property
                name="aboutText"
-               value="TIBCO Jaspersoft&#xAE; Studio 6.18.1 - Visual Designer for JasperReports 6.18.1. &#x0A;Copyright (C) 2010 - 2021 TIBCO Software Inc. All rights reserved. &#x0A;&#x0A;For more information, please visit &#x0A;http://community.jaspersoft.com/project/jaspersoft-studio  &#x0A;&#x0A;Special thanks to all people who support this software.">
+               value="Jaspersoft&#xAE; Studio 6.20.5 - Visual Designer for JasperReports 6.20.5. &#x0A;Copyright (C) 2010 - 2023 Cloud Software Group, Inc. All rights reserved. &#x0A;&#x0A;For more information, please visit &#x0A;https://community.jaspersoft.com/project/jaspersoft-studio  &#x0A;&#x0A;Special thanks to all people who support this software.">
          </property>
          <property
                name="aboutImage"
