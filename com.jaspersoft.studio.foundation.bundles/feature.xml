@@ -2,7 +2,7 @@
 <feature
       id="com.jaspersoft.studio.foundation.bundles"
       label="Jaspersoft Studio Required Bundles Feature"
-      version="1.0.22"
+      version="1.0.23"
       provider-name="Cloud Software Group, Inc.">
 
    <description url="https://community.jaspersoft.com/project/jaspersoft-studio">
@@ -17,14 +17,6 @@
       <update label="Jaspersoft Studio update site" url="https://jasperstudio.sf.net/updates"/>
       <discovery label="Jaspersoft Studio Community Edition" url="https://community.jaspersoft.com/project/jaspersoft-studio"/>
    </url>
-
-   <includes
-         id="org.eclipse.nebula.widgets.cdatetime.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.nebula.cwt.feature"
-         version="0.0.0"/>
 
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
@@ -331,6 +323,27 @@
          download-size="0"
          install-size="0"
          version="1.73.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.nebula.cwt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.nebula.jface.cdatetime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.nebula.widgets.cdatetime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
