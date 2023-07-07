@@ -6,11 +6,6 @@ package com.jaspersoft.studio.editor.preview.view.report.file;
 import java.io.File;
 import java.io.IOException;
 
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.eclipse.util.FileUtils;
-import net.sf.jasperreports.eclipse.viewer.ReportViewer;
-import net.sf.jasperreports.engine.JasperPrint;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -34,6 +29,11 @@ import com.jaspersoft.studio.editor.preview.view.report.IJRPrintable;
 import com.jaspersoft.studio.messages.Messages;
 import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
 
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.eclipse.util.FileUtils;
+import net.sf.jasperreports.eclipse.viewer.ReportViewer;
+import net.sf.jasperreports.engine.JasperPrint;
+
 public abstract class AFileViewer extends APreview implements IJRPrintable, IPreferencePage {
 
 	private ReportViewer rptviewer;
@@ -55,6 +55,10 @@ public abstract class AFileViewer extends APreview implements IJRPrintable, IPre
 
 	protected abstract String getExtension();
 
+	protected Text getTextControl() {
+		return txt;
+	}
+	
 	@Override
 	public void contribute2ToolBar(IToolBarManager tmanager) {
 		super.contribute2ToolBar(tmanager);
