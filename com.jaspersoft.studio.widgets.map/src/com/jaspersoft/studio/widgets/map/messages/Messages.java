@@ -27,6 +27,8 @@ public class Messages extends NLS {
 	public static String GMapsMarkersPanel_8;
 	public static String GMapsMarkersPanel_9;
 	public static String MapActivator_FileError;
+	public static String MapTile_ErrorMsgBadApiKey;
+	public static String MapTile_ErrorTemporaryDirectoryDelete;
 	public static String MapTile_JavascriptSupportAlreadyDefined;
 	public static String MapTile_JavaSupportAlreadyDefinedError;
 	public static String MapType_InvalidType;

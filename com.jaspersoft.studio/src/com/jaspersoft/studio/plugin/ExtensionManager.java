@@ -1027,8 +1027,8 @@ public class ExtensionManager {
 		}
 		List<UIElement> list = uiElementsIDByCustomType.get(hyperlinkType);
 		// When the list is null then there is no contribution at plugin.xml
-		// level
-		// As fallback solution we return all the available UI elements
-		return list != null ? list : Arrays.asList(UIElement.values());
+		// level.
+		// As fallback solution we return only the parameters UI piece.
+		return list != null ? list : Arrays.asList(UIElement.PARAMETERS);
 	}
 }

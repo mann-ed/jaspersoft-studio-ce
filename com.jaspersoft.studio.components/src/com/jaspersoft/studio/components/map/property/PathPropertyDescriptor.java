@@ -85,6 +85,14 @@ public class PathPropertyDescriptor extends AItemDataListPropertyDescriptor {
 				}
 
 				private GMapsPathsPanel pmap;
+				
+				@Override
+				public boolean close() {
+					if(pmap!=null) {
+						pmap.dispose();
+					}
+					return super.close();
+				}
 
 				@Override
 				protected void createItems(final CTabFolder tabFolder) {
@@ -115,7 +123,7 @@ public class PathPropertyDescriptor extends AItemDataListPropertyDescriptor {
 					layout.marginRight = -5;
 					cmp.setLayout(layout);
 					try {
-						pmap = new GMapsPathsPanel(cmp, SWT.NONE) {
+						pmap = new GMapsPathsPanel(cmp, SWT.NONE, GMapUtils.getMapCredentials(pnode.getJasperConfiguration())) {
 
 							private MMap mmap;
 							private BasicMapInfoData mapInfo;
@@ -207,7 +215,7 @@ public class PathPropertyDescriptor extends AItemDataListPropertyDescriptor {
 											String adr = ItemPropertyUtil.getItemPropertyString(ip, expIntr);
 											if (Misc.isNullOrEmpty(adr))
 												continue;
-											LatLng coords = GMapUtils.getAddressCoordinates(adr);
+											LatLng coords = GMapUtils.getAddressCoordinates(adr, mapCredentials);
 											if (coords != null) {
 												lat = coords.getLat();
 												lon = coords.getLng();

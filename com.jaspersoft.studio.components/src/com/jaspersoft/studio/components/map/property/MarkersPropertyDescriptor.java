@@ -89,6 +89,14 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 					(JasperReportsConfiguration) section.getJasperReportsContext(), getDescriptor(), expContext,
 					pnode) {
 				private GMapsMarkersPanel pmap;
+				
+				@Override
+				public boolean close() {
+					if(pmap!=null) {
+						pmap.dispose();
+					}
+					return super.close();
+				}
 
 				@Override
 				protected AItemDialog createItemDialog() {
@@ -199,7 +207,7 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 					layout.marginRight = -5;
 					cmp.setLayout(layout);
 					try {
-						pmap = new GMapsMarkersPanel(cmp, SWT.NONE) {
+						pmap = new GMapsMarkersPanel(cmp, SWT.NONE, GMapUtils.getMapCredentials(pnode.getJasperConfiguration())) {
 
 							private MMap mmap;
 							private BasicMapInfoData mapInfo;
@@ -273,7 +281,7 @@ public class MarkersPropertyDescriptor extends AItemDataListPropertyDescriptor {
 											String adr = ItemPropertyUtil.getItemPropertyString(ip, expIntr);
 											if (Misc.isNullOrEmpty(adr))
 												continue;
-											LatLng coords = GMapUtils.getAddressCoordinates(adr);
+											LatLng coords = GMapUtils.getAddressCoordinates(adr, mapCredentials);
 											if (coords != null) {
 												lat = coords.getLat();
 												lon = coords.getLng();

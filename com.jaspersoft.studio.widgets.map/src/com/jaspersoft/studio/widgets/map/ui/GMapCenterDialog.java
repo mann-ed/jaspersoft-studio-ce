@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.jaspersoft.studio.widgets.map.core.LatLng;
 import com.jaspersoft.studio.widgets.map.core.MapType;
+import com.jaspersoft.studio.widgets.map.support.MapCredentials;
 
 import net.sf.jasperreports.eclipse.ui.util.PersistentLocationDialog;
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
@@ -18,9 +19,11 @@ import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 public class GMapCenterDialog extends PersistentLocationDialog {
 
 	private GMapsCenterPanel mapPanel;
+	private MapCredentials mapCredentials;
 
-	protected GMapCenterDialog(Shell parentShell) {
+	protected GMapCenterDialog(Shell parentShell, MapCredentials mapCredentials) {
 		super(parentShell);
+		this.mapCredentials = mapCredentials;
 	}
 
 	@Override
@@ -43,7 +46,7 @@ public class GMapCenterDialog extends PersistentLocationDialog {
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		try {
-			mapPanel = new GMapsCenterPanel(container, SWT.NONE) {
+			mapPanel = new GMapsCenterPanel(container, SWT.NONE, mapCredentials) {
 
 				@Override
 				public void setMapCenter(LatLng mapCenter) {
@@ -141,4 +144,11 @@ public class GMapCenterDialog extends PersistentLocationDialog {
 		return address;
 	}
 
+	@Override
+	public boolean close() {
+		if(mapPanel!=null) {
+			mapPanel.dispose();
+		}
+		return super.close();
+	}
 }
