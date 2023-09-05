@@ -18,14 +18,6 @@
       <discovery label="Jaspersoft Studio Community Edition" url="https://community.jaspersoft.com/project/jaspersoft-studio"/>
    </url>
 
-   <includes
-         id="org.eclipse.nebula.widgets.cdatetime.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.nebula.cwt.feature"
-         version="0.0.0"/>
-
    <requires>
       <import plugin="org.w3c.dom.svg" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
@@ -213,20 +205,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bouncycastle.bcpkix"
-         download-size="0"
-         install-size="0"
-         version="1.72.0.v20221013-1810"
-         unpack="false"/>
-
-   <plugin
-         id="org.bouncycastle.bcutil"
-         download-size="0"
-         install-size="0"
-         version="1.72.0.v20221013-1810"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.servicemix.bundles.xmlbeans"
          download-size="0"
          install-size="0"
@@ -303,14 +281,14 @@
          id="bcpg"
          download-size="0"
          install-size="0"
-         version="1.72.0"
+         version="1.73.0"
          unpack="false"/>
 
    <plugin
          id="bcprov"
          download-size="0"
          install-size="0"
-         version="1.72.0"
+         version="1.73.0"
          unpack="false"/>
 
    <plugin
@@ -332,5 +310,40 @@
          download-size="0"
          install-size="0"
          version="1.16.0.b01"/>
+
+   <plugin
+         id="bcpkix"
+         download-size="0"
+         install-size="0"
+         version="1.73.0"
+         unpack="false"/>
+
+   <plugin
+         id="bcutil"
+         download-size="0"
+         install-size="0"
+         version="1.73.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.nebula.cwt"
+         download-size="0"
+         install-size="0"
+         version="1.1.0.202303072132"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.nebula.jface.cdatetime"
+         download-size="0"
+         install-size="0"
+         version="1.3.0.202303072132"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.nebula.widgets.cdatetime"
+         download-size="0"
+         install-size="0"
+         version="1.5.0.202303072132"
+         unpack="false"/>
 
 </feature>
