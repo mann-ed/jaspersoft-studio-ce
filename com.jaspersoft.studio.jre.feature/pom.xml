@@ -12,5 +12,5 @@
 	<groupId>com.jaspersoft.studio.community-edition</groupId>
 	<artifactId>com.jaspersoft.studio.jre.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
-	<version>17.0.7</version>
+	<version>17.0.8.1_1</version>
 </project> 

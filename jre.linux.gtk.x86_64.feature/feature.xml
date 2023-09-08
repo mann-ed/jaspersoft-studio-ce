@@ -2,7 +2,7 @@
 <feature
       id="jre.linux.gtk.x86_64.feature"
       label="JRE for Linux 64-bit systems"
-      version="17.0.7"
+      version="17.0.8.1_1"
       provider-name="Cloud Software Group, Inc."
       os="linux"
       ws="gtk"

@@ -10,7 +10,7 @@
 	<property name="dist" value="${basedir}/../product/dist"/>
 	<property name="productRootFolder" value="jaspersoftstudio" />
 	<property name="productVersionFile" value="buildversion.properties" />
-	<property name="jre.location.linux64" value="features/jre.linux.gtk.x86_64.feature_17.0.7/eclipsetemurin_jre/bin" />
+	<property name="jre.location.linux64" value="features/jre.linux.gtk.x86_64.feature_17.0.8.1_1/eclipsetemurin_jre/bin" />
 	<!-- import properties for mac machine producing the DMG -->
 	<property file="authenticationInfo.properties"/>
 
@@ -108,10 +108,10 @@
 		<!-- copy additional licensing files -->
 		<copy file="${basedir}/rootfiles/license/license.txt" tofile="${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/${jss.distro.prefix}_${jss.version}_license.txt" />
 		<!-- remove "broken" jre dir -->
-		<delete dir="${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_17.0.7/eclipsetemurin_jre" />
+		<delete dir="${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_17.0.8.1_1/eclipsetemurin_jre" />
 		<!-- extract correct jre dir  with symbolic links -->
 	    <exec executable="tar">
-	       <arg line="-xzf ${jre.packages.location}/jre-17.0.7-macosx-x64.tar.gz -C ${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_17.0.7/" />
+	       <arg line="-xzf ${jre.packages.location}/jre-17.0.8.1_1-macosx-x64.tar.gz -C ${dirlocation.mac.x86_64}/${productRootFolder}.app/Contents/Eclipse/features/jre.macosx.cocoa.x86_64.feature_17.0.8.1_1/" />
 	    </exec>
 		<exec executable="zip" dir="${dirlocation.mac.x86_64}">
 			<arg line="-r -X --symlinks ${mac.x86_64.zipfile} ${productRootFolder}.app"/>
