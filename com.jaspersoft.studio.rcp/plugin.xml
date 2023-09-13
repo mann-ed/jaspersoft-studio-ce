@@ -84,7 +84,7 @@
          </property>
          <property
                name="aboutText"
-               value="Jaspersoft&#xAE; Studio 6.20.5 - Visual Designer for JasperReports 6.20.5. &#x0A;Copyright (C) 2010 - 2023 Cloud Software Group, Inc. All rights reserved. &#x0A;&#x0A;For more information, please visit &#x0A;https://community.jaspersoft.com/project/jaspersoft-studio  &#x0A;&#x0A;Special thanks to all people who support this software.">
+               value="Jaspersoft&#xAE; Studio 6.20.6 - Visual Designer for JasperReports 6.20.6. &#x0A;Copyright (C) 2010 - 2023 Cloud Software Group, Inc. All rights reserved. &#x0A;&#x0A;For more information, please visit &#x0A;https://community.jaspersoft.com/project/jaspersoft-studio  &#x0A;&#x0A;Special thanks to all people who support this software.">
          </property>
          <property
                name="aboutImage"
