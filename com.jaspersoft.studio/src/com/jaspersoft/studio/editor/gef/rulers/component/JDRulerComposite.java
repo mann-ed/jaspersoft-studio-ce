@@ -477,7 +477,7 @@ public class JDRulerComposite extends Composite {
 		 * @see org.eclipse.gef.GraphicalViewer#findHandleAt(org.eclipse.draw2d.geometry.Point)
 		 */
 		public Handle findHandleAt(org.eclipse.draw2d.geometry.Point p) {
-			final GraphicalEditPart gep = (GraphicalEditPart) findObjectAtExcluding(p, new ArrayList<Object>());
+			final GraphicalEditPart gep = (GraphicalEditPart) findObjectAtExcluding(p, new ArrayList<IFigure>());
 			//Deselect all the other parst and select theright clicked one
 			deselectAll();
 			setSelection(new StructuredSelection(gep));

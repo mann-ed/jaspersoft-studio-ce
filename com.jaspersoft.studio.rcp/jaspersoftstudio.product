@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Jaspersoft Studio" uid="com.jaspersoft.studio.rcp.product" id="com.jaspersoft.studio.rcp.product" application="com.jaspersoft.studio.rcp.application" version="6.20.5.final" useFeatures="true" includeLaunchers="true">
+<product name="Jaspersoft Studio" uid="com.jaspersoft.studio.rcp.product" id="com.jaspersoft.studio.rcp.product" application="com.jaspersoft.studio.rcp.application" version="6.20.6.final" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/com.jaspersoft.studio.rcp/icons/studio_logo_about.png"/>
       <text>
-         Jaspersoft&#xAE; Studio 6.20.5 - Visual Designer for JasperReports 6.20.5. 
+         Jaspersoft&#xAE; Studio 6.20.6 - Visual Designer for JasperReports 6.20.6. 
 Copyright (C) 2010 - 2023 Cloud Software Group, Inc. All rights reserved. 
 
 For more information, please visit 
@@ -23,9 +23,11 @@ Special thanks to all people who support this software.
       <programArgs>-data @noDefault
 --launcher.defaultAction openFile</programArgs>
       <vmArgs>-Xms128m
--Xmx1024m
--XX:+CMSClassUnloadingEnabled
--XX:+UseConcMarkSweepGC
+-Xmx2048m
+--add-exports=java.xml/com.sun.org.apache.xml.internal.serialize=ALL-UNNAMED
+--add-opens=java.desktop/sun.java2d=ALL-UNNAMED
+--add-opens=java.base/java.io=ALL-UNNAMED
+--add-opens=java.base/java.lang=ALL-UNNAMED
 -Dfile.encoding=UTF-8
 -Djava.net.preferIPv4Stack=true
 -Ddeployment.security.TLSv1.1=true
@@ -197,7 +199,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <plugin id="org.apache.lucene"/>
       <plugin id="org.apache.lucene.analysis"/>
       <plugin id="org.apache.lucene.core"/>
-      <plugin id="org.apache.xalan"/>
       <plugin id="org.apache.xerces"/>
       <plugin id="org.apache.xml.resolver"/>
       <plugin id="org.apache.xml.serializer"/>

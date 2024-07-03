@@ -3,7 +3,6 @@
  *******************************************************************************/
 package com.jaspersoft.studio.data.sql.text2model;
 
-import org.apache.xpath.operations.Div;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
@@ -11,6 +10,7 @@ import com.jaspersoft.studio.data.sql.ColumnFull;
 import com.jaspersoft.studio.data.sql.ColumnOperand;
 import com.jaspersoft.studio.data.sql.ColumnOrAlias;
 import com.jaspersoft.studio.data.sql.Concat;
+import com.jaspersoft.studio.data.sql.Division;
 import com.jaspersoft.studio.data.sql.ExpOperand;
 import com.jaspersoft.studio.data.sql.Minus;
 import com.jaspersoft.studio.data.sql.Multiply;
@@ -110,7 +110,7 @@ public class ConvertSelectColumns {
 			str += " - ";
 		else if (ops instanceof Multiply)
 			str += " * ";
-		else if (ops instanceof Div)
+		else if (ops instanceof Division)
 			str += " / ";
 		else if (ops instanceof Concat)
 			str += " || ";

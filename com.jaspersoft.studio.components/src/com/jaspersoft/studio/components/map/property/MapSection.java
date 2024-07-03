@@ -21,6 +21,8 @@ import com.jaspersoft.studio.property.section.AbstractSection;
 import com.jaspersoft.studio.property.section.widgets.SPEvaluationTime;
 import com.jaspersoft.studio.widgets.map.core.LatLng;
 import com.jaspersoft.studio.widgets.map.core.MapType;
+import com.jaspersoft.studio.widgets.map.support.GMapUtils;
+import com.jaspersoft.studio.widgets.map.support.MapCredentials;
 import com.jaspersoft.studio.widgets.map.ui.GMapCenterDialog;
 
 import net.sf.jasperreports.components.map.StandardMapComponent;
@@ -82,7 +84,8 @@ public class MapSection extends AbstractSection {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				MMap mmap = (MMap) getElement();
-				GMapCenterDialog d = new GMapCenterDialog(UIUtils.getShell()) {
+				MapCredentials mapCredentials = GMapUtils.getMapCredentials(mmap.getJasperConfiguration());
+				GMapCenterDialog d = new GMapCenterDialog(UIUtils.getShell(), mapCredentials) {
 					@Override
 					protected void configureShell(Shell newShell) {
 						super.configureShell(newShell);

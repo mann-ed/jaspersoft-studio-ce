@@ -20,6 +20,8 @@ import com.jaspersoft.studio.widgets.map.messages.Messages;
  *
  */
 public class MapUIUtils {
+	
+	public static final String DISABLE_GOOGLEMAP_WIDGET="com.jaspersoft.studio.widgets.googlemap.disabled"; //$NON-NLS-1$
 
 	/**
 	 * Creates a warning composite that alerts the user about possible issues
@@ -40,6 +42,19 @@ public class MapUIUtils {
 		warningText.setToolTipText(Messages.MapUIUtils_MapLinuxWarningTooltip);
 		warningText.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,false));
 		return warningCmp;
+	}
+	
+	/**
+	 * Checks if the Google Map widget support has been disabled.
+	 * <p>
+	 * If enabled the map dialog will not show the component capable of bidirection Java-Javascript communication.<br/>
+	 * This could potentially help in some corner cases, mostly involving the Edge (windows) scenario.
+	 * 
+	 * @return <code>true</code> if googlemap widget support is disable,<code>false</code> otherwise
+	 */
+	public static boolean isGoogleMapWidgetDisabled() {
+		String wGoogleMapDisabled = System.getProperty(DISABLE_GOOGLEMAP_WIDGET); //$NON-NLS-1$
+		return wGoogleMapDisabled != null && wGoogleMapDisabled.equals("true"); //$NON-NLS-1$
 	}
 
 }

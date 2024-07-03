@@ -6,7 +6,6 @@ package com.jaspersoft.studio.server.utils;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.net.IDN;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -129,6 +128,10 @@ public class HttpUtils {
 		return req;
 	}
 
+	/**
+	 * Patching URI class in order to support the underscore char in hostname for a URL.
+	 * This was originated by a very old customer bug.
+	 */
 	public static void patchURIClass() {
 		try {
 			long lowMaskValue = lowMask("-_");
@@ -149,16 +152,24 @@ public class HttpUtils {
 		}
 	}
 	
+	/*
+	 * An initial workaround was put in place for fixing the problem when lowMask and highMask methods
+	 * were removed when moving from Java 8 -> 11.
+	 * The current solution introduced for Java 17 uses sun.misc.Unsafe class in order to make it work again.
+	 * 
+	 * Additional references: 
+	 * 	> java.net.URI get host with underscores (https://stackoverflow.com/questions/28568188/java-net-uri-get-host-with-underscores)
+	 * 	> Change static final field in java 12+ (https://stackoverflow.com/a/61150853)
+	 */
 	private static void patchUriField(long maskValue, String fieldName)
 	        throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
-	        Field field = URI.class.getDeclaredField(fieldName);
-	
-	        Field modifiers = Field.class.getDeclaredField("modifiers");
-	        modifiers.setAccessible(true);
-	        modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-	
-	        field.setAccessible(true);
-	        field.setLong(null, maskValue);
+		final Field unsafeField = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
+		unsafeField.setAccessible(true);
+		final sun.misc.Unsafe unsafe = (sun.misc.Unsafe) unsafeField.get(null);
+		Field field = URI.class.getDeclaredField(fieldName);
+		final Object staticFieldBase = unsafe.staticFieldBase(field);
+        final long staticFieldOffset = unsafe.staticFieldOffset(field);
+        unsafe.putObject(staticFieldBase, staticFieldOffset, maskValue);
 	}
 	
     // Compute the low-order mask for the characters in the given string (JDK 8)

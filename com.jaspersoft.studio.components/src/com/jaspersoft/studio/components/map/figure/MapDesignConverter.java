@@ -3,27 +3,28 @@
  *******************************************************************************/
 package com.jaspersoft.studio.components.map.figure;
 
+import com.jaspersoft.studio.jasper.AComponentDesignConverter;
+import com.jaspersoft.studio.utils.ModelUtils;
+import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
+
 import net.sf.jasperreports.components.ComponentsExtensionsRegistryFactory;
 import net.sf.jasperreports.components.map.MapComponent;
 import net.sf.jasperreports.components.map.type.MapImageTypeEnum;
 import net.sf.jasperreports.components.map.type.MapScaleEnum;
 import net.sf.jasperreports.components.map.type.MapTypeEnum;
 import net.sf.jasperreports.eclipse.util.KeyValue;
+import net.sf.jasperreports.eclipse.util.StringUtils;
 import net.sf.jasperreports.engine.JRComponentElement;
 import net.sf.jasperreports.engine.JRDataset;
 import net.sf.jasperreports.engine.JRElementDataset;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.renderers.Renderable;
-import net.sf.jasperreports.renderers.util.RendererUtil;
 import net.sf.jasperreports.engine.component.Component;
 import net.sf.jasperreports.engine.convert.ReportConverter;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.OnErrorTypeEnum;
 import net.sf.jasperreports.engine.util.JRImageLoader;
-
-import com.jaspersoft.studio.jasper.AComponentDesignConverter;
-import com.jaspersoft.studio.utils.ModelUtils;
-import com.jaspersoft.studio.utils.jasper.JasperReportsConfiguration;
+import net.sf.jasperreports.renderers.Renderable;
+import net.sf.jasperreports.renderers.util.RendererUtil;
 
 /**
  * 
@@ -43,8 +44,8 @@ public class MapDesignConverter extends AComponentDesignConverter {
 		return ComponentsExtensionsRegistryFactory.MAP_COMPONENT_NAME;
 	}
 
-	public static final Number DEFAULT_LONGITUDE = new Float(12.337967);
-	public static final Number DEFAULT_LATITUDE = new Float(45.433967);
+	public static final Number DEFAULT_LONGITUDE = Float.valueOf(12.337967f);
+	public static final Number DEFAULT_LATITUDE = Float.valueOf(45.433967f);
 
 	/**
 	 *
@@ -118,12 +119,14 @@ public class MapDesignConverter extends AComponentDesignConverter {
 		String mapFormat = MapImageTypeEnum.PNG.getName();
 		String language = evaluate(map.getLanguageExpression(), jrd, jrContext, "");
 		String markers = "";
+		String apiKey = jrContext.getJasperDesign().getProperty(MapComponent.PROPERTY_KEY);
 
-		String imageLocation = "http://maps.google.com/maps/api/staticmap?center=" + (latitude.floatValue() % 90) + ","
+		String imageLocation = "https://maps.google.com/maps/api/staticmap?center=" + (latitude.floatValue() % 90) + ","
 				+ (longitude.floatValue() % 180) + "&size=" + element.getWidth() + "x" + element.getHeight() + "&zoom="
 				+ zoom + (mapType == null ? "" : "&maptype=" + mapType)
 				+ (mapFormat == null ? "" : "&format=" + mapFormat) + (mapScale == null ? "" : "&scale=" + mapScale)
-				+ markers + "&sensor=false" + (language == null ? "" : "&language=" + language);
+				+ markers + "&sensor=false" + (language == null ? "" : "&language=" + language)
+				+ (!StringUtils.isNullOrEmpty(apiKey) ? "&key="+apiKey : "");
 		kv.key = ekey;
 		return RendererUtil.getInstance(jrContext).getNonLazyRenderable(imageLocation, OnErrorTypeEnum.ERROR);
 	}

@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>com.jaspersoft.studio.community-edition</groupId>
 		<artifactId>features</artifactId>
-		<version>6.20.5.final</version>
+		<version>6.20.6.final</version>
 		<relativePath>../aggregator/features/</relativePath>
 	</parent>
 
 	<groupId>com.jaspersoft.studio.community-edition</groupId>
 	<artifactId>jre.win32.win32.x86_64.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
-	<version>11.0.18</version>
+	<version>17.0.8.1_1</version>
 	
 	<build>
 		<plugins>
@@ -28,7 +28,7 @@
 							<tasks>
 								<exec executable="tar">
 									<arg
-										line="-xzf ${jre.packages.location}/jre-11.0.18-windows-x64.tar.gz -C ${project.build.directory}/../" />
+										line="-xzf ${jre.packages.location}/jre-17.0.8.1_1-windows-x64.tar.gz -C ${project.build.directory}/../" />
 								</exec>
 							</tasks>
 						</configuration>

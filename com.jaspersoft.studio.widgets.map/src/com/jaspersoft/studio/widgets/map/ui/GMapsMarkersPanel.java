@@ -12,6 +12,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressAdapter;
+import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -31,7 +33,6 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import com.jaspersoft.studio.widgets.map.MapActivator;
 import com.jaspersoft.studio.widgets.map.MapWidgetConstants;
 import com.jaspersoft.studio.widgets.map.browserfunctions.AddNewMarker;
 import com.jaspersoft.studio.widgets.map.browserfunctions.ClearMarkersList;
@@ -41,6 +42,7 @@ import com.jaspersoft.studio.widgets.map.browserfunctions.UpdateMarkerPosition;
 import com.jaspersoft.studio.widgets.map.core.LatLng;
 import com.jaspersoft.studio.widgets.map.core.Marker;
 import com.jaspersoft.studio.widgets.map.messages.Messages;
+import com.jaspersoft.studio.widgets.map.support.MapCredentials;
 
 import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
@@ -72,14 +74,12 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 	 * Creates a new panel containing the controls to work with a Google Maps
 	 * component presented inside a browser instance.
 	 * 
-	 * @param parent
-	 *            a composite control which will be the parent of the new instance
-	 *            (cannot be null)
-	 * @param style
-	 *            the style of widget to construct
+	 * @param parent a composite control which will be the parent of the new instance (cannot be null)
+	 * @param style the style of widget to construct
+	 * @param mapCredentials credentials (api key) for the Google Map component
 	 */
-	public GMapsMarkersPanel(Composite parent, int style) {
-		super(parent, style);
+	public GMapsMarkersPanel(Composite parent, int style, MapCredentials mapCredentials) {
+		super(parent, style, mapCredentials);
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 
 	@Override
 	protected void createMap(Composite parent) {
-		map = new MapTile(parent, SWT.NONE, MapActivator.getFileLocation("mapfiles/gmaps_library/map2.html")); //$NON-NLS-1$
+		map = new MapTile(parent, SWT.NONE, mapCredentials); //$NON-NLS-1$
 		map.configureJavaSupport(new DetailsPanelMapSupportMarker(map.getMapControl()));
 		map.getFunctions().add(new AddNewMarker(map.getMapControl(), MapWidgetConstants.BROWSER_FUNCTION_ADD_MARKER,
 				map.getJavaMapSupport()));
@@ -157,6 +157,12 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 			}
 
 		});
+		map.getMapControl().addProgressListener(new ProgressAdapter() {
+			@Override
+			public void completed(ProgressEvent event) {
+				map.getJavascriptMapSupport().evaluateJavascript("MENU_KIND=_MENU_COMPLETE"); //$NON-NLS-1$
+			}
+		});
 	}
 
 	protected void createRightPanel(Composite containerCmp) {
@@ -169,7 +175,9 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int markerIdx = markersList.getSelectionIndex();
-				map.getJavascriptMapSupport().highlightMarker(markerIdx);
+				UIUtils.getDisplay().asyncExec(()->{
+					map.getJavascriptMapSupport().highlightMarker(markerIdx);
+				});
 			}
 		});
 		markersList.addKeyListener(new KeyAdapter() {
@@ -344,18 +352,21 @@ public class GMapsMarkersPanel extends GMapsCenterPanel {
 			markersList.removeAll();
 	}
 
-	@Override
-	protected void postInitMap() {
-		map.getJavascriptMapSupport().evaluateJavascript("MENU_KIND=_MENU_COMPLETE"); //$NON-NLS-1$
-	}
-
 	protected void deleteMarker() {
 		if (markersList.getSelectionCount() <= 0)
 			return;
-		MessageDialog dialog = new MessageDialog(UIUtils.getShell(), Messages.GMapsMarkersPanel_2, null,
-				Messages.GMapsMarkersPanel_7, MessageDialog.QUESTION,
-				new String[] { Messages.GMapsMarkersPanel_8, Messages.GMapsMarkersPanel_9 }, 1);
-		if (dialog.open() == Dialog.OK)
-			handleRemoveMarker(markersList.getSelectionIndices());
+		UIUtils.getDisplay().asyncExec(()->{
+			MessageDialog dialog = new MessageDialog(UIUtils.getShell(), Messages.GMapsMarkersPanel_2, null,
+					Messages.GMapsMarkersPanel_7, MessageDialog.QUESTION,
+					new String[] { Messages.GMapsMarkersPanel_8, Messages.GMapsMarkersPanel_9 }, 1);
+			if (dialog.open() == Dialog.OK)
+				handleRemoveMarker(markersList.getSelectionIndices());
+		});
+	}
+	
+	public void dispose() {
+		if(map!=null) {
+			map.dispose();
+		}
 	}
 }

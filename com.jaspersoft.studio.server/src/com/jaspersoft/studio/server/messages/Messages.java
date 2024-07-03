@@ -349,6 +349,18 @@ public class Messages extends NLS {
 	public static String ReportUnitQueryContent_0;
 	public static String ReportUnitQueryContent_1;
 	public static String ReportUnitQueryContent_2;
+	public static String ReportUnitViewsFactory_CsvLabel;
+	public static String ReportUnitViewsFactory_CsvMetadataLabel;
+	public static String ReportUnitViewsFactory_DocxLabel;
+	public static String ReportUnitViewsFactory_HtmlLabel;
+	public static String ReportUnitViewsFactory_JrprintLabel;
+	public static String ReportUnitViewsFactory_OdsLabel;
+	public static String ReportUnitViewsFactory_OdtLabel;
+	public static String ReportUnitViewsFactory_PdfLabel;
+	public static String ReportUnitViewsFactory_PowerpointLabel;
+	public static String ReportUnitViewsFactory_XlsxLabel;
+	public static String ReportUnitViewsFactory_XlsxMetadataLabel;
+	public static String ReportUnitViewsFactory_XmlLabel;
 	public static String RepositoryDialog_0;
 	public static String RepositoryDialog_1;
 	public static String RepositoryDialog_2;

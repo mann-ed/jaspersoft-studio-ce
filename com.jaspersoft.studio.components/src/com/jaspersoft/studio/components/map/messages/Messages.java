@@ -51,7 +51,9 @@ public class Messages extends NLS {
 	public static String LegendOrResetMapLabelProvider_WarningInvalidLabel;
 	public static String LegendOrResetMapLabelProvider_WarningNotSet;
 	public static String MapAuthenticationSection_ApiKeyText;
+	public static String MapAuthenticationSection_BusinessAPIKeyWarningTooltip;
 	public static String MapAuthenticationSection_ClientIdText;
+	public static String MapAuthenticationSection_DeprecatedWarningPrefix;
 	public static String MapAuthenticationSection_SignatureText;
 	public static String MapAuthenticationSection_UseBusinessAPICheckbox;
 	public static String MapAuthenticationSection_VersionText;
