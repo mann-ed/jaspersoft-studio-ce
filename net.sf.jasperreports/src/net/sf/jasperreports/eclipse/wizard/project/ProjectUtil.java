@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.wizard.project;
 
@@ -16,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +16,7 @@ import java.util.List;
 import net.sf.jasperreports.eclipse.JasperReportsPlugin;
 import net.sf.jasperreports.eclipse.builder.JasperReportsNature;
 import net.sf.jasperreports.eclipse.classpath.container.JRClasspathContainer;
+import net.sf.jasperreports.eclipse.messages.Messages;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.filesystem.EFS;
@@ -34,6 +28,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
@@ -41,28 +36,61 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 import org.eclipse.jdt.ui.PreferenceConstants;
 
 public class ProjectUtil {
+	
+	private static final String REQUIRED_JAVA = "JavaSE-1.8"; //$NON-NLS-1$
+	
 	public static void createJRProject(IProgressMonitor monitor, IProject prj) throws CoreException, JavaModelException {
 		addNature(prj, JavaCore.NATURE_ID, monitor);
 
 		List<IClasspathEntry> centries = new ArrayList<IClasspathEntry>();
 		IJavaProject javaProject = JavaCore.create(prj);
-		IClasspathEntry[] jreClasspath = PreferenceConstants.getDefaultJRELibrary();
-
+	
+		//Search the execution environment
+		IExecutionEnvironment[] environments = JavaRuntime.getExecutionEnvironmentsManager().getExecutionEnvironments();
+		IPath execPath = null;
+		for (int i = 0; i < environments.length; i++) {
+			IExecutionEnvironment currentEnvoirement = environments[i];
+			String id = currentEnvoirement.getId();
+			if (id != null && id.equals(REQUIRED_JAVA)){
+				execPath = JavaRuntime.newJREContainerPath(currentEnvoirement);
+				break;
+			}
+		}
+		if (execPath != null){
+			centries.add(JavaCore.newContainerEntry(execPath));
+		} else {
+			//Required environment not found, fallback on the default JRE, but log the error
+			IClasspathEntry[] jreClasspath = PreferenceConstants.getDefaultJRELibrary();
+			centries.addAll(Arrays.asList(jreClasspath));
+			JasperReportsPlugin.getDefault().logWarning(MessageFormat.format(Messages.ProjectUtil_executionEnvironmentError, new Object[]{REQUIRED_JAVA}));
+		}
+		
+		
 		IFolder folder = prj.getFolder(PreferenceConstants.getPreferenceStore().getString(PreferenceConstants.SRCBIN_BINNAME));
 		folder.create(IResource.FORCE | IResource.DERIVED, true, monitor);
 		folder.setDerived(true, monitor);
 
 		prj.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-
-		centries.addAll(Arrays.asList(jreClasspath));
-
+		
 		addNature(prj, JasperReportsNature.NATURE_ID, monitor);
 
 		// Path to all libraries needed
 		createJRClasspathContainer(monitor, centries, javaProject);
+	}
+	
+	public static boolean hasJRNature(IProgressMonitor monitor, IProject project){
+		try{
+			if (!project.isOpen()) project.open(monitor);
+			return project.hasNature(JavaCore.NATURE_ID) && project.hasNature(JasperReportsNature.NATURE_ID);
+		} catch (Exception ex){
+			ex.printStackTrace();
+		}
+		return false;
 	}
 
 	public static void createJRClasspathContainer(IProgressMonitor monitor, IJavaProject javaProject) throws JavaModelException {
@@ -82,7 +110,6 @@ public class ProjectUtil {
 		JavaCore.setClasspathContainer(JRClasspathContainer.ID, new IJavaProject[] { javaProject }, new IClasspathContainer[] { classpathContainer }, monitor);
 		centries.add(JavaCore.newContainerEntry(JRClasspathContainer.ID, true));
 		javaProject.setRawClasspath(centries.toArray(new IClasspathEntry[centries.size()]), monitor);
-
 		JasperReportsPlugin.getClasspathContainerManager().createJRClasspathContainer(monitor, centries, javaProject);
 	}
 
@@ -114,7 +141,7 @@ public class ProjectUtil {
 				if (en.getPath().equals(file.getFullPath()))
 					return;
 			}
-			centries.add(JavaCore.newLibraryEntry(file.getFullPath(), null, new Path("/")));
+			centries.add(JavaCore.newLibraryEntry(file.getFullPath(), null, null)); //$NON-NLS-1$
 			centries.addAll(Arrays.asList(entries));
 			jprj.setRawClasspath(centries.toArray(new IClasspathEntry[centries.size()]), monitor);
 		}

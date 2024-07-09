@@ -1,21 +1,17 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.viewer;
 
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JRHyperlinkListener;
 
+import org.eclipse.swt.widgets.Control;
+
 public interface IReportViewer {
+
+	public void setReport(JasperPrint document, int page);
 
 	public void setReport(JasperPrint document);
 
@@ -26,6 +22,8 @@ public interface IReportViewer {
 	public void addReportViewerListener(IReportViewerListener listener);
 
 	public void removeReportViewerListener(IReportViewerListener listener);
+	
+	public Control getControl();
 
 	// page navigation
 	public int getPageIndex();
@@ -85,5 +83,5 @@ public interface IReportViewer {
 
 	public JRHyperlinkListener[] getHyperlinkListeners();
 
-	public void fireViewerModelChanged();
+	public void fireViewerModelChanged(boolean isCurrentPage);
 }

@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.viewer;
 
@@ -20,25 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
-import net.sf.jasperreports.engine.ImageMapRenderable;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRPrintAnchorIndex;
-import net.sf.jasperreports.engine.JRPrintElement;
-import net.sf.jasperreports.engine.JRPrintHyperlink;
-import net.sf.jasperreports.engine.JRPrintImage;
-import net.sf.jasperreports.engine.JRPrintImageAreaHyperlink;
-import net.sf.jasperreports.engine.JRPrintPage;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.engine.Renderable;
-import net.sf.jasperreports.engine.export.JRGraphics2DExporter;
-import net.sf.jasperreports.engine.type.HyperlinkTypeEnum;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleGraphics2DExporterOutput;
-import net.sf.jasperreports.export.SimpleGraphics2DReportConfiguration;
-import net.sf.jasperreports.view.JRHyperlinkListener;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -63,6 +36,26 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.wb.swt.Keyboard;
+
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRPrintAnchorIndex;
+import net.sf.jasperreports.engine.JRPrintElement;
+import net.sf.jasperreports.engine.JRPrintHyperlink;
+import net.sf.jasperreports.engine.JRPrintImage;
+import net.sf.jasperreports.engine.JRPrintImageAreaHyperlink;
+import net.sf.jasperreports.engine.JRPrintPage;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.engine.PrintPageFormat;
+import net.sf.jasperreports.engine.export.JRGraphics2DExporter;
+import net.sf.jasperreports.engine.type.HyperlinkTypeEnum;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleGraphics2DExporterOutput;
+import net.sf.jasperreports.export.SimpleGraphics2DReportConfiguration;
+import net.sf.jasperreports.renderers.AreaHyperlinksRenderable;
+import net.sf.jasperreports.renderers.Renderable;
+import net.sf.jasperreports.view.JRHyperlinkListener;
 
 public class ViewerCanvas extends Canvas {
 	public static final int ZOOM_MODE_NONE = 0;
@@ -126,7 +119,8 @@ public class ViewerCanvas extends Canvas {
 				if (e.button == 1) {
 					if (currentLink == null) {
 						dragging = true;
-						ds = new Rectangle(e.x, e.y, getVerticalBar().getSelection(), getHorizontalBar().getSelection());
+						ds = new Rectangle(e.x, e.y, getVerticalBar().getSelection(),
+								getHorizontalBar().getSelection());
 						setCursor(CURSOR_SIZEALL);
 					}
 				}
@@ -173,7 +167,7 @@ public class ViewerCanvas extends Canvas {
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			System.out.println(e.toString());
+			// System.out.println(e.toString());
 			if ((e.stateMask & Keyboard.getCtrlKey()) != 0) {
 				switch (e.keyCode) {
 				case '=':
@@ -254,6 +248,10 @@ public class ViewerCanvas extends Canvas {
 	private SelectionAdapter sListener = new SelectionAdapter() {
 		public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 			repaint();
+			// JIRA TIBCO #JSS-3000: Fix helping on BigSur and 
+			// https://community.jaspersoft.com/jaspersoft-studio/issues/13296
+			// other Mac environments (i.e runtime development)
+			redraw();
 		}
 	};
 	private ControlListener cListener = new ControlListener() {
@@ -266,7 +264,7 @@ public class ViewerCanvas extends Canvas {
 					return;
 				if (Math.abs(zm - zoom) > 0.00001) {
 					setZoomInternal(zm);
-					rViewer.fireViewerModelChanged();
+					rViewer.fireViewerModelChanged(false);
 				}
 			}
 			refresh();
@@ -295,7 +293,7 @@ public class ViewerCanvas extends Canvas {
 		if (zoomMode != getZoomMode()) {
 			this.zoomMode = zoomMode;
 			setZoomInternal(computeZoom());
-			rViewer.fireViewerModelChanged();
+			rViewer.fireViewerModelChanged(false);
 		}
 	}
 
@@ -357,7 +355,7 @@ public class ViewerCanvas extends Canvas {
 		zoomMode = ZOOM_MODE_NONE;
 		if (Math.abs(zm - zoom) > 0.00001) {
 			setZoomInternal(zm);
-			rViewer.fireViewerModelChanged();
+			rViewer.fireViewerModelChanged(false);
 		}
 	}
 
@@ -369,8 +367,10 @@ public class ViewerCanvas extends Canvas {
 		JasperPrint doc = rViewer.getReport();
 		if (doc == null)
 			return 1.0f;
-		int pw = doc.getPageWidth();
-		int ph = doc.getPageHeight();
+		int pageIndex = rViewer.getPageIndex();
+		PrintPageFormat ppFormat = doc.getPageFormat(pageIndex);
+		int pw = ppFormat.getPageWidth();
+		int ph = ppFormat.getPageHeight();
 		Point fitSize = getFitSize();
 		switch (zoomMode) {
 		case ZOOM_MODE_ACTUAL_SIZE:
@@ -393,7 +393,7 @@ public class ViewerCanvas extends Canvas {
 
 	private IReportViewerListener listener = new IReportViewerListener() {
 		public void viewerStateChanged(ReportViewerEvent evt) {
-			if (!isDisposed())
+			if (!evt.isCurrentPage() && !isDisposed())
 				refresh();
 		}
 	};
@@ -435,30 +435,44 @@ public class ViewerCanvas extends Canvas {
 
 	private Image renderPage() throws Throwable {
 		JasperPrint jr = rViewer.getReport();
-		BufferedImage img = new BufferedImage((int) (jr.getPageWidth() * zoom) + 1, (int) (jr.getPageHeight() * zoom) + 1, BufferedImage.TYPE_INT_RGB);
+
+		int pageIndex = rViewer.getPageIndex();
+
+		PrintPageFormat pageFormat = jr.getPageFormat(pageIndex);
+
+		BufferedImage img = null;
+
+		float z = computeZoom();
+		if (pageFormat != null) {
+			img = new BufferedImage((int) (pageFormat.getPageWidth() * z) + 1,
+					(int) (pageFormat.getPageHeight() * z) + 1, BufferedImage.TYPE_INT_RGB);
+		} else {
+			img = new BufferedImage((int) (jr.getPageWidth() * z) + 1, (int) (jr.getPageHeight() * z) + 1,
+					BufferedImage.TYPE_INT_RGB);
+		}
 
 		Graphics2D g2d = (Graphics2D) img.getGraphics();
-		try {
-			JRGraphics2DExporter exporter = new JRGraphics2DExporter(jContext);
-			exporter.setExporterInput(new SimpleExporterInput(jr));
+		if (pageIndex >= 0 && pageIndex <= rViewer.getPageIndex())
+			try {
+				JRGraphics2DExporter exporter = new JRGraphics2DExporter(jContext);
+				exporter.setExporterInput(new SimpleExporterInput(jr));
 
-			SimpleGraphics2DExporterOutput output = new SimpleGraphics2DExporterOutput();
-			output.setGraphics2D(g2d);
-			exporter.setExporterOutput(output);
+				SimpleGraphics2DExporterOutput output = new SimpleGraphics2DExporterOutput();
+				output.setGraphics2D(g2d);
+				exporter.setExporterOutput(output);
 
-			SimpleGraphics2DReportConfiguration grxConfiguration = new SimpleGraphics2DReportConfiguration();
-			grxConfiguration.setPageIndex(rViewer.getPageIndex());
-			grxConfiguration.setZoomRatio(zoom);
-			exporter.setConfiguration(grxConfiguration);
+				SimpleGraphics2DReportConfiguration grxConfiguration = new SimpleGraphics2DReportConfiguration();
+				grxConfiguration.setPageIndex(pageIndex);
+				grxConfiguration.setZoomRatio(z);
+				exporter.setConfiguration(grxConfiguration);
+				exporter.exportReport();
 
-			exporter.exportReport();
-
-			g2d.setColor(Color.black);
-			g2d.setStroke(new BasicStroke(1));
-			g2d.drawRect(0, 0, (int) (img.getWidth() / zoom), (int) (img.getHeight() / zoom));
-		} finally {
-			g2d.dispose();
-		}
+				g2d.setColor(Color.black);
+				g2d.setStroke(new BasicStroke(1));
+				g2d.drawRect(0, 0, (int) (img.getWidth() / z), (int) (img.getHeight() / z));
+			} finally {
+				g2d.dispose();
+			}
 		return UIUtils.awt2Swt(img);
 	}
 
@@ -466,7 +480,7 @@ public class ViewerCanvas extends Canvas {
 	 * Attaches the report viewer to the canvas
 	 * 
 	 * @param viewer
-	 *          the viewer
+	 *            the viewer
 	 */
 	public void setReportViewer(IReportViewer viewer) {
 		if (rViewer != null)
@@ -509,7 +523,8 @@ public class ViewerCanvas extends Canvas {
 
 				// if (x + b.width < ca.width) {
 				// draw right margin
-				// gc.fillRectangle(x + b.width, 0, ca.width - x - b.width, b.height);
+				// gc.fillRectangle(x + b.width, 0, ca.width - x - b.width,
+				// b.height);
 				// }
 			}
 
@@ -546,7 +561,7 @@ public class ViewerCanvas extends Canvas {
 			try {
 				List<JRPrintPage> pages = rViewer.getReport().getPages();
 				if (pages.isEmpty())
-					refresh(null, "Document is Empty", null);
+					refresh(null, "内容がありません", null);
 				else
 					refresh(renderPage(), null, pages.get(rViewer.getPageIndex()));
 			} catch (Throwable e) {
@@ -713,6 +728,10 @@ public class ViewerCanvas extends Canvas {
 
 	private void setScrollBarSelection(ScrollBar sb, int selection) {
 		sb.setSelection(Math.max(sb.getMinimum(), Math.min(selection, sb.getMaximum())));
+		// JIRA TIBCO #JSS-3000: Fix helping on BigSur and 
+		// https://community.jaspersoft.com/jaspersoft-studio/issues/13296
+		// other Mac environments (i.e runtime development)
+		redraw();
 	}
 
 	private Rectangle getContentBounds() {
@@ -759,17 +778,20 @@ public class ViewerCanvas extends Canvas {
 
 		for (JRPrintElement element : elements) {
 			if (element instanceof JRPrintImage) {
-				Renderable r = ((JRPrintImage) element).getRenderable();
-				if (r instanceof ImageMapRenderable) {
+				Renderable r = ((JRPrintImage) element).getRenderer();
+				if (r instanceof AreaHyperlinksRenderable) {
 					try {
-						List<JRPrintImageAreaHyperlink> hyperlinks = ((ImageMapRenderable) r).getImageAreaHyperlinks(new java.awt.Rectangle(0, 0, element.getWidth(), element.getHeight()));
+						List<JRPrintImageAreaHyperlink> hyperlinks = ((AreaHyperlinksRenderable) r)
+								.getImageAreaHyperlinks(
+										new java.awt.Rectangle(0, 0, element.getWidth(), element.getHeight()));
 						if (hyperlinks != null)
 							links.add(new ImageAreaHyperlink(element.getX(), element.getY(), hyperlinks));
 					} catch (JRException e) {
 						throw new RuntimeException(e);
 					}
 				}
-			} else if (element instanceof JRPrintHyperlink && !((JRPrintHyperlink) element).getHyperlinkTypeValue().equals(HyperlinkTypeEnum.NONE))
+			} else if (element instanceof JRPrintHyperlink
+					&& !((JRPrintHyperlink) element).getHyperlinkTypeValue().equals(HyperlinkTypeEnum.NONE))
 				links.add(new PrintHyperlink(0, 0, element));
 		}
 	}
@@ -837,12 +859,12 @@ public class ViewerCanvas extends Canvas {
 				if (link.getHyperlinkReference() != null)
 					tTip = link.getHyperlinkReference();
 				if (currentLink.getHyperlinkAnchor() != null)
-					tTip = "#" + currentLink.getHyperlinkAnchor(); //$NON-NLS-1$ 
+					tTip = "#" + currentLink.getHyperlinkAnchor(); //$NON-NLS-1$
 			} else if (hType.equals(HyperlinkTypeEnum.REMOTE_PAGE)) {
 				if (link.getHyperlinkReference() != null)
 					tTip = link.getHyperlinkReference();
 				if (link.getHyperlinkPage() != null)
-					tTip = "#page " + link.getHyperlinkPage(); //$NON-NLS-1$ 
+					tTip = "#page " + link.getHyperlinkPage(); //$NON-NLS-1$
 			}
 		}
 		return tTip;

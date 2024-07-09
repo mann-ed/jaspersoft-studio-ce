@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.builder.jdt;
 
@@ -73,7 +65,7 @@ public class JRErrorHandler implements JasperReportErrorHandler {
 			int line = location == null ? 1 : location.getLineNumber();
 			int col = location == null ? 1 : location.getColumnNumber();
 			IMarker m = Markers.addMarker(file, message, line, col, IMarker.SEVERITY_ERROR);
-			m.setAttribute(MARKER_ERROR_JRDESIGNELEMENT, element);
+			m.setAttribute(MARKER_ERROR_JRDESIGNELEMENT, element.getUUID().toString());
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

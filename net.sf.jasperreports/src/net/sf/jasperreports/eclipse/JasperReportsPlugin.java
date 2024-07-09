@@ -1,26 +1,24 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
-import net.sf.jasperreports.eclipse.classpath.container.ClasspathContainerManager;
-
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wb.swt.ResourceManager;
 import org.osgi.framework.BundleContext;
+
+import net.sf.jasperreports.eclipse.classpath.container.ClasspathContainerManager;
 
 /*
  * The main plugin class to be used in the desktop.
@@ -34,10 +32,23 @@ public class JasperReportsPlugin extends AbstractJRUIPlugin {
 	// The unique plug-in identifier
 	public static final String PLUGIN_ID = "net.sf.jasperreports"; //$NON-NLS-1$
 
+	private static ClasspathContainerManager classpathContainerManager;
+	
+	/**
+	 * Listener on the key press event
+	 */
+	private static List<IKeyboardEvent> events = new ArrayList<IKeyboardEvent>();
+	
 	/**
 	 * Map to keeping track if a key is held down
 	 */
 	private static HashSet<Integer> pressedKeys = new HashSet<Integer>();
+	
+	/**
+	 * Map to keeping track of the position where the mouse pointer was when a specific
+	 * mouse button was pressed. The key is the index of the button
+	 */
+	private static HashMap<Integer, Point> mousePressLocation = new HashMap<Integer, Point>();
 
 	/**
 	 * Listener called when a key is pressed
@@ -48,6 +59,16 @@ public class JasperReportsPlugin extends AbstractJRUIPlugin {
 	 * Listener called when a key is released
 	 */
 	private static Listener keyUpListener = null;
+	
+	/**
+	 * Listener when the application loose the focus, clear every key modifier in this case
+	 */
+	private static Listener focusLostListener = null;
+	
+	/**
+	 * Listener used when a mouse button is pressed, it will register its position
+	 */
+	private static Listener mousePressListener = null;
 
 	/**
 	 * The constructor.
@@ -69,21 +90,46 @@ public class JasperReportsPlugin extends AbstractJRUIPlugin {
 	 * one dosen't do anything
 	 */
 	public static void initializeKeyListener() {
-		if (keyDownListener == null && keyUpListener == null) {
+		
+		if (keyDownListener == null && keyUpListener == null && focusLostListener == null && mousePressListener == null) {
 			keyDownListener = new Listener() {
 				public void handleEvent(Event e) {
 					pressedKeys.add(e.keyCode);
+					fireEvent(true, e.keyCode);
 				}
 			};
 
 			keyUpListener = new Listener() {
 				public void handleEvent(Event e) {
 					pressedKeys.remove(e.keyCode);
+					fireEvent(false, e.keyCode);
 				}
 			};
+			
+			focusLostListener = new Listener() {
+				
+				@Override
+				public void handleEvent(Event event) {
+					pressedKeys.clear();
+					fireEvent(false, SWT.DEFAULT);
+				}
+			}; 
+			
+			mousePressListener = new Listener() {
+				
+				@Override
+				public void handleEvent(Event event) {
+					Display display = PlatformUI.getWorkbench().getDisplay();
+					Point point = display.getCursorLocation();
+					mousePressLocation.put(event.button, point);
+				}
+			};
+			
 
 			PlatformUI.getWorkbench().getDisplay().addFilter(org.eclipse.swt.SWT.KeyDown, keyDownListener);
 			PlatformUI.getWorkbench().getDisplay().addFilter(org.eclipse.swt.SWT.KeyUp, keyUpListener);
+			PlatformUI.getWorkbench().getDisplay().addFilter(org.eclipse.swt.SWT.FocusOut, focusLostListener);
+			PlatformUI.getWorkbench().getDisplay().addFilter(org.eclipse.swt.SWT.MouseDown, mousePressListener);
 		}
 	}
 
@@ -97,6 +143,35 @@ public class JasperReportsPlugin extends AbstractJRUIPlugin {
 	public static boolean isPressed(int keyCode) {
 		return pressedKeys.contains(keyCode);
 	}
+	
+	/**
+	 * Return the number of keys currently pressed
+	 */
+	public static int getPressedKeysNumber() {
+		return pressedKeys.size();
+	}
+	
+	/**
+	 * Return an array of integer representing the id of the key currently
+	 * pressed
+	 * 
+	 * @return a not null array of integer
+	 */
+	public static Integer[] getPressedKeys(){
+		return pressedKeys.toArray(new Integer[pressedKeys.size()]);
+	}
+	
+	/**
+	 * Return the position of the mouse pointer the last time a specific
+	 * mouse button was pressed
+	 * 
+	 * @param mouseButton the index of the mouse button
+	 * @return the last position of the pointer when the specified button was pressed
+	 * or null if it was never pressed
+	 */
+	public static Point getLastClickLocation(int mouseButton){
+		return mousePressLocation.get(mouseButton);
+	}
 
 	/**
 	 * This method is called when the plug-in is stopped
@@ -104,12 +179,58 @@ public class JasperReportsPlugin extends AbstractJRUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
+		events.clear();
 		if (keyDownListener != null && keyUpListener != null && !PlatformUI.getWorkbench().getDisplay().isDisposed()) {
 			PlatformUI.getWorkbench().getDisplay().removeFilter(org.eclipse.swt.SWT.KeyDown, keyDownListener);
 			PlatformUI.getWorkbench().getDisplay().removeFilter(org.eclipse.swt.SWT.KeyUp, keyUpListener);
+			PlatformUI.getWorkbench().getDisplay().removeFilter(org.eclipse.swt.SWT.FocusOut, focusLostListener);
+			PlatformUI.getWorkbench().getDisplay().removeFilter(org.eclipse.swt.SWT.MouseDown, mousePressListener);
 		}
 		// Invoke the dispose of all resources handled by the generic SWT manager
 		ResourceManager.dispose();
+	}
+	
+	/**
+	 * Add a key listener that will be fired when a keyboard key is pressed
+	 * or released
+	 * 
+	 * @param event the event to add, and event null or already present
+	 * will be not added to the list
+	 */
+	public static void addKeyListener(IKeyboardEvent event) {
+		if (event != null && !events.contains(event)) {
+			events.add(event);
+		}
+	}
+	
+	/**
+	 * Remove a key listener that will be fired when a keyboard key is pressed
+	 * or released
+	 * 
+	 * @param event the event to remove
+	 * @return true if the event was removed successfully, false otherwise
+	 */
+	public static boolean removeKeyListener(IKeyboardEvent event) {
+		return events.remove(event);
+	}
+	
+	/**
+	 * Fire all the keypress event registered
+	 * 
+	 * @param isKeyDown true if the event was a key down one, false if it
+	 * was a key up
+	 * @param keycode the code of the pressed key
+	 */
+	protected static void fireEvent(boolean isKeyDown, int keycode) {
+		if(isKeyDown) {
+			for(IKeyboardEvent event : events) {
+				event.keyDown(keycode);
+			}
+		} else {
+			for(IKeyboardEvent event : events) {
+				event.keyUp(keycode);
+			}
+		}
 	}
 
 	/**
@@ -123,8 +244,6 @@ public class JasperReportsPlugin extends AbstractJRUIPlugin {
 	public String getPluginID() {
 		return PLUGIN_ID;
 	}
-
-	private static ClasspathContainerManager classpathContainerManager;
 
 	public static ClasspathContainerManager getClasspathContainerManager() {
 		if (classpathContainerManager == null) {

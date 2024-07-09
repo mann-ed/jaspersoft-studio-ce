@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.classpath.container;
 
@@ -29,8 +21,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class JRClasspathContainerPage extends WizardPage implements
-		IClasspathContainerPage, IClasspathContainerPageExtension {
+public class JRClasspathContainerPage extends WizardPage
+		implements IClasspathContainerPage, IClasspathContainerPageExtension {
 	private ArrayList<IPath> fUsedPaths;
 
 	public JRClasspathContainerPage() {
@@ -38,7 +30,7 @@ public class JRClasspathContainerPage extends WizardPage implements
 		setTitle(Messages.JRClasspathContainerPage_Title);
 		setDescription(Messages.JRClasspathContainerPage_Description);
 		setPageComplete(true);
-		fUsedPaths = new ArrayList<IPath>();
+		fUsedPaths = new ArrayList<>();
 	}
 
 	@Override
@@ -54,8 +46,7 @@ public class JRClasspathContainerPage extends WizardPage implements
 	}
 
 	@Override
-	public void initialize(IJavaProject project,
-			IClasspathEntry[] currentEntries) {
+	public void initialize(IJavaProject project, IClasspathEntry[] currentEntries) {
 		jrcc = new JRClasspathContainer(null, project);
 		for (int i = 0; i < currentEntries.length; i++) {
 			IClasspathEntry curr = currentEntries[i];

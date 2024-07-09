@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.builder.jdt;
 
@@ -24,20 +16,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import net.sf.jasperreports.engine.DefaultJasperReportsContext;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRPropertiesUtil;
-import net.sf.jasperreports.engine.JRReport;
-import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.engine.design.JRAbstractJavaCompiler;
-import net.sf.jasperreports.engine.design.JRClassGenerator;
-import net.sf.jasperreports.engine.design.JRCompilationSourceCode;
-import net.sf.jasperreports.engine.design.JRCompilationUnit;
-import net.sf.jasperreports.engine.design.JRJavacCompiler;
-import net.sf.jasperreports.engine.design.JRSourceCompileTask;
-import net.sf.jasperreports.engine.util.JRClassLoader;
-import net.sf.jasperreports.functions.FunctionsUtil;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jdt.core.compiler.IProblem;
@@ -51,6 +29,20 @@ import org.eclipse.jdt.internal.compiler.IProblemFactory;
 import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
+
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRPropertiesUtil;
+import net.sf.jasperreports.engine.JRReport;
+import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.engine.design.JRAbstractJavaCompiler;
+import net.sf.jasperreports.engine.design.JRClassGenerator;
+import net.sf.jasperreports.engine.design.JRCompilationSourceCode;
+import net.sf.jasperreports.engine.design.JRCompilationUnit;
+import net.sf.jasperreports.engine.design.JRJavacCompiler;
+import net.sf.jasperreports.engine.design.JRSourceCompileTask;
+import net.sf.jasperreports.engine.util.JRClassLoader;
+import net.sf.jasperreports.functions.FunctionsUtil;
 
 /**
  * @author Teodor Danciu (teodord@users.sourceforge.net)
@@ -134,7 +126,8 @@ public class JRJdtCompiler extends JRAbstractJavaCompiler {
 			// CompilerOptions.GENERATE);
 			// }
 
-			List<JRPropertiesUtil.PropertySuffix> properties = JRPropertiesUtil.getInstance(jasperReportsContext).getProperties(JDT_PROPERTIES_PREFIX);
+			List<JRPropertiesUtil.PropertySuffix> properties = JRPropertiesUtil.getInstance(jasperReportsContext)
+					.getProperties(JDT_PROPERTIES_PREFIX);
 			for (Iterator<JRPropertiesUtil.PropertySuffix> it = properties.iterator(); it.hasNext();) {
 				JRPropertiesUtil.PropertySuffix property = it.next();
 				String propVal = property.getValue();
@@ -168,7 +161,8 @@ public class JRJdtCompiler extends JRAbstractJavaCompiler {
 			} catch (ClassNotFoundException e) {
 				clsLoader = null;
 				// if (log.isWarnEnabled())
-				// log.warn("Failure using Thread.currentThread().getContextClassLoader() in JRJdtCompiler class. Using JRJdtCompiler.class.getClassLoader() instead.");
+				// log.warn("Failure using Thread.currentThread().getContextClassLoader() in
+				// JRJdtCompiler class. Using JRJdtCompiler.class.getClassLoader() instead.");
 			}
 		}
 		if (clsLoader == null)
@@ -186,20 +180,25 @@ public class JRJdtCompiler extends JRAbstractJavaCompiler {
 
 	protected void checkLanguage(String language) throws JRException {
 		if (!JRReport.LANGUAGE_JAVA.equals(language))
-			throw new JRException("Language \"" + language + "\" not supported by this report compiler.\n" + "Expecting \"java\" instead.");
+			throw new JRException("Language \"" + language + "\" not supported by this report compiler.\n"
+					+ "Expecting \"java\" instead.");
 	}
 
 	protected JRCompilationUnit recreateCompileUnit(JRCompilationUnit compilationUnit, Set<Method> missingMethods) {
 		String unitName = compilationUnit.getName();
 
 		JRSourceCompileTask sourceTask = compilationUnit.getCompileTask();
-		JRCompilationSourceCode sourceCode = JRClassGenerator.modifySource(sourceTask, missingMethods, compilationUnit.getSourceCode());
+		JRCompilationSourceCode sourceCode = JRClassGenerator.modifySource(sourceTask, missingMethods,
+				compilationUnit.getSourceCode());
 
 		File sourceFile = compilationUnit.getSourceFile();
 		File saveSourceDir = sourceFile == null ? null : sourceFile.getParentFile();
 		sourceFile = getSourceFile(saveSourceDir, unitName, sourceCode);
 
-		return new JRCompilationUnit(unitName, sourceCode, sourceFile, compilationUnit.getExpressions(), sourceTask);
+		JRCompilationUnit newUnit = new JRCompilationUnit(unitName);
+		newUnit.setDirectEvaluations(compilationUnit.getDirectEvaluations());
+		newUnit.setSource(sourceCode, sourceFile, sourceTask);
+		return newUnit;
 	}
 
 	protected JRCompilationSourceCode generateSourceCode(JRSourceCompileTask sourceTask) throws JRException {
@@ -223,7 +222,8 @@ public class JRJdtCompiler extends JRAbstractJavaCompiler {
 		protected final JRCompilationUnit[] units;
 		protected final CompilationUnitResult[] unitResults;
 
-		public CompilerRequestor(final JasperReportsContext jasperReportsContext, final JRJdtCompiler compiler, final JRCompilationUnit[] units) {
+		public CompilerRequestor(final JasperReportsContext jasperReportsContext, final JRJdtCompiler compiler,
+				final JRCompilationUnit[] units) {
 			this.jasperReportsContext = jasperReportsContext;
 			this.compiler = compiler;
 			this.units = units;
@@ -255,9 +255,11 @@ public class JRJdtCompiler extends JRAbstractJavaCompiler {
 
 					if (IProblem.UndefinedMethod == problem.getID()) {
 						if (problem.getSourceStart() >= 0 && problem.getSourceEnd() >= 0) {
-							String methodName = sourceCode.substring(problem.getSourceStart(), problem.getSourceEnd() + 1);
+							String methodName = sourceCode.substring(problem.getSourceStart(),
+									problem.getSourceEnd() + 1);
 
-							Method method = FunctionsUtil.getInstance(jasperReportsContext).getMethod4Function(methodName);
+							Method method = FunctionsUtil.getInstance(jasperReportsContext)
+									.getMethod4Function(methodName);
 							if (method != null) {
 								unitResults[classIdx].addMissingMethod(method);
 								// continue;

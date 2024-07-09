@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse;
 
@@ -18,8 +10,16 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 public class MScopedPreferenceStore extends ScopedPreferenceStore {
 
+	private boolean withDefault = true;
+	
+	protected IScopeContext context;
+	
+	protected String qualifier;
+	
 	public MScopedPreferenceStore(IScopeContext context, String qualifier) {
 		super(context, qualifier);
+		this.context = context;
+		this.qualifier = qualifier;
 	}
 
 	@Override
@@ -27,9 +27,16 @@ public class MScopedPreferenceStore extends ScopedPreferenceStore {
 		return super.getPreferenceNodes(withDefault);
 	}
 
-	private boolean withDefault = true;
-
 	public void setWithDefault(boolean withDefault) {
 		this.withDefault = withDefault;
+	}
+	
+	/**
+	 * Essentially this method does the same of ScopedPreferenceStore:getStorePreferences(),
+	 * but since it has package visibility and can not be accessed this method replace it
+	 * to be used from studio
+	 */
+	public IEclipsePreferences getQualifierStore(){
+		return context.getNode(qualifier);
 	}
 }

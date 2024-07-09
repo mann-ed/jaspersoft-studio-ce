@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.soutils;
 
@@ -16,8 +8,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -202,30 +194,6 @@ public final class EnvironmentUtils extends AbstractUIPlugin {
         && SystemUtils.OS_VERSION.startsWith(osVersionPrefix);
   }
 
-  ////////////////////////////////////////////////////////////////////////////
-  //
-  // JVM version
-  //
-  ////////////////////////////////////////////////////////////////////////////
-  private static Float m_forcedJavaVersion = null;
-
-  /**
-   * @return the Java version number as <code>float</code>. For example <code>1.5</code> for JDK
-   *         1.5.
-   */
-  public static float getJavaVersion() {
-    if (m_forcedJavaVersion != null) {
-      return m_forcedJavaVersion;
-    }
-    return SystemUtils.JAVA_VERSION_FLOAT;
-  }
-
-  /**
-   * Allows temporary (for tests) specify different Java version.
-   */
-  public static void setForcedJavaVersion(Float version) {
-    m_forcedJavaVersion = version;
-  }
 
   ////////////////////////////////////////////////////////////////////////////
   //

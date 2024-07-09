@@ -1,22 +1,10 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.viewer.action;
 
 import java.text.DecimalFormat;
-
-import net.sf.jasperreports.eclipse.viewer.IReportViewer;
-import net.sf.jasperreports.eclipse.viewer.IReportViewerListener;
-import net.sf.jasperreports.eclipse.viewer.ReportViewerEvent;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.ContributionItem;
@@ -30,11 +18,17 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+
+import net.sf.jasperreports.eclipse.viewer.IReportViewer;
+import net.sf.jasperreports.eclipse.viewer.IReportViewerListener;
+import net.sf.jasperreports.eclipse.viewer.ReportViewerEvent;
 
 public class ZoomComboContributionItem extends ContributionItem {
 	private SelectionListener selListener = new SelectionListener() {
@@ -68,7 +62,8 @@ public class ZoomComboContributionItem extends ContributionItem {
 
 		@Override
 		public void viewerStateChanged(ReportViewerEvent evt) {
-			refresh();
+			if (!evt.isCurrentPage())
+				refresh();
 		}
 	};
 
@@ -84,7 +79,7 @@ public class ZoomComboContributionItem extends ContributionItem {
 	 * report zoom contribution item.
 	 * 
 	 * @param viewer
-	 *          the report viewer
+	 *            the report viewer
 	 */
 	public ZoomComboContributionItem(IReportViewer viewer) {
 		Assert.isNotNull(viewer);
@@ -120,35 +115,59 @@ public class ZoomComboContributionItem extends ContributionItem {
 	}
 
 	private Control createControl(Composite parent) {
-		zCombo = new Combo(parent, SWT.DROP_DOWN);
+		// NOTE: we use a container composite in order prevent a buggy behavior as shown
+		// in the following bug (Windows issue) - https://bugs.eclipse.org/bugs/show_bug.cgi?id=48905
+		Composite comboComp = new Composite(parent,SWT.NONE);
+		GridLayout comboCompL = new GridLayout();
+		comboCompL.horizontalSpacing=0;
+		comboCompL.verticalSpacing=0;
+		comboCompL.marginHeight=0;
+		comboCompL.marginWidth=0;
+		comboComp.setLayout(comboCompL);
+		zCombo = new Combo(comboComp, SWT.DROP_DOWN);
+		GridData comboGD = new GridData(SWT.FILL,SWT.CENTER,true,true);
+		zCombo.setLayoutData(comboGD);
 		zCombo.addSelectionListener(selListener);
 		zCombo.addFocusListener(fListener);
-		zCombo.setItems(getZoomLevelsAsText()); //$NON-NLS-1$
 		zCombo.addVerifyListener(new VerifyListener() {
 			@Override
 			public void verifyText(VerifyEvent e) {
 				if (isRefresh)
 					return;
 				String t = zCombo.getText();
-				int end = t.indexOf("%");
+				int end = t.indexOf("%"); //$NON-NLS-1$
 				if (e.end > end) {
 					e.doit = false;
 					zCombo.setSelection(new Point(end - 1, end - 1));
 				}
-				if (!Character.isDigit(e.character) && !(e.character == SWT.BS || e.character == SWT.DEL || e.character == SWT.CR)) {
+				if (!Character.isDigit(e.character)
+						&& !(e.character == SWT.BS || e.character == SWT.DEL || e.character == SWT.CR)) {
 					e.doit = false;
 					return;
 				}
-				if (e.character == SWT.DEL && !Character.isDigit(zCombo.getText().charAt(e.start)))
+				if (e.character == SWT.DEL
+						&& !Character.isDigit(zCombo.getText().charAt(e.start)))
 					e.doit = false;
 			}
 		});
 
+		zCombo.setItems(getZoomLevelsAsText()); //$NON-NLS-1$
+		tItem.setWidth(computeWidth(comboComp));
 		refresh();
-		zCombo.pack();
-		return zCombo;
+		return comboComp;
 	}
 
+	/**
+	 * Computes the width required by control
+	 * 
+	 * @param control
+	 *            The control to compute width
+	 * @return int The width required
+	 */
+	protected int computeWidth(Control control) {
+		return control.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x;
+	}
+	
 	/**
 	 * @see org.eclipse.jface.action.ContributionItem#dispose()
 	 */
@@ -172,7 +191,6 @@ public class ZoomComboContributionItem extends ContributionItem {
 	public void fill(ToolBar parent, int index) {
 		tItem = new ToolItem(parent, SWT.SEPARATOR, index);
 		Control ctrl = createControl(parent);
-		tItem.setWidth(zCombo.getSize().x);
 		tItem.setControl(ctrl);
 	}
 

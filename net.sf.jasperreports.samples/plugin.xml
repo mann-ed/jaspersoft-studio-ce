@@ -10,12 +10,20 @@
             class="net.sf.jasperreports.samples.wizards.SampleNewWizard"
             icon="icons/jrxml_icon.png"
             id="net.sf.jasperreports.samples.wizards.SampleNewWizard"
-            name="JasperReports Samples"
+            name="レポートサンプル"
             project="true">
          <description>
-            Create a JasperReports project that contains a many samples
+            サンプルを含むレポートプロジェクトを作成する
          </description>
       </wizard>
    </extension>
-
+   <extension
+         point="net.sf.jasperreports.samples.samples"
+         id="net.sf.jasperreports.samples.jrsamples"
+         name="Report Samples Provider">
+      <resources
+            resources="net.sf.jasperreports.samples.JasperReportsSamplesProvider">
+      </resources>
+   </extension>
+   
 </plugin>

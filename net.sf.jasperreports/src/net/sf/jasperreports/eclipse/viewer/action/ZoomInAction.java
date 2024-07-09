@@ -1,31 +1,24 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.viewer.action;
 
 import net.sf.jasperreports.eclipse.JasperReportsPlugin;
+import net.sf.jasperreports.eclipse.messages.Messages;
 import net.sf.jasperreports.eclipse.viewer.IReportViewer;
 
 public class ZoomInAction extends AReportAction {
 
-	public static final String ID = "PreviewZoomInAction";
+	public static final String ID = Messages.ZoomInAction_0;
 	
 	public ZoomInAction(IReportViewer viewer) {
 		super(viewer);
 		setId(ID);
 		setText("Zoom In"); //$NON-NLS-1$
 		setToolTipText("Zoom in"); //$NON-NLS-1$
-		setImageDescriptor(JasperReportsPlugin.getDefault().getImageDescriptor("icons/zoomin-16.png"));
-		setDisabledImageDescriptor(JasperReportsPlugin.getDefault().getImageDescriptor("icons/zoomin-16.png"));
+		setImageDescriptor(JasperReportsPlugin.getDefault().getImageDescriptor("icons/zoomin-16.png")); //$NON-NLS-1$
+		setDisabledImageDescriptor(JasperReportsPlugin.getDefault().getImageDescriptor("icons/zoomin-16.png")); //$NON-NLS-1$
 	}
 
 	@Override

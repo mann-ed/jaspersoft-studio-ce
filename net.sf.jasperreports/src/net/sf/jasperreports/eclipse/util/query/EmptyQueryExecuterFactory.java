@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.util.query;
 
@@ -29,7 +21,7 @@ import net.sf.jasperreports.engine.query.QueryExecuterFactory;
  * query executers.
  * 
  * @author sanda zaharia (shertage@users.sourceforge.net)
- * @version $Id: EmptyQueryExecuterFactory.java 920 2014-07-23 16:22:43Z mrabbi $
+ * @version $Id$
  */
 public class EmptyQueryExecuterFactory implements QueryExecuterFactory {
 

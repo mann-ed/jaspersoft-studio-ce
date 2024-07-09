@@ -1,29 +1,18 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.wizard.project;
 
-import net.sf.jasperreports.eclipse.messages.Messages;
-import net.sf.jasperreports.eclipse.ui.validator.EmptyStringValidator;
-
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.beans.typed.PojoProperties;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -32,6 +21,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+
+import net.sf.jasperreports.eclipse.messages.Messages;
+import net.sf.jasperreports.eclipse.ui.validator.EmptyStringValidator;
 
 public class JRProjectPage extends WizardPage {
 	private String name;
@@ -67,25 +59,22 @@ public class JRProjectPage extends WizardPage {
 		gd.horizontalSpan = 2;
 		new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL).setLayoutData(gd);
 
-		dbc.bindValue(SWTObservables.observeText(tname, SWT.Modify),
-				PojoObservables.observeValue(this, "name"), //$NON-NLS-1$
-				new UpdateValueStrategy()
-						.setAfterConvertValidator(new EmptyStringValidator() {
-							@Override
-							public IStatus validate(Object value) {
-								IStatus s = super.validate(value);
-								if (s.equals(Status.OK_STATUS)) {
-									IProject[] prjs = ResourcesPlugin
-											.getWorkspace().getRoot()
-											.getProjects();
-									for (IProject p : prjs) {
-										if (p.getName().equals(value))
-											return ValidationStatus
-													.error(Messages.JRProjectPage_ErrorExistingProject);
-									}
-								}
-								return s;
+		dbc.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(tname),
+				PojoProperties.value("name").observe(this), //$NON-NLS-1$
+				new UpdateValueStrategy().setAfterConvertValidator(new EmptyStringValidator() {
+					@Override
+					public IStatus validate(String value) {
+						IStatus s = super.validate(value);
+						if (s.equals(Status.OK_STATUS)) {
+							IProject[] prjs = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+							for (IProject p : prjs) {
+								if (p.getName().equals(value))
+									return ValidationStatus.error(Messages.JRProjectPage_ErrorExistingProject);
 							}
-						}), null);
+						}
+						return s;
+					}
+				}), null);
 	}
 }

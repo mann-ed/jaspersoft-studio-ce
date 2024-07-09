@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.ui;
 
@@ -36,26 +28,28 @@ public final class ReportPreviewUtil {
 	public static void loadFileIntoViewer(final IFile file, final IReportViewer viewer, Display display) {
 		display.asyncExec(new Runnable() {
 			public void run() {
-				ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-
-				try {
-					ClassLoader projectClassLoader = createProjectClassLoader(file.getProject());
-					if (projectClassLoader != null) {
-						Thread.currentThread().setContextClassLoader(projectClassLoader);
-					}
-
+				if(viewer.getControl()!=null && !viewer.getControl().isDisposed()) {
+					ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+	
 					try {
-						JRReport report = ReportLoader.loadReport(file);
-						if (report == null) {
-							viewer.setReport(null);
-						} else {
-							viewer.setReport(new ReportConverter(DefaultJasperReportsContext.getInstance(), report, false).getJasperPrint());
+						ClassLoader projectClassLoader = createProjectClassLoader(file.getProject());
+						if (projectClassLoader != null) {
+							Thread.currentThread().setContextClassLoader(projectClassLoader);
 						}
-					} catch (Throwable t) {
-						UIUtils.showError(t);
+	
+						try {
+							JRReport report = ReportLoader.loadReport(file);
+							if (report == null) {
+								viewer.setReport(null);
+							} else {
+								viewer.setReport(new ReportConverter(DefaultJasperReportsContext.getInstance(), report, false).getJasperPrint());
+							}
+						} catch (Throwable t) {
+							UIUtils.showError(t);
+						}
+					} finally {
+						Thread.currentThread().setContextClassLoader(oldClassLoader);
 					}
-				} finally {
-					Thread.currentThread().setContextClassLoader(oldClassLoader);
 				}
 			}
 		});

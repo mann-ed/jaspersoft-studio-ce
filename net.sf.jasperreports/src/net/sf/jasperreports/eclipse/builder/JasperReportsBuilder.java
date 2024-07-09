@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.builder;
 
@@ -19,16 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.jasperreports.eclipse.builder.jdt.JRErrorHandler;
-import net.sf.jasperreports.eclipse.classpath.ClassLoaderUtil;
-import net.sf.jasperreports.eclipse.util.FileExtension;
-import net.sf.jasperreports.eclipse.util.FileUtils;
-import net.sf.jasperreports.engine.DefaultJasperReportsContext;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.util.JRSaver;
-import net.sf.jasperreports.engine.util.LocalJasperReportsContext;
-
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -42,6 +25,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jdt.core.JavaCore;
+
+import net.sf.jasperreports.data.AbstractClasspathAwareDataAdapterService;
+import net.sf.jasperreports.eclipse.builder.jdt.JRErrorHandler;
+import net.sf.jasperreports.eclipse.util.FileExtension;
+import net.sf.jasperreports.eclipse.util.FileUtils;
+import net.sf.jasperreports.eclipse.util.Misc;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.SimpleJasperReportsContext;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.util.JRSaver;
 
 /*
  * @author Teodor Danciu (teodord@users.sourceforge.net)
@@ -108,13 +102,20 @@ public class JasperReportsBuilder extends IncrementalProjectBuilder {
 			if (monitor.isCanceled())
 				return false;
 			String ext = resource.getFileExtension();
-			if (ext == null)
-				return true;
-			if (resource.exists()) {
-				if (ext.equalsIgnoreCase(FileExtension.JRXML))
+			if (resource instanceof IProject) {
+				// since we are cleaning it makes sense to remove
+				// all sort of markers from the JR project
+				Markers.deleteMarkers(resource);
+			}
+			if (ext!=null && resource.exists()) {
+				if (ext.equalsIgnoreCase(FileExtension.JRXML)) {
+					// could be redundant since we have already cleaned the prj ones
 					Markers.deleteMarkers(resource);
-				else if (resource.isDerived() && ext.equalsIgnoreCase(FileExtension.JASPER))
+				}
+				else if (resource.isDerived() && ext.equalsIgnoreCase(FileExtension.JASPER)) {
+					// be sure to get rid of .jasper files
 					resource.delete(false, SubMonitor.convert(monitor));
+				}
 			}
 			return true;
 		}
@@ -160,10 +161,7 @@ public class JasperReportsBuilder extends IncrementalProjectBuilder {
 		return new IProject[0];
 	}
 
-	private LocalJasperReportsContext jContext = new LocalJasperReportsContext(DefaultJasperReportsContext.getInstance());
-
 	private JasperReportCompiler reportCompiler = new JasperReportCompiler();
-	private Map<IProject, ClassLoader> clmap = new HashMap<IProject, ClassLoader>();
 	private Map<IProject, IPath> outmap = new HashMap<IProject, IPath>();
 
 	/**
@@ -171,15 +169,27 @@ public class JasperReportsBuilder extends IncrementalProjectBuilder {
 	 * process to notify the error
 	 * 
 	 * @param arguments
-	 *          parameters eventually passed by the compilation process
+	 *            parameters eventually passed by the compilation process
 	 * @return a JasperReportErrorHandler
 	 */
 	protected JasperReportErrorHandler getErrorHandler(IFile resource) {
 		return new JRErrorHandler(resource);
 	}
 
+	private JSSReportContext jContext = JSSReportContext.getNewConfig();
+
 	public IFile compileJRXML(IResource resource, IProgressMonitor monitor) throws CoreException {
+		// reuse context creation, this will reduce extensions loading as much
+		// as possible
+		jContext.init(resource);
+		return compileJRXML(resource, monitor, jContext);
+	}
+
+	public IFile compileJRXML(IResource resource, IProgressMonitor monitor, SimpleJasperReportsContext jContext)
+			throws CoreException {
 		if (!(resource instanceof IFile && resource.exists() && resource.getFileExtension() != null))
+			return null;
+		if (resource instanceof IFile && resource.getFileExtension().equals(FileExtension.JASPER))
 			return null;
 		IProject project = resource.getProject();
 		IPath outLocation = outmap.get(project);
@@ -192,48 +202,49 @@ public class JasperReportsBuilder extends IncrementalProjectBuilder {
 			ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
 			IFile destFile = null;
 			try {
+				if (jContext == null)
+					jContext = JSSReportContext.getDefaultInstance(resource);
 				monitor.subTask("Compiling " + resource.getFullPath().toOSString());
 				Markers.deleteMarkers(resource);
 				IFile file = (IFile) resource;
-				ClassLoader cl = clmap.get(project);
-				if (cl == null) {
-					cl = ClassLoaderUtil.getClassLoader4Project(SubMonitor.convert(monitor), project);
-					jContext.setClassLoader(cl);
-					clmap.put(project, cl);
-				}
-				Thread.currentThread().setContextClassLoader(cl);
+				ClassLoader cl = (ClassLoader) jContext
+						.getValue(AbstractClasspathAwareDataAdapterService.CURRENT_CLASS_LOADER);
+				if (cl != null)
+					Thread.currentThread().setContextClassLoader(cl);
 				reportCompiler.setErrorHandler(getErrorHandler(file));
 				destFile = FileExtension.getCompiledFile(file);
 
 				JasperReport jasperReport = null;
 				// Checks if a potential linked resource really exists
 				if (file.getLocation().toFile().exists())
-					jasperReport = reportCompiler.compileReport(jContext, file);
-
-				if (jasperReport == null) {
-					if (destFile.exists())
-						destFile.delete(true, false, SubMonitor.convert(monitor));
-				} else {
-					ByteArrayOutputStream bout = new ByteArrayOutputStream();
-					ByteArrayInputStream compiledInput = null;
-					try {
-						JRSaver.saveObject(jasperReport, bout);
-						compiledInput = new ByteArrayInputStream(bout.toByteArray());
-						if (destFile.exists()) {
-							if (file.isLinked() && !destFile.isLinked()) {
-								destFile.delete(true, false, SubMonitor.convert(monitor));
-								destFile = createDestFile(monitor, project, file, destFile, compiledInput);
+					jasperReport = reportCompiler.compileReport(jContext, file, monitor);
+				String str = jContext.getProperty(JasperReportCompiler.JSS_COMPATIBILITY_COMPILER_VERSION);
+				if (Misc.isNullOrEmpty(str) || str.equals("last") || str.equals(JasperDesign.class.getPackage().getImplementationVersion())) {
+					if (jasperReport == null) {
+						if (destFile.exists())
+							destFile.delete(true, false, SubMonitor.convert(monitor));
+					} else {
+						ByteArrayOutputStream bout = new ByteArrayOutputStream();
+						ByteArrayInputStream compiledInput = null;
+						try {
+							JRSaver.saveObject(jasperReport, bout);
+							compiledInput = new ByteArrayInputStream(bout.toByteArray());
+							if (destFile.exists()) {
+								if (file.isLinked() && !destFile.isLinked()) {
+									destFile.delete(true, false, SubMonitor.convert(monitor));
+									destFile = createDestFile(monitor, project, file, destFile, compiledInput);
+								} else
+									destFile.setContents(compiledInput, true, false, SubMonitor.convert(monitor));
 							} else
-								destFile.setContents(compiledInput, true, false, SubMonitor.convert(monitor));
-						} else
-							destFile = createDestFile(monitor, project, file, destFile, compiledInput);
-						if (!destFile.isDerived())
-							destFile.setDerived(true, SubMonitor.convert(monitor));
-					} catch (JRException e) {
-						throw new RuntimeException(e);// TODO
-					} finally {
-						FileUtils.closeStream(bout);
-						FileUtils.closeStream(compiledInput);
+								destFile = createDestFile(monitor, project, file, destFile, compiledInput);
+							if (!destFile.isDerived())
+								destFile.setDerived(true, SubMonitor.convert(monitor));
+						} catch (JRException e) {
+							throw new RuntimeException(e);// TODO
+						} finally {
+							FileUtils.closeStream(bout);
+							FileUtils.closeStream(compiledInput);
+						}
 					}
 				}
 			} finally {
@@ -248,7 +259,8 @@ public class JasperReportsBuilder extends IncrementalProjectBuilder {
 		return null;
 	}
 
-	protected IFile createDestFile(IProgressMonitor monitor, IProject project, IFile file, IFile destFile, ByteArrayInputStream compiledInput) throws CoreException {
+	protected IFile createDestFile(IProgressMonitor monitor, IProject project, IFile file, IFile destFile,
+			ByteArrayInputStream compiledInput) throws CoreException {
 		if (file.isLinked()) {
 			String fpath = file.getLocation().toFile().getAbsolutePath();
 			fpath = FileExtension.getCompiledFileName(fpath);
@@ -256,7 +268,8 @@ public class JasperReportsBuilder extends IncrementalProjectBuilder {
 			try {
 				f.createNewFile();
 				IPath location = new Path(fpath);
-				destFile = project.getFile(location.lastSegment());
+				String fileName = FilenameUtils.removeExtension(file.getName());
+				destFile = project.getFile(fileName + "." + location.getFileExtension());
 				destFile.createLink(location, IResource.REPLACE, SubMonitor.convert(monitor));
 				destFile.setContents(compiledInput, true, false, SubMonitor.convert(monitor));
 			} catch (IOException e) {

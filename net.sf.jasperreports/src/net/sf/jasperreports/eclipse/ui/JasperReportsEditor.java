@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.ui;
 
@@ -16,18 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
-import net.sf.jasperreports.eclipse.util.FileExtension;
-import net.sf.jasperreports.eclipse.viewer.DefaultHyperlinkHandler;
-import net.sf.jasperreports.eclipse.viewer.IReportViewer;
-import net.sf.jasperreports.eclipse.viewer.ReportViewer;
-import net.sf.jasperreports.engine.DefaultJasperReportsContext;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRReport;
-import net.sf.jasperreports.engine.convert.ReportConverter;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.engine.util.LocalJasperReportsContext;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -43,12 +23,24 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.EditorPart;
 
+import net.sf.jasperreports.eclipse.builder.JSSReportContext;
+import net.sf.jasperreports.eclipse.util.FileExtension;
+import net.sf.jasperreports.eclipse.viewer.DefaultHyperlinkHandler;
+import net.sf.jasperreports.eclipse.viewer.IReportViewer;
+import net.sf.jasperreports.eclipse.viewer.ReportViewer;
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRReport;
+import net.sf.jasperreports.engine.convert.ReportConverter;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+
 /*
  * @author Teodor Danciu (teodord@users.sourceforge.net)
  * @version $Id: JasperDesignPreviewView.java 27 2009-11-11 12:40:27Z teodord $
  */
 public class JasperReportsEditor extends EditorPart {
-	private ReportViewer reportViewer = new ReportViewer(SWT.BORDER, new LocalJasperReportsContext(DefaultJasperReportsContext.getInstance()));
+	private ReportViewer reportViewer = new ReportViewer(SWT.BORDER, JSSReportContext.getDefaultInstance());
 	private Control reportViewerControl;
 
 	public void createPartControl(Composite parent) {
@@ -75,7 +67,9 @@ public class JasperReportsEditor extends EditorPart {
 	// private void initMenu() {
 	// IMenuManager mm = getEditorSite().getActionBars().getMenuManager();
 	//
-	//		MenuManager export = new MenuManager("FIXMEMessages.getString(\"ViewerApp.exportMenuLabel\")"); //$NON-NLS-1$
+	// MenuManager export = new
+	// MenuManager("FIXMEMessages.getString(\"ViewerApp.exportMenuLabel\")");
+	// //$NON-NLS-1$
 	// export.add(new ExportAsPdfAction(reportViewer));
 	// export.add(new ExportAsRtfAction(reportViewer));
 	// export.add(new ExportAsJasperReportsAction(reportViewer));
@@ -86,7 +80,9 @@ public class JasperReportsEditor extends EditorPart {
 	// export.add(new ExportAsXmlAction(reportViewer));
 	// export.add(new ExportAsXmlWithImagesAction(reportViewer));
 	//
-	//		MenuManager file = new MenuManager("FIXMEMessages.getString(\"ViewerApp.fileMenuLabel\")"); //$NON-NLS-1$
+	// MenuManager file = new
+	// MenuManager("FIXMEMessages.getString(\"ViewerApp.fileMenuLabel\")");
+	// //$NON-NLS-1$
 	// file.add(new ReloadAction(reportViewer));
 	// file.add(new Separator());
 	// file.add(export);
@@ -94,7 +90,9 @@ public class JasperReportsEditor extends EditorPart {
 	// file.add(new PrintAction(reportViewer));
 	// mm.add(file);
 	//
-	//		MenuManager view = new MenuManager("FIXMEMessages.getString(\"ViewerApp.viewMenuLabel\")"); //$NON-NLS-1$
+	// MenuManager view = new
+	// MenuManager("FIXMEMessages.getString(\"ViewerApp.viewMenuLabel\")");
+	// //$NON-NLS-1$
 	// view.add(new ZoomOutAction(reportViewer));
 	// view.add(new ZoomInAction(reportViewer));
 	// view.add(new Separator());
@@ -103,7 +101,9 @@ public class JasperReportsEditor extends EditorPart {
 	// view.add(new ZoomFitPageWidthAction(reportViewer));
 	// mm.add(view);
 	//
-	//		MenuManager nav = new MenuManager("FIXMEMessages.getString(\"ViewerApp.navigateMenuLabel\")"); //$NON-NLS-1$
+	// MenuManager nav = new
+	// MenuManager("FIXMEMessages.getString(\"ViewerApp.navigateMenuLabel\")");
+	// //$NON-NLS-1$
 	// nav.add(new FirstPageAction(reportViewer));
 	// nav.add(new PreviousPageAction(reportViewer));
 	// nav.add(new NextPageAction(reportViewer));
@@ -175,9 +175,12 @@ public class JasperReportsEditor extends EditorPart {
 			try {
 				DefaultJasperReportsContext context = DefaultJasperReportsContext.getInstance();
 				if (FileExtension.JRXML.equalsIgnoreCase(fileExtension)) {
-					getReportViewer().setReport(new ReportConverter(context, JRXmlLoader.load(context, is), false).getJasperPrint());
+					getReportViewer().setReport(
+							new ReportConverter(context, JRXmlLoader.load(context, is), false).getJasperPrint());
 				} else if (FileExtension.JASPER.equalsIgnoreCase(fileExtension)) {
-					getReportViewer().setReport(new ReportConverter(context, (JRReport) JRLoader.loadObject(context, is), false).getJasperPrint());
+					getReportViewer()
+							.setReport(new ReportConverter(context, (JRReport) JRLoader.loadObject(context, is), false)
+									.getJasperPrint());
 				}
 			} catch (JRException e) {
 				e.printStackTrace();

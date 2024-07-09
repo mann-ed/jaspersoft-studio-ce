@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.classpath.container;
 
@@ -30,10 +22,11 @@ import org.eclipse.jdt.core.JavaModelException;
 
 public class ClasspathContainerManager {
 
-	private static List<IClasspathContainerFactory> factoryByNodeType = new ArrayList<IClasspathContainerFactory>();
+	private static List<IClasspathContainerFactory> factoryByNodeType = new ArrayList<>();
 
 	public void init() {
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(JasperReportsPlugin.PLUGIN_ID, "classpathcontainer"); //$NON-NLS-1$ 
+		IConfigurationElement[] config = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(JasperReportsPlugin.PLUGIN_ID, "classpathcontainer"); //$NON-NLS-1$
 		for (IConfigurationElement e : config) {
 			try {
 				Object o = e.createExecutableExtension("ClassFactory"); //$NON-NLS-1$
@@ -47,13 +40,14 @@ public class ClasspathContainerManager {
 		}
 	}
 
-	public void createJRClasspathContainer(IProgressMonitor monitor, List<IClasspathEntry> centries, IJavaProject javaProject) throws JavaModelException {
+	public void createJRClasspathContainer(IProgressMonitor monitor, List<IClasspathEntry> centries,
+			IJavaProject javaProject) throws JavaModelException {
 		for (IClasspathContainerFactory f : factoryByNodeType)
 			f.createJRClasspathContainer(monitor, centries, javaProject);
 	}
 
 	public Set<Path> getRemovableContainers() {
-		Set<Path> set = new HashSet<Path>();
+		Set<Path> set = new HashSet<>();
 		for (IClasspathContainerFactory f : factoryByNodeType) {
 			Set<Path> s = f.isRemovable();
 			if (s != null && !s.isEmpty())

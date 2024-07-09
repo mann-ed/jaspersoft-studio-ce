@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="classpathcontainer" name="ClasspathContainer" schema="schema/classpathcontainer.exsd"/>
+   <extension-point id="preferencePageExtension" name="Preferences Page Extension" schema="schema/preferencePageExtension.exsd"/>
 <extension point="org.eclipse.ui.navigator.navigatorContent">
     <commonFilter
         description="Hides *.jasper JasperReports compiled file"
@@ -70,21 +71,12 @@
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
             id="net.sf.jasperreports.popupMenus.toggleNature">
-         <menu
-               icon="icons/jr_icon.png"
-               id="net.sf.jasperreports.menu1"
-               label="JasperReports"
-               path="additions">
-            <separator
-                  name="separator1">
-            </separator>
-         </menu>
          <action
                class="net.sf.jasperreports.eclipse.builder.action.ToggleNatureAction"
                enablesFor="+"
                icon="icons/jasper_icon.png"
                id="net.sf.jasperreports.actions.toggleNature"
-               label="Toggle JasperReports Nature"
+               label="レポートプロパティを切り替える"
                menubarPath="net.sf.jasperreports.menu1/separator1"
                style="toggle">
          </action>
@@ -92,13 +84,14 @@
       <objectContribution
             adaptable="false"
             id="net.sf.jasperreports.popupMenus.reportPreview.jrxml"
-            nameFilter="*.jrxml"
+            nameFilter="*.ezxml"
             objectClass="org.eclipse.core.resources.IResource">
          <action
                class="net.sf.jasperreports.eclipse.ui.ReportPreviewAction"
                icon="icons/jr_icon.png"
                id="net.sf.jasperreports.actions.reportPreview"
-               label="Preview"/>
+               label="Preview"
+               menubarPath="net.sf.jasperreports.menu1/separator1"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -109,7 +102,8 @@
                class="net.sf.jasperreports.eclipse.ui.ReportPreviewAction"
                icon="icons/jr_icon.png"
                id="net.sf.jasperreports.actions.reportPreview"
-               label="Preview">
+               label="Preview"
+               menubarPath="net.sf.jasperreports.menu1/separator1">
          </action>
       </objectContribution>
    </extension>
@@ -143,7 +137,7 @@
          point="org.eclipse.ui.views">
       <category
             id="net.sf.jasperreports"
-            name="JasperReports"/>
+            name="Report"/>
       <view
             category="net.sf.jasperreports"
             class="net.sf.jasperreports.eclipse.ui.ReportPreviewView"
@@ -165,7 +159,7 @@
    <extension
          point="org.eclipse.team.core.fileTypes">
       <fileTypes
-            extension="jrxml"
+            extension="ezxml"
             type="text">
       </fileTypes>
       <fileTypes
@@ -189,17 +183,17 @@
          point="org.eclipse.ui.newWizards">
       <category
             id="com.jaspersoft.studio"
-            name="Jaspersoft Studio">
+            name="ezRepo Designer">
       </category>
       <wizard
             category="com.jaspersoft.studio"
             class="net.sf.jasperreports.eclipse.wizard.project.JRProjectWizard"
-            icon="icons/jasper_icon.png"
+            icon="icons/addjrproject.png"
             id="net.sf.jasperreports.projectwizar"
-            name="JasperReports Project"
+            name="レポートプロジェクト"
             project="true">
          <description>
-            Create a JasperReports project
+            レポートプロジェクトを作成する
          </description>
       </wizard>
    </extension>
@@ -221,6 +215,21 @@
       </classpathContainerPage>
    </extension>
    <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="net.sf.jasperreports.eclipse.classpath.container.JRDependenciesClasspathContainerInitializer"
+            id="net.sf.jasperreports.JR_DEPENDENCIES_CONTAINER">
+      </classpathContainerInitializer>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+      		class="net.sf.jasperreports.eclipse.classpath.container.JRDependenciesClasspathContainerPage"
+      		name="Runtime Library Dependencies"
+            id="net.sf.jasperreports.JR_DEPENDENCIES_CONTAINER">
+      </classpathContainerPage>
+   </extension>      
+   <extension
          point="org.eclipse.ui.startup">
       <startup class="net.sf.jasperreports.eclipse.EnhancedSystemOutStartup"/>
       <startup
@@ -235,5 +244,76 @@
             natureId="net.sf.jasperreports.nature">
       </image>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?endof=additions">
+         <menu
+               icon="icons/jr_icon.png"
+               id="net.sf.jasperreports.menu1"
+               label="Report">
+            <command
+                  commandId="net.sf.jasperreports.project.classpath.reload"
+                  disabledIcon="icons/class_obj_dis.png"
+                  icon="icons/class_obj.png"
+                  label="クラスパスの再ロード"
+                  style="push"
+                  tooltip="Triggers the reload of the classpath associated to the Java Project selected">
+                  <visibleWhen
+                        checkEnabled="false">
+                        <iterate operator="and" ifEmpty="false">
+                        	<adapt
+                               type="org.eclipse.core.resources.IProject">
+                        	</adapt>
+                        </iterate>                       
+                  </visibleWhen>
+            </command>
+            <separator
+                  name="separator1">
+            </separator>
+            <separator
+                  name="separator2">
+            </separator>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="net.sf.jasperreports.project.classpath.reload"
+            name="Reload Classpath">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="net.sf.jasperreports.eclipse.classpath.ReloadClasspathHandler"
+            commandId="net.sf.jasperreports.project.classpath.reload">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate operator="and" ifEmpty="false">
+               	  <instanceof
+                        value="org.eclipse.core.resources.IProject">
+               	  </instanceof>
+                  <test
+                        property="net.sf.jasperreports.propertytesters.supportClassPathReload"
+                        value="SUPPORTED">
+                  </test>
+               </iterate>
+            </with>
+         </enabledWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="net.sf.jasperreports.eclipse.classpath.SupportClasspathReload"
+            id="net.sf.jasperreports.testers.classpath.reload"
+            namespace="net.sf.jasperreports.propertytesters"
+            properties="supportClassPathReload"
+            type="org.eclipse.core.resources.IProject">
+      </propertyTester>
+   </extension>
 </plugin>

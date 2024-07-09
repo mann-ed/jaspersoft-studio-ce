@@ -1,20 +1,43 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.samples;
 
-import java.net.URL;
+import java.io.File;
 import java.util.Set;
 
+/**
+ * This interface describes the details for a sample provider 
+ * with all the required information in order to correctly 
+ * contribute the Report examples to a newly created project.
+ * 
+ * @author Massimo Rabbi (mrabbi@users.sourceforge.net)
+ *
+ */
 public interface ISamplesProvider {
-	public Set<URL> getSamples();
+	
+	/**
+	 * Returns a set of folders that should be added to the project
+	 * build-path as "Source Folder".
+	 * 
+	 * @return a set of source folders
+	 */
+	public Set<File> getSourceFolders();
+	
+	/**
+	 * Returns a set of additional libraries that should be added 
+	 * to the project build-path
+	 * 
+	 * @return a set of additional libraries
+	 */
+	public Set<File> getAdditionalLibraries();
+	
+	/**
+	 * Returns a set of folders containing samples JRXML files and related resources.
+	 * 
+	 * @return a set of folders containing samples
+	 */
+	public Set<File> getSampleFolders();
+	
 }

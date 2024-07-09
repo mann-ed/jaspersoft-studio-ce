@@ -1,28 +1,8 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.ui;
-
-import net.sf.jasperreports.eclipse.viewer.DefaultHyperlinkHandler;
-import net.sf.jasperreports.eclipse.viewer.IReportViewer;
-import net.sf.jasperreports.eclipse.viewer.ReportViewer;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomActualSizeAction;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomComboContributionItem;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomFitPageAction;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomFitPageWidthAction;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomInAction;
-import net.sf.jasperreports.eclipse.viewer.action.ZoomOutAction;
-import net.sf.jasperreports.engine.DefaultJasperReportsContext;
-import net.sf.jasperreports.engine.util.LocalJasperReportsContext;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IToolBarManager;
@@ -39,6 +19,17 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import net.sf.jasperreports.eclipse.builder.JSSReportContext;
+import net.sf.jasperreports.eclipse.viewer.DefaultHyperlinkHandler;
+import net.sf.jasperreports.eclipse.viewer.IReportViewer;
+import net.sf.jasperreports.eclipse.viewer.ReportViewer;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomActualSizeAction;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomComboContributionItem;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomFitPageAction;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomFitPageWidthAction;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomInAction;
+import net.sf.jasperreports.eclipse.viewer.action.ZoomOutAction;
+
 /*
  * @author Lucian Chirita (lucianc@users.sourceforge.net)
  * @version $Id: JasperDesignPreviewView.java 27 2009-11-11 12:40:27Z teodord $
@@ -47,11 +38,12 @@ public class ReportPreviewView extends ViewPart {
 	public static final String ID = "net.sf.jasperreports.views.reportPreview"; //$NON-NLS-1$
 
 	private Composite container = null;
-	private ReportViewer reportViewer = new ReportViewer(SWT.BORDER | SWT.NO_FOCUS, new LocalJasperReportsContext(DefaultJasperReportsContext.getInstance()));
+	private ReportViewer reportViewer = new ReportViewer(SWT.BORDER | SWT.NO_FOCUS,
+			JSSReportContext.getDefaultInstance());
 	// FIXME add IPartListener2 as follows
 	// http://pookzilla.net/wp/2006/10/link-to-editor/
 
-	private ISelectionListener listener = new ISelectionListener() {
+	private ISelectionListener selectionListener = new ISelectionListener() {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			boolean unset = true;
 
@@ -60,7 +52,8 @@ public class ReportPreviewView extends ViewPart {
 				if (strSel.size() == 1) {
 					final Object sel = strSel.getFirstElement();
 					if (sel instanceof IFile) {
-						ReportPreviewUtil.loadFileIntoViewer((IFile) sel, getReportViewer(), getSite().getShell().getDisplay());
+						ReportPreviewUtil.loadFileIntoViewer((IFile) sel, getReportViewer(),
+								getSite().getShell().getDisplay());
 						unset = false;
 					}
 				}
@@ -80,11 +73,11 @@ public class ReportPreviewView extends ViewPart {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(container, "com.jaspersoft.studio.doc.view_preview"); //$NON-NLS-1$
 
 		Control reportViewerControl = reportViewer.createControl(container);
-		reportViewerControl.setLayoutData(new GridData(GridData.FILL_BOTH));
+		reportViewerControl.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 		initToolBar();
 
 		reportViewer.addHyperlinkListener(new DefaultHyperlinkHandler());
-		getSite().getPage().addSelectionListener(listener);
+		getSite().getPage().addSelectionListener(selectionListener);
 	}
 
 	/**
@@ -103,7 +96,7 @@ public class ReportPreviewView extends ViewPart {
 
 	@Override
 	public void dispose() {
-		getSite().getPage().removeSelectionListener(listener);
+		getSite().getPage().removeSelectionListener(selectionListener);
 	}
 
 	private void initToolBar() {

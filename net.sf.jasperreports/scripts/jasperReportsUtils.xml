@@ -1,13 +1,13 @@
 <project name="JasperReportsUtils" default="main" basedir="../../">
 	<!-- Maven installation location -->
-	<property name="maven.home" value="/usr/share/maven"/>
+	<property name="maven.home" value="/opt/local/share/java/maven3"/>
 	<!-- Shared properties -->
 	<property name="jss.jr.plugin.location" value="${basedir}/net.sf.jasperreports" />
 	<property name="jss.jrdoc.plugin.location" value="${basedir}/net.sf.jasperreports.doc" />
 	<property name="jss.studio.plugin.location" value="${basedir}/com.jaspersoft.studio" />
 	
 	<!-- List of projects JasperReports related for which we need the jars -->
-	<property name="jasperreports.location" value="${basedir}/jasperreports-561" />
+	<property name="jasperreports.location" value="/Users/mrabbi/git/jasperreports/jasperreports" />
 
 	<!-- Define the Maven ANT macro -->
 	<macrodef name="maven">

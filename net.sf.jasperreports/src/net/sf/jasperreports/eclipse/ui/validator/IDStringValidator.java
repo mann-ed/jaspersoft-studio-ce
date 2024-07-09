@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.ui.validator;
 
@@ -19,14 +11,14 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-public class IDStringValidator implements IValidator {
+public class IDStringValidator implements IValidator<String> {
 	private final static char[] allowed = "_.".toCharArray(); //$NON-NLS-1$
 
-	// private Pattern pattern = Pattern.compile("^[A-Za-z0-9_.//-]{0,100}$"); //$NON-NLS-1$
+	// private Pattern pattern = Pattern.compile("^[A-Za-z0-9_.//-]{0,100}$");
+	// //$NON-NLS-1$
 
-	public IStatus validate(Object value) {
-		String v = (String) value;
-		if (value == null || v.isEmpty())
+	public IStatus validate(String v) {
+		if (v == null || v.isEmpty())
 			return ValidationStatus.error(Messages.IDStringValidator_EmptyError);
 		if (v.length() > 100)
 			return ValidationStatus.error("ID size between 0 and 100");
@@ -50,13 +42,19 @@ public class IDStringValidator implements IValidator {
 		char[] charArray = input.toString().toCharArray();
 		StringBuilder result = new StringBuilder();
 		for (char c : charArray) {
+			Character newc = null;
 			if (Character.isLetterOrDigit(c))
-				result.append(c);
+				newc = c;
 			else
 				for (char a : allowed) {
-					if (c == a)
-						result.append(a);
+					if (c == a) {
+						newc = c;
+						break;
+					}
 				}
+			if (newc == null)
+				newc = '_';
+			result.append(newc);
 		}
 		return result.toString();
 	}

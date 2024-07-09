@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.builder.action;
 
@@ -107,7 +99,8 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+	 * @see
+	 * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
 	 * action.IAction, org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -136,7 +129,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	 * Toggles sample nature on a project
 	 * 
 	 * @param project
-	 *          to have sample nature added or removed
+	 *            to have sample nature added or removed
 	 */
 	private void toggleNature(IProject project, IProgressMonitor monitor) {
 		try {
@@ -160,7 +153,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 					for (IClasspathEntry en : entries) {
 						if (en.getPath().equals(JRClasspathContainer.ID))
 							continue;
-						if(set.contains(en.getPath()))
+						if (set.contains(en.getPath()))
 							continue;
 						centries.add(en);
 					}

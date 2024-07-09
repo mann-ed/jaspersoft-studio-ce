@@ -1,21 +1,11 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.wizard.project;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-
-import net.sf.jasperreports.eclipse.messages.Messages;
-import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -24,13 +14,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+
+import net.sf.jasperreports.eclipse.messages.Messages;
+import net.sf.jasperreports.eclipse.ui.util.UIUtils;
 
 public class JRProjectWizard extends Wizard implements INewWizard,
 		IExecutableExtension {
@@ -100,13 +92,15 @@ public class JRProjectWizard extends Wizard implements INewWizard,
 					createProject(monitor, prj);
 				} catch (CoreException e) {
 					UIUtils.showError(e);
+				} catch (FileNotFoundException e) {
+					UIUtils.showError(e);
 				}
 			}
 		}
 	}
 
 	protected void createProject(IProgressMonitor monitor, IProject prj)
-			throws CoreException, JavaModelException {
+			throws CoreException, FileNotFoundException {
 		ProjectUtil.createJRProject(monitor, prj);
 	}
 

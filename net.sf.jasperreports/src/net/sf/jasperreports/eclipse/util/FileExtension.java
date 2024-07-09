@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.util;
 
@@ -19,7 +11,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 
 public final class FileExtension {
-	public static final String JRXML = "jrxml";
+	public static final String JRXML = "ezxml";
 	public static final String PointJRXML = "." + JRXML;
 	public static final String JASPER = "jasper";
 	public static final String PointJASPER = "." + JASPER;
@@ -29,6 +21,8 @@ public final class FileExtension {
 	public static final String PointJRCTX = "." + JRCTX;
 	public static final String JRTX = "jrtx";
 	public static final String PointJRTX = "." + JRTX;
+	
+	public static final String PointJRPRINT = "." + JRPRINT;
 
 	public static IFile getCompiledFile(final IFile file) {
 		String name = getCompiledFileName(file.getName(), file.getFileExtension());
@@ -37,7 +31,7 @@ public final class FileExtension {
 
 	public static String getCompiledFileName(String name) {
 		String ext = null;
-		int ind = name.lastIndexOf(".");
+		int ind = name.lastIndexOf('.');
 		if (ind >= 0)
 			ext = name.substring(ind);
 		return getCompiledFileName(name, ext);
@@ -45,23 +39,27 @@ public final class FileExtension {
 
 	public static String getCompiledFileName(String name, String ext) {
 		if (ext != null)
-			name = StringUtils.replaceAllIns(name, FileExtension.JRXML + "$", FileExtension.JASPER);
+			name = StringUtils.replaceAllIns(name, FileExtension.PointJRXML + "$", FileExtension.PointJASPER);
 		else
 			name = name + FileExtension.PointJASPER;
 		return name;
+	}
+
+	public static String getJRXMLFileName(String name) {
+		return StringUtils.replaceAllIns(name, FileExtension.PointJASPER + "$", FileExtension.PointJRXML);
 	}
 
 	public static IFile getSourceFile(final IFile file) {
 		String name = file.getName();
 		String ext = file.getFileExtension();
 		if (ext != null)
-			name = StringUtils.replaceAllIns(name, FileExtension.JASPER + "$", FileExtension.JRXML);
+			name = StringUtils.replaceAllIns(name, FileExtension.PointJASPER + "$", FileExtension.PointJRXML);
 		else
 			name = name + FileExtension.PointJRXML;
 		return file.getParent().getFile(new Path(name));
 	}
 
-	private static Set<String> imgExt = new HashSet<String>();
+	private static Set<String> imgExt = new HashSet<>();
 	static {
 		imgExt.add(".png");
 		imgExt.add(".jpeg");
@@ -75,13 +73,13 @@ public final class FileExtension {
 	}
 
 	public static boolean isImage(String fname) {
-		int ind = fname.lastIndexOf(".");
+		int ind = fname.lastIndexOf('.');
 		if (ind > 0)
 			fname = fname.substring(ind);
 		return imgExt.contains(fname);
 	}
 
-	private static Set<String> fontExt = new HashSet<String>();
+	private static Set<String> fontExt = new HashSet<>();
 	static {
 		fontExt.add(".ttf");
 		fontExt.add(".eot");
@@ -89,7 +87,7 @@ public final class FileExtension {
 	}
 
 	public static boolean isFont(String fname) {
-		int ind = fname.lastIndexOf(".");
+		int ind = fname.lastIndexOf('.');
 		if (ind > 0)
 			fname = fname.substring(ind);
 		return fontExt.contains(fname);

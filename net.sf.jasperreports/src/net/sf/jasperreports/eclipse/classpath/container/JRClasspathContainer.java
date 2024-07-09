@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.eclipse.classpath.container;
 
@@ -36,14 +28,14 @@ public class JRClasspathContainer implements IClasspathContainer {
 	public final static Path ID = new Path("net.sf.jasperreports.JR_CONTAINER"); //$NON-NLS-1$
 
 	// path string that uniquiely identifies this container instance
-	private IPath _path;
+	private IPath path;
 
 	public JRClasspathContainer(IPath path, IJavaProject project) {
-		_path = path;
+		this.path = path;
 	}
 
 	public IClasspathEntry[] getClasspathEntries() {
-		List<IClasspathEntry> entryList = new ArrayList<IClasspathEntry>();
+		List<IClasspathEntry> entryList = new ArrayList<>();
 
 		Bundle bundle = JasperReportsPlugin.getDefault().getBundle();
 		Enumeration<URL> urls = bundle.findEntries("lib/", "jasperreports*.jar", true); //$NON-NLS-1$ //$NON-NLS-2$
@@ -51,14 +43,12 @@ public class JRClasspathContainer implements IClasspathContainer {
 			URL url = urls.nextElement();
 			try {
 				URL fileURL = FileLocator.toFileURL(url);
-				URI uri = new URI(fileURL.getProtocol(), fileURL.getUserInfo(), fileURL.getHost(), fileURL.getPort(), fileURL.getPath(), fileURL.getQuery(), null);
-				// fileURL.toURI();
+				URI uri = new URI(fileURL.getProtocol(), fileURL.getUserInfo(), fileURL.getHost(), fileURL.getPort(),
+						fileURL.getPath(), fileURL.getQuery(), null);
 				Path binpath = new Path(new File(uri).getAbsolutePath());
 				Path srcpath = binpath;
 				entryList.add(JavaCore.newLibraryEntry(binpath, srcpath, new Path("/"))); //$NON-NLS-1$
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (URISyntaxException | IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -67,7 +57,7 @@ public class JRClasspathContainer implements IClasspathContainer {
 	}
 
 	public IClasspathEntry[] getAllClasspathEntries() {
-		List<IClasspathEntry> entryList = new ArrayList<IClasspathEntry>();
+		List<IClasspathEntry> entryList = new ArrayList<>();
 
 		Bundle bundle = JasperReportsPlugin.getDefault().getBundle();
 		Enumeration<URL> urls = bundle.findEntries("lib/", "*.jar", true); //$NON-NLS-1$ //$NON-NLS-2$
@@ -75,14 +65,12 @@ public class JRClasspathContainer implements IClasspathContainer {
 			URL url = urls.nextElement();
 			try {
 				URL fileURL = FileLocator.toFileURL(url);
-				URI uri = new URI(fileURL.getProtocol(), fileURL.getUserInfo(), fileURL.getHost(), fileURL.getPort(), fileURL.getPath(), fileURL.getQuery(), null);
-				// fileURL.toURI();
+				URI uri = new URI(fileURL.getProtocol(), fileURL.getUserInfo(), fileURL.getHost(), fileURL.getPort(),
+						fileURL.getPath(), fileURL.getQuery(), null);
 				Path binpath = new Path(new File(uri).getAbsolutePath());
 				Path srcpath = binpath;
 				entryList.add(JavaCore.newLibraryEntry(binpath, srcpath, new Path("/"))); //$NON-NLS-1$
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (URISyntaxException | IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -91,7 +79,7 @@ public class JRClasspathContainer implements IClasspathContainer {
 	}
 
 	public String getDescription() {
-		return "JasperReports Library"; //$NON-NLS-1$
+		return "Runtime Library"; //$NON-NLS-1$
 	}
 
 	public int getKind() {
@@ -99,6 +87,6 @@ public class JRClasspathContainer implements IClasspathContainer {
 	}
 
 	public IPath getPath() {
-		return _path;
+		return path;
 	}
 }

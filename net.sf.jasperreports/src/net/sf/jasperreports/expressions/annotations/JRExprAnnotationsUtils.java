@@ -1,14 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2005 - 2014 TIBCO Software Inc. All rights reserved.
- * http://www.jaspersoft.com.
- * 
- * Unless you have purchased  a commercial license agreement from Jaspersoft,
- * the following license terms  apply:
- * 
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (C) 2010 - 2016. TIBCO Software Inc. 
+ * All Rights Reserved. Confidential & Proprietary.
  ******************************************************************************/
 package net.sf.jasperreports.expressions.annotations;
 
@@ -19,9 +11,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.osgi.util.NLS;
+
 import net.sf.jasperreports.eclipse.JasperReportsPlugin;
 import net.sf.jasperreports.eclipse.builder.jdt.JDTUtils;
-import net.sf.jasperreports.eclipse.classpath.OutputFolderClassLoader;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JasperReportsContext;
 import net.sf.jasperreports.engine.util.MessageUtil;
@@ -32,10 +26,6 @@ import net.sf.jasperreports.functions.annotations.FunctionMessagesBundle;
 import net.sf.jasperreports.functions.annotations.FunctionParameter;
 import net.sf.jasperreports.functions.annotations.FunctionParameters;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.osgi.util.NLS;
-
 /**
  * Support class that works with the annotated Class(es).
  * 
@@ -45,6 +35,7 @@ import org.eclipse.osgi.util.NLS;
 public final class JRExprAnnotationsUtils 
 {
 
+	@SuppressWarnings("unused")
 	private final JasperReportsContext jasperReportsContext;
 	private final MessageUtil messageUtil;
 
@@ -281,13 +272,12 @@ public final class JRExprAnnotationsUtils
 		String classCanonicalName = clazz.getCanonicalName();
 		if(currProj!=null && 
 				!classCanonicalName.startsWith("net.sf.jasperreports.functions.standard")){
-			// Try to reload a fresh new instance of the Class instance.
-			// Useful for code being developed directly inside JSS.
-			// We skip the standard ones contributed via jar.
-			OutputFolderClassLoader reloaderCL = new OutputFolderClassLoader(JavaCore.create(currProj), ctxClassLoader);
-			Class<?> reloadedClazz = reloaderCL.reloadClass(clazz.getCanonicalName());
-			if(reloadedClazz!=null) {
-				clazz = reloadedClazz;
+			// Fallback solution for problems raised in Community Bug #4781
+			// See also:
+			// - https://bugs.eclipse.org/bugs/show_bug.cgi?id=439095#c7
+			// - https://bugs.openjdk.java.net/browse/JDK-8017491
+			if(ctxClassLoader==null) {
+				ctxClassLoader = this.getClass().getClassLoader();
 			}
 		}
 		
